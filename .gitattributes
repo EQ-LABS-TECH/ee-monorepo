@@ -1,0 +1,92 @@
+###############################################################################
+# Engineering Ecosystem (EE)
+# Official .gitattributes
+#
+# This file defines Git-specific behavior for files in the repository.
+# Formatting rules belong to .editorconfig, Prettier and ESLint.
+###############################################################################
+
+###############################################################################
+# Default text handling
+###############################################################################
+
+* text=auto
+
+###############################################################################
+# Source Code
+###############################################################################
+
+*.ts      text eol=lf
+*.tsx     text eol=lf
+*.js      text eol=lf
+*.jsx     text eol=lf
+*.mjs     text eol=lf
+*.cjs     text eol=lf
+*.json    text eol=lf
+*.jsonc   text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.xml     text eol=lf
+*.md      text eol=lf
+*.sh      text eol=lf
+*.bash    text eol=lf
+*.gitignore      text eol=lf
+*.gitattributes  text eol=lf
+*.editorconfig   text eol=lf
+
+###############################################################################
+# Windows Scripts
+###############################################################################
+
+*.cmd     text eol=crlf
+*.bat     text eol=crlf
+*.ps1     text eol=crlf
+
+###############################################################################
+# Binary Files
+###############################################################################
+
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.svg     binary
+*.ico     binary
+
+*.pdf     binary
+
+*.zip     binary
+*.tar     binary
+*.gz      binary
+*.tgz     binary
+*.7z      binary
+*.rar     binary
+
+*.woff    binary
+*.woff2   binary
+*.ttf     binary
+*.otf     binary
+*.eot     binary
+
+###############################################################################
+# Certificates & Keys
+###############################################################################
+
+*.pem     binary
+*.key     binary
+*.crt     binary
+*.p12     binary
+*.pfx     binary
+
+###############################################################################
+# Lock Files
+###############################################################################
+
+pnpm-lock.yaml text eol=lf
+
+###############################################################################
+# Git Merge Behavior
+###############################################################################
+
+package.json merge=union
+CHANGELOG.md merge=union

@@ -1,0 +1,15 @@
+{
+  "name": "@eq-labs/config",
+  "private": true,
+  "files": [
+    "typescript/",
+    "eslint/",
+    "prettier/",
+    "vite/",
+    "jest/",
+    "vitest/",
+    "playwright/",
+    "README.md",
+    "package.json"
+  ]
+}

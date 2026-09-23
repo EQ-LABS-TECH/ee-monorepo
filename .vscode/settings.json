@@ -1,0 +1,13 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.turbo": true,
+    "**/dist": true
+  },
+  "markdownlint.ignore": [".github/CODEOWNERS"],
+  "files.associations": {
+    "CODEOWNERS": "ignore"
+  }
+}

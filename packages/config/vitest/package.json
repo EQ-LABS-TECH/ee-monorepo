@@ -1,0 +1,26 @@
+{
+  "name": "@eq-labs/config-vitest",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "files": [
+    "base.mjs",
+    "react.mjs",
+    "README.md",
+    "package.json"
+  ],
+  "peerDependencies": {
+    "vitest": "^4.1.11"
+  },
+  "dependencies": {
+    "@vitest/coverage-v8": "4.1.11"
+  },
+  "scripts": {
+    "build": "node -e \"const fs=require('fs'); ['base.mjs','react.mjs'].forEach(f=>{if(!fs.existsSync(f))throw new Error('Missing '+f)}); console.log('Build successful')\"",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "9.35.0",
+    "@eq-labs/config-eslint": "workspace:*"
+  }
+}

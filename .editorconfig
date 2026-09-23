@@ -1,0 +1,42 @@
+###############################################################################
+# Engineering Ecosystem (EE)
+# Official EditorConfig
+#
+# This file only defines editor-independent formatting settings.
+# Code style rules are defined in the shared Prettier and ESLint configurations.
+###############################################################################
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+###############################################################################
+# Language Specific
+###############################################################################
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[*.json]
+indent_size = 2
+
+[*.{ts,tsx,d.ts,js,jsx,mjs,cjs}]
+indent_size = 2
+
+[*.xml]
+indent_size = 2
+
+[Makefile]
+indent_style = tab
+
+[*.{sh,bash}]
+end_of_line = lf

@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+import { spawnSync } from "node:child_process";
+
+console.log("🔍 Running TypeScript type checking...");
+console.log("");
+
+const result = spawnSync("turbo", ["run", "typecheck"], {
+  stdio: "inherit",
+  shell: true,
+});
+
+if (result.status !== 0) {
+  console.error("");
+  console.error("❌ Type checking failed");
+  process.exit(result.status ?? 1);
+}
+
+console.log("");
+console.log("✅ Type checking passed!");

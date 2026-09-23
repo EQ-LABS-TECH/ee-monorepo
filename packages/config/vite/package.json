@@ -1,0 +1,44 @@
+{
+  "name": "@eq-labs/config-vite",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "files": [
+    "base.mjs",
+    "base.d.ts",
+    "library.mjs",
+    "library.d.ts",
+    "react.mjs",
+    "react.d.ts",
+    "README.md",
+    "package.json"
+  ],
+  "exports": {
+    "./base": {
+      "types": "./base.d.ts",
+      "import": "./base.mjs"
+    },
+    "./library": {
+      "types": "./library.d.ts",
+      "import": "./library.mjs"
+    },
+    "./react": {
+      "types": "./react.d.ts",
+      "import": "./react.mjs"
+    }
+  },
+  "peerDependencies": {
+    "vite": "^7.0.0"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "5.0.0"
+  },
+  "scripts": {
+    "build": "node -e \"const fs=require('fs'); ['base.mjs','library.mjs','react.mjs'].forEach(f=>{if(!fs.existsSync(f))throw new Error('Missing '+f)}); console.log('Build successful')\"",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "9.35.0",
+    "@eq-labs/config-eslint": "workspace:*"
+  }
+}

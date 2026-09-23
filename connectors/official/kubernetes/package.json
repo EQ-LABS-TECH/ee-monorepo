@@ -1,0 +1,19 @@
+{
+  "name": "@eq-labs/connector-kubernetes",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Official Kubernetes connector for the EQ-LABS Engineering Ecosystem.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eq-labs/config-typescript": "workspace:*",
+    "typescript": "5.9.2",
+    "eslint": "9.35.0",
+    "@eq-labs/config-eslint": "workspace:*"
+  }
+}

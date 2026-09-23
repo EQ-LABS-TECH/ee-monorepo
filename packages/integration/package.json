@@ -1,0 +1,20 @@
+{
+  "name": "@eq-labs/integration",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Integration layer of the EQ-LABS Engineering Ecosystem.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit false",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eq-labs/config-typescript": "workspace:*",
+    "typescript": "5.9.2",
+    "eslint": "9.35.0",
+    "@eq-labs/config-eslint": "workspace:*"
+  }
+}

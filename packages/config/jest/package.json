@@ -1,0 +1,23 @@
+{
+  "name": "@eq-labs/config-jest",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "files": [
+    "base.mjs",
+    "typescript.mjs",
+    "README.md",
+    "package.json"
+  ],
+  "peerDependencies": {
+    "jest": "^30.0.0"
+  },
+  "scripts": {
+    "build": "node -e \"const fs=require('fs'); ['base.mjs','typescript.mjs'].forEach(f=>{if(!fs.existsSync(f))throw new Error('Missing '+f)}); console.log('Build successful')\"",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "9.35.0",
+    "@eq-labs/config-eslint": "workspace:*"
+  }
+}

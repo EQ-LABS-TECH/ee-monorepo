@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+import { spawnSync } from "node:child_process";
+
+console.log("🏗️ Building all workspaces...");
+console.log("");
+
+const result = spawnSync("turbo", ["run", "build"], {
+  stdio: "inherit",
+  shell: true,
+});
+
+if (result.status !== 0) {
+  console.error("");
+  console.error("❌ Build failed");
+  process.exit(result.status ?? 1);
+}
+
+console.log("");
+console.log("✅ Build completed successfully!");

@@ -1,0 +1,22 @@
+{
+  "name": "@eq-labs/config-prettier",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "files": [
+    "index.mjs",
+    "README.md",
+    "package.json"
+  ],
+  "peerDependencies": {
+    "prettier": "^3.0.0"
+  },
+  "scripts": {
+    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('index.mjs'))throw new Error('Missing index.mjs'); console.log('Build successful')\"",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "9.35.0",
+    "@eq-labs/config-eslint": "workspace:*"
+  }
+}

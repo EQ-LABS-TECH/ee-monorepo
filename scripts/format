@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+import { spawnSync } from "node:child_process";
+
+console.log("💅 Formatting code...");
+console.log("");
+
+const prettierCheck = spawnSync("pnpm", ["exec", "prettier", "--version"], {
+  stdio: "pipe",
+  shell: true,
+  encoding: "utf8",
+});
+
+if (prettierCheck.status !== 0) {
+  console.error("❌ Prettier is not available. Please run: pnpm install");
+  process.exit(1);
+}
+
+console.log(`  Prettier: ${prettierCheck.stdout.trim()}`);
+console.log("");
+
+const result = spawnSync(
+  "pnpm",
+  ["exec", "prettier", "--write", ".", "--ignore-path", ".prettierignore"],
+  {
+    stdio: "inherit",
+    shell: true,
+  },
+);
+
+if (result.status !== 0) {
+  console.error("");
+  console.error("❌ Formatting failed");
+  process.exit(result.status ?? 1);
+}
+
+console.log("");
+console.log("✅ Formatting completed!");

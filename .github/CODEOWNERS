@@ -1,0 +1,48 @@
+﻿# CODEOWNERS — EE-DOC-007 §08 / EE-IMP-007-P04
+# Organization: EQ-LABS-TECH
+# Teams: architecture, repository-admin, maintainers, contributors
+# Last matching pattern takes precedence.
+#
+# Operational ownership for ee-monorepo.
+# Do not list individual users; use org teams only.
+
+# Default — ecosystem code
+*       @EQ-LABS-TECH/maintainers
+
+# Repository root governance & orchestration
+LICENSE                         @EQ-LABS-TECH/architecture
+NOTICE                          @EQ-LABS-TECH/architecture
+CHANGELOG.md                    @EQ-LABS-TECH/architecture
+README.md                       @EQ-LABS-TECH/architecture
+package.json                    @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+pnpm-workspace.yaml             @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+pnpm-lock.yaml                  @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+turbo.json                      @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+.nvmrc                          @EQ-LABS-TECH/architecture
+.npmrc                          @EQ-LABS-TECH/architecture
+.editorconfig                   @EQ-LABS-TECH/architecture
+.gitattributes                  @EQ-LABS-TECH/architecture
+.gitignore                      @EQ-LABS-TECH/architecture
+
+# GitHub Governance (high impact)
+.github/                        @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin
+
+# Shared config (SSOT)
+packages/config/                @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+
+# Ecosystem packages & applications
+packages/                       @EQ-LABS-TECH/maintainers
+apps/                           @EQ-LABS-TECH/maintainers
+connectors/                     @EQ-LABS-TECH/maintainers
+
+# Automation scripts
+scripts/                        @EQ-LABS-TECH/repository-admin @EQ-LABS-TECH/maintainers
+
+# Documentation
+docs/                           @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+
+# Support / extensibility
+assets/                         @EQ-LABS-TECH/maintainers
+data/                           @EQ-LABS-TECH/maintainers
+examples/                       @EQ-LABS-TECH/maintainers
+marketplace/                    @EQ-LABS-TECH/maintainers

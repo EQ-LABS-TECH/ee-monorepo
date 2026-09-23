@@ -1,0 +1,31 @@
+{
+  "name": "@eq-labs/config-eslint",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "files": [
+    "base.mjs",
+    "typescript.mjs",
+    "README.md",
+    "package.json"
+  ],
+  "exports": {
+    "./base": {
+      "import": "./base.mjs"
+    },
+    "./typescript": {
+      "import": "./typescript.mjs"
+    }
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0"
+  },
+  "dependencies": {
+    "@eslint/js": "9.35.0",
+    "typescript-eslint": "8.42.0"
+  },
+  "scripts": {
+    "build": "node -e \"const fs=require('fs'); ['base.mjs','typescript.mjs'].forEach(f=>{if(!fs.existsSync(f))throw new Error('Missing '+f)}); console.log('Build successful')\"",
+    "lint": "eslint ."
+  }
+}

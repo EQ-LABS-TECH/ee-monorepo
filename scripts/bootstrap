@@ -1,0 +1,127 @@
+#!/usr/bin/env node
+
+import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { satisfies } from "semver";
+
+const ROOT = process.cwd();
+
+function validateEngines() {
+  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf-8"));
+
+  const nodeVersion = process.version;
+
+  const pnpmCheck = spawnSync("pnpm", ["--version"], {
+    encoding: "utf-8",
+    shell: true,
+  });
+
+  if (pnpmCheck.status !== 0) {
+    console.error("❌ pnpm is not installed or not available in PATH");
+    console.error("   Please install pnpm before continuing.");
+    return false;
+  }
+
+  const pnpmVersion = pnpmCheck.stdout.trim();
+
+  const nodeMatch = pkg.engines?.node;
+  const pnpmMatch = pkg.engines?.pnpm;
+
+  let valid = true;
+
+  if (nodeMatch) {
+    const nodeOk = satisfies(nodeVersion, nodeMatch);
+
+    if (!nodeOk) {
+      console.error(
+        `❌ Node.js ${nodeVersion} does not satisfy required version: ${nodeMatch}`,
+      );
+      valid = false;
+    }
+  }
+
+  if (pnpmMatch) {
+    const pnpmOk = satisfies(pnpmVersion, pnpmMatch);
+
+    if (!pnpmOk) {
+      console.error(
+        `❌ pnpm ${pnpmVersion} does not satisfy required version: ${pnpmMatch}`,
+      );
+      valid = false;
+    }
+  }
+
+  return valid;
+}
+
+console.log("📦 Bootstrapping EE-LABS monorepo...");
+console.log("");
+
+console.log("✓ Validating environment requirements...");
+
+if (!validateEngines()) {
+  console.error("");
+  console.error("❌ Bootstrap failed: Environment requirements not met");
+  process.exit(1);
+}
+
+console.log("  Environment: ✅");
+console.log("");
+
+console.log("✓ Checking Node.js version...");
+
+const nodeVersion = spawnSync("node", ["--version"], {
+  encoding: "utf-8",
+  shell: true,
+});
+
+if (nodeVersion.status !== 0) {
+  console.error("❌ Unable to determine Node.js version");
+  process.exit(1);
+}
+
+console.log(`  Node.js: ${nodeVersion.stdout.trim()}`);
+
+console.log("");
+
+console.log("✓ Checking pnpm version...");
+
+const pnpmVersion = spawnSync("pnpm", ["--version"], {
+  encoding: "utf-8",
+  shell: true,
+});
+
+if (pnpmVersion.status !== 0) {
+  console.error("❌ Unable to determine pnpm version");
+  process.exit(1);
+}
+
+console.log(`  pnpm: ${pnpmVersion.stdout.trim()}`);
+
+console.log("");
+
+console.log("📥 Installing dependencies...");
+
+const install = spawnSync("pnpm", ["install"], {
+  stdio: "inherit",
+  shell: true,
+  cwd: ROOT,
+});
+
+if (install.status !== 0) {
+  console.error("");
+  console.error("❌ Bootstrap failed");
+  process.exit(install.status ?? 1);
+}
+
+console.log("");
+console.log("✅ Bootstrap completed successfully!");
+console.log("");
+console.log("Next steps:");
+console.log("  pnpm build     - Build all workspaces");
+console.log("  pnpm dev       - Start development mode");
+console.log("  pnpm test      - Run tests");
+console.log("  pnpm lint      - Run linting");
+console.log("  pnpm typecheck - Run TypeScript checks");
+console.log("  pnpm validate  - Run full validation suite");

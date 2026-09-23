@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+
+const ROOT = process.cwd();
+
+console.log("🔧 Code Generator");
+console.log("=================");
+console.log("");
+
+const plopCheck = spawnSync("pnpm", ["exec", "plop", "--version"], {
+  stdio: "pipe",
+  shell: true,
+  cwd: ROOT,
+});
+
+if (plopCheck.status !== 0) {
+  console.error("❌ Plop is not available. Please run: pnpm install");
+  process.exit(1);
+}
+
+console.log(`  Plop: ${plopCheck.stdout.trim()}`);
+console.log("");
+
+const plopfile = join(ROOT, "plopfile.js");
+
+if (!existsSync(plopfile)) {
+  console.log("⚠️ plopfile.js not found.");
+  console.log("   Templates are not yet configured.");
+  console.log(
+    "   This is expected until EE-DOC-012 (Templates) is implemented.",
+  );
+  console.log("");
+  console.log("📋 Generator remains pending until templates are available.");
+  console.log("");
+  process.exit(0);
+}
+
+console.log("📦 Generating from templates...");
+console.log("");
+
+const result = spawnSync("pnpm", ["exec", "plop"], {
+  stdio: "inherit",
+  shell: true,
+  cwd: ROOT,
+});
+
+if (result.status !== 0) {
+  console.error("");
+  console.error("❌ Code generation failed");
+  process.exit(result.status ?? 1);
+}
+
+console.log("");
+console.log("✅ Code generation completed successfully!");

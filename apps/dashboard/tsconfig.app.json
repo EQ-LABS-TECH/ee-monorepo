@@ -1,0 +1,7 @@
+{
+  "extends": "@eq-labs/config-typescript/react",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"]
+}

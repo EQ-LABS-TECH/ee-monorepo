@@ -1,0 +1,30 @@
+{
+  "name": "@eq-labs/config-playwright",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "files": [
+    "base.mjs",
+    "base.d.ts",
+    "README.md",
+    "package.json"
+  ],
+  "exports": {
+    "./base": {
+      "types": "./base.d.ts",
+      "import": "./base.mjs"
+    }
+  },
+  "peerDependencies": {
+    "@playwright/test": "^1.63.0"
+  },
+  "scripts": {
+    "build": "node -e \"const fs=require('fs'); ['base.mjs','base.d.ts'].forEach(f=>{if(!fs.existsSync(f))throw new Error('Missing '+f)}); console.log('Build successful')\"",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eq-labs/config-eslint": "workspace:*",
+    "@playwright/test": "1.63.0",
+    "eslint": "9.35.0"
+  }
+}

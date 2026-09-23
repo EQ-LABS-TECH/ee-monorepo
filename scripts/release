@@ -1,0 +1,346 @@
+#!/usr/bin/env node
+
+import { spawnSync } from "node:child_process";
+import {
+  existsSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { join } from "node:path";
+import { inc } from "semver";
+
+const ROOT = process.cwd();
+
+function execCommand(cmd, args, label) {
+  console.log(`  ${label}...`);
+
+  const result = spawnSync(cmd, args, {
+    stdio: "inherit",
+    shell: true,
+    cwd: ROOT,
+  });
+
+  if (result.status !== 0) {
+    throw new Error(`Command failed: ${cmd} ${args.join(" ")}`);
+  }
+
+  return result;
+}
+cls;
+
+function readRootPackage() {
+  const packagePath = join(ROOT, "package.json");
+
+  return JSON.parse(readFileSync(packagePath, "utf-8"));
+}
+
+function writeRootPackage(pkg) {
+  const packagePath = join(ROOT, "package.json");
+
+  writeFileSync(packagePath, `${JSON.stringify(pkg, null, 2)}\n`, "utf-8");
+}
+
+function getRootVersion() {
+  const pkg = readRootPackage();
+
+  if (typeof pkg.version !== "string" || !/^\d+\.\d+\.\d+$/.test(pkg.version)) {
+    throw new Error(`Invalid root package version: ${pkg.version}`);
+  }
+
+  return pkg.version;
+}
+
+function checkChangesets() {
+  const changesetDir = join(ROOT, ".changeset");
+
+  if (!existsSync(changesetDir)) {
+    return {
+      exists: false,
+      count: 0,
+      files: [],
+    };
+  }
+
+  try {
+    const files = readdirSync(changesetDir);
+
+    const changesetFiles = files.filter(
+      (file) => file.endsWith(".md") && file !== "README.md",
+    );
+
+    return {
+      exists: true,
+      count: changesetFiles.length,
+      files: changesetFiles,
+    };
+  } catch {
+    return {
+      exists: false,
+      count: 0,
+      files: [],
+    };
+  }
+}
+
+function getChangesetReleaseType() {
+  const outputPath = join(ROOT, `.changeset-status-${process.pid}.json`);
+
+  try {
+    execCommand(
+      "pnpm",
+      ["changeset", "status", "--output", outputPath],
+      "Reading Changesets release plan",
+    );
+
+    if (!existsSync(outputPath)) {
+      throw new Error("Changesets did not generate the release status file");
+    }
+
+    const status = JSON.parse(readFileSync(outputPath, "utf-8"));
+
+    if (!status || !Array.isArray(status.releases)) {
+      throw new Error("Invalid Changesets release status");
+    }
+
+    const releaseTypes = status.releases
+      .map((release) => release.type)
+      .filter(
+        (type) => type === "major" || type === "minor" || type === "patch",
+      );
+
+    if (releaseTypes.length === 0) {
+      throw new Error("Changesets release plan contains no versioned releases");
+    }
+
+    if (releaseTypes.includes("major")) {
+      return "major";
+    }
+
+    if (releaseTypes.includes("minor")) {
+      return "minor";
+    }
+
+    return "patch";
+  } finally {
+    if (existsSync(outputPath)) {
+      rmSync(outputPath, {
+        force: true,
+      });
+    }
+  }
+}
+
+function calculateNextRootVersion(currentVersion, releaseType) {
+  const nextVersion = inc(currentVersion, releaseType);
+
+  if (!nextVersion) {
+    throw new Error(
+      `Unable to calculate next root version from ${currentVersion} using ${releaseType}`,
+    );
+  }
+
+  return nextVersion;
+}
+
+function synchronizeRootVersion(previousVersion, expectedVersion) {
+  const rootPackage = readRootPackage();
+
+  rootPackage.version = expectedVersion;
+
+  writeRootPackage(rootPackage);
+
+  const updatedVersion = getRootVersion();
+
+  if (updatedVersion !== expectedVersion) {
+    throw new Error(
+      `Root package version mismatch. Expected ${expectedVersion}, found ${updatedVersion}`,
+    );
+  }
+
+  if (updatedVersion === previousVersion) {
+    throw new Error(
+      `Root package version was not updated. Current version: ${updatedVersion}`,
+    );
+  }
+
+  console.log(
+    `  Root EE version synchronized: ${previousVersion} → ${updatedVersion}`,
+  );
+}
+
+async function main() {
+  console.log("📦 EE-LABS Release Process");
+  console.log("===========================");
+  console.log("");
+
+  try {
+    console.log("✓ Checking branch...");
+
+    const branch = spawnSync("git", ["branch", "--show-current"], {
+      encoding: "utf-8",
+      shell: true,
+      cwd: ROOT,
+    });
+
+    if (branch.status !== 0) {
+      throw new Error("Unable to determine current Git branch");
+    }
+
+    const currentBranch = branch.stdout.trim();
+
+    if (currentBranch !== "main" && currentBranch !== "master") {
+      throw new Error(
+        `Releases must be done from main/master branch (current: ${currentBranch})`,
+      );
+    }
+
+    console.log(`  Branch: ${currentBranch}`);
+    console.log("");
+
+    console.log("✓ Checking working directory...");
+
+    const status = spawnSync("git", ["status", "--porcelain"], {
+      encoding: "utf-8",
+      shell: true,
+      cwd: ROOT,
+    });
+
+    if (status.status !== 0) {
+      throw new Error("Unable to determine Git working tree status");
+    }
+
+    if (status.stdout.trim() !== "") {
+      throw new Error("Working directory is not clean");
+    }
+
+    console.log("  Clean: ✅");
+    console.log("");
+
+    console.log("✓ Checking changesets...");
+
+    const changesetInfo = checkChangesets();
+
+    if (!changesetInfo.exists || changesetInfo.count === 0) {
+      throw new Error("No changesets found. Run `pnpm changeset` first");
+    }
+
+    console.log(`  Changesets: ${changesetInfo.count}`);
+    console.log("");
+
+    console.log("✓ Checking npm authentication...");
+
+    const npmWhoami = spawnSync("npm", ["whoami"], {
+      encoding: "utf-8",
+      shell: true,
+      cwd: ROOT,
+    });
+
+    if (npmWhoami.status !== 0) {
+      throw new Error("Not logged in to npm. Run: npm login");
+    }
+
+    console.log(`  Logged in as: ${npmWhoami.stdout.trim()}`);
+    console.log("");
+
+    const previousRootVersion = getRootVersion();
+
+    console.log(`✓ Current EE version: ${previousRootVersion}`);
+    console.log("");
+
+    console.log("🔎 Determining EE version from Changesets...");
+
+    const releaseType = getChangesetReleaseType();
+
+    const expectedRootVersion = calculateNextRootVersion(
+      previousRootVersion,
+      releaseType,
+    );
+
+    console.log(`  Release type: ${releaseType}`);
+
+    console.log(`  Expected EE version: ${expectedRootVersion}`);
+    console.log("");
+
+    console.log("📝 Versioning packages...");
+
+    execCommand("pnpm", ["version-packages"], "Versioning");
+
+    console.log("");
+
+    console.log("🔐 Synchronizing canonical EE version...");
+
+    synchronizeRootVersion(previousRootVersion, expectedRootVersion);
+
+    console.log("");
+
+    console.log("🔍 Running validations...");
+
+    execCommand("pnpm", ["validate"], "Validation");
+
+    console.log("");
+
+    console.log("🏗️ Building packages...");
+
+    execCommand("turbo", ["run", "build"], "Building");
+
+    console.log("");
+
+    console.log("📤 Publishing to npm...");
+
+    console.log("  Publishing public packages with access: public");
+
+    console.log(
+      "  Packages marked private: true are excluded from publication.",
+    );
+
+    console.log("");
+
+    execCommand("pnpm", ["-r", "publish", "--access", "public"], "Publishing");
+
+    console.log("");
+
+    console.log("📌 Creating release commit...");
+
+    const rootVersion = getRootVersion();
+
+    const tag = `v${rootVersion}`;
+
+    console.log(`  Release version: ${rootVersion}`);
+
+    console.log(`  Tag: ${tag}`);
+
+    console.log("");
+
+    execCommand("git", ["add", "."], "Staging changes");
+
+    execCommand(
+      "git",
+      ["commit", "-m", `chore(release): ${tag}`],
+      "Committing",
+    );
+
+    execCommand("git", ["tag", "-a", tag, "-m", `Release ${tag}`], "Tagging");
+
+    execCommand("git", ["push", "--follow-tags"], "Pushing to remote");
+
+    console.log("");
+    console.log(`✅ Release ${tag} completed successfully!`);
+    console.log("📚 Changelog available in CHANGELOG.md");
+    console.log("");
+    console.log("📋 Next steps:");
+    console.log("  1. Verify packages published correctly");
+    console.log("  2. Update release notes if needed");
+    console.log("  3. Close the release milestone");
+  } catch (error) {
+    console.error(
+      "❌ Release failed:",
+      error instanceof Error ? error.message : String(error),
+    );
+
+    process.exit(1);
+  }
+}
+
+main();

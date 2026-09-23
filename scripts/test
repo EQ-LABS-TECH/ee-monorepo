@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+import { spawnSync } from "node:child_process";
+
+console.log("🧪 Running tests...");
+console.log("");
+
+const result = spawnSync("turbo", ["run", "test"], {
+  stdio: "inherit",
+  shell: true,
+});
+
+if (result.status !== 0) {
+  console.error("");
+  console.error("❌ Tests failed");
+  process.exit(result.status ?? 1);
+}
+
+console.log("");
+console.log("⚠️ Test execution completed without errors.");
+
+console.log("");
+console.log(
+  "ℹ️ If Turbo executed 0 test tasks, no workspace currently defines a `test` script.",
+);
+
+console.log("");
+console.log("✅ Test command completed successfully!");

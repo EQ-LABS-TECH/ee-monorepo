@@ -1,0 +1,227 @@
+#!/usr/bin/env node
+
+import { spawnSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { parse } from "yaml";
+
+const ROOT = process.cwd();
+
+function execCommand(cmd, args, label) {
+  console.log(`  ${label}...`);
+
+  const result = spawnSync(cmd, args, {
+    stdio: "inherit",
+    shell: true,
+    cwd: ROOT,
+  });
+
+  return result.status === 0;
+}
+
+function validateStructure() {
+  const errors = [];
+
+  const requiredDirectories = [
+    "apps",
+    "apps/extensions",
+    "connectors",
+    "connectors/official",
+    "packages",
+    "packages/config",
+    "packages/foundation",
+    "packages/shared",
+    "packages/execution",
+    "packages/intelligence",
+    "packages/knowledge",
+    "packages/governance",
+    "packages/integration",
+    "packages/registry",
+    "packages/sdk",
+    "scripts",
+  ];
+
+  for (const directory of requiredDirectories) {
+    const fullPath = join(ROOT, directory);
+
+    if (!existsSync(fullPath)) {
+      errors.push(`Missing required directory: ${directory}`);
+    }
+  }
+
+  return errors;
+}
+
+function validateWorkspace() {
+  const errors = [];
+
+  const workspacePath = join(ROOT, "pnpm-workspace.yaml");
+
+  if (!existsSync(workspacePath)) {
+    errors.push("Missing pnpm-workspace.yaml");
+
+    return errors;
+  }
+
+  try {
+    const content = readFileSync(workspacePath, "utf-8");
+
+    const workspace = parse(content);
+
+    if (
+      !workspace ||
+      typeof workspace !== "object" ||
+      Array.isArray(workspace)
+    ) {
+      errors.push("pnpm-workspace.yaml does not contain a valid YAML object");
+
+      return errors;
+    }
+
+    if (!Array.isArray(workspace.packages)) {
+      errors.push("pnpm-workspace.yaml must define packages as an array");
+
+      return errors;
+    }
+
+    const requiredPatterns = [
+      "apps/*",
+      "apps/extensions/*",
+      "connectors/official/*",
+      "packages/config/*",
+      "packages/foundation",
+      "packages/shared",
+      "packages/execution",
+      "packages/intelligence",
+      "packages/knowledge",
+      "packages/governance",
+      "packages/integration",
+      "packages/registry",
+      "packages/sdk",
+    ];
+
+    for (const pattern of requiredPatterns) {
+      if (!workspace.packages.includes(pattern)) {
+        errors.push(
+          `pnpm-workspace.yaml missing workspace pattern: ${pattern}`,
+        );
+      }
+    }
+  } catch (error) {
+    errors.push(
+      `Could not parse pnpm-workspace.yaml: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
+
+  return errors;
+}
+
+console.log("🔬 Running full validation suite...");
+
+console.log("");
+
+const validations = [
+  {
+    cmd: "turbo",
+    args: ["run", "typecheck"],
+    label: "Type checking",
+    critical: true,
+  },
+  {
+    cmd: "turbo",
+    args: ["run", "lint"],
+    label: "Linting",
+    critical: true,
+  },
+  {
+    cmd: "turbo",
+    args: ["run", "test"],
+    label: "Tests",
+    critical: true,
+  },
+  {
+    cmd: "pnpm",
+    args: ["exec", "prettier", "--check", "."],
+    label: "Format check",
+    critical: false,
+  },
+  {
+    cmd: "pnpm",
+    args: ["audit", "--prod", "--audit-level", "critical"],
+    label: "Security audit",
+    critical: true,
+  },
+];
+
+let hasErrors = false;
+const warnings = [];
+
+for (const validation of validations) {
+  const passed = execCommand(validation.cmd, validation.args, validation.label);
+
+  if (!passed) {
+    if (validation.critical) {
+      hasErrors = true;
+    } else {
+      warnings.push(`⚠️ ${validation.label} failed (non-critical)`);
+    }
+  }
+
+  console.log("");
+}
+
+console.log("  Checking project structure...");
+
+const structureErrors = validateStructure();
+
+if (structureErrors.length > 0) {
+  hasErrors = true;
+
+  structureErrors.forEach((error) => {
+    console.error(`    ❌ ${error}`);
+  });
+}
+
+console.log("");
+
+console.log("  Checking workspace configuration...");
+
+const workspaceErrors = validateWorkspace();
+
+if (workspaceErrors.length > 0) {
+  hasErrors = true;
+
+  workspaceErrors.forEach((error) => {
+    console.error(`    ❌ ${error}`);
+  });
+}
+
+console.log("");
+
+console.log("📊 Validation Summary:");
+
+console.log("=====================");
+
+console.log("");
+
+if (!hasErrors && warnings.length === 0) {
+  console.log("✅ All validations passed successfully!");
+} else {
+  if (warnings.length > 0) {
+    console.log("⚠️ Warnings:");
+
+    warnings.forEach((warning) => {
+      console.log(`  ${warning}`);
+    });
+
+    console.log("");
+  }
+
+  if (hasErrors) {
+    console.log("❌ Critical errors found. Please fix them before proceeding.");
+  }
+}
+
+process.exit(hasErrors ? 1 : 0);

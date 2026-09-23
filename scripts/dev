@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+import { spawnSync } from "node:child_process";
+
+console.log("🚀 Starting development mode...");
+console.log("");
+
+const result = spawnSync("turbo", ["run", "dev"], {
+  stdio: "inherit",
+  shell: true,
+});
+
+if (result.status !== 0) {
+  console.error("");
+  console.error("❌ Development mode failed");
+  process.exit(result.status ?? 1);
+}

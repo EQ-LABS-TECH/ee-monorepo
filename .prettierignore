@@ -1,0 +1,12 @@
+node_modules/
+.turbo/
+dist/
+build/
+lib/
+out/Bin/
+coverage/
+
+Turbo-build-dry.json
+
+# Exclusión de archivos de gobernanza para evitar falsos positivos de formato
+.github/CODEOWNERS

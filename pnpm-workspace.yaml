@@ -1,0 +1,19 @@
+packages:
+  - apps/*
+  - apps/extensions/*
+  - connectors/official/*
+  - packages/config/*
+  - packages/foundation
+  - packages/shared
+  - packages/execution
+  - packages/intelligence
+  - packages/knowledge
+  - packages/governance
+  - packages/integration
+  - packages/registry
+  - packages/sdk
+
+ignoredBuiltDependencies:
+  - "@parcel/watcher"
+  - esbuild
+  - unrs-resolver
