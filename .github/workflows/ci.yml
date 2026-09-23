@@ -1,4 +1,4 @@
-﻿# EE-DOC-007 §09 / EE-IMP-007-P05 — Platform CI (least privilege)
+# EE-DOC-007 §09 / EE-IMP-007-P05 — Platform CI (least privilege)
 name: CI
 
 on:
