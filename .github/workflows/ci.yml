@@ -1,4 +1,4 @@
-# EE-DOC-007 §09 / EE-IMP-007-P05 — Platform CI (least privilege)
+# EE-DOC-007 §09 / EE-IMP-007-P05 / EE-ADR-003 — Platform CI (least privilege)
 name: CI
 
 on:
@@ -30,6 +30,9 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
