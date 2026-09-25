@@ -49,7 +49,7 @@ The implementation follows the thirteen-phase repository implementation plan def
 
 ## Requirements
 
-- Node.js 22 LTS
+- Node.js 24 LTS
 
 > **Official Node.js Version:** The Engineering Ecosystem uses the LTS version specified in the `.nvmrc` file. All contributors should use that version (or a compatible version within the same LTS release) to ensure a consistent development environment.
 

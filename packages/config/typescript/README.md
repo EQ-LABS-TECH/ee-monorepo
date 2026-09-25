@@ -113,7 +113,7 @@ The shared configurations follow these principles:
 
 Node.js-specific configurations are aligned with the Node.js LTS version established by the repository `.nvmrc`.
 
-The current repository standard is Node.js 22 LTS.
+The current repository standard is Node.js 24 LTS.
 
 ---
 
