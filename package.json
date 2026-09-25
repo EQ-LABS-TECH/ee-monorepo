@@ -26,12 +26,12 @@
     "version-packages": "changeset version"
   },
   "devDependencies": {
-    "@changesets/cli": "2.27.0",
+    "@changesets/cli": "3.0.2",
     "plop": "4.0.0",
     "prettier": "3.6.2",
     "rimraf": "5.0.0",
-    "semver": "7.6.0",
+    "semver": "7.8.5",
     "turbo": "2.9.14",
-    "yaml": "2.8.3"
+    "yaml": "2.9.0"
   }
 }

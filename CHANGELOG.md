@@ -12,6 +12,14 @@ The format is based on Keep a Changelog and follows Semantic Versioning (SemVer)
 
 - Changes following the `1.0.0` release.
 
+### Changed
+
+- Updated `@changesets/cli` from `2.27.0` to `3.0.2`.
+- Removed `tmp` transitive dependency (resolves Dependabot alerts #4, #7).
+- Aligned `semver` to `7.8.5` and `yaml` to `2.9.0` to match Changesets requirements.
+- Formatted `pnpm-lock.yaml` with Prettier.
+- Retained `rimraf` as a prospective dependency for future root-level cleanup operations. It is not currently used by any script.
+
 ---
 
 ## [1.0.0] - YYYY-MM-DD

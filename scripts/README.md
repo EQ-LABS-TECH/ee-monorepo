@@ -53,6 +53,37 @@ These commands provide stable repository-level interfaces:
 | `generate`  | `plop`               | Code generation         |
 | `release`   | Changesets + pnpm    | Release management      |
 
+## Prospective Dependencies
+
+The root `package.json` may declare dependencies that are not currently used by any script but are retained for planned implementation.
+
+These dependencies are intentionally preserved to maintain consistency and avoid reintroducing the same tooling decisions during future phases.
+
+### Rationale
+
+Declaring a dependency before it is actively used allows:
+
+- The dependency version to be centralized in the monorepo.
+- The version to be aligned with peer requirements from other tools.
+- The dependency to be installed and validated through the standard `pnpm install` flow.
+- Future implementation phases to adopt the tool without altering the root dependency contract.
+
+### Current Prospective Dependencies
+
+| Dependency | Purpose | Expected Adoption |
+| :--------- | :------ | :---------------- |
+| `rimraf` | Cross-platform directory cleanup for future root-level `clean` operations. | When root-level cleanup scripts are implemented. |
+
+### Rules
+
+| Rule | Description |
+| :--: | :---------- |
+| R1 | Prospective dependencies must be declared with exact versions. |
+| R2 | Prospective dependencies must have a documented purpose and expected adoption phase. |
+| R3 | Prospective dependencies must not be referenced by any script until their adoption phase. |
+| R4 | Once adopted, the dependency must be removed from this section. |
+| R5 | Prospective dependencies are subject to the same security and versioning policies as active dependencies. |
+
 ## Publication Policy
 
 The Engineering Ecosystem currently uses public package publication.
