@@ -1,7 +1,9 @@
-{
+﻿{
   "recommendations": [
-    "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "redhat.vscode-yaml",
     "bfred-it.npm-dependency-links"
   ]
 }
