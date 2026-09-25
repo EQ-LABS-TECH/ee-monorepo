@@ -46,3 +46,7 @@ assets/                         @EQ-LABS-TECH/maintainers
 data/                           @EQ-LABS-TECH/maintainers
 examples/                       @EQ-LABS-TECH/maintainers
 marketplace/                    @EQ-LABS-TECH/maintainers
+
+# Platform infrastructure (EE-DOC-009)
+infra/                          @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin
+
