@@ -70,19 +70,19 @@ Declaring a dependency before it is actively used allows:
 
 ### Current Prospective Dependencies
 
-| Dependency | Purpose | Expected Adoption |
-| :--------- | :------ | :---------------- |
-| `rimraf` | Cross-platform directory cleanup for future root-level `clean` operations. | When root-level cleanup scripts are implemented. |
+| Dependency | Purpose                                                                    | Expected Adoption                                |
+| :--------- | :------------------------------------------------------------------------- | :----------------------------------------------- |
+| `rimraf`   | Cross-platform directory cleanup for future root-level `clean` operations. | When root-level cleanup scripts are implemented. |
 
 ### Rules
 
-| Rule | Description |
-| :--: | :---------- |
-| R1 | Prospective dependencies must be declared with exact versions. |
-| R2 | Prospective dependencies must have a documented purpose and expected adoption phase. |
-| R3 | Prospective dependencies must not be referenced by any script until their adoption phase. |
-| R4 | Once adopted, the dependency must be removed from this section. |
-| R5 | Prospective dependencies are subject to the same security and versioning policies as active dependencies. |
+| Rule | Description                                                                                               |
+| :--: | :-------------------------------------------------------------------------------------------------------- |
+|  R1  | Prospective dependencies must be declared with exact versions.                                            |
+|  R2  | Prospective dependencies must have a documented purpose and expected adoption phase.                      |
+|  R3  | Prospective dependencies must not be referenced by any script until their adoption phase.                 |
+|  R4  | Once adopted, the dependency must be removed from this section.                                           |
+|  R5  | Prospective dependencies are subject to the same security and versioning policies as active dependencies. |
 
 ## Publication Policy
 
