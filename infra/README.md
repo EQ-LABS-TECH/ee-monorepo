@@ -28,3 +28,7 @@ Canonical product/platform Infrastructure as Code for `ee-monorepo`.
 - EE-DOC-009 — Infrastructure
 - EE-DOC-006 — Repository Structure
 - EE-RFC-001 — Incorporation of `infra/` into the Top-Level Repository Tree and Index Synchronization
+
+## Secrets
+
+Runtime infrastructure secrets policy: see [secrets/](./secrets/) (EE-DOC-009 S-01…S-03). **Do not** commit secret values.
