@@ -1,0 +1,12 @@
+﻿# Template only — product/platform Node image (EE-DOC-009 / EE-ADR-003)
+# Do not embed secrets. Customize per service in later IMP iterations.
+FROM node:24-bookworm-slim
+
+WORKDIR /app
+
+# Example: copy package manifests first for better layer caching
+# COPY package.json pnpm-lock.yaml ./
+# RUN corepack enable && pnpm install --frozen-lockfile
+
+# COPY . .
+# CMD ["node", "dist/index.js"]
