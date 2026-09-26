@@ -21,9 +21,11 @@
     "**/.turbo": true,
     "**/dist": true
   },
-  "markdownlint.ignore": [".github/CODEOWNERS"],
+  "markdownlint.ignore": [".github/CODEOWNERS", "LICENSE", "NOTICE"],
   "files.associations": {
-    "CODEOWNERS": "plaintext"
+    "CODEOWNERS": "plaintext",
+    "LICENSE": "plaintext",
+    "NOTICE": "plaintext"
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
