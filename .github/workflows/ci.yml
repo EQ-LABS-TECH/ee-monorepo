@@ -25,6 +25,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Secret detection (QG-SEC-002)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.4.0
 

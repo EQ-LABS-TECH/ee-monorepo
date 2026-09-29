@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
 
@@ -47,6 +47,55 @@ function validateStructure() {
     if (!existsSync(fullPath)) {
       errors.push(`Missing required directory: ${directory}`);
     }
+  }
+
+  try {
+    const allowedTopLevel = new Set([
+      "apps",
+      "packages",
+      "connectors",
+      "scripts",
+      "docs",
+      "assets",
+      "data",
+      "examples",
+      "marketplace",
+      "infra",
+      ".github",
+      ".vscode",
+      ".changeset",
+      ".devcontainer",
+      ".git",
+      ".turbo",
+      "node_modules",
+    ]);
+    const forbiddenTopLevel = new Set(["docker", "k8s", "kubernetes"]);
+
+    for (const name of readdirSync(ROOT)) {
+      const full = join(ROOT, name);
+      let isDir = false;
+      try {
+        isDir = statSync(full).isDirectory();
+      } catch {
+        continue;
+      }
+      if (!isDir) continue;
+      if (forbiddenTopLevel.has(name)) {
+        errors.push(
+          `QG-ARCH-001: forbidden top-level directory "${name}/" (use infra/ per EE-RFC-001 / EE-DOC-006)`,
+        );
+      } else if (!allowedTopLevel.has(name) && !name.startsWith(".")) {
+        errors.push(
+          `QG-ARCH-001: unauthorized top-level directory "${name}/" (EE-DOC-006 allowlist)`,
+        );
+      }
+    }
+  } catch (error) {
+    errors.push(
+      `QG-ARCH-001: could not scan top-level directories: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
   }
 
   return errors;
