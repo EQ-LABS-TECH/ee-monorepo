@@ -167,6 +167,70 @@ function validateWorkspace() {
   return errors;
 }
 
+function validateDocumentation() {
+  const errors = [];
+  const requiredFiles = ["README.md", "LICENSE", "NOTICE", "CHANGELOG.md"];
+
+  for (const file of requiredFiles) {
+    if (!existsSync(join(ROOT, file))) {
+      errors.push(`QG-DOC-001: missing required file: ${file}`);
+    }
+  }
+
+  try {
+    const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf-8"));
+    if (!pkg.name) {
+      errors.push("QG-DOC-002: package.json missing name");
+    }
+    if (!pkg.engines?.node) {
+      errors.push("QG-DOC-002: package.json missing engines.node");
+    }
+
+    const nvmPath = join(ROOT, ".nvmrc");
+    if (!existsSync(nvmPath)) {
+      errors.push("QG-DOC-002: missing .nvmrc");
+    } else {
+      const nvm = readFileSync(nvmPath, "utf-8").trim();
+      if (!nvm) {
+        errors.push("QG-DOC-002: .nvmrc is empty");
+      } else if (pkg.engines?.node) {
+        const major = nvm.split(".")[0];
+        if (!pkg.engines.node.includes(major)) {
+          errors.push(
+            `QG-DOC-002: engines.node (${pkg.engines.node}) does not align with .nvmrc (${nvm})`,
+          );
+        }
+      }
+    }
+  } catch (error) {
+    errors.push(
+      `QG-DOC-002: cannot validate package metadata: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
+
+  return errors;
+}
+
+function validateInfra() {
+  const errors = [];
+  const required = [
+    "infra/containers",
+    "infra/orchestration",
+    "infra/secrets",
+    "infra/secrets/.gitignore",
+  ];
+
+  for (const path of required) {
+    if (!existsSync(join(ROOT, path))) {
+      errors.push(`QG-INFRA-001: missing required path: ${path}`);
+    }
+  }
+
+  return errors;
+}
+
 console.log("🔬 Running full validation suite...");
 
 console.log("");
@@ -228,31 +292,43 @@ for (const validation of validations) {
 }
 
 console.log("  Checking project structure...");
-
 const structureErrors = validateStructure();
-
 if (structureErrors.length > 0) {
   hasErrors = true;
-
   structureErrors.forEach((error) => {
     console.error(`    ❌ ${error}`);
   });
 }
-
 console.log("");
 
 console.log("  Checking workspace configuration...");
-
 const workspaceErrors = validateWorkspace();
-
 if (workspaceErrors.length > 0) {
   hasErrors = true;
-
   workspaceErrors.forEach((error) => {
     console.error(`    ❌ ${error}`);
   });
 }
+console.log("");
 
+console.log("  Checking documentation gates (QG-DOC-001/002)...");
+const docErrors = validateDocumentation();
+if (docErrors.length > 0) {
+  hasErrors = true;
+  docErrors.forEach((error) => {
+    console.error(`    ❌ ${error}`);
+  });
+}
+console.log("");
+
+console.log("  Checking infrastructure gates (QG-INFRA-001)...");
+const infraErrors = validateInfra();
+if (infraErrors.length > 0) {
+  hasErrors = true;
+  infraErrors.forEach((error) => {
+    console.error(`    ❌ ${error}`);
+  });
+}
 console.log("");
 
 console.log("📊 Validation Summary:");
