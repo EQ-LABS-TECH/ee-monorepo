@@ -26,9 +26,12 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Secret detection (QG-SEC-002)
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          GITLEAKS_VERSION="8.21.2"
+          curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar -xz gitleaks
+          ./gitleaks detect --source . --verbose --exit-code 1
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.4.0
