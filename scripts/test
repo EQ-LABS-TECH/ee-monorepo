@@ -1,28 +1,39 @@
 #!/usr/bin/env node
-
 import { spawnSync } from "node:child_process";
 
-console.log("🧪 Running tests...");
+console.log("🧪 Running tests (QG-TEST-001)...");
 console.log("");
 
 const result = spawnSync("turbo", ["run", "test"], {
-  stdio: "inherit",
+  encoding: "utf-8",
   shell: true,
 });
 
-if (result.status !== 0) {
+const stdout = result.stdout ?? "";
+const stderr = result.stderr ?? "";
+process.stdout.write(stdout);
+process.stderr.write(stderr);
+
+const combined = `${stdout}\n${stderr}`;
+const zeroTasks =
+  /No tasks were executed as part of this run/i.test(combined) ||
+  /Tasks:\s*0 successful,\s*0 total/i.test(combined);
+
+if (result.status !== 0 && result.status !== null) {
   console.error("");
-  console.error("❌ Tests failed");
+  console.error("❌ QG-TEST-001: FAIL");
   process.exit(result.status ?? 1);
 }
 
-console.log("");
-console.log("⚠️ Test execution completed without errors.");
+if (zeroTasks) {
+  console.log("");
+  console.log(
+    "ℹ️ QG-TEST-001: SKIPPED — 0 test tasks (no workspace defines an executable `test` script).",
+  );
+  console.log("   Exit 0 with 0 tasks is not PASS (EE-DOC-010 §05.4).");
+  process.exit(0);
+}
 
 console.log("");
-console.log(
-  "ℹ️ If Turbo executed 0 test tasks, no workspace currently defines a `test` script.",
-);
-
-console.log("");
-console.log("✅ Test command completed successfully!");
+console.log("✅ QG-TEST-001: PASS");
+process.exit(0);
