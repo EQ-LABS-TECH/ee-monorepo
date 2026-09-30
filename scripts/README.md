@@ -42,16 +42,37 @@ The architectural decision is defined by **ADR-001 — Estrategia de Orquestaci�
 
 ## Repository-level Commands
 
-These commands provide stable repository-level interfaces:
+Normative contract: **EE-DOC-011 — Automation**. This README is operational
+documentation derived from that contract — not an independent source of truth.
 
-| Command     | Implementation       | Responsibility          |
-| ----------- | -------------------- | ----------------------- |
-| `bootstrap` | `pnpm install`       | Environment setup       |
-| `format`    | `prettier --write .` | Code formatting         |
-| `validate`  | Multiple checks      | Full validation suite   |
-| `doctor`    | System checks        | Environment diagnostics |
-| `generate`  | `plop`               | Code generation         |
-| `release`   | Changesets + pnpm    | Release management      |
+| Command            | Implementation      | Category | Responsibility                                       |
+| ------------------ | ------------------- | -------- | ---------------------------------------------------- |
+| `bootstrap`        | `scripts/bootstrap` | A-ROOT   | Environment setup                                    |
+| `build`            | `scripts/build`     | A-ROOT   | Workspace build (QG-BUILD-001)                       |
+| `dev`              | `scripts/dev`       | A-ROOT   | Local development (long-running)                     |
+| `test`             | `scripts/test`      | A-ROOT   | Orchestrated tests (QG-TEST-001)                     |
+| `lint`             | `scripts/lint`      | A-ROOT   | Lint (QG-LINT-001)                                   |
+| `format`           | `scripts/format`    | A-ROOT   | Prettier **write** (local tool; not the format gate) |
+| `typecheck`        | `scripts/typecheck` | A-ROOT   | Typecheck (QG-TYPE-001)                              |
+| `validate`         | `scripts/validate`  | A-ROOT   | Local validation aggregator (EE-DOC-010)             |
+| `doctor`           | `scripts/doctor`    | A-ROOT   | Environment diagnostics (does not replace validate)  |
+| `generate`         | `scripts/generate`  | A-GEN    | Scaffolding (Plop)                                   |
+| `release`          | `scripts/release`   | A-REL    | Monorepo release orchestration                       |
+| `clean`            | `scripts/clean`     | A-ROOT   | Clean build artifacts / caches                       |
+| `changeset`        | `@changesets/cli`   | A-REL    | Declare SemVer changes (no file under `scripts/`)    |
+| `version-packages` | `changeset version` | A-REL    | Apply package versions (no file under `scripts/`)    |
+
+### Format write vs check
+
+- `pnpm run format` rewrites files (local convenience).
+- The format **Quality Gate** uses check mode inside `pnpm run validate`
+  (EE-DOC-010 / EE-DOC-011). CI must not rely on write-only format as a gate.
+
+### Auxiliary files
+
+| File                 | Role                                                        |
+| -------------------- | ----------------------------------------------------------- |
+| `configure-lint.mjs` | Tooling helper — **not** a root command in EE-DOC-011 §04.2 |
 
 ## Prospective Dependencies
 
