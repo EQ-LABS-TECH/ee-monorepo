@@ -1,20 +1,20 @@
 #!/usr/bin/env node
-
 import { spawnSync } from "node:child_process";
 
-console.log("🔍 Running linter...");
+console.log("🔍 Running linter (QG-LINT-001)...");
 console.log("");
 
-const result = spawnSync("turbo", ["run", "lint"], {
+const result = spawnSync("pnpm", ["exec", "turbo", "run", "lint"], {
   stdio: "inherit",
-  shell: true,
+  shell: process.platform === "win32",
+  cwd: process.cwd(),
 });
 
 if (result.status !== 0) {
   console.error("");
-  console.error("❌ Linting failed");
+  console.error("❌ QG-LINT-001: FAIL");
   process.exit(result.status ?? 1);
 }
 
 console.log("");
-console.log("✅ Linting passed!");
+console.log("✅ QG-LINT-001: PASS");

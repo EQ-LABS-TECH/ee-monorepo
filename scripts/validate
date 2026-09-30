@@ -12,7 +12,7 @@ function execCommand(cmd, args, label) {
 
   const result = spawnSync(cmd, args, {
     stdio: "inherit",
-    shell: true,
+    shell: process.platform === "win32",
     cwd: ROOT,
   });
 

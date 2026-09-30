@@ -4,9 +4,10 @@ import { spawnSync } from "node:child_process";
 console.log("🧪 Running tests (QG-TEST-001)...");
 console.log("");
 
-const result = spawnSync("turbo", ["run", "test"], {
+const result = spawnSync("pnpm", ["exec", "turbo", "run", "test"], {
   encoding: "utf-8",
-  shell: true,
+  shell: process.platform === "win32",
+  cwd: process.cwd(),
 });
 
 const stdout = result.stdout ?? "";

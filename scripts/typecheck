@@ -1,20 +1,20 @@
 #!/usr/bin/env node
-
 import { spawnSync } from "node:child_process";
 
-console.log("🔍 Running TypeScript type checking...");
+console.log("🔍 Running TypeScript type checking (QG-TYPE-001)...");
 console.log("");
 
-const result = spawnSync("turbo", ["run", "typecheck"], {
+const result = spawnSync("pnpm", ["exec", "turbo", "run", "typecheck"], {
   stdio: "inherit",
-  shell: true,
+  shell: process.platform === "win32",
+  cwd: process.cwd(),
 });
 
 if (result.status !== 0) {
   console.error("");
-  console.error("❌ Type checking failed");
+  console.error("❌ QG-TYPE-001: FAIL");
   process.exit(result.status ?? 1);
 }
 
 console.log("");
-console.log("✅ Type checking passed!");
+console.log("✅ QG-TYPE-001: PASS");
