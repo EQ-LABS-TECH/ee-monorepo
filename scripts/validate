@@ -264,11 +264,11 @@ const validations = [
     cmd: "pnpm",
     args: ["exec", "prettier", "--check", "."],
     label: "Format check",
-    critical: false,
+    critical: true,
   },
   {
     cmd: "pnpm",
-    args: ["audit", "--prod", "--audit-level", "critical"],
+    args: ["audit", "--audit-level", "high"],
     label: "Security audit",
     critical: true,
   },
