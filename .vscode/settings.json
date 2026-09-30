@@ -44,5 +44,6 @@
   },
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "yaml.maxItemsComputed": 50000
 }

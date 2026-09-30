@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  brace-expansion@<1.1.20: 1.1.20
+  brace-expansion@>=2.0.0 <2.1.6: 2.1.6
+  brace-expansion@>=4.0.0 <5.0.11: 5.0.11
+
 importers:
   .:
     devDependencies:
@@ -23,8 +28,8 @@ importers:
         specifier: 7.8.5
         version: 7.8.5
       turbo:
-        specifier: 2.9.14
-        version: 2.9.14
+        specifier: 2.11.5
+        version: 2.11.5
       yaml:
         specifier: 2.9.0
         version: 2.9.0
@@ -1843,50 +1848,50 @@ packages:
         integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==,
       }
 
-  "@turbo/darwin-64@2.9.14":
+  "@turbo/darwin-64@2.11.5":
     resolution:
       {
-        integrity: sha512-t7QiPflaEyBE4oayeZtSmu4mEfjgIrcNlNNl1z1dmIVPqEdtA7+CfTf8d7KXsOGPh6aNgWjKxyvQg9uGfDQF+A==,
+        integrity: sha512-KdY4y7BBjIisl+jAkb3FFaRjClGqHyaeHCcVcCT8LBzFFwUu6thgfxyRZAx0uL4KoxLmH+iOan8UhVf/aDDcaA==,
       }
     cpu: [x64]
     os: [darwin]
 
-  "@turbo/darwin-arm64@2.9.14":
+  "@turbo/darwin-arm64@2.11.5":
     resolution:
       {
-        integrity: sha512-d23147mC9BsCPA9mJ0h/ubcpbRgcJBXbcG3+Vq7YLhjz3IXuvQsJ1UXH8f4MD76ZjJ4m/E4aRdJV+MW88CDfbw==,
+        integrity: sha512-ToZDGi2u410+TfRtC/O1/LpujGgvNJoRBZnwVXob7oO0+3OSlwIO3zofXKUvwQvlba7a8ZXPyCZwufjAXd7f0w==,
       }
     cpu: [arm64]
     os: [darwin]
 
-  "@turbo/linux-64@2.9.14":
+  "@turbo/linux-64@2.11.5":
     resolution:
       {
-        integrity: sha512-P3ZKB5tuUDdDQWuAsACGUR1qv9W7BNWxdxqVJ0kZNuNNPRaVYTPPikLcp79+GiEcW3npsR+KyP38lnQiBc5aSA==,
+        integrity: sha512-Ub2d/nAbdWLaSytcEaPp1wm/YuIvHEIqNrCRMI/UgOGyFdOhgxm8VyWPAJilQWRYxYVrqEUoy2K5S5K8SG50rA==,
       }
     cpu: [x64]
-    os: [linux]
+    os: [android, linux]
 
-  "@turbo/linux-arm64@2.9.14":
+  "@turbo/linux-arm64@2.11.5":
     resolution:
       {
-        integrity: sha512-ZRTlzcUMrrPv9ZuDzRF9n60Ym13bKeG9jDB8WjxyLhWNzV+AJQN+zdpIk3NJYf2zQsGUm1mNar2P0elRzLw25g==,
+        integrity: sha512-JQjmGxp724Wuft9FAxPMtmBur1CEdUyxJ+FVoIvKkgj63rXHl9PYCWrsU2tMjVi609XTQ3M8vZD9Yc9qVAVYrw==,
       }
     cpu: [arm64]
-    os: [linux]
+    os: [android, linux]
 
-  "@turbo/windows-64@2.9.14":
+  "@turbo/windows-64@2.11.5":
     resolution:
       {
-        integrity: sha512-exanwN6sIduZwykYeiTQj8kCmOhazP5WOz3bvXMcYtjhL6Z3iRWLewKrXCBq0bqwSP3iBMb/AerRCnHI4lx46A==,
+        integrity: sha512-AFkbPmXNd8XgCi/66YEHR2bVl3gtusXyDihTIVEPAuSB+7ulLmJePvz1unWPVKLHdbCTTIdKq2mpJ1B1e3lJXw==,
       }
     cpu: [x64]
     os: [win32]
 
-  "@turbo/windows-arm64@2.9.14":
+  "@turbo/windows-arm64@2.11.5":
     resolution:
       {
-        integrity: sha512-fVdCsnmYoKICsycbWuuGp6Jvi51/3G/UluFWuAUCvR8PIW5IJkAk5BM9UF8PSm0Q2IphWHFZjYEgjHsh3B9y/g==,
+        integrity: sha512-52ziXYP3snGOxjv19xA3WL1WDKv9Q6uDAa/7EKIR5j4hocMlYURkrOHbJ2ZZI+VfPU5MwKpcGeRfHxHJu7Y/Pw==,
       }
     cpu: [arm64]
     os: [win32]
@@ -2577,22 +2582,22 @@ packages:
         integrity: sha512-tv1ZJHLfTDnXE6tMHv73YgSJaWR2AFuPwMntBe7XL/GBFHnT0CLnsHMogfk5+GzCDC5ZWarSCYaIGATZt9dNsQ==,
       }
 
-  brace-expansion@1.1.18:
+  brace-expansion@1.1.20:
     resolution:
       {
-        integrity: sha512-Edep/X9fGqVNmzKBVsDYIOtD+z1tuezV70LBjdCst9Tqu76lsnvRiZ6oTic1n+/BIwX6QDGAO94PN4N2SADvtw==,
+        integrity: sha512-5/qk29RyvatwgzNMrvGjkIhKYzpJ0OUnPK+9TU+zS/CMJqzmb+UD0irWu42JfpUvO636fxd8IstgiydZRM/76A==,
       }
 
-  brace-expansion@2.1.4:
+  brace-expansion@2.1.6:
     resolution:
       {
-        integrity: sha512-hGfVzPxthbf3+2yjg/RBs60cB0FhqBS/zvdV/4wn4/BmN0bNMMHPc4V/BbFieqf1TKAGGAHnY4eSjajCl0f2Xg==,
+        integrity: sha512-pi/WFpBvCBmB/NsURt7hW5sDvuOqvJaDMDai7CrlT9xoehzWRzo/dhQRKqOhpPvlnicVaTzHCbzGnnTgpvMTFw==,
       }
 
-  brace-expansion@5.0.9:
+  brace-expansion@5.0.11:
     resolution:
       {
-        integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==,
+        integrity: sha512-awigjhi6cLTh90bdw6+QJ9CtmJmyYhEIi70iCbc8Rozn04Fw9FeQIBjv/E22FFGuCGx1bLJyUfB64x/szUSXUg==,
       }
     engines: { node: 20 || >=22 }
 
@@ -4945,10 +4950,10 @@ packages:
         integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==,
       }
 
-  turbo@2.9.14:
+  turbo@2.11.5:
     resolution:
       {
-        integrity: sha512-BQqXRr4UoWI3UPFrtznCLykYHxwxWh53iCB57x092jPMjIlW1wnm3N895g5irpiXmnxUhREBB0n6+y8BHhs4nw==,
+        integrity: sha512-qLXheqz3TUvJpHIV6MUBwkNkvwKxMVG/QsimyiKT9DfNWPHJ294G/i5nDaH+fbHJt3UH7orubNNxAqYkbUNGAQ==,
       }
     hasBin: true
 
@@ -6172,22 +6177,22 @@ snapshots:
 
   "@standard-schema/spec@1.1.0": {}
 
-  "@turbo/darwin-64@2.9.14":
+  "@turbo/darwin-64@2.11.5":
     optional: true
 
-  "@turbo/darwin-arm64@2.9.14":
+  "@turbo/darwin-arm64@2.11.5":
     optional: true
 
-  "@turbo/linux-64@2.9.14":
+  "@turbo/linux-64@2.11.5":
     optional: true
 
-  "@turbo/linux-arm64@2.9.14":
+  "@turbo/linux-arm64@2.11.5":
     optional: true
 
-  "@turbo/windows-64@2.9.14":
+  "@turbo/windows-64@2.11.5":
     optional: true
 
-  "@turbo/windows-arm64@2.9.14":
+  "@turbo/windows-arm64@2.11.5":
     optional: true
 
   "@tybys/wasm-util@0.10.3":
@@ -6647,16 +6652,16 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
 
-  brace-expansion@1.1.18:
+  brace-expansion@1.1.20:
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
 
-  brace-expansion@2.1.4:
+  brace-expansion@2.1.6:
     dependencies:
       balanced-match: 1.0.2
 
-  brace-expansion@5.0.9:
+  brace-expansion@5.0.11:
     dependencies:
       balanced-match: 4.0.4
 
@@ -7675,15 +7680,15 @@ snapshots:
 
   minimatch@10.2.6:
     dependencies:
-      brace-expansion: 5.0.9
+      brace-expansion: 5.0.11
 
   minimatch@3.1.5:
     dependencies:
-      brace-expansion: 1.1.18
+      brace-expansion: 1.1.20
 
   minimatch@9.0.9:
     dependencies:
-      brace-expansion: 2.1.4
+      brace-expansion: 2.1.6
 
   minimist@1.2.8: {}
 
@@ -8141,14 +8146,14 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  turbo@2.9.14:
+  turbo@2.11.5:
     optionalDependencies:
-      "@turbo/darwin-64": 2.9.14
-      "@turbo/darwin-arm64": 2.9.14
-      "@turbo/linux-64": 2.9.14
-      "@turbo/linux-arm64": 2.9.14
-      "@turbo/windows-64": 2.9.14
-      "@turbo/windows-arm64": 2.9.14
+      "@turbo/darwin-64": 2.11.5
+      "@turbo/darwin-arm64": 2.11.5
+      "@turbo/linux-64": 2.11.5
+      "@turbo/linux-arm64": 2.11.5
+      "@turbo/windows-64": 2.11.5
+      "@turbo/windows-arm64": 2.11.5
 
   type-check@0.4.0:
     dependencies:
