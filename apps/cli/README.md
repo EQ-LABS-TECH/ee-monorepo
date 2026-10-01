@@ -1,44 +1,38 @@
 # @eq-labs/cli
 
-Command-line interface for the EQ-LABS Engineering Ecosystem.
+DX facade for the EQ-LABS Engineering Ecosystem (**EE-DOC-011 §06**).
 
-## Purpose
+## Role
 
-This application provides the command-line entry point for the EQ-LABS
-Engineering Ecosystem.
+| Layer            | Responsibility                                                           |
+| ---------------- | ------------------------------------------------------------------------ |
+| **Canonical**    | Root commands: `pnpm run <cmd>` (`scripts/`)                             |
+| **This package** | Optional DX entry (`ee help`, `ee run <cmd>`) that **delegates** to root |
 
-## Current Status
+This CLI does **not** reimplement Quality Gates or change thresholds (EE-DOC-010).
 
-This application was created during Phase 5 — Apps.
+## Usage
 
-The current implementation is intentionally minimal and provides only a
-functional `Hello World` command-line output.
+From the monorepo root (after build):
 
-No ecosystem commands, workflows, integrations, or business logic are
-implemented at this stage.
+```bash
+pnpm --filter @eq-labs/cli run build
+node apps/cli/dist/index.js help
+node apps/cli/dist/index.js run doctor
+node apps/cli/dist/index.js run validate
+```
+
+`ee run validate` is equivalent in contract to `pnpm run validate`.
 
 ## Development
 
-### Typecheck
-
 ```bash
-pnpm typecheck
+pnpm --filter @eq-labs/cli run typecheck
+pnpm --filter @eq-labs/cli run build
+pnpm --filter @eq-labs/cli run lint
 ```
 
-### Build
+## References
 
-```bash
-pnpm build
-```
-
-### Run
-
-```bash
-pnpm start
-```
-
-### The application outputs
-
-```texto
-Hello World
-```
+- EE-DOC-011 — Automation §06
+- EE-IMP-011-P03 — CLI Surface
