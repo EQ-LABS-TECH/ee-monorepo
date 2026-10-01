@@ -12,7 +12,8 @@ console.log("");
 
 const plopCheck = spawnSync("pnpm", ["exec", "plop", "--version"], {
   stdio: "pipe",
-  shell: true,
+  encoding: "utf8",
+  shell: process.platform === "win32",
   cwd: ROOT,
 });
 
@@ -43,7 +44,7 @@ console.log("");
 
 const result = spawnSync("pnpm", ["exec", "plop"], {
   stdio: "inherit",
-  shell: true,
+  shell: process.platform === "win32",
   cwd: ROOT,
 });
 

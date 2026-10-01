@@ -18,7 +18,7 @@ function execCommand(cmd, args, label) {
 
   const result = spawnSync(cmd, args, {
     stdio: "inherit",
-    shell: true,
+    shell: process.platform === "win32",
     cwd: ROOT,
   });
 
@@ -28,7 +28,6 @@ function execCommand(cmd, args, label) {
 
   return result;
 }
-cls;
 
 function readRootPackage() {
   const packagePath = join(ROOT, "package.json");
@@ -180,7 +179,7 @@ async function main() {
 
     const branch = spawnSync("git", ["branch", "--show-current"], {
       encoding: "utf-8",
-      shell: true,
+      shell: process.platform === "win32",
       cwd: ROOT,
     });
 
@@ -203,7 +202,7 @@ async function main() {
 
     const status = spawnSync("git", ["status", "--porcelain"], {
       encoding: "utf-8",
-      shell: true,
+      shell: process.platform === "win32",
       cwd: ROOT,
     });
 
@@ -233,7 +232,7 @@ async function main() {
 
     const npmWhoami = spawnSync("npm", ["whoami"], {
       encoding: "utf-8",
-      shell: true,
+      shell: process.platform === "win32",
       cwd: ROOT,
     });
 
@@ -283,7 +282,7 @@ async function main() {
 
     console.log("🏗️ Building packages...");
 
-    execCommand("turbo", ["run", "build"], "Building");
+    execCommand("pnpm", ["run", "build"], "Building");
 
     console.log("");
 
