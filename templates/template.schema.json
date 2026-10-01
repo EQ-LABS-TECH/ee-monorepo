@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eq-labs.dev/schemas/template.schema.json",
+  "title": "EE-LABS generative template metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "category",
+    "version",
+    "description",
+    "target",
+    "owner",
+    "locale",
+    "allowedTargets",
+    "inputs",
+    "outputs"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1" },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "category": {
+      "type": "string",
+      "enum": ["T-DOC", "T-PKG", "T-APP", "T-CON"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "description": { "type": "string", "minLength": 1 },
+    "target": { "type": "string", "minLength": 1 },
+    "owner": { "type": "string", "minLength": 1 },
+    "locale": { "type": "string", "enum": ["es", "en"] },
+    "allowedTargets": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "required"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["string", "boolean", "number", "enum"]
+          },
+          "required": { "type": "boolean" },
+          "pattern": { "type": "string" },
+          "enum": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "default": {},
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "preconditions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

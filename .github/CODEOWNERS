@@ -50,3 +50,5 @@ marketplace/                    @EQ-LABS-TECH/maintainers
 # Platform infrastructure (EE-DOC-009)
 infra/                          @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin
 
+# Platform templates (EE-DOC-012)
+templates/                      @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers

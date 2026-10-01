@@ -61,6 +61,7 @@ function validateStructure() {
       "examples",
       "marketplace",
       "infra",
+      "templates",
       ".github",
       ".vscode",
       ".changeset",
@@ -231,6 +232,89 @@ function validateInfra() {
   return errors;
 }
 
+function validateTemplates() {
+  const errors = [];
+  const templatesRoot = join(ROOT, "templates");
+  const categoryMap = {
+    document: "T-DOC",
+    package: "T-PKG",
+    app: "T-APP",
+    connector: "T-CON",
+  };
+  const required = [
+    "schemaVersion",
+    "id",
+    "name",
+    "category",
+    "version",
+    "description",
+    "target",
+    "owner",
+    "locale",
+    "allowedTargets",
+    "inputs",
+    "outputs",
+  ];
+
+  if (!existsSync(templatesRoot)) {
+    errors.push("QG-REPO-001: missing templates/ (EE-DOC-012 / EE-RFC-002)");
+    return errors;
+  }
+  if (!existsSync(join(templatesRoot, "template.schema.json"))) {
+    errors.push("QG-REPO-001: missing templates/template.schema.json");
+  }
+  for (const dir of Object.keys(categoryMap)) {
+    if (!existsSync(join(templatesRoot, dir))) {
+      errors.push(`QG-REPO-001: missing templates/${dir}/`);
+    }
+  }
+
+  const ids = new Set();
+  for (const [dir, expectedCat] of Object.entries(categoryMap)) {
+    const catPath = join(templatesRoot, dir);
+    if (!existsSync(catPath)) continue;
+    let entries = [];
+    try {
+      entries = readdirSync(catPath, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+    for (const ent of entries) {
+      if (!ent.isDirectory()) continue;
+      const metaPath = join(catPath, ent.name, "template.json");
+      if (!existsSync(metaPath)) continue;
+      let data;
+      try {
+        data = JSON.parse(readFileSync(metaPath, "utf8"));
+      } catch (e) {
+        errors.push(
+          `QG-REPO-001: invalid JSON ${dir}/${ent.name}/template.json: ${e.message}`,
+        );
+        continue;
+      }
+      for (const key of required) {
+        if (data[key] === undefined || data[key] === null) {
+          errors.push(
+            `QG-REPO-001: ${dir}/${ent.name}/template.json missing required "${key}"`,
+          );
+        }
+      }
+      if (data.category && data.category !== expectedCat) {
+        errors.push(
+          `QG-REPO-001: ${dir}/${ent.name} category "${data.category}" != ${expectedCat}`,
+        );
+      }
+      if (data.id) {
+        if (ids.has(data.id)) {
+          errors.push(`QG-REPO-001: duplicate template id "${data.id}"`);
+        }
+        ids.add(data.id);
+      }
+    }
+  }
+  return errors;
+}
+
 console.log("🔬 Running full validation suite...");
 
 console.log("");
@@ -326,6 +410,16 @@ const infraErrors = validateInfra();
 if (infraErrors.length > 0) {
   hasErrors = true;
   infraErrors.forEach((error) => {
+    console.error(`    ❌ ${error}`);
+  });
+}
+console.log("");
+
+console.log("  Checking templates gates (QG-REPO-001)...");
+const templateErrors = validateTemplates();
+if (templateErrors.length > 0) {
+  hasErrors = true;
+  templateErrors.forEach((error) => {
     console.error(`    ❌ ${error}`);
   });
 }

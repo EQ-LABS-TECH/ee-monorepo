@@ -10,3 +10,5 @@ Turbo-build-dry.json
 
 # Exclusión de archivos de gobernanza para evitar falsos positivos de formato
 .github/CODEOWNERS
+
+templates/**/files/**
