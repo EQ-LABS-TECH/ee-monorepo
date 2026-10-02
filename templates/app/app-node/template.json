@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1",
+  "id": "app-node",
+  "name": "Node TypeScript application",
+  "category": "T-APP",
+  "version": "0.1.0",
+  "description": "Minimal Node.js TypeScript app under apps/ (EE-DOC-012 section 11).",
+  "target": "apps/",
+  "owner": "architecture",
+  "locale": "en",
+  "allowedTargets": ["apps/"],
+  "inputs": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "App directory name; package @eq-labs/<name>."
+    }
+  ],
+  "outputs": [
+    "package.json",
+    "tsconfig.json",
+    "eslint.config.mjs",
+    "src/index.ts",
+    "README.md"
+  ],
+  "preconditions": [
+    "destination under apps/",
+    "name must not collide with existing app"
+  ]
+}

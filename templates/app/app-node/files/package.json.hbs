@@ -1,0 +1,24 @@
+{
+  "name": "@eq-labs/{{name}}",
+  "version": "0.1.0",
+  "private": true,
+  "description": "{{name}} application for the EQ-LABS Engineering Ecosystem.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/index.js",
+    "lint": "eslint ."
+  },
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "devDependencies": {
+    "@eq-labs/config-typescript": "workspace:*",
+    "@eq-labs/config-eslint": "workspace:*",
+    "@types/node": "22.18.6",
+    "typescript": "5.9.2",
+    "eslint": "9.35.0"
+  }
+}

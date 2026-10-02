@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1",
+  "id": "connector-typescript",
+  "name": "Official TypeScript connector",
+  "category": "T-CON",
+  "version": "0.1.0",
+  "description": "Official connector skeleton under connectors/official/ (EE-DOC-012 section 12).",
+  "target": "connectors/official/",
+  "owner": "architecture",
+  "locale": "en",
+  "allowedTargets": ["connectors/official/"],
+  "inputs": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Connector short name; package @eq-labs/connector-<name>."
+    }
+  ],
+  "outputs": [
+    "package.json",
+    "tsconfig.json",
+    "eslint.config.mjs",
+    "src/index.ts",
+    "README.md"
+  ],
+  "preconditions": [
+    "destination under connectors/official/ only (C-01, C-05)",
+    "no secrets or IaC manifests (C-03, C-04)"
+  ]
+}

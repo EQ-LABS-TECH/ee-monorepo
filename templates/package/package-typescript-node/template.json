@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1",
+  "id": "package-typescript-node",
+  "name": "TypeScript Node package",
+  "category": "T-PKG",
+  "version": "0.1.0",
+  "description": "Skeleton Node.js TypeScript workspace package (EE-DOC-012 section 10).",
+  "target": "packages/",
+  "owner": "architecture",
+  "locale": "en",
+  "allowedTargets": ["packages/"],
+  "inputs": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Package short name (kebab-case); becomes @eq-labs/<name>."
+    }
+  ],
+  "outputs": [
+    "package.json",
+    "tsconfig.json",
+    "eslint.config.mjs",
+    "src/index.ts",
+    "README.md"
+  ],
+  "preconditions": [
+    "name must not collide with existing workspace package",
+    "generation under packages/<layer>/ requires EE-DOC-006 nested patterns (EE-DOC-012 section 13.1 deferred)"
+  ]
+}
