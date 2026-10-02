@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1",
+  "id": "ee-adr",
+  "name": "Architecture Decision Record (EE-ADR)",
+  "category": "T-DOC",
+  "version": "0.1.0",
+  "description": "Scaffold for EE-ADR-XXX (EE-DOC-002 §18.2).",
+  "target": "docs/adr/",
+  "owner": "architecture",
+  "locale": "es",
+  "allowedTargets": ["docs/"],
+  "inputs": [
+    {
+      "name": "docId",
+      "type": "string",
+      "required": true,
+      "pattern": "^EE-ADR-[0-9]{3}$",
+      "description": "ADR code (D-01)."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "relativePath",
+      "type": "string",
+      "required": true,
+      "default": "adr"
+    },
+    {
+      "name": "parentDoc",
+      "type": "string",
+      "required": false,
+      "pattern": "^EE-DOC-[0-9]{3}$",
+      "description": "Related normative document."
+    },
+    {
+      "name": "purpose",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "createdAt",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "outputs": ["EE-ADR-XXX_Title.md"],
+  "preconditions": ["destination under docs/ only"]
+}

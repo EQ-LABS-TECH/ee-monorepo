@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1",
+  "id": "ee-imp",
+  "name": "Implementation Unit (EE-IMP)",
+  "category": "T-DOC",
+  "version": "0.1.0",
+  "description": "Scaffold for EE-IMP-XXX-PXX (EE-DOC-002 §18.3).",
+  "target": "docs/developer/",
+  "owner": "architecture",
+  "locale": "es",
+  "allowedTargets": ["docs/"],
+  "inputs": [
+    {
+      "name": "docId",
+      "type": "string",
+      "required": true,
+      "pattern": "^EE-IMP-[0-9]{3}-P[0-9]{2}$",
+      "description": "IMP unit code (D-01)."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "relativePath",
+      "type": "string",
+      "required": true,
+      "default": "developer"
+    },
+    {
+      "name": "parentDoc",
+      "type": "string",
+      "required": false,
+      "pattern": "^EE-DOC-[0-9]{3}$",
+      "description": "Parent normative EE-DOC."
+    },
+    {
+      "name": "purpose",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "createdAt",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "outputs": ["body.md"],
+  "preconditions": ["destination under docs/ only"]
+}

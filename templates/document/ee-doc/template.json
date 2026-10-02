@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1",
+  "id": "ee-doc",
+  "name": "Engineering Ecosystem Document (EE-DOC)",
+  "category": "T-DOC",
+  "version": "0.1.0",
+  "description": "Scaffold for EE-DOC-XXX (EE-DOC-002 section 18.1).",
+  "target": "docs/architecture/",
+  "owner": "architecture",
+  "locale": "es",
+  "allowedTargets": ["docs/"],
+  "inputs": [
+    {
+      "name": "docId",
+      "type": "string",
+      "required": true,
+      "pattern": "^EE-DOC-[0-9]{3}$",
+      "description": "Document code (D-01)."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "Document title."
+    },
+    {
+      "name": "relativePath",
+      "type": "string",
+      "required": true,
+      "default": "architecture",
+      "description": "Subpath under docs/."
+    }
+  ],
+  "outputs": ["EE-DOC-XXX_Title.md"]
+}

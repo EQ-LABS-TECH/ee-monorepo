@@ -1,0 +1,141 @@
+# {{docId}} — {{title}}
+
+Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y se desarrolla conforme al ciclo documental definido por **EE-DOC-005 — Development Workflow**.
+
+---
+
+## METADATOS
+
+| Campo | Valor |
+| :---- | :---- |
+| **ID** | {{docId}} |
+| **Documento** | {{title}} |
+| **Código corto** | {{docId}} |
+| **Tipo** | Documento Normativo |
+| **Clasificación** | Especializado |
+| **Nivel** | Especializado |
+| **Normativo** | Sí |
+| **Versión** | v0.1.0 |
+| **Estado** | En Elaboración |
+| **Propietario** | Equipo de Arquitectura |
+| **Documento padre** | — |
+| **Dependencias** | EE-DOC-001, EE-DOC-002, EE-DOC-005 |
+| **Aprobado por** | — |
+| **Audiencia** | Arquitectura, Desarrollo |
+| **Fecha de creación** | {{createdAt}} |
+| **Última revisión** | {{createdAt}} |
+| **Próxima revisión** | Pendiente |
+
+---
+
+## 01. Propósito
+
+{{#if purpose}}{{purpose}}{{else}}[Una línea clara que define por qué existe este documento.]{{/if}}
+
+---
+
+## 02. Alcance
+
+### 02.1. Incluye
+
+-
+
+### 02.2. No incluye
+
+-
+
+---
+
+## 03. Contenido Normativo
+
+### 03.1.
+
+---
+
+## [Secciones variables numeradas: 04 a XX-1]
+
+[Secciones específicas según el dominio del documento.]
+
+---
+
+## XX. Plan de Implementación y Fases (Normativo)
+
+> **Aplicabilidad:** Obligatoria cuando el documento genera implementación física (EE-DOC-006 en adelante). No aplica a EE-DOC-001 a EE-DOC-005 (omitir o dejar como N/A).
+
+La implementación física se rige por unidades **EE-IMP-XXX-PXX** y el ciclo de **EE-DOC-005**.
+
+### XX.1. Catálogo Oficial de Fases
+
+| Fase | Identificador | Propósito Técnico | Entregable Principal / Artefacto |
+| :--- | :------------ | :---------------- | :------------------------------- |
+| **Fase N** | [Nombre corto] | [Propósito] | EE-IMP-XXX-PXX |
+
+### XX.2. Especificaciones Técnicas por Unidad de Implementación
+
+Cada unidad materializa elementos normativos; el detalle físico vive en **EE-IMP-XXX-PXX**.
+
+---
+
+## YY. Evolución
+
+Cambios gobernados según **EE-DOC-005 §04** (Aclaración, Especialización Técnica, ADR o RFC).
+
+---
+
+## ZZ. Cumplimiento
+
+Conformidad verificable respecto a este documento y Quality Gates aplicables (**EE-DOC-010**). Desviación no autorizada = incumplimiento.
+
+---
+
+## AA. Referencias
+
+| Código | Documento | Descripción |
+| :----- | :-------- | :---------- |
+| **EE-DOC-001** | Master Documentation Index | Índice maestro |
+| **EE-DOC-002** | Document Design Template | Plantilla documental |
+| **EE-DOC-005** | Development Workflow | Ciclo documental |
+
+---
+
+## BB. Historial de Cambios
+
+| Versión | Fecha | Autor | Aprobado por | Motivo | Cambios | Estado |
+| :------ | :---- | :---- | :----------- | :----- | :------ | :----- |
+| **v0.1.0** | {{createdAt}} | Equipo de Arquitectura | — | Creación inicial | Scaffold T-DOC (ee-doc) | En Elaboración |
+
+---
+
+## CC. Cierre Documental
+
+> **Aplicabilidad:** Obligatoria al completar la validación final de la implementación (documento implementable). Se rellena al cierre del ciclo; permanece **pendiente** durante Elaboración / Implementación (**D-04**: el scaffold no declara Congelado).
+
+### CC.1. Validación Final
+
+| Campo | Valor |
+| :---- | :---- |
+| **Fecha** | Pendiente |
+| **Evidencias** | Pendiente (EE-IMP-XXX-PXX, EE-TEC-XXX, Quality Gates) |
+| **Responsable** | Equipo de Arquitectura |
+
+### CC.2. Resultado de Quality Gates
+
+| Validación | Resultado |
+| :--------- | :-------: |
+| [Gate] | Pendiente |
+
+### CC.3. Dictamen de Cierre
+
+Pendiente de Validación Final.
+
+### CC.4. Estado Final
+
+| Campo | Valor |
+| :---- | :---- |
+| **Estado documental** | En Elaboración |
+| **Versión** | v0.1.0 |
+| **Congelación** | Pendiente |
+
+---
+
+## FIN DEL DOCUMENTO

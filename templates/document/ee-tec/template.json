@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1",
+  "id": "ee-tec",
+  "name": "Consolidated Technical Documentation (EE-TEC)",
+  "category": "T-DOC",
+  "version": "0.1.0",
+  "description": "Scaffold for EE-TEC-XXX (EE-DOC-002 §18.4).",
+  "target": "docs/architecture/",
+  "owner": "architecture",
+  "locale": "es",
+  "allowedTargets": ["docs/"],
+  "inputs": [
+    {
+      "name": "docId",
+      "type": "string",
+      "required": true,
+      "pattern": "^EE-TEC-[0-9]{3}$",
+      "description": "TEC code (D-01)."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "parentDoc",
+      "type": "string",
+      "required": true,
+      "pattern": "^EE-DOC-[0-9]{3}$",
+      "description": "Parent normative document code."
+    },
+    {
+      "name": "relativePath",
+      "type": "string",
+      "required": true,
+      "default": "architecture"
+    },
+    {
+      "name": "purpose",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "createdAt",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "outputs": ["body.md"],
+  "preconditions": ["destination under docs/ only"]
+}

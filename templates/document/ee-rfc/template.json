@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1",
+  "id": "ee-rfc",
+  "name": "Request for Comments (EE-RFC)",
+  "category": "T-DOC",
+  "version": "0.1.0",
+  "description": "Scaffold for EE-RFC-XXX governed change proposals (EE-DOC-002 §18.5).",
+  "target": "docs/rfc/",
+  "owner": "architecture",
+  "locale": "es",
+  "allowedTargets": ["docs/"],
+  "inputs": [
+    {
+      "name": "docId",
+      "type": "string",
+      "required": true,
+      "pattern": "^EE-RFC-[0-9]{3}$",
+      "description": "RFC code (D-01: never assigned by template)."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "RFC title in English (document name convention)."
+    },
+    {
+      "name": "relativePath",
+      "type": "string",
+      "required": true,
+      "default": "rfc",
+      "description": "Subpath under docs/ (default: rfc)."
+    },
+    {
+      "name": "solicitante",
+      "type": "string",
+      "required": false,
+      "description": "Originating document or discovery source."
+    },
+    {
+      "name": "affectedDocs",
+      "type": "string",
+      "required": false,
+      "description": "Normative documents in the sync package."
+    },
+    {
+      "name": "createdAt",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "outputs": ["EE-RFC-XXX_Title.md"],
+  "preconditions": [
+    "docId must not already exist in the documentation tree",
+    "destination under docs/rfc/ only"
+  ]
+}
