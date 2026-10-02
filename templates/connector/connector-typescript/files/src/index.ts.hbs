@@ -1,11 +1,9 @@
 /**
  * @eq-labs/connector-{{name}}
- * Official connector boundary (EE-DOC-012 section 12). No secrets; no platform IaC.
+ * Official connector boundary (EE-DOC-012 section 11). No secrets; no platform IaC.
  */
 
-export interface ConnectorContext {
-  // Integration boundary types
-}
+export type ConnectorContext = Record<string, unknown>;
 
 export function createConnector(_ctx: ConnectorContext = {}): void {
   // TODO: implement adapter
