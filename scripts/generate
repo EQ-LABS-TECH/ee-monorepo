@@ -5,6 +5,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
+const PLOPFILE = join(ROOT, "scripts", "plopfile.mjs");
 
 console.log("🔧 Code Generator");
 console.log("=================");
@@ -23,36 +24,30 @@ if (plopCheck.status !== 0) {
 }
 
 console.log(`  Plop: ${plopCheck.stdout.trim()}`);
+console.log("  Registry: scripts/plopfile.mjs");
 console.log("");
 
-const plopfile = join(ROOT, "plopfile.js");
-
-if (!existsSync(plopfile)) {
-  console.log("⚠️ plopfile.js not found.");
-  console.log("   Templates are not yet configured.");
-  console.log(
-    "   This is expected until EE-DOC-012 (Templates) is implemented.",
+if (!existsSync(PLOPFILE)) {
+  console.error(
+    "❌ scripts/plopfile.mjs not found (EE-DOC-012 / EE-IMP-012-P05).",
   );
-  console.log("");
-  console.log("📋 Generator remains pending until templates are available.");
-  console.log("");
-  process.exit(0);
+  console.error("   Generation registry is required (No False Pass).");
+  process.exit(1);
 }
+
+const forward = process.argv.slice(2);
 
 console.log("📦 Generating from templates...");
 console.log("");
 
-const result = spawnSync("pnpm", ["exec", "plop"], {
-  stdio: "inherit",
-  shell: process.platform === "win32",
-  cwd: ROOT,
-});
+const result = spawnSync(
+  "pnpm",
+  ["exec", "plop", "--plopfile", PLOPFILE, ...forward],
+  {
+    stdio: "inherit",
+    shell: process.platform === "win32",
+    cwd: ROOT,
+  },
+);
 
-if (result.status !== 0) {
-  console.error("");
-  console.error("❌ Code generation failed");
-  process.exit(result.status ?? 1);
-}
-
-console.log("");
-console.log("✅ Code generation completed successfully!");
+process.exit(result.status ?? 1);

@@ -238,3 +238,20 @@ The workspace task orchestration strategy is defined by:
 ADR-001 — Estrategia de Orquestación de Tareas del Workspace
 Changes to that architectural decision require review by the Engineering Ecosystem Architecture Team.
 Significant or cross-cutting changes must comply with the Engineering Ecosystem governance and change-management process.
+
+## Generation registry (EE-IMP-012-P05)
+
+| Item            | Value                                             |
+| --------------- | ------------------------------------------------- |
+| Registry        | `scripts/plopfile.mjs`                            |
+| Command         | `pnpm run generate`                               |
+| Non-interactive | `pnpm run generate -- <generator> --name <value>` |
+
+Examples:
+
+`powershell
+pnpm run generate -- app-node --name sample-app
+pnpm run generate -- connector-typescript --name sample-conn
+`
+
+Missing registry ⇒ exit code ≠ 0 (No False Pass). Do not commit sample trees.
