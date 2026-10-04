@@ -1,5 +1,4 @@
 {
-  "ui": "tui",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -13,6 +12,7 @@
       "outputs": ["coverage/**"]
     },
     "typecheck": {
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "lint": {
