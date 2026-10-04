@@ -36,6 +36,13 @@ importers:
         version: 2.9.0
 
   apps/cli:
+    dependencies:
+      "@eq-labs/foundation":
+        specifier: workspace:*
+        version: link:../../packages/foundation
+      "@eq-labs/intelligence":
+        specifier: workspace:*
+        version: link:../../packages/intelligence
     devDependencies:
       "@eq-labs/config-eslint":
         specifier: workspace:*
@@ -44,7 +51,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/config/typescript
       "@types/node":
-        specifier: ^22.18.6
+        specifier: 22.18.6
         version: 22.18.6
       eslint:
         specifier: 9.35.0
@@ -356,6 +363,10 @@ importers:
         version: 5.9.2
 
   packages/intelligence:
+    dependencies:
+      "@eq-labs/foundation":
+        specifier: workspace:*
+        version: link:../foundation
     devDependencies:
       "@eq-labs/config-eslint":
         specifier: workspace:*
