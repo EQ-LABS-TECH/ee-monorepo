@@ -2,7 +2,7 @@
   "name": "@eq-labs/intelligence",
   "version": "0.1.0",
   "private": true,
-  "description": "Intelligence layer of the EQ-LABS Engineering Ecosystem.",
+  "description": "Intelligence layer: routing and AI orchestration for the EQ-LABS Engineering Ecosystem (EE-DOC-013).",
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
