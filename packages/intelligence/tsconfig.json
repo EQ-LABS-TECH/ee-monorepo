@@ -1,8 +1,11 @@
 {
   "extends": "@eq-labs/config-typescript/node",
   "compilerOptions": {
-    "noEmit": true,
-    "outDir": "dist"
+    "rootDir": "src",
+    "outDir": "dist",
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true
   },
   "include": ["src/**/*.ts"]
 }

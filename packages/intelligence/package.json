@@ -2,14 +2,28 @@
   "name": "@eq-labs/intelligence",
   "version": "0.1.0",
   "private": true,
-  "description": "Intelligence layer: routing and AI orchestration for the EQ-LABS Engineering Ecosystem (EE-DOC-013).",
+  "description": "Intelligence layer of the EQ-LABS Engineering Ecosystem.",
   "license": "Apache-2.0",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc -p tsconfig.json --noEmit false",
+    "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "lint": "eslint ."
+  },
+  "dependencies": {
+    "@eq-labs/foundation": "workspace:*"
   },
   "devDependencies": {
     "@eq-labs/config-typescript": "workspace:*",

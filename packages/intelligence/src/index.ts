@@ -1,6 +1,11 @@
 /**
- * @eq-labs/intelligence — public surface (EE-DOC-013).
- * Router / SPI consumers land in later IMP phases (P03–P04).
- * Do not import @eq-labs/registry, @eq-labs/knowledge, or connectors here.
+ * @eq-labs/intelligence — routing surface (EE-DOC-013 / EE-IMP-013-P04).
+ * Does not import registry, knowledge, or connectors.
  */
-export {};
+export {
+  ProviderRouter,
+  SpecializationRouter,
+  defaultRoutingPolicy,
+  type RoutingDecision,
+  type RoutingPolicy,
+} from "./routing/index.js";
