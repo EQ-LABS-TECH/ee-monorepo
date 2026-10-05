@@ -30,6 +30,10 @@ turbo.json                      @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintai
 # Shared config (SSOT)
 packages/config/                @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
 
+# Knowledge Layer (EE-DOC-014 / KS-06 / EE-IMP-014-P01)
+packages/knowledge/             @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+packages/foundation/src/contracts/knowledge.ts @EQ-LABS-TECH/architecture
+
 # Ecosystem packages & applications
 packages/                       @EQ-LABS-TECH/maintainers
 apps/                           @EQ-LABS-TECH/maintainers
