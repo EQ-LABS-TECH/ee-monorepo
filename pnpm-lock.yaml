@@ -44,6 +44,9 @@ importers:
       "@eq-labs/intelligence":
         specifier: workspace:*
         version: link:../../packages/intelligence
+      "@eq-labs/knowledge":
+        specifier: workspace:*
+        version: link:../../packages/knowledge
     devDependencies:
       "@eq-labs/config-eslint":
         specifier: workspace:*
@@ -386,6 +389,10 @@ importers:
         version: 5.9.2
 
   packages/knowledge:
+    dependencies:
+      "@eq-labs/foundation":
+        specifier: workspace:*
+        version: link:../foundation
     devDependencies:
       "@eq-labs/config-eslint":
         specifier: workspace:*

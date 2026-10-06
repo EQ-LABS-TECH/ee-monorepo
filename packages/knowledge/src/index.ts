@@ -1,5 +1,5 @@
 /**
- * @eq-labs/knowledge — Knowledge layer baseline (EE-DOC-014).
- * Surface for workspace consumption. KnowledgePort contracts land in P03 (Foundation).
+ * @eq-labs/knowledge — Knowledge layer (EE-DOC-014).
+ * Port types live in @eq-labs/foundation; this package implements the port.
  */
-export {};
+export { createInMemoryKnowledgePort } from "./in-memory-port.js";

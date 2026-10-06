@@ -22,6 +22,9 @@
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "lint": "eslint ."
   },
+  "dependencies": {
+    "@eq-labs/foundation": "workspace:*"
+  },
   "devDependencies": {
     "@eq-labs/config-typescript": "workspace:*",
     "typescript": "5.9.2",

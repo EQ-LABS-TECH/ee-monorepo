@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "@eq-labs/foundation": "workspace:*",
-    "@eq-labs/intelligence": "workspace:*"
+    "@eq-labs/intelligence": "workspace:*",
+    "@eq-labs/knowledge": "workspace:*"
   },
   "devDependencies": {
     "@eq-labs/config-eslint": "workspace:*",

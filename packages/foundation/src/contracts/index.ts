@@ -23,3 +23,21 @@ export { createGenerationRequest } from "./generation.js";
 export type { AIProvider } from "./provider.js";
 
 export type { SpecializationMeta, CatalogPort } from "./catalog.js";
+
+export { KNOWLEDGE_PORT_VERSION } from "./knowledge-version.js";
+export type { KnowledgePortVersion } from "./knowledge-version.js";
+
+export type { KnowledgeErrorCode, KnowledgeError } from "./knowledge-error.js";
+export { isKnowledgeError } from "./knowledge-error.js";
+
+export type {
+  KnowledgeUnitMeta,
+  KnowledgeUnit,
+  KnowledgeIndexRequest,
+  KnowledgeIndexResult,
+  KnowledgeQueryFilter,
+  KnowledgeQueryResult,
+  KnowledgeHealth,
+  KnowledgeSemanticSearchRequest,
+  KnowledgePort,
+} from "./knowledge.js";
