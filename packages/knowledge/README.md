@@ -20,3 +20,10 @@ pnpm --filter @eq-labs/knowledge run build
 
 - EE-DOC-014 — Knowledge Management
 - EE-IMP-014-P02 — Baseline Package
+
+## Security & data
+
+- Credentials: runtime secrets only (EE-DOC-009) — **KS-01**
+- Do not log full query/unit payloads by default — **KS-03**
+- Heavy artifacts: `data/datasets`, `data/models` (EE-IMP-014-P05)
+- CODEOWNERS: `packages/knowledge/` — **KS-06**

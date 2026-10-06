@@ -159,3 +159,23 @@ docker-volumes/
 *.crt
 *.p12
 *.pfx
+
+###############################################################################
+# Knowledge / data artifacts (EE-DOC-014 KS-02 / EE-IMP-014-P05)
+###############################################################################
+
+data/datasets/**
+!data/datasets/.gitkeep
+!data/datasets/README.md
+data/models/**
+!data/models/.gitkeep
+!data/models/README.md
+
+*.onnx
+*.gguf
+*.safetensors
+*.pt
+*.pth
+
+**/.knowledge-cache/
+**/knowledge-index/
