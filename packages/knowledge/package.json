@@ -20,15 +20,17 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@eq-labs/foundation": "workspace:*"
   },
   "devDependencies": {
+    "@eq-labs/config-eslint": "workspace:*",
     "@eq-labs/config-typescript": "workspace:*",
-    "typescript": "5.9.2",
     "eslint": "9.35.0",
-    "@eq-labs/config-eslint": "workspace:*"
+    "typescript": "5.9.2",
+    "vitest": "4.1.11"
   }
 }
