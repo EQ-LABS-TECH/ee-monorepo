@@ -1,27 +1,22 @@
 # @eq-labs/knowledge
 
-Knowledge layer of the EQ-LABS Engineering Ecosystem.
+Knowledge layer of the EQ-LABS Engineering Ecosystem (**EE-DOC-014**).
 
-## Purpose
+## Status
 
-This package will provide abstractions and capabilities for managing,
-accessing, and processing engineering knowledge.
+- **Form:** flat package (`packages/knowledge`) — not nested workspaces
+- **Visibility:** `private: true` (workspace API via `exports`; no npm publish in this cycle)
+- **Contracts:** `KnowledgePort` / embedding ABI → **EE-IMP-014-P03+** (Foundation)
 
-## Current Status
-
-This package was created during Phase 4 — Packages.
-
-No functional implementation is included at this stage.
-
-## Configuration
-
-The package uses the shared Node.js TypeScript configuration:
-
-`@eq-labs/config-typescript/node`
-
-## Development
+## Scripts
 
 ```bash
-pnpm build
-pnpm typecheck
+pnpm --filter @eq-labs/knowledge run lint
+pnpm --filter @eq-labs/knowledge run typecheck
+pnpm --filter @eq-labs/knowledge run build
 ```
+
+## References
+
+- EE-DOC-014 — Knowledge Management
+- EE-IMP-014-P02 — Baseline Package

@@ -2,11 +2,22 @@
   "name": "@eq-labs/knowledge",
   "version": "0.1.0",
   "private": true,
-  "description": "Knowledge layer of the EQ-LABS Engineering Ecosystem.",
+  "description": "Knowledge layer of the EQ-LABS Engineering Ecosystem (EE-DOC-014).",
   "license": "Apache-2.0",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc -p tsconfig.json --noEmit false",
+    "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "lint": "eslint ."
