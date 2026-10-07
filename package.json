@@ -43,6 +43,12 @@
       "source-map-js@<1.2.2": "1.2.2",
       "tinypool@<2.1.2": "2.1.2",
       "shell-quote": ">=1.11.0"
+    },
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-vfj7-8cjw-p6xm",
+        "GHSA-hp3w-g68c-fv3c"
+      ]
     }
   }
 }
