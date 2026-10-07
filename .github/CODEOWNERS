@@ -56,3 +56,6 @@ infra/                          @EQ-LABS-TECH/architecture @EQ-LABS-TECH/reposit
 
 # Platform templates (EE-DOC-012)
 templates/                      @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+
+# Ecosystem validation evidence (EE-DOC-015 / EE-IMP-015-P01)
+docs/validation/    @EQ-LABS-TECH/architecture
