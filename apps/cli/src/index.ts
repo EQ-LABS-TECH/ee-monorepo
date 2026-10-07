@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
+import { createAiRoot } from "./composition/ai-root.js";
+import { createKnowledgeRoot } from "./composition/knowledge-root.js";
 
 const ALLOWED = new Set([
   "doctor",
@@ -19,12 +21,15 @@ function printHelp(): void {
 Usage:
   ee help
   ee run <root-command>
+  ee composition
 
 Root commands are the canonical automation surface (pnpm run <cmd>).
 This CLI does not reimplement Quality Gates.
 
 Delegable commands:
   ${[...ALLOWED].join(", ")}
+
+composition — invoke apps/cli composition root (EE-DOC-006 §13.5 / EE-DOC-015 §05.2.2)
 `);
 }
 
@@ -42,12 +47,36 @@ function runRoot(cmd: string): number {
   return result.status ?? 1;
 }
 
+/** Composition root effective: factory invoked from runtime entrypoint. */
+function runComposition(): number {
+  const ai = createAiRoot();
+  const knowledge = createKnowledgeRoot();
+  console.log(
+    JSON.stringify(
+      {
+        compositionRoot: "apps/cli",
+        aiRootId: ai.rootId,
+        defaultProvider: "noop",
+        knowledgePortVersion: knowledge.portVersion,
+        status: "wired",
+      },
+      null,
+      2,
+    ),
+  );
+  return 0;
+}
+
 const args = process.argv.slice(2);
 const [verb, target] = args;
 
 if (!verb || verb === "help" || verb === "--help" || verb === "-h") {
   printHelp();
   process.exit(0);
+}
+
+if (verb === "composition") {
+  process.exit(runComposition());
 }
 
 if (verb === "run" && target) {
