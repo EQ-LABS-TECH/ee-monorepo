@@ -1,6 +1,6 @@
-import tseslint from "typescript-eslint";
+import tseslint from 'typescript-eslint';
 
-import base from "./base.mjs";
+import base from './base.mjs';
 
 export default [
   ...base,
@@ -8,22 +8,22 @@ export default [
   ...tseslint.configs.recommended,
 
   {
-    files: ["**/*.{ts,tsx}"],
+    files: ['**/*.{ts,tsx}'],
 
     rules: {
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
         {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
         },
       ],
-      "@typescript-eslint/consistent-type-imports": [
-        "error",
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
         {
-          prefer: "type-imports",
-          fixStyle: "separate-type-imports",
+          prefer: 'type-imports',
+          fixStyle: 'separate-type-imports',
         },
       ],
     },

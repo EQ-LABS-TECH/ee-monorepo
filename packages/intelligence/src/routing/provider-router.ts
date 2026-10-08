@@ -1,15 +1,6 @@
-import type {
-  AIError,
-  AIProvider,
-  InferenceRequest,
-  InferenceResponse,
-} from "@eq-labs/foundation";
-import { isAIError } from "@eq-labs/foundation";
-import {
-  defaultRoutingPolicy,
-  type RoutingDecision,
-  type RoutingPolicy,
-} from "./policy.js";
+import type { AIError, AIProvider, InferenceRequest, InferenceResponse } from '@eq-labs/foundation';
+import { isAIError } from '@eq-labs/foundation';
+import { defaultRoutingPolicy, type RoutingDecision, type RoutingPolicy } from './policy.js';
 
 export class ProviderRouter {
   private readonly providers = new Map<string, AIProvider>();
@@ -43,7 +34,7 @@ export class ProviderRouter {
     const provider = this.providers.get(d.providerId);
     if (!provider) {
       return {
-        code: "PROVIDER_UNAVAILABLE",
+        code: 'PROVIDER_UNAVAILABLE',
         message: `Provider not found: ${d.providerId}`,
         retryable: false,
       };

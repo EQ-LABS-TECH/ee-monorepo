@@ -72,7 +72,7 @@ Project-specific settings such as ports, aliases, proxies and output directories
 A Vite workspace can consume the base configuration:
 
 ```js
-import config from "@eq-labs/config-vite/base";
+import config from '@eq-labs/config-vite/base';
 
 export default config;
 ```
@@ -80,7 +80,7 @@ export default config;
 A library workspace can consume the library configuration:
 
 ```js
-import config from "@eq-labs/config-vite/library";
+import config from '@eq-labs/config-vite/library';
 
 export default config;
 ```
@@ -88,7 +88,7 @@ export default config;
 A React workspace can consume the React configuration:
 
 ```js
-import config from "@eq-labs/config-vite/react";
+import config from '@eq-labs/config-vite/react';
 
 export default config;
 ```

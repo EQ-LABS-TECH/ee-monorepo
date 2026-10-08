@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { spawnSync } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 const ROOT = process.cwd();
 
@@ -12,7 +12,7 @@ function check(command, args, label) {
   console.log(`  ✓ ${label}...`);
 
   const result = spawnSync(command, args, {
-    stdio: "inherit",
+    stdio: 'inherit',
     shell: true,
     cwd: ROOT,
   });
@@ -40,86 +40,86 @@ function checkPath(path, label) {
   return false;
 }
 
-console.log("🩺 Engineering Ecosystem Environment Diagnostic");
-console.log("===============================================");
-console.log("");
+console.log('🩺 Engineering Ecosystem Environment Diagnostic');
+console.log('===============================================');
+console.log('');
 
-console.log("System:");
+console.log('System:');
 
-check("node", ["--version"], "Node.js");
-check("pnpm", ["--version"], "pnpm");
-check("git", ["--version"], "Git");
+check('node', ['--version'], 'Node.js');
+check('pnpm', ['--version'], 'pnpm');
+check('git', ['--version'], 'Git');
 
-console.log("");
+console.log('');
 
-console.log("Project Structure:");
+console.log('Project Structure:');
 
 const files = [
-  ["package.json", "Root package.json"],
-  ["pnpm-workspace.yaml", "Workspace config"],
-  ["turbo.json", "Turbo config"],
-  [".npmrc", "npm config"],
-  [".nvmrc", "Node version"],
-  [".editorconfig", "Editor config"],
-  [".gitignore", "Git ignore"],
-  [".gitattributes", "Git attributes"],
-  ["LICENSE", "License"],
-  ["NOTICE", "Notice"],
-  ["README.md", "Readme"],
-  ["CHANGELOG.md", "Changelog"],
+  ['package.json', 'Root package.json'],
+  ['pnpm-workspace.yaml', 'Workspace config'],
+  ['turbo.json', 'Turbo config'],
+  ['.npmrc', 'npm config'],
+  ['.nvmrc', 'Node version'],
+  ['.editorconfig', 'Editor config'],
+  ['.gitignore', 'Git ignore'],
+  ['.gitattributes', 'Git attributes'],
+  ['LICENSE', 'License'],
+  ['NOTICE', 'Notice'],
+  ['README.md', 'Readme'],
+  ['CHANGELOG.md', 'Changelog'],
 ];
 
 for (const [path, label] of files) {
   checkPath(path, label);
 }
 
-console.log("");
+console.log('');
 
-console.log("Directory Structure:");
+console.log('Directory Structure:');
 
 const dirs = [
-  ["apps", "Applications"],
-  ["packages", "Packages"],
-  ["connectors/official", "Official Connectors"],
-  ["connectors/community", "Community Connectors"],
-  ["connectors/experimental", "Experimental Connectors"],
-  ["scripts", "Scripts"],
-  [".github", "GitHub config"],
-  [".vscode", "VSCode config"],
+  ['apps', 'Applications'],
+  ['packages', 'Packages'],
+  ['connectors/official', 'Official Connectors'],
+  ['connectors/community', 'Community Connectors'],
+  ['connectors/experimental', 'Experimental Connectors'],
+  ['scripts', 'Scripts'],
+  ['.github', 'GitHub config'],
+  ['.vscode', 'VSCode config'],
 ];
 
 for (const [path, label] of dirs) {
   checkPath(path, label);
 }
 
-console.log("");
+console.log('');
 
-console.log("Key Dependencies:");
+console.log('Key Dependencies:');
 
 try {
-  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf-8"));
-  console.log(`  ✓ Turbo: ${pkg.devDependencies?.turbo || "not found"}`);
-  console.log(`  ✓ Node: ${pkg.engines?.node || "not specified"}`);
-  console.log(`  ✓ pnpm: ${pkg.packageManager || "not specified"}`);
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf-8'));
+  console.log(`  ✓ Turbo: ${pkg.devDependencies?.turbo || 'not found'}`);
+  console.log(`  ✓ Node: ${pkg.engines?.node || 'not specified'}`);
+  console.log(`  ✓ pnpm: ${pkg.packageManager || 'not specified'}`);
 } catch {
-  console.log("  ✗ Could not read package.json");
+  console.log('  ✗ Could not read package.json');
   hasErrors = true;
 }
 
-console.log("");
+console.log('');
 
-console.log("Environment Summary:");
+console.log('Environment Summary:');
 console.log(`  Root: ${ROOT}`);
 console.log(`  Platform: ${process.platform}`);
 console.log(`  Architecture: ${process.arch}`);
-console.log("");
+console.log('');
 
 if (hasErrors) {
-  console.error("❌ Diagnostic completed with errors.");
+  console.error('❌ Diagnostic completed with errors.');
 
   process.exit(1);
 }
 
-console.log("✅ Diagnostic completed successfully.");
+console.log('✅ Diagnostic completed successfully.');
 
 process.exit(0);

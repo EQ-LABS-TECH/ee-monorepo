@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
-import { parse } from "yaml";
+import { spawnSync } from 'node:child_process';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { parse } from 'yaml';
 
 const ROOT = process.cwd();
 
@@ -11,8 +11,8 @@ function execCommand(cmd, args, label) {
   console.log(`  ${label}...`);
 
   const result = spawnSync(cmd, args, {
-    stdio: "inherit",
-    shell: process.platform === "win32",
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
     cwd: ROOT,
   });
 
@@ -23,22 +23,22 @@ function validateStructure() {
   const errors = [];
 
   const requiredDirectories = [
-    "apps",
-    "apps/extensions",
-    "connectors",
-    "connectors/official",
-    "packages",
-    "packages/config",
-    "packages/foundation",
-    "packages/shared",
-    "packages/execution",
-    "packages/intelligence",
-    "packages/knowledge",
-    "packages/governance",
-    "packages/integration",
-    "packages/registry",
-    "packages/sdk",
-    "scripts",
+    'apps',
+    'apps/extensions',
+    'connectors',
+    'connectors/official',
+    'packages',
+    'packages/config',
+    'packages/foundation',
+    'packages/shared',
+    'packages/execution',
+    'packages/intelligence',
+    'packages/knowledge',
+    'packages/governance',
+    'packages/integration',
+    'packages/registry',
+    'packages/sdk',
+    'scripts',
   ];
 
   for (const directory of requiredDirectories) {
@@ -51,26 +51,26 @@ function validateStructure() {
 
   try {
     const allowedTopLevel = new Set([
-      "apps",
-      "packages",
-      "connectors",
-      "scripts",
-      "docs",
-      "assets",
-      "data",
-      "examples",
-      "marketplace",
-      "infra",
-      "templates",
-      ".github",
-      ".vscode",
-      ".changeset",
-      ".devcontainer",
-      ".git",
-      ".turbo",
-      "node_modules",
+      'apps',
+      'packages',
+      'connectors',
+      'scripts',
+      'docs',
+      'assets',
+      'data',
+      'examples',
+      'marketplace',
+      'infra',
+      'templates',
+      '.github',
+      '.vscode',
+      '.changeset',
+      '.devcontainer',
+      '.git',
+      '.turbo',
+      'node_modules',
     ]);
-    const forbiddenTopLevel = new Set(["docker", "k8s", "kubernetes"]);
+    const forbiddenTopLevel = new Set(['docker', 'k8s', 'kubernetes']);
 
     for (const name of readdirSync(ROOT)) {
       const full = join(ROOT, name);
@@ -85,7 +85,7 @@ function validateStructure() {
         errors.push(
           `QG-ARCH-001: forbidden top-level directory "${name}/" (use infra/ per EE-RFC-001 / EE-DOC-006)`,
         );
-      } else if (!allowedTopLevel.has(name) && !name.startsWith(".")) {
+      } else if (!allowedTopLevel.has(name) && !name.startsWith('.')) {
         errors.push(
           `QG-ARCH-001: unauthorized top-level directory "${name}/" (EE-DOC-006 allowlist)`,
         );
@@ -105,56 +105,50 @@ function validateStructure() {
 function validateWorkspace() {
   const errors = [];
 
-  const workspacePath = join(ROOT, "pnpm-workspace.yaml");
+  const workspacePath = join(ROOT, 'pnpm-workspace.yaml');
 
   if (!existsSync(workspacePath)) {
-    errors.push("Missing pnpm-workspace.yaml");
+    errors.push('Missing pnpm-workspace.yaml');
 
     return errors;
   }
 
   try {
-    const content = readFileSync(workspacePath, "utf-8");
+    const content = readFileSync(workspacePath, 'utf-8');
 
     const workspace = parse(content);
 
-    if (
-      !workspace ||
-      typeof workspace !== "object" ||
-      Array.isArray(workspace)
-    ) {
-      errors.push("pnpm-workspace.yaml does not contain a valid YAML object");
+    if (!workspace || typeof workspace !== 'object' || Array.isArray(workspace)) {
+      errors.push('pnpm-workspace.yaml does not contain a valid YAML object');
 
       return errors;
     }
 
     if (!Array.isArray(workspace.packages)) {
-      errors.push("pnpm-workspace.yaml must define packages as an array");
+      errors.push('pnpm-workspace.yaml must define packages as an array');
 
       return errors;
     }
 
     const requiredPatterns = [
-      "apps/*",
-      "apps/extensions/*",
-      "connectors/official/*",
-      "packages/config/*",
-      "packages/foundation",
-      "packages/shared",
-      "packages/execution",
-      "packages/intelligence",
-      "packages/knowledge",
-      "packages/governance",
-      "packages/integration",
-      "packages/registry",
-      "packages/sdk",
+      'apps/*',
+      'apps/extensions/*',
+      'connectors/official/*',
+      'packages/config/*',
+      'packages/foundation',
+      'packages/shared',
+      'packages/execution',
+      'packages/intelligence',
+      'packages/knowledge',
+      'packages/governance',
+      'packages/integration',
+      'packages/registry',
+      'packages/sdk',
     ];
 
     for (const pattern of requiredPatterns) {
       if (!workspace.packages.includes(pattern)) {
-        errors.push(
-          `pnpm-workspace.yaml missing workspace pattern: ${pattern}`,
-        );
+        errors.push(`pnpm-workspace.yaml missing workspace pattern: ${pattern}`);
       }
     }
   } catch (error) {
@@ -170,7 +164,7 @@ function validateWorkspace() {
 
 function validateDocumentation() {
   const errors = [];
-  const requiredFiles = ["README.md", "LICENSE", "NOTICE", "CHANGELOG.md"];
+  const requiredFiles = ['README.md', 'LICENSE', 'NOTICE', 'CHANGELOG.md'];
 
   for (const file of requiredFiles) {
     if (!existsSync(join(ROOT, file))) {
@@ -179,23 +173,23 @@ function validateDocumentation() {
   }
 
   try {
-    const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf-8"));
+    const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf-8'));
     if (!pkg.name) {
-      errors.push("QG-DOC-002: package.json missing name");
+      errors.push('QG-DOC-002: package.json missing name');
     }
     if (!pkg.engines?.node) {
-      errors.push("QG-DOC-002: package.json missing engines.node");
+      errors.push('QG-DOC-002: package.json missing engines.node');
     }
 
-    const nvmPath = join(ROOT, ".nvmrc");
+    const nvmPath = join(ROOT, '.nvmrc');
     if (!existsSync(nvmPath)) {
-      errors.push("QG-DOC-002: missing .nvmrc");
+      errors.push('QG-DOC-002: missing .nvmrc');
     } else {
-      const nvm = readFileSync(nvmPath, "utf-8").trim();
+      const nvm = readFileSync(nvmPath, 'utf-8').trim();
       if (!nvm) {
-        errors.push("QG-DOC-002: .nvmrc is empty");
+        errors.push('QG-DOC-002: .nvmrc is empty');
       } else if (pkg.engines?.node) {
-        const major = nvm.split(".")[0];
+        const major = nvm.split('.')[0];
         if (!pkg.engines.node.includes(major)) {
           errors.push(
             `QG-DOC-002: engines.node (${pkg.engines.node}) does not align with .nvmrc (${nvm})`,
@@ -217,10 +211,10 @@ function validateDocumentation() {
 function validateInfra() {
   const errors = [];
   const required = [
-    "infra/containers",
-    "infra/orchestration",
-    "infra/secrets",
-    "infra/secrets/.gitignore",
+    'infra/containers',
+    'infra/orchestration',
+    'infra/secrets',
+    'infra/secrets/.gitignore',
   ];
 
   for (const path of required) {
@@ -234,34 +228,34 @@ function validateInfra() {
 
 function validateTemplates() {
   const errors = [];
-  const templatesRoot = join(ROOT, "templates");
+  const templatesRoot = join(ROOT, 'templates');
   const categoryMap = {
-    document: "T-DOC",
-    package: "T-PKG",
-    app: "T-APP",
-    connector: "T-CON",
+    document: 'T-DOC',
+    package: 'T-PKG',
+    app: 'T-APP',
+    connector: 'T-CON',
   };
   const required = [
-    "schemaVersion",
-    "id",
-    "name",
-    "category",
-    "version",
-    "description",
-    "target",
-    "owner",
-    "locale",
-    "allowedTargets",
-    "inputs",
-    "outputs",
+    'schemaVersion',
+    'id',
+    'name',
+    'category',
+    'version',
+    'description',
+    'target',
+    'owner',
+    'locale',
+    'allowedTargets',
+    'inputs',
+    'outputs',
   ];
 
   if (!existsSync(templatesRoot)) {
-    errors.push("QG-REPO-001: missing templates/ (EE-DOC-012 / EE-RFC-002)");
+    errors.push('QG-REPO-001: missing templates/ (EE-DOC-012 / EE-RFC-002)');
     return errors;
   }
-  if (!existsSync(join(templatesRoot, "template.schema.json"))) {
-    errors.push("QG-REPO-001: missing templates/template.schema.json");
+  if (!existsSync(join(templatesRoot, 'template.schema.json'))) {
+    errors.push('QG-REPO-001: missing templates/template.schema.json');
   }
   for (const dir of Object.keys(categoryMap)) {
     if (!existsSync(join(templatesRoot, dir))) {
@@ -281,22 +275,18 @@ function validateTemplates() {
     }
     for (const ent of entries) {
       if (!ent.isDirectory()) continue;
-      const metaPath = join(catPath, ent.name, "template.json");
+      const metaPath = join(catPath, ent.name, 'template.json');
       if (!existsSync(metaPath)) continue;
       let data;
       try {
-        data = JSON.parse(readFileSync(metaPath, "utf8"));
+        data = JSON.parse(readFileSync(metaPath, 'utf8'));
       } catch (e) {
-        errors.push(
-          `QG-REPO-001: invalid JSON ${dir}/${ent.name}/template.json: ${e.message}`,
-        );
+        errors.push(`QG-REPO-001: invalid JSON ${dir}/${ent.name}/template.json: ${e.message}`);
         continue;
       }
       for (const key of required) {
         if (data[key] === undefined || data[key] === null) {
-          errors.push(
-            `QG-REPO-001: ${dir}/${ent.name}/template.json missing required "${key}"`,
-          );
+          errors.push(`QG-REPO-001: ${dir}/${ent.name}/template.json missing required "${key}"`);
         }
       }
       if (data.category && data.category !== expectedCat) {
@@ -315,45 +305,45 @@ function validateTemplates() {
   return errors;
 }
 
-console.log("🔬 Running full validation suite...");
+console.log('🔬 Running full validation suite...');
 
-console.log("");
+console.log('');
 
 const validations = [
   {
-    cmd: "turbo",
-    args: ["run", "typecheck"],
-    label: "Type checking",
+    cmd: 'turbo',
+    args: ['run', 'typecheck'],
+    label: 'Type checking',
     critical: true,
   },
   {
-    cmd: "turbo",
-    args: ["run", "lint"],
-    label: "Linting",
+    cmd: 'turbo',
+    args: ['run', 'lint'],
+    label: 'Linting',
     critical: true,
   },
   {
-    cmd: "turbo",
-    args: ["run", "test"],
-    label: "Tests",
+    cmd: 'turbo',
+    args: ['run', 'test'],
+    label: 'Tests',
     critical: true,
   },
   {
-    cmd: "turbo",
-    args: ["run", "build"],
-    label: "Build",
+    cmd: 'turbo',
+    args: ['run', 'build'],
+    label: 'Build',
     critical: true,
   },
   {
-    cmd: "pnpm",
-    args: ["exec", "prettier", "--check", "."],
-    label: "Format check",
+    cmd: 'pnpm',
+    args: ['exec', 'prettier', '--check', '.'],
+    label: 'Format check',
     critical: true,
   },
   {
-    cmd: "pnpm",
-    args: ["audit", "--audit-level", "high"],
-    label: "Security audit",
+    cmd: 'pnpm',
+    args: ['audit', '--audit-level', 'high'],
+    label: 'Security audit',
     critical: true,
   },
 ];
@@ -372,10 +362,10 @@ for (const validation of validations) {
     }
   }
 
-  console.log("");
+  console.log('');
 }
 
-console.log("  Checking project structure...");
+console.log('  Checking project structure...');
 const structureErrors = validateStructure();
 if (structureErrors.length > 0) {
   hasErrors = true;
@@ -383,9 +373,9 @@ if (structureErrors.length > 0) {
     console.error(`    ❌ ${error}`);
   });
 }
-console.log("");
+console.log('');
 
-console.log("  Checking workspace configuration...");
+console.log('  Checking workspace configuration...');
 const workspaceErrors = validateWorkspace();
 if (workspaceErrors.length > 0) {
   hasErrors = true;
@@ -393,9 +383,9 @@ if (workspaceErrors.length > 0) {
     console.error(`    ❌ ${error}`);
   });
 }
-console.log("");
+console.log('');
 
-console.log("  Checking documentation gates (QG-DOC-001/002)...");
+console.log('  Checking documentation gates (QG-DOC-001/002)...');
 const docErrors = validateDocumentation();
 if (docErrors.length > 0) {
   hasErrors = true;
@@ -403,9 +393,9 @@ if (docErrors.length > 0) {
     console.error(`    ❌ ${error}`);
   });
 }
-console.log("");
+console.log('');
 
-console.log("  Checking infrastructure gates (QG-INFRA-001)...");
+console.log('  Checking infrastructure gates (QG-INFRA-001)...');
 const infraErrors = validateInfra();
 if (infraErrors.length > 0) {
   hasErrors = true;
@@ -413,9 +403,9 @@ if (infraErrors.length > 0) {
     console.error(`    ❌ ${error}`);
   });
 }
-console.log("");
+console.log('');
 
-console.log("  Checking templates gates (QG-REPO-001)...");
+console.log('  Checking templates gates (QG-REPO-001)...');
 const templateErrors = validateTemplates();
 if (templateErrors.length > 0) {
   hasErrors = true;
@@ -423,29 +413,29 @@ if (templateErrors.length > 0) {
     console.error(`    ❌ ${error}`);
   });
 }
-console.log("");
+console.log('');
 
-console.log("📊 Validation Summary:");
+console.log('📊 Validation Summary:');
 
-console.log("=====================");
+console.log('=====================');
 
-console.log("");
+console.log('');
 
 if (!hasErrors && warnings.length === 0) {
-  console.log("✅ All validations passed successfully!");
+  console.log('✅ All validations passed successfully!');
 } else {
   if (warnings.length > 0) {
-    console.log("⚠️ Warnings:");
+    console.log('⚠️ Warnings:');
 
     warnings.forEach((warning) => {
       console.log(`  ${warning}`);
     });
 
-    console.log("");
+    console.log('');
   }
 
   if (hasErrors) {
-    console.log("❌ Critical errors found. Please fix them before proceeding.");
+    console.log('❌ Critical errors found. Please fix them before proceeding.');
   }
 }
 

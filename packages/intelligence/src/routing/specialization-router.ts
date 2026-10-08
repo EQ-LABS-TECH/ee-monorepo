@@ -3,8 +3,8 @@ import type {
   CatalogPort,
   InferenceRequest,
   InferenceResponse,
-} from "@eq-labs/foundation";
-import type { ProviderRouter } from "./provider-router.js";
+} from '@eq-labs/foundation';
+import type { ProviderRouter } from './provider-router.js';
 
 export class SpecializationRouter {
   constructor(
@@ -18,9 +18,9 @@ export class SpecializationRouter {
   ): Promise<InferenceResponse | AIError> {
     if (specializationId && !this.catalog) {
       return {
-        code: "DEGRADED",
+        code: 'DEGRADED',
         message:
-          "CatalogPort not injected; cannot resolve specialization (no silent parallel catalog)",
+          'CatalogPort not injected; cannot resolve specialization (no silent parallel catalog)',
         retryable: false,
         requestId: request.requestId,
       };
@@ -30,15 +30,15 @@ export class SpecializationRouter {
       const meta = await this.catalog.getSpecialization(specializationId);
       if (!meta) {
         return {
-          code: "NOT_APPLICABLE",
+          code: 'NOT_APPLICABLE',
           message: `Unknown specialization: ${specializationId}`,
           retryable: false,
           requestId: request.requestId,
         };
       }
-      if (meta.status === "disabled") {
+      if (meta.status === 'disabled') {
         return {
-          code: "NOT_APPLICABLE",
+          code: 'NOT_APPLICABLE',
           message: `Specialization disabled: ${specializationId}`,
           retryable: false,
           requestId: request.requestId,

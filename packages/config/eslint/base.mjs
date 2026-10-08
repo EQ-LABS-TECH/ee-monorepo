@@ -1,21 +1,21 @@
-import eslint from "@eslint/js";
+import eslint from '@eslint/js';
 
 export default [
   {
-    files: ["**/*.{js,jsx,mjs,cjs}"],
+    files: ['**/*.{js,jsx,mjs,cjs}'],
     languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
+      ecmaVersion: 'latest',
+      sourceType: 'module',
     },
     rules: {
-      "no-console": "warn",
-      "no-debugger": "error",
-      "no-duplicate-imports": "error",
-      "no-unused-vars": [
-        "error",
+      'no-console': 'warn',
+      'no-debugger': 'error',
+      'no-duplicate-imports': 'error',
+      'no-unused-vars': [
+        'error',
         {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
         },
       ],
     },
@@ -25,14 +25,14 @@ export default [
 
   {
     ignores: [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/build/**",
-      "**/lib/**",
-      "**/out/**",
-      "**/bin/**",
-      "**/coverage/**",
-      "**/.turbo/**",
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/lib/**',
+      '**/out/**',
+      '**/bin/**',
+      '**/coverage/**',
+      '**/.turbo/**',
     ],
   },
 ];

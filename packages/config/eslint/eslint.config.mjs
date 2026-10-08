@@ -1,3 +1,3 @@
-import base from "@eq-labs/config-eslint/base";
+import base from '@eq-labs/config-eslint/base';
 
 export default base;

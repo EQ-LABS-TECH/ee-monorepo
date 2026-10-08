@@ -1,12 +1,12 @@
 export type AIErrorCode =
-  | "PROVIDER_UNAVAILABLE"
-  | "TIMEOUT"
-  | "RATE_LIMITED"
-  | "INVALID_REQUEST"
-  | "AUTH_FAILED"
-  | "DEGRADED"
-  | "NOT_APPLICABLE"
-  | "INTERNAL";
+  | 'PROVIDER_UNAVAILABLE'
+  | 'TIMEOUT'
+  | 'RATE_LIMITED'
+  | 'INVALID_REQUEST'
+  | 'AUTH_FAILED'
+  | 'DEGRADED'
+  | 'NOT_APPLICABLE'
+  | 'INTERNAL';
 
 export interface AIError {
   code: AIErrorCode;
@@ -20,10 +20,10 @@ export interface AIError {
 
 export function isAIError(value: unknown): value is AIError {
   return (
-    typeof value === "object" &&
+    typeof value === 'object' &&
     value !== null &&
-    "code" in value &&
-    "message" in value &&
-    "retryable" in value
+    'code' in value &&
+    'message' in value &&
+    'retryable' in value
   );
 }

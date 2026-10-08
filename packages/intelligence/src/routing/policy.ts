@@ -1,4 +1,4 @@
-import type { AIError, AIProvider } from "@eq-labs/foundation";
+import type { AIError, AIProvider } from '@eq-labs/foundation';
 
 export interface RoutingDecision {
   providerId: string;
@@ -17,8 +17,8 @@ export const defaultRoutingPolicy: RoutingPolicy = {
   selectProvider({ providers, defaultProviderId, specializationId }) {
     if (providers.length === 0) {
       return {
-        code: "PROVIDER_UNAVAILABLE",
-        message: "No AI providers registered in ProviderRouter",
+        code: 'PROVIDER_UNAVAILABLE',
+        message: 'No AI providers registered in ProviderRouter',
         retryable: false,
       };
     }
@@ -26,7 +26,7 @@ export const defaultRoutingPolicy: RoutingPolicy = {
       const found = providers.find((p) => p.id === defaultProviderId);
       if (!found) {
         return {
-          code: "PROVIDER_UNAVAILABLE",
+          code: 'PROVIDER_UNAVAILABLE',
           message: `Default provider not registered: ${defaultProviderId}`,
           retryable: false,
         };
@@ -36,8 +36,8 @@ export const defaultRoutingPolicy: RoutingPolicy = {
     const first = providers[0];
     if (!first) {
       return {
-        code: "PROVIDER_UNAVAILABLE",
-        message: "No AI providers registered in ProviderRouter",
+        code: 'PROVIDER_UNAVAILABLE',
+        message: 'No AI providers registered in ProviderRouter',
         retryable: false,
       };
     }

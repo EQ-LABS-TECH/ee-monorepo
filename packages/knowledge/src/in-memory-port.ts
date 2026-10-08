@@ -8,8 +8,8 @@ import type {
   KnowledgeQueryResult,
   KnowledgeSemanticSearchRequest,
   KnowledgeUnit,
-} from "@eq-labs/foundation";
-import { KNOWLEDGE_PORT_VERSION } from "@eq-labs/foundation";
+} from '@eq-labs/foundation';
+import { KNOWLEDGE_PORT_VERSION } from '@eq-labs/foundation';
 
 /**
  * In-memory KnowledgePort — evidence implementation (EE-IMP-014-P03).
@@ -22,19 +22,17 @@ export function createInMemoryKnowledgePort(): KnowledgePort {
     async health(): Promise<KnowledgeHealth> {
       return {
         ok: true,
-        backend: "in-memory",
+        backend: 'in-memory',
         portVersion: KNOWLEDGE_PORT_VERSION,
         details: `units=${store.size}`,
       };
     },
 
-    async index(
-      request: KnowledgeIndexRequest,
-    ): Promise<KnowledgeIndexResult | KnowledgeError> {
+    async index(request: KnowledgeIndexRequest): Promise<KnowledgeIndexResult | KnowledgeError> {
       if (!request?.units || !Array.isArray(request.units)) {
         return {
-          code: "INVALID_REQUEST",
-          message: "index requires units[]",
+          code: 'INVALID_REQUEST',
+          message: 'index requires units[]',
           retryable: false,
         };
       }
@@ -42,11 +40,11 @@ export function createInMemoryKnowledgePort(): KnowledgePort {
       let rejected = 0;
       const errors: KnowledgeError[] = [];
       for (const unit of request.units) {
-        if (!unit?.id || typeof unit.content !== "string") {
+        if (!unit?.id || typeof unit.content !== 'string') {
           rejected += 1;
           errors.push({
-            code: "INVALID_REQUEST",
-            message: "unit requires id and content",
+            code: 'INVALID_REQUEST',
+            message: 'unit requires id and content',
             retryable: false,
             unitId: unit?.id,
           });
@@ -58,18 +56,14 @@ export function createInMemoryKnowledgePort(): KnowledgePort {
       return { accepted, rejected, errors: errors.length ? errors : undefined };
     },
 
-    async query(
-      filter: KnowledgeQueryFilter,
-    ): Promise<KnowledgeQueryResult | KnowledgeError> {
+    async query(filter: KnowledgeQueryFilter): Promise<KnowledgeQueryResult | KnowledgeError> {
       let units = [...store.values()];
       if (filter?.ids?.length) {
         const set = new Set(filter.ids);
         units = units.filter((u) => set.has(u.id));
       }
       if (filter?.tags?.length) {
-        units = units.filter((u) =>
-          filter.tags!.every((t) => u.meta?.tags?.includes(t)),
-        );
+        units = units.filter((u) => filter.tags!.every((t) => u.meta?.tags?.includes(t)));
       }
       if (filter?.source) {
         units = units.filter((u) => u.meta?.source === filter.source);
@@ -84,7 +78,7 @@ export function createInMemoryKnowledgePort(): KnowledgePort {
       const unit = store.get(id);
       if (!unit) {
         return {
-          code: "NOT_FOUND",
+          code: 'NOT_FOUND',
           message: `unit not found: ${id}`,
           retryable: false,
           unitId: id,
@@ -97,9 +91,9 @@ export function createInMemoryKnowledgePort(): KnowledgePort {
       _request: KnowledgeSemanticSearchRequest,
     ): Promise<KnowledgeQueryResult | KnowledgeError> {
       return {
-        code: "NOT_IMPLEMENTED",
+        code: 'NOT_IMPLEMENTED',
         message:
-          "semanticSearch PENDING until Embedding ABI + store (EE-IMP-014-P04 / EE-DOC-014 §04.6)",
+          'semanticSearch PENDING until Embedding ABI + store (EE-IMP-014-P04 / EE-DOC-014 §04.6)',
         retryable: false,
       };
     },

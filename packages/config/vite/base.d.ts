@@ -1,4 +1,4 @@
-import type { UserConfig } from "vite";
+import type { UserConfig } from 'vite';
 
 declare const config: UserConfig;
 

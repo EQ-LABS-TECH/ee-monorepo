@@ -6,7 +6,7 @@
 export interface SpecializationMeta {
   id: string;
   capabilities?: string[];
-  status?: "active" | "deprecated" | "disabled";
+  status?: 'active' | 'deprecated' | 'disabled';
   /** Opaque routing hints; Router interprets policy. */
   routingHints?: Record<string, unknown>;
 }

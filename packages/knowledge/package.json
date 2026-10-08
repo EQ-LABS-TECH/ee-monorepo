@@ -27,6 +27,7 @@
     "@eq-labs/foundation": "workspace:*"
   },
   "devDependencies": {
+    "@eq-labs/config-vitest": "workspace:*",
     "@eq-labs/config-eslint": "workspace:*",
     "@eq-labs/config-typescript": "workspace:*",
     "eslint": "9.35.0",

@@ -68,7 +68,7 @@ Note: This configuration does not enable project parsing (parserOptions.projectS
 A JavaScript workspace can consume the base configuration:
 
 ```js
-import base from "@eq-labs/config-eslint/base";
+import base from '@eq-labs/config-eslint/base';
 
 export default base;
 ```
@@ -76,7 +76,7 @@ export default base;
 A TypeScript workspace can consume the TypeScript configuration:
 
 ```js
-import typescript from "@eq-labs/config-eslint/typescript";
+import typescript from '@eq-labs/config-eslint/typescript';
 
 export default typescript;
 ```

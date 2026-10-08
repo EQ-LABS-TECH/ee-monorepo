@@ -18,15 +18,6 @@
       "description": "App directory name; package @eq-labs/<name>."
     }
   ],
-  "outputs": [
-    "package.json",
-    "tsconfig.json",
-    "eslint.config.mjs",
-    "src/index.ts",
-    "README.md"
-  ],
-  "preconditions": [
-    "destination under apps/",
-    "name must not collide with existing app"
-  ]
+  "outputs": ["package.json", "tsconfig.json", "eslint.config.mjs", "src/index.ts", "README.md"],
+  "preconditions": ["destination under apps/", "name must not collide with existing app"]
 }

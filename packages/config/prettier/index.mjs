@@ -6,12 +6,12 @@ export default {
   semi: true,
   singleQuote: true,
 
-  trailingComma: "all",
+  trailingComma: 'all',
 
   bracketSpacing: true,
   bracketSameLine: false,
 
-  arrowParens: "always",
+  arrowParens: 'always',
 
-  endOfLine: "lf",
+  endOfLine: 'lf',
 };

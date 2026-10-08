@@ -7,8 +7,8 @@ import type {
   CatalogPort,
   InferenceRequest,
   InferenceResponse,
-} from "@eq-labs/foundation";
-import { isAIError } from "@eq-labs/foundation";
+} from '@eq-labs/foundation';
+import { isAIError } from '@eq-labs/foundation';
 import {
   ProviderRouter,
   SpecializationRouter,
@@ -17,8 +17,8 @@ import {
   DEFAULT_OBSERVABILITY_POLICY,
   type InvocationLogSink,
   type ObservabilityPolicy,
-} from "@eq-labs/intelligence";
-import { noopProvider } from "./noop-provider.js";
+} from '@eq-labs/intelligence';
+import { noopProvider } from './noop-provider.js';
 
 export interface AiRootOptions {
   catalog?: CatalogPort | null;
@@ -32,19 +32,16 @@ export interface AiRootOptions {
 export function createAiRoot(options: AiRootOptions = {}) {
   const providerRouter = new ProviderRouter();
   providerRouter.register(noopProvider);
-  providerRouter.setDefault(options.defaultProviderId ?? "noop");
+  providerRouter.setDefault(options.defaultProviderId ?? 'noop');
 
-  const specializationRouter = new SpecializationRouter(
-    providerRouter,
-    options.catalog ?? null,
-  );
+  const specializationRouter = new SpecializationRouter(providerRouter, options.catalog ?? null);
 
   const logger = createInvocationLogger(
     options.observabilityPolicy ?? DEFAULT_OBSERVABILITY_POLICY,
     options.logSink ??
       ((event) => {
         // Metadata only; raw fields omitted by default policy.
-        console.info("[ai-invocation]", JSON.stringify(event));
+        console.info('[ai-invocation]', JSON.stringify(event));
       }),
   );
 
@@ -58,10 +55,7 @@ export function createAiRoot(options: AiRootOptions = {}) {
   ): Promise<InferenceResponse | AIError> {
     const correlationId = createCorrelationId();
     const started = Date.now();
-    const result = await specializationRouter.inferForSpecialization(
-      specializationId,
-      request,
-    );
+    const result = await specializationRouter.inferForSpecialization(specializationId, request);
     const latencyMs = Date.now() - started;
     const resolved = providerRouter.resolve(specializationId);
     const providerId = isAIError(resolved) ? undefined : resolved.id;
@@ -84,6 +78,6 @@ export function createAiRoot(options: AiRootOptions = {}) {
     specializationRouter,
     logger,
     infer,
-    rootId: "apps/cli/composition/ai-root",
+    rootId: 'apps/cli/composition/ai-root',
   };
 }

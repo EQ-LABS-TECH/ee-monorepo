@@ -1,5 +1,5 @@
-import type { AISpiVersion } from "./version.js";
-import { AI_SPI_VERSION } from "./version.js";
+import type { AISpiVersion } from './version.js';
+import { AI_SPI_VERSION } from './version.js';
 
 export interface GenerationRequestOptions {
   timeoutMs?: number;
@@ -29,7 +29,7 @@ export interface GenerationResponse {
 }
 
 export function createGenerationRequest(
-  partial: Omit<GenerationRequest, "spiVersion"> & {
+  partial: Omit<GenerationRequest, 'spiVersion'> & {
     spiVersion?: AISpiVersion;
   },
 ): GenerationRequest {

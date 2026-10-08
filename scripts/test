@@ -1,17 +1,17 @@
 #!/usr/bin/env node
-import { spawnSync } from "node:child_process";
+import { spawnSync } from 'node:child_process';
 
-console.log("🧪 Running tests (QG-TEST-001)...");
-console.log("");
+console.log('🧪 Running tests (QG-TEST-001)...');
+console.log('');
 
-const result = spawnSync("pnpm", ["exec", "turbo", "run", "test"], {
-  encoding: "utf-8",
-  shell: process.platform === "win32",
+const result = spawnSync('pnpm', ['exec', 'turbo', 'run', 'test'], {
+  encoding: 'utf-8',
+  shell: process.platform === 'win32',
   cwd: process.cwd(),
 });
 
-const stdout = result.stdout ?? "";
-const stderr = result.stderr ?? "";
+const stdout = result.stdout ?? '';
+const stderr = result.stderr ?? '';
 process.stdout.write(stdout);
 process.stderr.write(stderr);
 
@@ -21,20 +21,20 @@ const zeroTasks =
   /Tasks:\s*0 successful,\s*0 total/i.test(combined);
 
 if (result.status !== 0 && result.status !== null) {
-  console.error("");
-  console.error("❌ QG-TEST-001: FAIL");
+  console.error('');
+  console.error('❌ QG-TEST-001: FAIL');
   process.exit(result.status ?? 1);
 }
 
 if (zeroTasks) {
-  console.log("");
+  console.log('');
   console.log(
-    "ℹ️ QG-TEST-001: SKIPPED — 0 test tasks (no workspace defines an executable `test` script).",
+    'ℹ️ QG-TEST-001: SKIPPED — 0 test tasks (no workspace defines an executable `test` script).',
   );
-  console.log("   Exit 0 with 0 tasks is not PASS (EE-DOC-010 §05.4).");
+  console.log('   Exit 0 with 0 tasks is not PASS (EE-DOC-010 §05.4).');
   process.exit(0);
 }
 
-console.log("");
-console.log("✅ QG-TEST-001: PASS");
+console.log('');
+console.log('✅ QG-TEST-001: PASS');
 process.exit(0);

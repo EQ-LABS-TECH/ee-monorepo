@@ -18,13 +18,7 @@
       "description": "Connector short name; package @eq-labs/connector-<name>."
     }
   ],
-  "outputs": [
-    "package.json",
-    "tsconfig.json",
-    "eslint.config.mjs",
-    "src/index.ts",
-    "README.md"
-  ],
+  "outputs": ["package.json", "tsconfig.json", "eslint.config.mjs", "src/index.ts", "README.md"],
   "preconditions": [
     "destination under connectors/official/ only (C-01, C-05)",
     "no secrets or IaC manifests (C-03, C-04)"

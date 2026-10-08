@@ -1,53 +1,47 @@
 #!/usr/bin/env node
 
-import { spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { spawnSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 
 const ROOT = process.cwd();
-const PLOPFILE = join(ROOT, "scripts", "plopfile.mjs");
+const PLOPFILE = join(ROOT, 'scripts', 'plopfile.mjs');
 
-console.log("🔧 Code Generator");
-console.log("=================");
-console.log("");
+console.log('🔧 Code Generator');
+console.log('=================');
+console.log('');
 
-const plopCheck = spawnSync("pnpm", ["exec", "plop", "--version"], {
-  stdio: "pipe",
-  encoding: "utf8",
-  shell: process.platform === "win32",
+const plopCheck = spawnSync('pnpm', ['exec', 'plop', '--version'], {
+  stdio: 'pipe',
+  encoding: 'utf8',
+  shell: process.platform === 'win32',
   cwd: ROOT,
 });
 
 if (plopCheck.status !== 0) {
-  console.error("❌ Plop is not available. Please run: pnpm install");
+  console.error('❌ Plop is not available. Please run: pnpm install');
   process.exit(1);
 }
 
 console.log(`  Plop: ${plopCheck.stdout.trim()}`);
-console.log("  Registry: scripts/plopfile.mjs");
-console.log("");
+console.log('  Registry: scripts/plopfile.mjs');
+console.log('');
 
 if (!existsSync(PLOPFILE)) {
-  console.error(
-    "❌ scripts/plopfile.mjs not found (EE-DOC-012 / EE-IMP-012-P05).",
-  );
-  console.error("   Generation registry is required (No False Pass).");
+  console.error('❌ scripts/plopfile.mjs not found (EE-DOC-012 / EE-IMP-012-P05).');
+  console.error('   Generation registry is required (No False Pass).');
   process.exit(1);
 }
 
 const forward = process.argv.slice(2);
 
-console.log("📦 Generating from templates...");
-console.log("");
+console.log('📦 Generating from templates...');
+console.log('');
 
-const result = spawnSync(
-  "pnpm",
-  ["exec", "plop", "--plopfile", PLOPFILE, ...forward],
-  {
-    stdio: "inherit",
-    shell: process.platform === "win32",
-    cwd: ROOT,
-  },
-);
+const result = spawnSync('pnpm', ['exec', 'plop', '--plopfile', PLOPFILE, ...forward], {
+  stdio: 'inherit',
+  shell: process.platform === 'win32',
+  cwd: ROOT,
+});
 
 process.exit(result.status ?? 1);

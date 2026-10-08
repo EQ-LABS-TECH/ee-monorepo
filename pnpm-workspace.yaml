@@ -14,6 +14,6 @@ packages:
   - packages/sdk
 
 ignoredBuiltDependencies:
-  - "@parcel/watcher"
+  - '@parcel/watcher'
   - esbuild
   - unrs-resolver

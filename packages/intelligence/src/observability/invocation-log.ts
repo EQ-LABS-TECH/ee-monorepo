@@ -1,6 +1,6 @@
-import type { ObservabilityPolicy } from "./policy.js";
-import { DEFAULT_OBSERVABILITY_POLICY } from "./policy.js";
-import { redactSensitive } from "./redaction.js";
+import type { ObservabilityPolicy } from './policy.js';
+import { DEFAULT_OBSERVABILITY_POLICY } from './policy.js';
+import { redactSensitive } from './redaction.js';
 
 /** Metadata-only invocation event (SEC-03 / §09.3). */
 export interface InvocationLogEvent {

@@ -52,7 +52,7 @@ The preset does not install or configure React Testing Library.
 A workspace using the base configuration can extend it with:
 
 ```js
-import base from "@eq-labs/config-vitest/base";
+import base from '@eq-labs/config-vitest/base';
 
 export default base;
 ```
@@ -60,7 +60,7 @@ export default base;
 A React workspace can use:
 
 ```js
-import react from "@eq-labs/config-vitest/react";
+import react from '@eq-labs/config-vitest/react';
 
 export default react;
 ```

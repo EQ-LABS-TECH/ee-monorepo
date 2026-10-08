@@ -18,13 +18,7 @@
       "description": "Package short name (kebab-case); becomes @eq-labs/<name>."
     }
   ],
-  "outputs": [
-    "package.json",
-    "tsconfig.json",
-    "eslint.config.mjs",
-    "src/index.ts",
-    "README.md"
-  ],
+  "outputs": ["package.json", "tsconfig.json", "eslint.config.mjs", "src/index.ts", "README.md"],
   "preconditions": [
     "name must not collide with existing workspace package",
     "generation under packages/<layer>/ requires EE-DOC-006 nested patterns (EE-DOC-012 section 13.1 deferred)"

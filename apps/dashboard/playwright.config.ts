@@ -1,5 +1,5 @@
-import { defineConfig } from "@playwright/test";
-import base from "@eq-labs/config-playwright/base";
+import { defineConfig } from '@playwright/test';
+import base from '@eq-labs/config-playwright/base';
 
 export default defineConfig({
   ...base,
@@ -10,12 +10,12 @@ export default defineConfig({
 
   use: {
     ...base.use,
-    baseURL: "http://127.0.0.1:5173",
+    baseURL: 'http://127.0.0.1:5173',
   },
 
   webServer: {
-    command: "pnpm dev --host 127.0.0.1",
-    url: "http://127.0.0.1:5173",
+    command: 'pnpm dev --host 127.0.0.1',
+    url: 'http://127.0.0.1:5173',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

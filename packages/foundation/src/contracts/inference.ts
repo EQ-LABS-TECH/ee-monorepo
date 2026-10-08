@@ -1,5 +1,5 @@
-import type { AISpiVersion } from "./version.js";
-import { AI_SPI_VERSION } from "./version.js";
+import type { AISpiVersion } from './version.js';
+import { AI_SPI_VERSION } from './version.js';
 
 export interface InferenceRequestOptions {
   timeoutMs?: number;
@@ -29,7 +29,7 @@ export interface InferenceResponse {
 }
 
 export function createInferenceRequest(
-  partial: Omit<InferenceRequest, "spiVersion"> & { spiVersion?: AISpiVersion },
+  partial: Omit<InferenceRequest, 'spiVersion'> & { spiVersion?: AISpiVersion },
 ): InferenceRequest {
   return {
     spiVersion: partial.spiVersion ?? AI_SPI_VERSION,

@@ -26,6 +26,7 @@
     "version-packages": "changeset version"
   },
   "devDependencies": {
+    "@eq-labs/config-prettier": "workspace:*",
     "@changesets/cli": "3.0.2",
     "plop": "4.0.0",
     "prettier": "3.6.2",

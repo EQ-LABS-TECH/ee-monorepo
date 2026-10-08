@@ -1,4 +1,4 @@
-﻿# CODEOWNERS — EE-DOC-007 §08 / EE-IMP-007-P04
+# CODEOWNERS — EE-DOC-007 §08 / EE-IMP-007-P04
 # Organization: EQ-LABS-TECH
 # Teams: architecture, repository-admin, maintainers, contributors
 # Last matching pattern takes precedence.
@@ -27,23 +27,25 @@ turbo.json                      @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintai
 # GitHub Governance (high impact)
 .github/                        @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin
 
-# Shared config (SSOT)
-packages/config/                @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-
-# Knowledge Layer (EE-DOC-014 / KS-06 / EE-IMP-014-P01)
-packages/knowledge/             @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-packages/foundation/src/contracts/knowledge.ts @EQ-LABS-TECH/architecture
-
-# Ecosystem packages & applications
+# Ecosystem packages & applications (general first)
 packages/                       @EQ-LABS-TECH/maintainers
 apps/                           @EQ-LABS-TECH/maintainers
 connectors/                     @EQ-LABS-TECH/maintainers
 
+# Shared config (SSOT) — after packages/ so it wins
+packages/config/                @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+
+# Knowledge Layer (EE-DOC-014 / KS-06) — after packages/
+packages/knowledge/             @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+packages/foundation/src/contracts/knowledge.ts  @EQ-LABS-TECH/architecture
+packages/foundation/src/contracts/knowledge*.ts @EQ-LABS-TECH/architecture
+
 # Automation scripts
 scripts/                        @EQ-LABS-TECH/repository-admin @EQ-LABS-TECH/maintainers
 
-# Documentation
+# Documentation (general then validation)
 docs/                           @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+docs/validation/                @EQ-LABS-TECH/architecture
 
 # Support / extensibility
 assets/                         @EQ-LABS-TECH/maintainers
@@ -56,6 +58,3 @@ infra/                          @EQ-LABS-TECH/architecture @EQ-LABS-TECH/reposit
 
 # Platform templates (EE-DOC-012)
 templates/                      @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-
-# Ecosystem validation evidence (EE-DOC-015 / EE-IMP-015-P01)
-docs/validation/    @EQ-LABS-TECH/architecture

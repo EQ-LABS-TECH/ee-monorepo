@@ -1,18 +1,18 @@
 #!/usr/bin/env node
-import { spawnSync } from "node:child_process";
-import { createAiRoot } from "./composition/ai-root.js";
-import { createKnowledgeRoot } from "./composition/knowledge-root.js";
+import { spawnSync } from 'node:child_process';
+import { createAiRoot } from './composition/ai-root.js';
+import { createKnowledgeRoot } from './composition/knowledge-root.js';
 
 const ALLOWED = new Set([
-  "doctor",
-  "validate",
-  "lint",
-  "typecheck",
-  "test",
-  "build",
-  "format",
-  "bootstrap",
-  "clean",
+  'doctor',
+  'validate',
+  'lint',
+  'typecheck',
+  'test',
+  'build',
+  'format',
+  'bootstrap',
+  'clean',
 ]);
 
 function printHelp(): void {
@@ -27,7 +27,7 @@ Root commands are the canonical automation surface (pnpm run <cmd>).
 This CLI does not reimplement Quality Gates.
 
 Delegable commands:
-  ${[...ALLOWED].join(", ")}
+  ${[...ALLOWED].join(', ')}
 
 composition — invoke apps/cli composition root (EE-DOC-006 §13.5 / EE-DOC-015 §05.2.2)
 `);
@@ -39,9 +39,9 @@ function runRoot(cmd: string): number {
     printHelp();
     return 1;
   }
-  const result = spawnSync("pnpm", ["run", cmd], {
-    stdio: "inherit",
-    shell: process.platform === "win32",
+  const result = spawnSync('pnpm', ['run', cmd], {
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
     cwd: process.cwd(),
   });
   return result.status ?? 1;
@@ -54,11 +54,11 @@ function runComposition(): number {
   console.log(
     JSON.stringify(
       {
-        compositionRoot: "apps/cli",
+        compositionRoot: 'apps/cli',
         aiRootId: ai.rootId,
-        defaultProvider: "noop",
+        defaultProvider: 'noop',
         knowledgePortVersion: knowledge.portVersion,
-        status: "wired",
+        status: 'wired',
       },
       null,
       2,
@@ -70,19 +70,19 @@ function runComposition(): number {
 const args = process.argv.slice(2);
 const [verb, target] = args;
 
-if (!verb || verb === "help" || verb === "--help" || verb === "-h") {
+if (!verb || verb === 'help' || verb === '--help' || verb === '-h') {
   printHelp();
   process.exit(0);
 }
 
-if (verb === "composition") {
+if (verb === 'composition') {
   process.exit(runComposition());
 }
 
-if (verb === "run" && target) {
+if (verb === 'run' && target) {
   process.exit(runRoot(target));
 }
 
-console.error(`Unknown usage: ${args.join(" ")}`);
+console.error(`Unknown usage: ${args.join(' ')}`);
 printHelp();
 process.exit(1);

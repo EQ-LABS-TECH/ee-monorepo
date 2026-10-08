@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": false,
   "type": "module",
+  "main": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs"
+  },
   "files": [
     "index.mjs",
     "README.md",

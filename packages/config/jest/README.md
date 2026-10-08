@@ -61,7 +61,7 @@ The transformation mechanism remains the responsibility of the consuming workspa
 A JavaScript workspace can consume the base configuration:
 
 ```js
-import config from "@eq-labs/config-jest/base";
+import config from '@eq-labs/config-jest/base';
 
 export default config;
 ```
@@ -69,7 +69,7 @@ export default config;
 A TypeScript workspace can consume the TypeScript configuration:
 
 ```js
-import config from "@eq-labs/config-jest/typescript";
+import config from '@eq-labs/config-jest/typescript';
 
 export default config;
 ```
@@ -90,7 +90,7 @@ For example:
 
 ```js
 export default {
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };
 ```
 

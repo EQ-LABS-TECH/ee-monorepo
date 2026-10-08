@@ -7,7 +7,7 @@ const SECRET_PATTERNS: RegExp[] = [
   /\b(github_pat_[a-zA-Z0-9_]{20,})\b/g,
 ];
 
-const REDACTED = "[REDACTED]";
+const REDACTED = '[REDACTED]';
 
 /**
  * Redact common secret-like substrings. Not a guarantee of absence of secrets

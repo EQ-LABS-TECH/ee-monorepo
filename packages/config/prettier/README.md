@@ -33,7 +33,7 @@ index.mjs
 A workspace can consume the shared configuration from its own Prettier configuration file:
 
 ```js
-import config from "@eq-labs/config-prettier";
+import config from '@eq-labs/config-prettier';
 
 export default config;
 ```

@@ -1,6 +1,6 @@
-import type { KnowledgeError } from "./knowledge-error.js";
-import type { KnowledgePortVersion } from "./knowledge-version.js";
-import { KNOWLEDGE_PORT_VERSION } from "./knowledge-version.js";
+import type { KnowledgeError } from './knowledge-error.js';
+import type { KnowledgePortVersion } from './knowledge-version.js';
+import { KNOWLEDGE_PORT_VERSION } from './knowledge-version.js';
 
 export interface KnowledgeUnitMeta {
   id: string;
@@ -39,7 +39,7 @@ export interface KnowledgeQueryResult {
 
 export interface KnowledgeHealth {
   ok: boolean;
-  backend: "in-memory" | "local" | "remote" | "none";
+  backend: 'in-memory' | 'local' | 'remote' | 'none';
   portVersion: KnowledgePortVersion | string;
   details?: string;
 }
@@ -56,12 +56,8 @@ export interface KnowledgeSemanticSearchRequest {
  */
 export interface KnowledgePort {
   health(): Promise<KnowledgeHealth | KnowledgeError>;
-  index(
-    request: KnowledgeIndexRequest,
-  ): Promise<KnowledgeIndexResult | KnowledgeError>;
-  query(
-    filter: KnowledgeQueryFilter,
-  ): Promise<KnowledgeQueryResult | KnowledgeError>;
+  index(request: KnowledgeIndexRequest): Promise<KnowledgeIndexResult | KnowledgeError>;
+  query(filter: KnowledgeQueryFilter): Promise<KnowledgeQueryResult | KnowledgeError>;
   retrieve(id: string): Promise<KnowledgeUnit | KnowledgeError>;
   semanticSearch(
     request: KnowledgeSemanticSearchRequest,
