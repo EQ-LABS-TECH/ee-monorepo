@@ -4,18 +4,18 @@ Definición operativa para auditorías de documentación del Engineering Ecosyst
 (gobernanza EE-DOC / EE-ADR / EE-RFC / EE-IMP / EE-TEC y evidencias asociadas).
 
 **Ámbito:** revisión normativa y de coherencia documental sobre `main`.
-**No sustituye:** Quality Gates de código (QG-*), EE-VAL de ecosistema, ni RFC/ADR
+**No sustituye:** Quality Gates de código (QG-\*), EE-VAL de ecosistema, ni RFC/ADR
 cuando el hallazgo lo exija.
 
 ---
 
 ## 1. Veredicto
 
-| Veredicto | Significado |
-| :-------- | :---------- |
-| **CONFORME** | Cumple todos los criterios obligatorios; hallazgos abiertos solo Menores aceptados o diferidos con plan |
-| **NO CONFORME** | Existe al menos un Bloqueante o Crítico abierto, o Mayor sin plan de cierre |
-| **CONFORME CON RESERVAS** | Sin Bloqueantes/Críticos; Mayores diferidos con mecanismo formal (Aclaración / ADR / RFC) y registro |
+| Veredicto                 | Significado                                                                                             |
+| :------------------------ | :------------------------------------------------------------------------------------------------------ |
+| **CONFORME**              | Cumple todos los criterios obligatorios; hallazgos abiertos solo Menores aceptados o diferidos con plan |
+| **NO CONFORME**           | Existe al menos un Bloqueante o Crítico abierto, o Mayor sin plan de cierre                             |
+| **CONFORME CON RESERVAS** | Sin Bloqueantes/Críticos; Mayores diferidos con mecanismo formal (Aclaración / ADR / RFC) y registro    |
 
 Un documento solo se marca **Auditado** en el AUDIT-LOG cuando el veredicto es
 **CONFORME** o **CONFORME CON RESERVAS** y la fila del log está completa.
@@ -48,7 +48,7 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 
 ### C4 — Referencias cruzadas
 
-- [ ] Códigos EE-* citados existen o están marcados como planificados/NO VERIFICABLE con causa
+- [ ] Códigos EE-\* citados existen o están marcados como planificados/NO VERIFICABLE con causa
 - [ ] Anclas §X.Y citadas son resolubles en el documento destino (o se registra gap)
 - [ ] No hay referencias rotas a ADRs/RFCs/IMPs/TECs cerrados como vigentes si no lo están
 
@@ -78,22 +78,22 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 
 ## 3. Clasificación de hallazgos
 
-| Severidad | Definición operativa |
-| :-------- | :------------------- |
+| Severidad      | Definición operativa                                                                             |
+| :------------- | :----------------------------------------------------------------------------------------------- |
 | **Bloqueante** | Impide usar el documento como norma (identidad inválida, tipo incorrecto, ruptura grave de SSOT) |
-| **Crítico** | Contradicción material con documento superior Congelado, o traza de implementación falsa |
-| **Mayor** | Gap de plantilla, matriz de trazabilidad incompleta, inconsistencia relevante corregible |
-| **Menor** | Cosmético, estilo, homogenización opcional, tipografía |
+| **Crítico**    | Contradicción material con documento superior Congelado, o traza de implementación falsa         |
+| **Mayor**      | Gap de plantilla, matriz de trazabilidad incompleta, inconsistencia relevante corregible         |
+| **Menor**      | Cosmético, estilo, homogenización opcional, tipografía                                           |
 
 ---
 
 ## 4. Política de trabajo
 
-| Actividad | Dónde |
-| :-------- | :---- |
-| Lectura / exploración / checklist | `main` actualizado |
-| Correcciones | Rama `docs/…` o `audit/…` desde `main` → PR → Squash and Merge |
-| Registro de progreso | `docs/validation/audit/AUDIT-LOG.md` |
+| Actividad                         | Dónde                                                          |
+| :-------------------------------- | :------------------------------------------------------------- |
+| Lectura / exploración / checklist | `main` actualizado                                             |
+| Correcciones                      | Rama `docs/…` o `audit/…` desde `main` → PR → Squash and Merge |
+| Registro de progreso              | `docs/validation/audit/AUDIT-LOG.md`                           |
 
 **Prohibido:** commits directos de correcciones normativas en `main` eludiendo PR.
 
