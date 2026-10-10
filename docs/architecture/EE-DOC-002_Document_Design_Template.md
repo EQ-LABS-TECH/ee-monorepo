@@ -1,5 +1,7 @@
 # EE-DOC-002 — Document Design Template
 
+Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (norma de diseño documental del ecosistema).
+
 ## METADATOS
 
 | Campo                 | Valor                           |
@@ -11,7 +13,7 @@
 | **Clasificación**     | Fundacional                     |
 | **Nivel**             | Estratégico                     |
 | **Normativo**         | Sí                              |
-| **Versión**           | v1.6.0                          |
+| **Versión**           | v1.6.1                          |
 | **Estado**            | Congelado                       |
 | **Propietario**       | Equipo de Arquitectura          |
 | **Documento padre**   | EE-DOC-001                      |
@@ -19,7 +21,7 @@
 | **Aprobado por**      | Equipo de Arquitectura          |
 | **Audiencia**         | Arquitectura, Desarrollo, IA    |
 | **Fecha de creación** | 2026-08-02                      |
-| **Última revisión**   | 2026-10-01                      |
+| **Última revisión**   | 2026-10-10                      |
 | **Próxima revisión**  | No aplica — Documento Congelado |
 
 ---
@@ -34,9 +36,7 @@ Este documento es la **plantilla oficial** que deben seguir todos los documentos
 
 ## 02. Alcance
 
-Este estándar aplica a todos los documentos del Engineering Ecosystem:
-
-- Este estándar aplica a todos los documentos definidos por el Master Documentation Index (EE-DOC-001), independientemente de su clasificación o fase dentro del Engineering Ecosystem.
+Aplica a todos los documentos definidos por **EE-DOC-001 — Master Documentation Index**, independientemente de su clasificación o fase dentro del Engineering Ecosystem.
 
 No aplica a:
 
@@ -74,10 +74,10 @@ Los documentos del Engineering Ecosystem se organizan en una jerarquía que esta
 
 > **Nota:** La jerarquía se define por tipo de documento, no por código específico. El `Master Documentation Index` (EE-DOC-001) es la fuente de verdad para la asignación de códigos y la estructura documental.
 
-**Regla de Precedencia:**
-En caso de conflicto entre dos documentos, prevalece el documento de nivel jerárquico superior. Un documento de nivel inferior no puede contradecir lo establecido en un documento de nivel superior, salvo que el documento superior haga referencia explícita a la excepción.
-
-Si dos documentos pertenecen al mismo nivel jerárquico y existe conflicto, prevalecerá el documento aprobado más recientemente, salvo que exista una relación explícita de dependencia entre ellos.
+> **Regla de Precedencia:**
+> En caso de conflicto entre dos documentos, prevalece el documento de nivel jerárquico superior. Un documento de nivel inferior no puede contradecir lo establecido en un documento de nivel superior, salvo que el documento superior haga referencia explícita a la excepción.
+>
+> Si dos documentos pertenecen al mismo nivel jerárquico y existe conflicto, prevalecerá el documento aprobado más recientemente, salvo que exista una relación explícita de dependencia entre ellos.
 
 ---
 
@@ -118,7 +118,9 @@ Todos los documentos deben incluir la siguiente tabla de metadatos al inicio:
 | **Audiencia**         | Público objetivo                  | Obligatorio    |
 | **Fecha de creación** | Fecha de creación                 | Obligatorio    |
 | **Última revisión**   | Fecha de última revisión          | Obligatorio    |
-| **Próxima revisión**  | Fecha de próxima revisión         | Obligatorio    |
+| **Próxima revisión**  | Fecha de próxima revisión         | Obligatorio\*  |
+
+> **(\*) Próxima revisión — excepción Congelado:** Si el **Estado** del documento es **Congelado**, el valor obligatorio del campo es `No aplica — Documento Congelado` (no se exige una fecha futura de revisión mientras permanezca congelado). Cualquier descongelamiento o nueva versión vuelve a exigir fecha o la misma excepción según el nuevo estado.
 
 > **Regla de Inmutabilidad:** Los campos **ID**, **Código corto** y **Fecha de creación** son inmutables una vez que el documento ha sido aprobado. No pueden modificarse bajo ninguna circunstancia.
 
@@ -246,7 +248,7 @@ flowchart TD
 |  🟢   | **Aprobado**                   | El documento fue aprobado y puede implementarse.                                                    |
 |  🟠   | **En Implementación**          | Se está implementando lo definido por el documento.                                                 |
 |  🔷   | **Documentado**                | La documentación técnica derivada ya fue generada y sincronizada.                                   |
-|  🟣   | **En Validación**              | La implementación y documentacion está siendo validada.                                             |
+|  🟣   | **En Validación**              | La implementación y documentación está siendo validada.                                             |
 |  ✅   | **Congelado**                  | Documento e implementación sincronizados, validados y formalmente cerrados para la versión vigente. |
 
 ### 13.1. Integridad normativa durante la implementación
@@ -387,7 +389,7 @@ Esta sección es la **Single Source of Truth** de la política de idioma por tip
 | **Mensajes y comunicación interna del equipo**                     | Español            | Fluidez operativa de la organización.                                        |
 
 > **Regla de Oro:** _Código e interfaces en Inglés; Gobernanza y Arquitectura en Español._
->
+
 > **Evolución del catálogo:** Cualquier ampliación o modificación de esta tabla deberá realizarse únicamente en esta sección (EE-DOC-002 §16.1), mediante el mecanismo de cambio gobernado aplicable. Los documentos especializados actualizarán sus referencias, no la norma.
 
 ---
@@ -1234,7 +1236,7 @@ Lista de verificación antes de aprobar un documento:
 
 ### 20.1. Plantilla en Blanco
 
-[Ver Sección 17 — Plantilla Base]
+[Ver Sección 18 — Plantillas Base]
 
 ### 20.2. Tabla de Iconos e Integridad de Ciclo de Vida
 
@@ -1298,6 +1300,7 @@ Todo documento nuevo deberá cumplir este estándar.
 | **v1.4.0** | 2026-09-21 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación plantilla EE-DOC con documentos implementables | Ampliación de §18.1: cola fija XX Plan de Implementación y Fases, YY Evolución, ZZ Cumplimiento, AA Referencias, BB Historial, CC Cierre Documental                       | **Congelado** |
 | **v1.5.0** | 2026-09-21 | Equipo de Arquitectura | Equipo de Arquitectura | SSOT política de idioma                                   | §16.1 ampliada (plantillas Issue/PR, CI/Actions, workflows, EE-IMP, EE-TEC); declaración explícita de Single Source of Truth; evolución del catálogo solo en esta sección | **Congelado** |
 | **v1.6.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Plantilla EE-RFC                                          | §18.5 Request for Comments (EE-RFC-XXX); derivada de EE-RFC-001/002                                                                                                       | **Congelado** |
+| **v1.6.1** | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) post-auditoría                        | §20.1 → §18 Plantillas Base; §05 excepción Próxima revisión en Congelado; §02 alcance sin redundancia; §13 tilde «documentación»; frase H1 de identidad del estándar      | **Congelado** |
 
 ---
 
