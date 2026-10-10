@@ -9,11 +9,11 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **ID**                | EE-DOC-001                              |
 | **Documento**         | Master Documentation Index              |
 | **Código corto**      | EE-DOC-001                              |
-| **Tipo**              | Documento de Gobernanza                 |
+| **Tipo**              | Documento Normativo                     |
 | **Clasificación**     | Fundacional                             |
 | **Nivel**             | Estratégico                             |
 | **Normativo**         | Sí                                      |
-| **Versión**           | v2.26.1                                 |
+| **Versión**           | v2.26.2                                 |
 | **Estado**            | Congelado                               |
 | **Propietario**       | Equipo de Arquitectura                  |
 | **Documento padre**   | No aplica                               |
@@ -21,12 +21,12 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**      | Equipo de Arquitectura                  |
 | **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección |
 | **Fecha de creación** | 2026-08-02                              |
-| **Última revisión**   | 2026-10-08                              |
+| **Última revisión**   | 2026-10-09                              |
 | **Próxima revisión**  | No aplica — Documento Congelado         |
 
 ---
 
-## 01. Propósito
+## 1. Propósito
 
 El **Master Documentation Index** es el mapa único, fuente de verdad, roadmap, planificación, estado documental, estado de implementación y trazabilidad del Engineering Ecosystem. Define qué documentos existen, su código, su propósito, su fase, su estado, qué genera y su orden de implementación.
 
@@ -40,7 +40,7 @@ Este documento garantiza que:
 
 ---
 
-## 02. Alcance
+## 2. Alcance
 
 Este índice cubre todos los documentos y reglas de la plataforma **EE-LABS** (Engineering Ecosystem). Todo el código fuente, automatización, herramientas y documentación de esta serie se distribuye bajo la **Apache License 2.0**. No cubre la lógica comercial propietaria de los productos o aplicaciones de negocio desarrollados sobre el ecosistema.
 
@@ -57,7 +57,7 @@ No cubre:
 
 ---
 
-## 03. Filosofía del Engineering Ecosystem
+## 3. Filosofía del Engineering Ecosystem
 
 Este documento constituye la autoridad documental del Engineering Ecosystem. Ante cualquier discrepancia entre este índice y otros documentos, prevalece este índice hasta que la modificación correspondiente sea aprobada y sincronizada.
 
@@ -69,7 +69,7 @@ Este documento constituye la autoridad documental del Engineering Ecosystem. Ant
 
 ---
 
-## 04. Estrategia Oficial de Implementación
+## 4. Estrategia Oficial de Implementación
 
 La construcción del Engineering Ecosystem sigue la siguiente estrategia:
 
@@ -86,7 +86,7 @@ Este ciclo se aplica a cada documento del ecosistema, garantizando que la docume
 
 ---
 
-## 05. Roadmap del Ecosistema
+## 5. Roadmap del Ecosistema
 
 El Engineering Ecosystem se construye en cuatro fases:
 
@@ -99,7 +99,7 @@ El Engineering Ecosystem se construye en cuatro fases:
 
 ---
 
-## 06. Estructura Documental
+## 6. Estructura Documental
 
 | Fase       | Orden | Código         | Documento                          | Genera                                                                                    | Artefacto                                                      | Dependencias |
 | ---------- | ----- | -------------- | ---------------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------ |
@@ -126,7 +126,7 @@ El Engineering Ecosystem se construye en cuatro fases:
 
 ---
 
-## 07. Implementation Roadmap
+## 7. Implementation Roadmap
 
 ```mermaid
 flowchart TD
@@ -146,7 +146,7 @@ flowchart TD
 
 ---
 
-## 08. Estados del Ciclo de Vida Documental
+## 8. Estados del Ciclo de Vida Documental
 
 | Icono | Estado                         | Descripción                                                       |
 | ----- | ------------------------------ | ----------------------------------------------------------------- |
@@ -172,7 +172,7 @@ flowchart TD
     G --> H["✅ Congelado"]
 ```
 
-## 09. Matriz de Trazabilidad
+## 9. Matriz de Trazabilidad
 
 | Código         | Documento                          | Naturaleza    | Implementación Aplicable | Estado Documental | Validado | Congelado |
 | :------------- | :--------------------------------- | :------------ | :----------------------: | :---------------: | :------: | :-------: |
@@ -199,7 +199,7 @@ flowchart TD
 >
 > **Validado / Congelado (documentos implementables):** «Sí» incluye el régimen de **PENDING listado** y dictamen de ecosistema **DEGRADED** admisible definido por EE-DOC-015 (§04.4.2, §04.4.3). No exige PASS total de todos los dominios de validación (p. ej. V-ARCH-LAYERS y V-E2E pueden permanecer PENDING).
 
-### 09.1. Matriz de Decisiones Arquitectónicas (ADRs)
+### 9.1. Matriz de Decisiones Arquitectónicas (ADRs)
 
 | Código         | Documento                              | Estado   | Norma/Documento Padre   | Impacto Principal                                                                                                                                                       |
 | :------------- | :------------------------------------- | :------- | :---------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -219,14 +219,14 @@ flowchart TD
 
 > Los iconos ✅ / 🟡 / ⬜ de la matriz documental (§09) no se reutilizan en las matrices de ADR/RFC para evitar ambigüedad de significado.
 
-### 09.2. Matriz de Requests for Comments (RFCs)
+### 9.2. Matriz de Requests for Comments (RFCs)
 
 | Código         | Documento                     | Estado   | Norma/Documento Padre   | Impacto Principal                                                                          |
 | :------------- | :---------------------------- | :------- | :---------------------- | :----------------------------------------------------------------------------------------- |
 | **EE-RFC-001** | Infra Top Level Directory     | Aprobado | EE-DOC-006 / EE-DOC-009 | Introduce `infra/` (`containers/`, `orchestration/`) en sustitución de `docker/` y `k8s/`. |
 | **EE-RFC-002** | Templates Top Level Directory | Aprobado | EE-DOC-006 / EE-DOC-012 | Introduce `templates/` como top-level autorizado y sincroniza EE-DOC-006.                  |
 
-### 09.3. Matriz de Evidencia de Implementación (documentos implementables)
+### 9.3. Matriz de Evidencia de Implementación (documentos implementables)
 
 | Código         | EE-IMP (fases)         | EE-TEC     | Validación                               | Pendientes residuales admisibles                                 | Estado cierre |
 | :------------- | :--------------------- | :--------- | :--------------------------------------- | :--------------------------------------------------------------- | :------------ |
@@ -241,10 +241,13 @@ flowchart TD
 | **EE-DOC-014** | EE-IMP-014-P01…P06     | EE-TEC-009 | Completada                               | Ninguno conocido                                                 | Congelado     |
 | **EE-DOC-015** | EE-IMP-015-P01…P05     | EE-TEC-010 | Completada (dictamen DEGRADED admisible) | V-ARCH-LAYERS, V-E2E (PENDING listado, régimen EE-DOC-015 §04.4) | Congelado     |
 
-> **Ubicación canónica de artefactos:**
+> **Ubicación canónica de artefactos** (EE-DOC-006 `docs/`):
 >
-> - EE-TEC-001…010 y EE-IMP-015-P0x: disponibles en el repositorio de documentación del ecosistema.
-> - EE-IMP-006…014: registro histórico de fases; pueden residir en el repositorio documental o en archivo de implementación. Su existencia individual fuera del conjunto de fuentes cargado se trata como **NO VERIFICABLE** en auditorías parciales, sin invalidar el cierre registrado en esta matriz.
+> - EE-DOC-\* / EE-TEC-001…010: `docs/architecture/`
+> - EE-IMP-\* (fases 006…015): `docs/developer/`
+> - EE-ADR-\*: `docs/adr/`
+> - EE-RFC-\*: `docs/rfc/`
+> - Validación de ecosistema (reports, waivers, evidence, audit): `docs/validation/`
 >
 > «Validación Completada» para EE-DOC-015 incluye el régimen PENDING listado y dictamen DEGRADED admisible (EE-DOC-015 §04.4.2 / §04.4.3). No se exige PASS de V-ARCH-LAYERS ni de V-E2E para el cierre de Fase 4.
 
@@ -399,6 +402,7 @@ flowchart TD
 | **v2.25.0** | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación EE-DOC-015                 | EE-DOC-015 **Aprobado** (Fase 4 Validation)                                                                                                                                                                                                                                                           | **Congelado** |
 | **v2.26.0** | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre EE-DOC-015                     | EE-DOC-015 **Congelado**; EE-TEC-010; Fase 4 Validation cerrada                                                                                                                                                                                                                                       | **Congelado** |
 | **v2.26.1** | 2026-10-08 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) post-auditoría    | Plantilla §18.1; §14 Referencias; §09.2 RFCs; §09.3 Matriz de Evidencia IMP/TEC/Validación; columna Naturaleza; leyenda ADR/RFC sin iconos ambiguos; R4/R9 alineados con régimen PENDING listado y DEGRADED (EE-DOC-015); métricas §13 con residuales admisibles; nota de columna Estado en Historial | **Congelado** |
+| **v2.26.2** | 2026-10-09 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) post-reauditoría  | §09.3 rutas canónicas docs/ (architecture, developer, adr, rfc, validation); Tipo → Documento Normativo; numeración de secciones sin cero inicial; normalización de tablas (sin padding); retiro NO VERIFICABLE residual IMP-006…014                                                                  | **Congelado** |
 
 ---
 
