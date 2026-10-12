@@ -8,12 +8,12 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | --------------------- | --------------------------------------- |
 | **ID**                | EE-DOC-001                              |
 | **Documento**         | Master Documentation Index              |
-| **Código corto**      | EE-DOC-001                              |
+| **Código corto**      | DOC-001                                 |
 | **Tipo**              | Documento Normativo                     |
 | **Clasificación**     | Fundacional                             |
 | **Nivel**             | Estratégico                             |
 | **Normativo**         | Sí                                      |
-| **Versión**           | v2.26.2                                 |
+| **Versión**           | v2.27.0                                 |
 | **Estado**            | Congelado                               |
 | **Propietario**       | Equipo de Arquitectura                  |
 | **Documento padre**   | No aplica                               |
@@ -21,12 +21,12 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**      | Equipo de Arquitectura                  |
 | **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección |
 | **Fecha de creación** | 2026-08-02                              |
-| **Última revisión**   | 2026-10-09                              |
+| **Última revisión**   | 2026-10-11                              |
 | **Próxima revisión**  | No aplica — Documento Congelado         |
 
 ---
 
-## 1. Propósito
+## 01. Propósito
 
 El **Master Documentation Index** es el mapa único, fuente de verdad, roadmap, planificación, estado documental, estado de implementación y trazabilidad del Engineering Ecosystem. Define qué documentos existen, su código, su propósito, su fase, su estado, qué genera y su orden de implementación.
 
@@ -40,7 +40,7 @@ Este documento garantiza que:
 
 ---
 
-## 2. Alcance
+## 02. Alcance
 
 Este índice cubre todos los documentos y reglas de la plataforma **EE-LABS** (Engineering Ecosystem). Todo el código fuente, automatización, herramientas y documentación de esta serie se distribuye bajo la **Apache License 2.0**. No cubre la lógica comercial propietaria de los productos o aplicaciones de negocio desarrollados sobre el ecosistema.
 
@@ -57,7 +57,7 @@ No cubre:
 
 ---
 
-## 3. Filosofía del Engineering Ecosystem
+## 03. Filosofía del Engineering Ecosystem
 
 Este documento constituye la autoridad documental del Engineering Ecosystem. Ante cualquier discrepancia entre este índice y otros documentos, prevalece este índice hasta que la modificación correspondiente sea aprobada y sincronizada.
 
@@ -69,7 +69,7 @@ Este documento constituye la autoridad documental del Engineering Ecosystem. Ant
 
 ---
 
-## 4. Estrategia Oficial de Implementación
+## 04. Estrategia Oficial de Implementación
 
 La construcción del Engineering Ecosystem sigue la siguiente estrategia:
 
@@ -86,7 +86,7 @@ Este ciclo se aplica a cada documento del ecosistema, garantizando que la docume
 
 ---
 
-## 5. Roadmap del Ecosistema
+## 05. Roadmap del Ecosistema
 
 El Engineering Ecosystem se construye en cuatro fases:
 
@@ -99,7 +99,7 @@ El Engineering Ecosystem se construye en cuatro fases:
 
 ---
 
-## 6. Estructura Documental
+## 06. Estructura Documental
 
 | Fase       | Orden | Código         | Documento                          | Genera                                                                                    | Artefacto                                                      | Dependencias |
 | ---------- | ----- | -------------- | ---------------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------ |
@@ -126,7 +126,7 @@ El Engineering Ecosystem se construye en cuatro fases:
 
 ---
 
-## 7. Implementation Roadmap
+## 07. Implementation Roadmap
 
 ```mermaid
 flowchart TD
@@ -146,7 +146,7 @@ flowchart TD
 
 ---
 
-## 8. Estados del Ciclo de Vida Documental
+## 08. Estados del Ciclo de Vida Documental
 
 | Icono | Estado                         | Descripción                                                       |
 | ----- | ------------------------------ | ----------------------------------------------------------------- |
@@ -172,7 +172,22 @@ flowchart TD
     G --> H["✅ Congelado"]
 ```
 
-## 9. Matriz de Trazabilidad
+### 08.1. Estados operativos de artefactos derivados (evidencia)
+
+Además de la taxonomía anterior (documentos EE-DOC del índice), los artefactos de **evidencia** pueden usar estados operativos en metadatos. **No sustituyen** la tabla de §08 para EE-DOC normativos.
+
+| Estado operativo                 | Aplicable a                                           | Significado                                                                             |
+| -------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| **Completado**                   | EE-IMP, EE-TEC (cuando la fase/consolidación terminó) | Unidad de evidencia cerrada en su alcance; no implica Congelado del EE-DOC padre        |
+| **Implementado (documentación)** | EE-RFC (post-aprobación)                              | Diffs documentales del paquete aplicados; materialización física puede seguir en EE-IMP |
+| **Borrador** / **En Revisión**   | IMP/TEC/VAL en elaboración                            | Equivalente operativo a Pendiente / En Elaboración / En Revisión según contexto         |
+| **WAIVED**                       | EE-WAIVE-\* / registro de gate                        | Gate no PASS por waiver aceptado (campos según EE-DOC-010)                              |
+
+Calificadores entre paréntesis en TEC (p. ej. “Congelado (as-built…)”) son **anotación de alcance**, no estados distintos del catálogo §08.
+
+Ampliar esta tabla requiere cambio gobernado sobre **EE-DOC-001**.
+
+## 09. Matriz de Trazabilidad
 
 | Código         | Documento                          | Naturaleza    | Implementación Aplicable | Estado Documental | Validado | Congelado |
 | :------------- | :--------------------------------- | :------------ | :----------------------: | :---------------: | :------: | :-------: |
@@ -199,7 +214,7 @@ flowchart TD
 >
 > **Validado / Congelado (documentos implementables):** «Sí» incluye el régimen de **PENDING listado** y dictamen de ecosistema **DEGRADED** admisible definido por EE-DOC-015 (§04.4.2, §04.4.3). No exige PASS total de todos los dominios de validación (p. ej. V-ARCH-LAYERS y V-E2E pueden permanecer PENDING).
 
-### 9.1. Matriz de Decisiones Arquitectónicas (ADRs)
+### 09.1. Matriz de Decisiones Arquitectónicas (ADRs)
 
 | Código         | Documento                              | Estado   | Norma/Documento Padre   | Impacto Principal                                                                                                                                                       |
 | :------------- | :------------------------------------- | :------- | :---------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -211,22 +226,23 @@ flowchart TD
 
 #### Leyenda de estados (ADRs / RFCs)
 
-| Símbolo / Texto            | Significado                                      |
-| :------------------------- | :----------------------------------------------- |
-| **Aprobado**               | Decisión arquitectónica o RFC aprobado; vigente. |
-| **Propuesto**              | En elaboración o revisión; aún no vinculante.    |
-| **Rechazado / Superseded** | No vigente.                                      |
+| Símbolo / Texto                  | Significado                                                        |
+| :------------------------------- | :----------------------------------------------------------------- |
+| **Aprobado**                     | Decisión arquitectónica o RFC aprobado; vigente.                   |
+| **Propuesto**                    | En elaboración o revisión; aún no vinculante.                      |
+| **Rechazado / Superseded**       | No vigente.                                                        |
+| **Implementado (documentación)** | RFC aprobado y cambios documentales del paquete aplicados (§08.1). |
 
 > Los iconos ✅ / 🟡 / ⬜ de la matriz documental (§09) no se reutilizan en las matrices de ADR/RFC para evitar ambigüedad de significado.
 
-### 9.2. Matriz de Requests for Comments (RFCs)
+### 09.2. Matriz de Requests for Comments (RFCs)
 
 | Código         | Documento                     | Estado   | Norma/Documento Padre   | Impacto Principal                                                                          |
 | :------------- | :---------------------------- | :------- | :---------------------- | :----------------------------------------------------------------------------------------- |
 | **EE-RFC-001** | Infra Top Level Directory     | Aprobado | EE-DOC-006 / EE-DOC-009 | Introduce `infra/` (`containers/`, `orchestration/`) en sustitución de `docker/` y `k8s/`. |
 | **EE-RFC-002** | Templates Top Level Directory | Aprobado | EE-DOC-006 / EE-DOC-012 | Introduce `templates/` como top-level autorizado y sincroniza EE-DOC-006.                  |
 
-### 9.3. Matriz de Evidencia de Implementación (documentos implementables)
+### 09.3. Matriz de Evidencia de Implementación (documentos implementables)
 
 | Código         | EE-IMP (fases)         | EE-TEC     | Validación                               | Pendientes residuales admisibles                                 | Estado cierre |
 | :------------- | :--------------------- | :--------- | :--------------------------------------- | :--------------------------------------------------------------- | :------------ |
@@ -253,20 +269,31 @@ flowchart TD
 
 ---
 
+### 09.4. Evidencias de validación y waivers (`EE-VAL-_ / EE-WAIVE-_`)
+
+Artefactos de **evidencia** (no EE-DOC del índice §06). Se emiten bajo el régimen de **EE-DOC-015** (validación de ecosistema) y **EE-DOC-010** (Quality Gates / waivers). Plantilla mínima: **EE-DOC-002 §18.6**. Nomenclatura: **EE-DOC-002 §16** (código corto sin `EE`: `VAL-…`, `WAIVE-…`).
+
+| Familia         | Rol                                                        | Padre típico                          | Normativo |
+| --------------- | ---------------------------------------------------------- | ------------------------------------- | --------- |
+| **EE-VAL-\***   | Reportes / evidencia de validación de ecosistema o dominio | EE-DOC-015 (u otro DOC de validación) | No        |
+| **EE-WAIVE-\*** | Waiver de Quality Gate (campos WAIVED según EE-DOC-010)    | EE-DOC-010 / EE-DOC-015               | No        |
+
+> **Gobernanza:** no elevan precedencia sobre EE-DOC normativos (§03.1 de EE-DOC-002). Un waiver documenta excepción aceptada; no autoriza omitir el cambio gobernado cuando R2 lo exige. La existencia de archivos en `docs/validation/` debe reflejarse aquí como familia catalogada; el inventario fino de cada VAL/WAIVE puede vivir en EE-DOC-015 / evidencias as-built.
+
 ## 10. Reglas de Gobernanza Documental
 
-| Regla   | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **R1**  | Ningún documento puede implementarse sin aprobación arquitectónica.                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| **R2**  | Ningún documento congelado puede modificarse sin cambio gobernado: **RFC** o **ADR**, según la clasificación de EE-DOC-005 §04.2 (Tipo C/D u otras previstas). Un ADR Tipo C es vehículo válido cuando el cambio es decisión arquitectónica sin alterar necesariamente el árbol de primer nivel.                                                                                                                                                                                             |
-| **R3**  | Toda implementación debe mantenerse sincronizada con su documento.                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| **R4**  | Cada documento **implementable** (EE-DOC-006 en adelante) genera su implementación y documentación técnica derivada. Los documentos **fundacionales** (EE-DOC-001 a EE-DOC-005) están exceptuados: no generan EE-IMP ni EE-TEC propios (ver §09 — Naturaleza).                                                                                                                                                                                                                               |
-| **R5**  | El roadmap documental solo cambia mediante aprobación del Equipo de Arquitectura.                                                                                                                                                                                                                                                                                                                                                                                                            |
-| **R6**  | Los documentos deben seguir la estructura definida en este índice.                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| **R7**  | Las dependencias entre documentos deben respetar el orden de implementación.                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| **R8**  | La implementación deberá seguir exactamente el orden establecido por el Implementation Roadmap, salvo excepción aprobada mediante ADR.                                                                                                                                                                                                                                                                                                                                                       |
-| **R9**  | Un documento solo podrá cambiar a estado **Congelado** cuando: (1) el documento esté aprobado, (2) la implementación esté completada (si aplica), (3) la documentación derivada esté sincronizada (si aplica) y (4) la validación esté completada (si aplica). Para documentos implementables, «validación completada» incluye el régimen de **PENDING listado** y dictamen de ecosistema **DEGRADED** admisible definido por EE-DOC-015 (§04.4); no exige PASS total de todos los dominios. |
-| **R10** | Cualquier modificación del orden de implementación o del roadmap requiere actualización obligatoria de **EE-DOC-001** antes de modificar cualquier otro documento.                                                                                                                                                                                                                                                                                                                           |
+| Regla   | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **R1**  | Ningún documento puede implementarse sin aprobación arquitectónica.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **R2**  | Ningún documento congelado puede modificarse sin cambio gobernado: **RFC** o **ADR**, según la clasificación de EE-DOC-005 §04.2 (Tipo C/D u otras previstas). Un ADR Tipo C es vehículo válido cuando el cambio es decisión arquitectónica sin alterar necesariamente el árbol de primer nivel.                                                                                                                                                                                                                            |
+| **R3**  | Toda implementación debe mantenerse sincronizada con su documento.                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **R4**  | Cada documento **implementable** (EE-DOC-006 en adelante) genera su implementación y documentación técnica derivada. Los documentos **fundacionales** (EE-DOC-001 a EE-DOC-005) están exceptuados: no generan EE-IMP ni EE-TEC propios (ver §09 — Naturaleza).                                                                                                                                                                                                                                                              |
+| **R5**  | El roadmap documental solo cambia mediante aprobación del Equipo de Arquitectura.                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **R6**  | Los documentos deben seguir la estructura definida en este índice.                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **R7**  | Las dependencias entre documentos deben respetar el orden de implementación del roadmap (§06/§07). El campo **Dependencias** de metadatos (EE-DOC-002 §05) declara **dependencias de contenido/lectura**, no necesariamente aristas del grafo de orden de implementación: citar EE-DOC-005 en el cuerpo o en §Referencias **no** crea dependencia circular respecto de R7 si el orden de implementación en §06 se mantiene (p. ej. 002 depende solo de 001 en metadatos; 005 puede referenciar 002 como estándar de forma). |
+| **R8**  | La implementación deberá seguir exactamente el orden establecido por el Implementation Roadmap, salvo excepción aprobada mediante ADR.                                                                                                                                                                                                                                                                                                                                                                                      |
+| **R9**  | Un documento solo podrá cambiar a estado **Congelado** cuando: (1) el documento esté aprobado, (2) la implementación esté completada (si aplica), (3) la documentación derivada esté sincronizada (si aplica) y (4) la validación esté completada (si aplica). Para documentos implementables, «validación completada» incluye el régimen de **PENDING listado** y dictamen de ecosistema **DEGRADED** admisible definido por EE-DOC-015 (§04.4); no exige PASS total de todos los dominios.                                |
+| **R10** | Cualquier modificación del orden de implementación o del roadmap requiere actualización obligatoria de **EE-DOC-001** antes de modificar cualquier otro documento.                                                                                                                                                                                                                                                                                                                                                          |
 
 ---
 
@@ -336,18 +363,19 @@ flowchart TD
 
 ## 14. Referencias
 
-| Código         | Documento                              | Relación                                                                    |
-| -------------- | -------------------------------------- | --------------------------------------------------------------------------- |
-| **EE-DOC-002** | Document Design Template               | Estándar de estructura, metadatos, plantillas y ciclo de vida documental.   |
-| **EE-DOC-005** | Development Workflow                   | Ciclo de vida, cambio gobernado (R2) y clasificación Tipo A/B/C/D.          |
-| **EE-DOC-015** | Engineering Ecosystem Validation       | Régimen PENDING listado, dictamen DEGRADED y criterios de cierre de Fase 4. |
-| **EE-ADR-001** | Workspace Task Orchestration Strategy  | Orquestador oficial (Turborepo) y gestor de paquetes (pnpm).                |
-| **EE-ADR-002** | Engineering Ecosystem Testing Standard | Estándar de testing (Vitest + Playwright).                                  |
-| **EE-ADR-003** | Node.js Baseline Upgrade to 24 LTS     | Baseline de runtime Node.js ≥ 24 &lt; 25.                                   |
-| **EE-ADR-004** | Quality Gates Progressive Adoption     | Adopción progresiva de Mandatory Gates.                                     |
-| **EE-ADR-005** | AI Provider SPI and Connector Adapters | SPI, adapters y composition root.                                           |
-| **EE-RFC-001** | Infra Top Level Directory              | Top-level `infra/`.                                                         |
-| **EE-RFC-002** | Templates Top Level Directory          | Top-level `templates/`.                                                     |
+| Código         | Documento                              | Relación                                                                  |
+| -------------- | -------------------------------------- | ------------------------------------------------------------------------- |
+| **EE-DOC-002** | Document Design Template               | Estándar de estructura, metadatos, plantillas y ciclo de vida documental. |
+| **EE-DOC-005** | Development Workflow                   | Ciclo de vida, cambio gobernado (R2) y clasificación Tipo A/B/C/D.        |
+| **EE-DOC-010** | Quality Gates                          | Régimen de gates y campos de waiver (WAIVED).                             |
+| **EE-DOC-015** | Engineering Ecosystem Validation       | Régimen PENDING listado, dictamen DEGRADED; padre típico de EE-VAL-\*.    |
+| **EE-ADR-001** | Workspace Task Orchestration Strategy  | Orquestador oficial (Turborepo) y gestor de paquetes (pnpm).              |
+| **EE-ADR-002** | Engineering Ecosystem Testing Standard | Estándar de testing (Vitest + Playwright).                                |
+| **EE-ADR-003** | Node.js Baseline Upgrade to 24 LTS     | Baseline de runtime Node.js ≥ 24 &lt; 25.                                 |
+| **EE-ADR-004** | Quality Gates Progressive Adoption     | Adopción progresiva de Mandatory Gates.                                   |
+| **EE-ADR-005** | AI Provider SPI and Connector Adapters | SPI, adapters y composition root.                                         |
+| **EE-RFC-001** | Infra Top Level Directory              | Top-level `infra/`.                                                       |
+| **EE-RFC-002** | Templates Top Level Directory          | Top-level `templates/`.                                                   |
 
 ---
 
@@ -403,6 +431,8 @@ flowchart TD
 | **v2.26.0** | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre EE-DOC-015                     | EE-DOC-015 **Congelado**; EE-TEC-010; Fase 4 Validation cerrada                                                                                                                                                                                                                                       | **Congelado** |
 | **v2.26.1** | 2026-10-08 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) post-auditoría    | Plantilla §18.1; §14 Referencias; §09.2 RFCs; §09.3 Matriz de Evidencia IMP/TEC/Validación; columna Naturaleza; leyenda ADR/RFC sin iconos ambiguos; R4/R9 alineados con régimen PENDING listado y DEGRADED (EE-DOC-015); métricas §13 con residuales admisibles; nota de columna Estado en Historial | **Congelado** |
 | **v2.26.2** | 2026-10-09 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) post-reauditoría  | §09.3 rutas canónicas docs/ (architecture, developer, adr, rfc, validation); Tipo → Documento Normativo; numeración de secciones sin cero inicial; normalización de tablas (sin padding); retiro NO VERIFICABLE residual IMP-006…014                                                                  | **Congelado** |
+| **v2.26.3** | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) numeración §      | Restaura numeración de secciones a dos dígitos (01…) según EE-DOC-002 §06 (SSOT); corrige desvío de v2.26.2                                                                                                                                                                                           | **Congelado** |
+| **v2.27.0** | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Minor (Y) sync post-auditoría 002     | §08.1 estados operativos Completado/Implementado/WAIVED; §09.4 familias EE-VAL-_/EE-WAIVE-_; R7 aclara Dependencias de contenido vs orden de implementación; §14 +010                                                                                                                                 | **Congelado** |
 
 ---
 

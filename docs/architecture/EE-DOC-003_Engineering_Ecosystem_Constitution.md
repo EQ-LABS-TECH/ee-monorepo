@@ -1,30 +1,32 @@
 # EE-DOC-003 — Engineering Ecosystem Constitution
 
-## METADATOS
-
-| Campo                 | Valor                                   |
-| --------------------- | --------------------------------------- |
-| **ID**                | EE-DOC-003                              |
-| **Documento**         | Engineering Ecosystem Constitution      |
-| **Código corto**      | EE-DOC-003                              |
-| **Tipo**              | Documento Normativo                     |
-| **Clasificación**     | Fundacional                             |
-| **Nivel**             | Estratégico                             |
-| **Normativo**         | Sí                                      |
-| **Versión**           | v1.0.0                                  |
-| **Estado**            | Congelado                               |
-| **Propietario**       | Equipo de Arquitectura                  |
-| **Documento padre**   | EE-DOC-001                              |
-| **Dependencias**      | EE-DOC-001, EE-DOC-002                  |
-| **Aprobado por**      | Equipo de Arquitectura                  |
-| **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección |
-| **Fecha de creación** | 2026-08-02                              |
-| **Última revisión**   | 2026-08-02                              |
-| **Próxima revisión**  | No aplica — Documento Congelado         |
+Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ---
 
-Este documento sigue el estándar EE-DOC-002 — Document Design Template.
+## METADATOS
+
+| Campo                 | Valor                                           |
+| --------------------- | ----------------------------------------------- |
+| **ID**                | EE-DOC-003                                      |
+| **Documento**         | Engineering Ecosystem Constitution              |
+| **Código corto**      | DOC-003                                         |
+| **Tipo**              | Documento Normativo                             |
+| **Clasificación**     | Fundacional                                     |
+| **Nivel**             | Estratégico                                     |
+| **Normativo**         | Sí                                              |
+| **Versión**           | v1.2.0                                          |
+| **Estado**            | Congelado                                       |
+| **Propietario**       | Equipo de Arquitectura                          |
+| **Documento padre**   | EE-DOC-001                                      |
+| **Dependencias**      | EE-DOC-001 (padre/SSOT), EE-DOC-002 (plantilla) |
+| **Aprobado por**      | Equipo de Arquitectura                          |
+| **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección         |
+| **Fecha de creación** | 2026-08-02                                      |
+| **Última revisión**   | 2026-10-11                                      |
+| **Próxima revisión**  | No aplica — Documento Congelado                 |
+
+---
 
 ## 01. Propósito
 
@@ -39,7 +41,7 @@ Todo documento, herramienta, proceso o decisión dentro del ecosistema debe alin
 Esta constitución cubre:
 
 - La misión, visión, valores y objetivos estratégicos del Engineering Ecosystem.
-- El marco conceptual organizacional de cuatro capas (EE-LABS, EQ-LABS, Product Ecosystem y Business Application).
+- El marco conceptual organizacional de cuatro capas (EQ-LABS, EE-LABS, Product Ecosystem y Business Application).
 - Los principios fundamentales que nunca cambian.
 - La política constitucional de licenciamiento y propiedad intelectual de EE-LABS.
 - El modelo de gobernanza y la organización del ecosistema.
@@ -60,7 +62,7 @@ Esta constitución **no cubre**:
 
 Proporcionar un ecosistema de ingeniería moderno, automatizado, reproducible y gobernado que permita desarrollar productos de software de alta calidad mediante procesos estandarizados, automatización e inteligencia artificial.
 
-### 03.1. Marco Conceptual Organizacional (4 Capas)
+## 04. Marco Conceptual Organizacional (4 Capas)
 
 El Engineering Ecosystem se fundamenta en un modelo conceptual corporativo de cuatro (4) capas que responde a la secuencia de creación de valor desde la estrategia hasta el usuario final:
 
@@ -71,28 +73,31 @@ El Engineering Ecosystem se fundamenta en un modelo conceptual corporativo de cu
 | **3. Product Ecosystem**                      | ¿Cómo desarrollamos este producto?                   | Especialización del ecosistema al contexto de un producto (ej. EUM). Define arquitectura técnica, DevOps e infraestructura. | **Licencia Propietaria** (núcleo técnico). **Apache License 2.0** (interfaces públicas: APIs/SDKs/Schemas). |
 | **4. Business Application**                   | ¿Qué hace el producto?                               | Implementación de la lógica funcional de negocio (ej. EUM ERP) que aporta valor directo al cliente.                         | **Licencia Comercial Propietaria (Cerrada)**. Producto comercial.                                           |
 
+**Diagrama — Marco conceptual de 4 capas (EQ-LABS → EE-LABS → Product → Business Application).**
+
 ```mermaid
 flowchart TD
-    Q1["¿Cómo evolucionamos el conocimiento y la ingeniería?"] --> EQ["EQ-LABS\n(Engineering Quality Labs)\n[Propietario]"]
-    Q2["¿Cómo desarrollamos software?"] --> EE["EE-LABS\n(Engineering Ecosystem Labs)\n[Apache-2.0 / Open Source]"]
-    Q3["¿Cómo desarrollamos este producto?"] --> PE["Product Ecosystem\n[Propietario / Interfaces Apache-2.0]"]
-    Q4["¿Qué hace el producto?"] --> BA["Business Application\n[Comercial Propietario]"]
+    EQ["EQ-LABS<br/>Engineering Quality Labs<br/>[Propietario]<br/>¿Cómo evolucionamos el conocimiento y la ingeniería?"]
+    EE["EE-LABS<br/>Engineering Ecosystem Labs<br/>[Apache-2.0 / Open Source]<br/>¿Cómo desarrollamos software?"]
+    PE["Product Ecosystem<br/>[Propietario / Interfaces Apache-2.0]<br/>¿Cómo desarrollamos este producto?"]
+    BA["Business Application<br/>[Comercial Propietario]<br/>¿Qué hace el producto?"]
+    C["Usuarios / Partners / Clientes / Integradores"]
 
     EQ --> EE
     EE --> PE
     PE --> BA
-    BA --> C["Usuarios / Partners / Clientes / Integradores"]
+    BA --> C
 ```
 
 ---
 
-## 04. Visión
+## 05. Visión
 
 Ser el estándar de referencia para ecosistemas de ingeniería en organizaciones que buscan maximizar la calidad, consistencia y velocidad de desarrollo mediante la automatización, la gobernanza y la integración nativa de inteligencia artificial.
 
 ---
 
-## 05. Valores
+## 06. Valores
 
 | Valor                    | Descripción                                                              |
 | ------------------------ | ------------------------------------------------------------------------ |
@@ -104,7 +109,7 @@ Ser el estándar de referencia para ecosistemas de ingeniería en organizaciones
 
 ---
 
-## 06. Objetivos Estratégicos
+## 07. Objetivos Estratégicos
 
 | #   | Objetivo                           | Descripción                                                            |
 | --- | ---------------------------------- | ---------------------------------------------------------------------- |
@@ -117,7 +122,7 @@ Ser el estándar de referencia para ecosistemas de ingeniería en organizaciones
 
 ---
 
-## 07. Principios Fundamentales
+## 08. Principios Fundamentales
 
 > **Regla Introductoria:** Los principios fundamentales tienen carácter permanente y prevalecen sobre cualquier documento inferior. No pueden ser modificados sin un RFC aprobado por el Equipo de Arquitectura.
 
@@ -138,9 +143,9 @@ Ser el estándar de referencia para ecosistemas de ingeniería en organizaciones
 
 ---
 
-## 08. Modelo de Gobernanza
+## 09. Modelo de Gobernanza
 
-### 08.1. Autoridad Constitucional
+### 09.1. Autoridad Constitucional
 
 La máxima autoridad normativa del Engineering Ecosystem es el **Equipo de Arquitectura**, responsable de:
 
@@ -151,7 +156,7 @@ La máxima autoridad normativa del Engineering Ecosystem es el **Equipo de Arqui
 
 El Equipo de Arquitectura delega en los Arquitectos la revisión y aprobación de ADRs y RFCs, pero la autoridad última sobre la Constitución reside en el equipo colegiado.
 
-### 08.2. Estructura de Gobernanza
+### 09.2. Estructura de Gobernanza
 
 | Nivel                      | Responsabilidad                                                | Autoridad                                                                       |
 | -------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
@@ -160,16 +165,18 @@ El Equipo de Arquitectura delega en los Arquitectos la revisión y aprobación d
 | **Desarrolladores**        | Implementan y mantienen los componentes del ecosistema.        | Propuesta de cambios y mejoras.                                                 |
 | **IA Asistente**           | Asiste en la generación de documentación, código y revisiones. | Propuesta de cambios (sin autoridad de aprobación).                             |
 
-### 08.3. Mecanismos de Decisión
+### 09.3. Mecanismos de Decisión
 
-| Mecanismo       | Descripción                                                                        | Aplicación                                                                    | Obligatorio cuando                                                            |
-| --------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| **RFC**         | Request for Comments. Documento que propone un cambio significativo.               | Cambios arquitectónicos, nuevos estándares, modificaciones a la Constitución. | El cambio afecta a múltiples proyectos o modifica la Constitución.            |
-| **ADR**         | Architectural Decision Record. Documento que registra una decisión arquitectónica. | Decisiones de diseño, selección de tecnologías, patrones arquitectónicos.     | La decisión es irreversible o tiene impacto significativo en la arquitectura. |
-| **Aprobación**  | Decisión formal del Equipo de Arquitectura.                                        | Cambios que afectan la Constitución o la arquitectura del ecosistema.         | El cambio modifica la Constitución o la arquitectura principal.               |
-| **Congelación** | Estado final de un documento o componente.                                         | Documentos y componentes completados y estabilizados.                         | El documento o componente ha sido validado y estabilizado.                    |
+| Mecanismo       | Descripción                                                                                      | Aplicación                                                                    | Obligatorio cuando                                                            |
+| --------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **RFC**         | Request for Comments. Documento que propone un cambio significativo.                             | Cambios arquitectónicos, nuevos estándares, modificaciones a la Constitución. | El cambio afecta a múltiples proyectos o modifica la Constitución.            |
+| **ADR**         | Architectural Decision Record. Documento que registra una decisión arquitectónica.               | Decisiones de diseño, selección de tecnologías, patrones arquitectónicos.     | La decisión es irreversible o tiene impacto significativo en la arquitectura. |
+| **Aprobación**  | Decisión formal del Equipo de Arquitectura.                                                      | Cambios que afectan la Constitución o la arquitectura del ecosistema.         | El cambio modifica la Constitución o la arquitectura principal.               |
+| **Congelación** | Estado de cierre de una **versión** (no implica inmutabilidad permanente; ver EE-DOC-002 §13.2). | Versión documental/implementación sincronizada y validada.                    | Tras validación; cambios posteriores = nueva versión vía cambio gobernado.    |
 
-### 08.4. Flujo de Aprobación
+### 09.4. Flujo de Aprobación
+
+**Diagrama — Flujo de aprobación.**
 
 ```mermaid
 flowchart TD
@@ -183,37 +190,21 @@ flowchart TD
     H --> I[Congelación]
 ```
 
----
-
-## 09. Organización del Ecosistema
-
-El Engineering Ecosystem se organiza en los siguientes componentes, cuyo orden de implementación está definido en el **Master Documentation Index (EE-DOC-001)**:
-
-| Fase       | Orden | Componente                  | Propósito                                                                 | Documento Principal |
-| ---------- | ----- | --------------------------- | ------------------------------------------------------------------------- | ------------------- |
-| **Fase 1** | 1     | **Master Index**            | Índice maestro, roadmap, trazabilidad y estado del ecosistema             | EE-DOC-001          |
-| **Fase 1** | 2     | **Design Template**         | Estándar para la estructura, formato y ciclo de vida de la documentación. | EE-DOC-002          |
-| **Fase 1** | 3     | **Governance**              | Define las reglas, roles y procesos del ecosistema.                       | EE-DOC-003          |
-| **Fase 1** | 4     | **Architecture**            | Define la estructura y relaciones del ecosistema.                         | EE-DOC-004          |
-| **Fase 1** | 5     | **Workflow**                | Define los procesos de desarrollo y operación.                            | EE-DOC-005          |
-| **Fase 2** | 6     | **Repository Structure**    | Define la estructura del repositorio, árbol de directorios y workspaces.  | EE-DOC-006          |
-| **Fase 2** | 7     | **GitHub Governance**       | Define la gobernanza de repositorios, CODEOWNERS, Rulesets y Actions.     | EE-DOC-007          |
-| **Fase 2** | 8     | **Development Environment** | Define herramientas y configuraciones del entorno local.                  | EE-DOC-008          |
-| **Fase 3** | 9     | **Infrastructure**          | Define servicios base y plataformas de soporte.                           | EE-DOC-009          |
-| **Fase 3** | 10    | **Quality Gates**           | Define estándares y controles de calidad.                                 | EE-DOC-010          |
-| **Fase 3** | 11    | **Automation**              | Define scripts, CLI y herramientas de automatización.                     | EE-DOC-011          |
-| **Fase 3** | 12    | **Templates**               | Define plantillas reutilizables para el ecosistema.                       | EE-DOC-012          |
-| **Fase 3** | 13    | **AI Ecosystem**            | Define la integración y uso de inteligencia artificial.                   | EE-DOC-013          |
-| **Fase 3** | 14    | **Knowledge Management**    | Define la gestión del conocimiento y documentación.                       | EE-DOC-014          |
-| **Fase 4** | 15    | **Validation**              | Define la validación end-to-end del ecosistema.                           | EE-DOC-015          |
-
-> **Nota:** Este orden es el establecido oficialmente en el **Master Documentation Index (EE-DOC-001)** y debe mantenerse sincronizado con él. Cualquier modificación en el roadmap debe reflejarse primero en EE-DOC-001 y luego en este documento.
+> **Nota:** Este flujo es un resumen de alto nivel. El ciclo detallado de implementación por fases, el mecanismo de **Descubrimiento** y la clasificación de cambios **Tipo A/B/C/D** se definen en **EE-DOC-005 — Development Workflow** (§04 y §04.2). **Congelado ≠ inmutable** (EE-DOC-002 §13.2).
 
 ---
 
-## 10. Roles, Responsabilidades y Autoridades
+## 10. Organización del Ecosistema
 
-> **Regla de Multiplicidad:** Un mismo individuo puede desempeñar múltiples roles, pero las autoridades permanecen separadas. Por ejemplo, un Arquitecto puede actuar como Revisor, pero no puede aprobar sus propias decisiones sin la revisión de otro Arquitecto.
+El Engineering Ecosystem se organiza en componentes cuyo **orden de implementación, códigos y artefactos** están definidos como SSOT en **EE-DOC-001 — Master Documentation Index** (§05 Roadmap, §06 Estructura Documental, §07 Implementation Roadmap).
+
+Esta Constitución **no duplica** la tabla de roadmap. Cualquier modificación del orden o del catálogo de documentos debe reflejarse **primero** en EE-DOC-001 y, solo si afecta principios o gobernanza constitucional, sincronizarse aquí mediante cambio gobernado.
+
+> **Regla:** Mantener sincronización con EE-DOC-001. No redefinir aquí el catálogo EE-DOC-001…015.
+
+---
+
+## 11. Roles, Responsabilidades y Autoridades
 
 | Rol                        | Responsabilidad                                                                                                            | Autoridad                                                             |
 | :------------------------- | :------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------- |
@@ -226,60 +217,49 @@ El Engineering Ecosystem se organiza en los siguientes componentes, cuyo orden d
 | **Security**               | Validar la seguridad de los componentes y procesos.                                                                        | Rechazar cambios que no cumplan con los estándares de seguridad.      |
 | **IA Asistente**           | Asistir en la generación de documentación, código y revisiones.                                                            | Proponer cambios (sin autoridad de aprobación).                       |
 
----
-
-## 11. Ciclo de Vida del Ecosistema
-
-El ciclo de vida documental definido en **EE-DOC-002** aplica a todos los componentes del ecosistema.
-
-```mermaid
-flowchart TD
-    A["⚪ Pendiente"] --> B["🟡 En Elaboración"]
-    B --> C["🔵 En Revisión Arquitectónica"]
-    C --> D["🟢 Aprobado"]
-    D --> E["🟠 En Implementación"]
-    E --> F["🔷 Documentado"]
-    F --> G["🟣 En Validación"]
-    G --> H["✅ Congelado"]
-```
-
-> **Nota:** La fuente normativa del ciclo de vida y los estados documentales es EE-DOC-002 — Document Design Template. Este diagrama se reproduce por legibilidad, pero las definiciones oficiales de cada estado residen en el estándar documental.
-
-**Aplicación del ciclo:**
-
-| Fase                           | Descripción                                                       |
-| :----------------------------- | :---------------------------------------------------------------- |
-| **Pendiente**                  | El componente o documento ha sido identificado pero no iniciado.  |
-| **En Elaboración**             | Se está desarrollando el componente o documento.                  |
-| **En Revisión Arquitectónica** | El componente o documento está siendo revisado por Arquitectura.  |
-| **Aprobado**                   | El componente o documento ha sido aprobado y puede implementarse. |
-| **En Implementación**          | Se está implementando el componente o documento.                  |
-| **Documentado**                | La documentación técnica derivada ha sido generada.               |
-| **En Validación**              | La implementación y documentacion está siendo validada.           |
-| **Congelado**                  | Componente o documento estabilizado y cerrado.                    |
+> **Regla de Multiplicidad:** Un mismo individuo puede desempeñar múltiples roles, pero las autoridades permanecen separadas. La **aprobación** de cambios (PR / merge) la ejerce el rol **Maintainer** (u otro revisor con autoridad de aprobación distinta del autor del cambio), conforme a la gobernanza de GitHub del monorepo (CODEOWNERS / team Maintainers) y a EE-DOC-005 / EE-DOC-007.
+>
+> Un Arquitecto **no** auto-aprueba en solitario el merge de sus propios cambios cuando existe Maintainer u otro revisor habilitado: la separación autor ≠ aprobador es la regla operativa vigente.
 
 ---
 
-## 12. Normas del Ecosistema
+## 12. Ciclo de Vida del Ecosistema
 
-Las siguientes normas son de carácter constitucional y aplican a todos los proyectos gobernados por el Engineering Ecosystem. Representan la aplicación práctica de los principios fundamentales (Sección 07).
+El ciclo de vida documental y la **taxonomía de estados** del Engineering Ecosystem tienen un único SSOT:
 
-| #   | Norma                         | Principio Asociado        | Descripción                                                                     |
-| --- | ----------------------------- | ------------------------- | ------------------------------------------------------------------------------- |
-| 1   | **Documentation First**       | Documentation First       | Ningún cambio, decisión o configuración puede existir sin documentación.        |
-| 2   | **Architecture First**        | Architecture First        | Toda implementación debe basarse en una arquitectura documentada y aprobada.    |
-| 3   | **Automation First**          | Automation First          | Toda tarea repetitiva debe ser automatizada.                                    |
-| 4   | **Single Source of Truth**    | Single Source of Truth    | No existe información duplicada. Cada decisión tiene un único lugar donde vive. |
-| 5   | **Configuration over Code**   | Configuration over Code   | La configuración debe ser externa al código siempre que sea posible.            |
-| 6   | **Security by Design**        | Security by Design        | La seguridad se incorpora desde el diseño, no como un añadido.                  |
-| 7   | **Quality by Default**        | Quality by Default        | La calidad es un requisito, no una opción.                                      |
-| 8   | **Reproducibility**           | Reproducibility           | Cualquier entorno, build o despliegue debe poder reproducirse.                  |
-| 9   | **Vendor Agnostic**           | Vendor Agnostic           | El ecosistema no depende de un proveedor específico.                            |
-| 10  | **Evolution over Revolution** | Evolution over Revolution | Los cambios se introducen de forma evolutiva y controlada.                      |
+| Aspecto                                                               | Fuente normativa (SSOT)                                                               |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Taxonomía de estados e iconografía                                    | **EE-DOC-001** §08 — Estados del Ciclo de Vida Documental                             |
+| Elaboración documental, plantillas y uso del ciclo                    | **EE-DOC-002** — Document Design Template (§13, §14, §15; §20.2 delega estados a 001) |
+| Implementación por fases y Descubrimiento                             | **EE-DOC-005** — Development Workflow (§04)                                           |
+| Estados operativos de evidencia (Completado, Implementado, WAIVED, …) | **EE-DOC-001** §08.1                                                                  |
 
-> **Nota:** Las normas operativas específicas (Git, IA, calidad, seguridad, desarrollo, etc.) se definen en sus respectivos documentos especializados. Esta sección contiene únicamente normas de carácter constitucional que derivan de los principios fundamentales.
+Esta sección **no redefine** estados ni versionado. Cualquier diagrama o resumen local es solo ilustrativo y debe interpretarse conforme a las fuentes anteriores.
 
-### 12.1. Política de Licenciamiento y Propiedad Intelectual
+**Congelado** no significa inmutable: una versión congelada no se modifica in situ; todo cambio genera nueva versión mediante el mecanismo de gobernanza aplicable (EE-DOC-002 §13.2; EE-DOC-001 R2 / EE-DOC-005 §04.2).
+
+---
+
+## 13. Normas del Ecosistema
+
+Las normas siguientes **aplican** los principios fundamentales de §08 (no los sustituyen). Incluyen de forma explícita **AI Assisted Engineering** y **Continuous Validation**.
+
+| #   | Norma                               | Principio(s) de §08                     | Descripción operativa                                                                                                                          |
+| --- | ----------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Documentar antes de implementar** | Documentation First, Architecture First | No se implementa sin documentación normativa o decisión aprobada cuando aplique.                                                               |
+| 2   | **Automatizar lo repetible**        | Automation First                        | Tareas repetitivas se automatizan; la excepción debe justificarse.                                                                             |
+| 3   | **Una sola fuente de verdad**       | Single Source of Truth                  | Prohibida la duplicación normativa; los índices y matrices remiten al SSOT.                                                                    |
+| 4   | **IA asistida, no sustitutiva**     | AI Assisted Engineering                 | La IA asiste; el juicio humano y la aprobación arquitectónica prevalecen.                                                                      |
+| 5   | **Seguridad desde el diseño**       | Security by Design                      | Controles y amenazas se consideran en diseño, no solo en cierre.                                                                               |
+| 6   | **Calidad por defecto**             | Quality by Default                      | Quality Gates y estándares aplican por defecto según EE-DOC-010.                                                                               |
+| 7   | **Configuración sobre código**      | Configuration over Code                 | Preferir configuración externa y compartida (SSOT de config del monorepo) frente a valores hardcodeados; el árbol físico lo define EE-DOC-006. |
+| 8   | **Reproducibilidad**                | Reproducibility                         | Entornos y builds deben poder reproducirse de forma documentada.                                                                               |
+| 9   | **Vendor agnostic**                 | Vendor Agnostic                         | Evitar acoplamiento irreversible a un proveedor sin ADR/RFC.                                                                                   |
+| 10  | **Evolución gobernada**             | Evolution over Revolution               | Cambios estructurales vía ADR/RFC y sincronización con EE-DOC-001.                                                                             |
+| 11  | **Validación continua**             | Continuous Validation                   | La validación no es un evento único de cierre; el régimen de ecosistema lo define EE-DOC-015.                                                  |
+| 12  | **Cumplimiento verificable**        | (transversal)                           | El incumplimiento se gestiona según §15; no se interpreta como aprobación tácita.                                                              |
+
+### 13.1. Política de Licenciamiento y Propiedad Intelectual
 
 1. **Titularidad de Activos:** EQ-LABS es el único propietario de la propiedad intelectual, marcas y productos desarrollados en la organización.
 2. **Ecosistema Abierto (EE-LABS):** La plataforma EE-LABS se distribuye como software libre bajo la Apache License 2.0 para fomentar la adopción, reutilización y colaboración de la comunidad.
@@ -287,7 +267,7 @@ Las siguientes normas son de carácter constitucional y aplican a todos los proy
 4. **Interfaces Públicas Abiertas:** Todas las APIs públicas, SDKs públicos (Public SDKs), especificaciones OpenAPI, contratos de eventos AsyncAPI y esquemas JSON Schemas se publican bajo Apache License 2.0 para facilitar la integración de terceros sin comprometer el núcleo comercial.
 5. **Apertura Controlada:** La apertura de la plataforma de ingeniería no implica la apertura del código ni del know-how comercial de las aplicaciones de negocio.
 
-### 12.2. Ventajas Estratégicas del Modelo de Licenciamiento
+### 13.2. Ventajas Estratégicas del Modelo de Licenciamiento
 
 - **Comunidad de Ingenieros:** EE-LABS genera adopción masiva mediante su modelo Open Source.
 - **Ecosistema de Integradores:** Las interfaces públicas bajo Apache License 2.0 permiten a partners extender la plataforma sin fricción legal.
@@ -295,9 +275,11 @@ Las siguientes normas son de carácter constitucional y aplican a todos los proy
 
 ---
 
-## 13. Gestión del Cambio
+## 14. Gestión del Cambio
 
-### 13.1. Modificaciones a la Constitución
+### 14.1. Modificaciones a la Constitución
+
+Los cambios a esta Constitución se clasifican además según el régimen de **EE-DOC-005 §04.2** (Tipo A/B/C/D) y **EE-DOC-001 R2** (RFC o ADR cuando aplique). La tabla siguiente detalla el impacto constitucional y el incremento de versión semántica de **este** documento.
 
 | Tipo de Cambio            | Proceso                                          | Aprobación                                      | Incremento de Versión   |
 | ------------------------- | ------------------------------------------------ | ----------------------------------------------- | ----------------------- |
@@ -307,7 +289,9 @@ Las siguientes normas son de carácter constitucional y aplican a todos los proy
 | **Eliminaciones**         | Eliminación de secciones completas.              | RFC + Equipo de Arquitectura                    | X (ej. v1.0.0 → v2.0.0) |
 | **Cambios estructurales** | Reorganización de la Constitución.               | RFC + Equipo de Arquitectura + Revisión externa | X (ej. v1.0.0 → v2.0.0) |
 
-### 13.2. Proceso de Modificación
+### 14.2. Proceso de Modificación
+
+**Diagrama — Proceso de modificación de la Constitución.**
 
 ```mermaid
 flowchart TD
@@ -323,17 +307,17 @@ flowchart TD
 
 ---
 
-## 14. Cumplimiento
+## 15. Cumplimiento
 
-### 14.1. Mecanismos de Verificación
+### 15.1. Mecanismos de Verificación
 
-| Mecanismo                      | Descripción                                                      | Frecuencia                | Responsable             |
-| ------------------------------ | ---------------------------------------------------------------- | ------------------------- | ----------------------- |
-| **Revisiones Arquitectónicas** | Verificación de alineación con la Constitución.                  | Por cambio significativo. | Equipo de Arquitectura  |
-| **Auditorías**                 | Revisión periódica del cumplimiento de normas.                   | Trimestral.               | Equipo de Arquitectura  |
-| **Validación Automática**      | Verificación automática de estándares documentales y de calidad. | Continua.                 | Automatización / DevOps |
+| Mecanismo                                          | Descripción                                                                                                                                                    | Frecuencia                    | Responsable             |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ----------------------- |
+| **Revisiones Arquitectónicas**                     | Verificación de alineación con la Constitución.                                                                                                                | Por cambio significativo.     | Equipo de Arquitectura  |
+| **Auditorías**                                     | Revisión periódica del cumplimiento de normas.                                                                                                                 | Trimestral.                   | Equipo de Arquitectura  |
+| **Validación Automática de estándares EE-DOC-002** | **PENDING** (régimen EE-DOC-005 §10.4): QG-DOC actuales no validan estructura EE-DOC-002 completa (ver EE-DOC-012 §19.4). No declarar enforcement inexistente. | Continua (cuando exista gate) | Automatización / DevOps |
 
-### 14.2. Consecuencias del Incumplimiento
+### 15.2. Consecuencias del Incumplimiento
 
 | Nivel        | Consecuencia                                 |
 | :----------- | :------------------------------------------- |
@@ -344,50 +328,59 @@ flowchart TD
 
 ---
 
-## 15. Disposiciones Finales
+## 16. Disposiciones Finales
 
-### 15.1. Vigencia
+### 16.1. Vigencia
 
-Esta Constitución entra en vigencia a partir de su congelación y publicación oficial. Todos los proyectos y componentes del Engineering Ecosystem deben alinearse con ella en un plazo máximo de 90 días.
+Esta Constitución entra en vigencia a partir de su **congelación y publicación oficial** en el repositorio canónico.
 
-### 15.2. Jerarquía Normativa
+Los proyectos y componentes del Engineering Ecosystem deben **alinearse** a ella. La evidencia de alineación se registra mediante el mecanismo de validación aplicable (p. ej. EE-DOC-015 / evidencias en `docs/validation/`) o declaración explícita en el documento de implementación correspondiente — **sin** plazo fijo de “90 días” no verificable.
 
-La jerarquía documental del Engineering Ecosystem se define por **EE-DOC-001** (Master Documentation Index), que establece la estructura documental y la asignación de códigos, y por **EE-DOC-002** (Document Design Template), que establece la jerarquía normativa y las reglas de elaboración de los documentos.
+### 16.2. Jerarquía Normativa
 
-A efectos constitucionales, el siguiente orden de precedencia resume dicha jerarquía:
+La **jerarquía por tipo de documento**, la precedencia en conflicto (incluido desempate a **mismo nivel**: padre estructural o escalar a Arquitectura; **sin** sola recencia) y el rol de artefactos derivados (**ADR, RFC, IMP, TEC, VAL, WAIVE**) se definen en **EE-DOC-002 §03.1**. El **índice, códigos, roadmap y taxonomía de estados** se definen en **EE-DOC-001**.
 
-| Nivel | Norma                                                   | Autoridad                                                                                                 |
-| :---: | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| **1** | **EE-DOC-001 — Master Documentation Index**             | Define la estructura documental y el roadmap del ecosistema.                                              |
-| **2** | **EE-DOC-002 — Document Design Template**               | Define cómo se escriben todos los documentos y su jerarquía normativa.                                    |
-| **3** | **EE-DOC-003 — Engineering Ecosystem Constitution**     | Define la gobernanza y las normas constitucionales del ecosistema.                                        |
-| **4** | **Documentos Especializados (EE-DOC-004 a EE-DOC-015)** | Aplican las reglas de los documentos superiores en su contexto específico.                                |
-| **5** | **ADRs y RFCs**                                         | Decisiones específicas que no pueden contradecir la Constitución ni los documentos normativos superiores. |
+Esta Constitución ocupa el **nivel 3 — Documentos Constitucionales** y **no redefine** la taxonomía de 002 ni el catálogo de 001.
 
-### 15.3. Excepciones
+### 16.3. Excepciones
 
-Toda excepción a esta Constitución debe ser solicitada mediante un RFC aprobado por el Equipo de Arquitectura. La excepción debe ser documentada y revisada periódicamente.
+Toda excepción a esta Constitución debe solicitarse mediante **RFC aprobado** por el Equipo de Arquitectura (EE-DOC-001 R2 / EE-DOC-005), documentarse y revisarse periódicamente.
 
-### 15.4. Interpretación
+La existencia de **Maintainer** (team Maintainers / CODEOWNERS) que aprueba cambios **no** constituye excepción: es el mecanismo ordinario de separación autor ≠ aprobador (§11).
+
+### 16.4. Interpretación
 
 La interpretación de esta Constitución corresponde al Equipo de Arquitectura. En caso de ambigüedad, prevalece el espíritu de la Constitución sobre la letra.
 
 ---
 
-## 16. Referencias
+## 17. Referencias
 
-| Código         | Documento                  | Descripción                        |
-| :------------- | :------------------------- | :--------------------------------- |
-| **EE-DOC-001** | Master Documentation Index | Índice maestro del ecosistema      |
-| **EE-DOC-002** | Document Design Template   | Estándar documental del ecosistema |
+| Código                          | Documento                             | Descripción                                                                                      |
+| ------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| **EE-DOC-001**                  | Master Documentation Index            | Índice, roadmap, códigos; SSOT estados §08 / §08.1; R2/R7; §09.4 familias VAL/WAIVE              |
+| **EE-DOC-002**                  | Document Design Template              | Plantilla §18; jerarquía y derivados §03.1; estados delegados (§13, §20.2); código corto §05/§16 |
+| **EE-DOC-004**                  | Engineering Architecture              | Documento arquitectónico (nivel 4)                                                               |
+| **EE-DOC-005**                  | Development Workflow                  | Ciclo de implementación, Descubrimiento, Tipo A/B/C/D (§04); régimen PENDING §10.4               |
+| **EE-DOC-006**                  | Repository Structure                  | Árbol físico del monorepo; nomenclatura de archivos EE-\*                                        |
+| **EE-DOC-010**                  | Quality Gates                         | Calidad por defecto; Result WAIVED §04.6.1                                                       |
+| **EE-DOC-012**                  | Templates                             | QG-DOC y límites de validación documental automática (§19.4)                                     |
+| **EE-DOC-015**                  | Engineering Ecosystem Validation      | Validación continua de ecosistema; padre típico de EE-VAL-\*                                     |
+| **EE-ADR-\***                   | Architectural Decision Records        | Decisiones arquitectónicas subordinadas (002 §18.2; 001 §09.1)                                   |
+| **EE-RFC-\***                   | Requests for Comments                 | Cambio gobernado Tipo D / transversal (002 §18.5)                                                |
+| **EE-IMP-\***                   | Documentos técnicos de implementación | Evidencia por fase; subordinados al DOC padre (002 §18.3)                                        |
+| **EE-TEC-\***                   | Documentación técnica consolidada     | As-built consolidado; subordinados al DOC padre (002 §18.4)                                      |
+| **EE-VAL-\*** / **EE-WAIVE-\*** | Evidencia de validación / waivers     | 001 §09.4; plantilla 002 §18.6; no normativos                                                    |
 
----
+## 18. Historial de Cambios
 
-## 17. Historial de Cambios
-
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo           | Cambios                            | Estado        |
-| :--------- | :--------- | :--------------------- | :--------------------- | :--------------- | :--------------------------------- | :------------ |
-| **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial | Versión inicial de la Constitución | **Congelado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                        | Cambios                                                                                                                                                                                                                                                                                                                                                          | Estado        |
+| :--------- | :--------- | :--------------------- | :--------------------- | :------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
+| **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                              | Versión inicial de la Constitución                                                                                                                                                                                                                                                                                                                               | **Congelado** |
+| **v1.0.1** | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) post-auditoría                            | SSOT estados→001 §08; jerarquía §15.2 alineada a 002 §03.1; §09 sin duplicar roadmap 001; §11 puntero; §12 normas alineadas a §07 (AI/Continuous Validation); §08.3/§08.4 vs 002/005; frase plantilla; referencias; tipografía                                                                                                                                   | **Congelado** |
+| **v1.1.0** | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Minor (Y) — Tipo A (alineación 001/002) + regularización C-01 | C-01: v1.0.1 debió versionarse Y (cambios de significado bajo §14.1); esta v1.1.0 consolida y documenta clasificación Tipo A (alineación a documentos superiores). §15.2 puntero a 002 §03.1; §14.1 validación EE-DOC PENDING; §10 régimen bootstrap; §15.1 vigencia verificable; §11→001 §08.1; norma 7 agnóstica; títulos Mermaid; separadores; deps contenido | **Congelado** |
+| **v1.1.1** | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — §16 referencias                                      | Completa tabla de referencias (001/002/006/012, IMP/TEC/VAL/WAIVE); elimina fila errónea EE-DOC-001b                                                                                                                                                                                                                                                             | **Congelado** |
+| **v1.2.0** | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — reordenación + corrección factual                    | §03.1 → **§04**; renumeración §05–§18; §11/§16.3: Maintainer como aprobador ordinario (sin régimen bootstrap “operador único”). Borrador de trabajo — no publicado en main                                                                                                                                                                                       | **Congelado** |
 
 ---
 

@@ -106,3 +106,9 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 - EE-DOC-006 — Repository Structure
 - EE-DOC-015 — Engineering Ecosystem Validation
 - EE-DOC-010 — Quality Gates (hallazgos de gates ≠ hallazgos de esta auditoría documental)
+
+---
+
+## Reglas emergentes
+
+Las reglas detectadas en auditoría (aún no necesariamente volcadas a EE-DOC) se registran en **`AUDIT-RULES.md`** de esta misma carpeta.
