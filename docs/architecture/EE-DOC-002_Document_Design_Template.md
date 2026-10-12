@@ -2,18 +2,20 @@
 
 Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (norma de diseño documental del ecosistema).
 
+---
+
 ## METADATOS
 
 | Campo                 | Valor                           |
 | --------------------- | ------------------------------- |
 | **ID**                | EE-DOC-002                      |
 | **Documento**         | Document Design Template        |
-| **Código corto**      | EE-DOC-002                      |
+| **Código corto**      | DOC-002                         |
 | **Tipo**              | Documento Normativo             |
 | **Clasificación**     | Fundacional                     |
 | **Nivel**             | Estratégico                     |
 | **Normativo**         | Sí                              |
-| **Versión**           | v1.6.1                          |
+| **Versión**           | v1.9.1                          |
 | **Estado**            | Congelado                       |
 | **Propietario**       | Equipo de Arquitectura          |
 | **Documento padre**   | EE-DOC-001                      |
@@ -21,7 +23,7 @@ Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (
 | **Aprobado por**      | Equipo de Arquitectura          |
 | **Audiencia**         | Arquitectura, Desarrollo, IA    |
 | **Fecha de creación** | 2026-08-02                      |
-| **Última revisión**   | 2026-10-10                      |
+| **Última revisión**   | 2026-10-11                      |
 | **Próxima revisión**  | No aplica — Documento Congelado |
 
 ---
@@ -40,8 +42,10 @@ Aplica a todos los documentos definidos por **EE-DOC-001 — Master Documentatio
 
 No aplica a:
 
-- Documentación técnica de implementación (código, JSDoc, READMEs técnicos)
-- Documentos específicos de proyectos (EQ-Labs, EUM, etc.) salvo que decidan adoptarlo
+- Documentación embebida en código (comentarios, JSDoc, READMEs de paquete) y material no gobernado por EE-DOC-001
+- Documentos específicos de proyectos de producto (**EQ-LABS** Product Ecosystem / Business Application, p. ej. EUM), salvo que adopten este estándar
+
+**Sí aplica** a los artefactos de gobernanza del índice, incluidos **EE-IMP-XXX-PXX** y **EE-TEC-XXX** (§18.3 y §18.4): son documentos técnicos de implementación/consolidación del monorepo, no “documentación de código”.
 
 ---
 
@@ -49,35 +53,45 @@ No aplica a:
 
 Todo documento normativo del Engineering Ecosystem debe seguir esta estructura base:
 
-| Orden | Sección                  | Obligatoriedad                                   |
-| ----- | ------------------------ | ------------------------------------------------ |
-| 1     | **Metadatos**            | Obligatorio                                      |
-| 2     | **Propósito**            | Obligatorio                                      |
-| 3     | **Alcance**              | Obligatorio                                      |
-| 4     | **Contenido Normativo**  | Obligatorio (contenido específico del documento) |
-| 5     | **Referencias**          | Obligatorio                                      |
-| 6     | **Historial de Cambios** | Obligatorio                                      |
+| Orden | Sección                           | Obligatoriedad                                                                                                     |
+| ----- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| 1     | **Metadatos**                     | Obligatorio                                                                                                        |
+| 2     | **Propósito**                     | Obligatorio                                                                                                        |
+| 3     | **Alcance**                       | Obligatorio                                                                                                        |
+| 4     | **Contenido normativo (dominio)** | Obligatorio: una o más secciones de dominio (§18.1: títulos variables; _Contenido Normativo_ no es título literal) |
+| 5     | **Referencias**                   | Obligatorio                                                                                                        |
+| 6     | **Historial de Cambios**          | Obligatorio                                                                                                        |
 
-> **Nota de Aplicación:** La estructura definida en esta sección representa la **estructura mínima obligatoria**. Cada documento podrá incorporar secciones adicionales cuando la naturaleza del documento lo requiera, manteniendo siempre dicha estructura mínima. Esta estructura base aplica a todos los documentos normativos del Engineering Ecosystem y constituye el estándar documental para los proyectos gobernados por EQ-Labs, salvo que un documento defina explícitamente una excepción aprobada por Arquitectura.
+> **Nota de Aplicación:** La estructura definida en esta sección representa la **estructura mínima obligatoria**. Cada documento podrá incorporar secciones adicionales cuando la naturaleza del documento lo requiera, manteniendo siempre dicha estructura mínima. Aplica a los **documentos normativos del Engineering Ecosystem (EE)** listados en EE-DOC-001. Los proyectos de producto de **EQ-LABS** (Product Ecosystem / Business Application) **solo** quedan bajo este estándar si lo **adoptan explícitamente** (§02). Toda excepción al estándar requiere cambio gobernado (**EE-DOC-001 R2** / **EE-DOC-005**: RFC y/o ADR), no aprobación informal.
 
 ### 03.1. Jerarquía Documental
 
 Los documentos del Engineering Ecosystem se organizan en una jerarquía que establece su orden de precedencia:
 
-| Nivel | Tipo de Documento               | Autoridad                                                                  |
-| ----- | ------------------------------- | -------------------------------------------------------------------------- |
-| 1     | **Índice Maestro**              | Define la estructura documental y el roadmap del ecosistema.               |
-| 2     | **Estándares Documentales**     | Define cómo se escriben todos los documentos.                              |
-| 3     | **Documentos Constitucionales** | Define la gobernanza del ecosistema.                                       |
-| 4     | **Documentos Arquitectónicos**  | Define la arquitectura del ecosistema.                                     |
-| 5+    | **Documentos Especializados**   | Aplican las reglas de los documentos superiores en su contexto específico. |
+| Nivel | Tipo de Documento               | Autoridad                                                                                 |
+| ----- | ------------------------------- | ----------------------------------------------------------------------------------------- |
+| 1     | **Índice Maestro**              | Define la estructura documental, el roadmap, códigos y taxonomía de estados (EE-DOC-001). |
+| 2     | **Estándares Documentales**     | Define cómo se escriben todos los documentos (EE-DOC-002).                                |
+| 3     | **Documentos Constitucionales** | Define la gobernanza del ecosistema (EE-DOC-003).                                         |
+| 4     | **Documentos Arquitectónicos**  | Define la arquitectura del ecosistema (EE-DOC-004).                                       |
+| 5+    | **Documentos Especializados**   | Aplican las reglas superiores en su dominio (EE-DOC-005…015 y demás EE-DOC del índice).   |
 
-> **Nota:** La jerarquía se define por tipo de documento, no por código específico. El `Master Documentation Index` (EE-DOC-001) es la fuente de verdad para la asignación de códigos y la estructura documental.
+**Artefactos derivados (no son un nivel paralelo que empate con 1–5+):**
+
+| Artefacto                       | Rol                                                     | Precedencia                                                                        | Fuente normativa de tipo                                                             |
+| ------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **EE-ADR-XXX**                  | Decisión arquitectónica vinculante (Tipo C)             | Subordinado a EE-DOC de nivel superior; no puede contradecirlos                    | EE-DOC-005 §04.2; plantilla §18.2; matrices EE-DOC-001 §09.1                         |
+| **EE-RFC-XXX**                  | Cambio gobernado transversal (Tipo D)                   | Subordinado; sincroniza el paquete normativo afectado                              | EE-DOC-005 §04.2; plantilla §18.5; EE-DOC-001 R2                                     |
+| **EE-IMP-XXX-PXX**              | Evidencia de implementación por fase                    | Subordinado al EE-DOC padre; Normativo = No                                        | EE-DOC-005 (ciclo de fases); plantilla §18.3                                         |
+| **EE-TEC-XXX**                  | Consolidación as-built                                  | Subordinado al EE-DOC padre; Normativo = No                                        | EE-DOC-005; plantilla §18.4                                                          |
+| **EE-VAL-\*** / **EE-WAIVE-\*** | Evidencia de validación de ecosistema / waivers de gate | Subordinados al DOC padre de validación (p. ej. EE-DOC-015); no elevan precedencia | EE-DOC-010 / EE-DOC-015 (campos y régimen); nomenclatura §16; plantilla mínima §18.6 |
+
+> **Nota:** La jerarquía de **tipos EE-DOC** se define aquí (§03.1). EE-DOC-001 es la fuente de verdad para **códigos**, roadmap y **taxonomía de estados**. ADR/RFC/IMP/TEC no elevan su precedencia por encima del EE-DOC padre.
 
 > **Regla de Precedencia:**
-> En caso de conflicto entre dos documentos, prevalece el documento de nivel jerárquico superior. Un documento de nivel inferior no puede contradecir lo establecido en un documento de nivel superior, salvo que el documento superior haga referencia explícita a la excepción.
+> En caso de conflicto entre dos documentos, prevalece el documento de **nivel jerárquico superior**. Un documento de nivel inferior no puede contradecir lo establecido en un documento de nivel superior, salvo excepción **explícita** en el superior y mecanismo de cambio gobernado (**EE-DOC-001 R2** / **EE-DOC-005**: RFC o ADR según el caso).
 >
-> Si dos documentos pertenecen al mismo nivel jerárquico y existe conflicto, prevalecerá el documento aprobado más recientemente, salvo que exista una relación explícita de dependencia entre ellos.
+> Si dos documentos pertenecen al **mismo nivel** y existe conflicto: (1) prevalece la relación de **padre estructural / dependencia explícita** si existe; (2) si no hay relación clara, **escalar a Arquitectura** — **no** se resuelve por sola recencia de aprobación (evita que un EE-DOC más nuevo anule a otro del mismo nivel sin RFC/ADR).
 
 ---
 
@@ -100,31 +114,61 @@ Los documentos técnicos (guías, manuales, estándares de implementación) pued
 
 Todos los documentos deben incluir la siguiente tabla de metadatos al inicio:
 
-| Campo                 | Descripción                       | Obligatoriedad |
-| --------------------- | --------------------------------- | -------------- |
-| **ID**                | Identificador único del documento | Obligatorio    |
-| **Documento**         | Nombre completo del documento     | Obligatorio    |
-| **Código corto**      | Código de nivel y número          | Obligatorio    |
-| **Tipo**              | Tipo de documento                 | Obligatorio    |
-| **Clasificación**     | Clasificación del documento       | Obligatorio    |
-| **Nivel**             | Nivel jerárquico                  | Obligatorio    |
-| **Normativo**         | Indica si es normativo            | Obligatorio    |
-| **Versión**           | Versión semántica                 | Obligatorio    |
-| **Estado**            | Estado del ciclo de vida          | Obligatorio    |
-| **Propietario**       | Equipo responsable                | Obligatorio    |
-| **Documento padre**   | ID del documento padre            | Opcional       |
-| **Dependencias**      | IDs de documentos relacionados    | Opcional       |
-| **Aprobado por**      | Equipo que aprueba                | Opcional       |
-| **Audiencia**         | Público objetivo                  | Obligatorio    |
-| **Fecha de creación** | Fecha de creación                 | Obligatorio    |
-| **Última revisión**   | Fecha de última revisión          | Obligatorio    |
-| **Próxima revisión**  | Fecha de próxima revisión         | Obligatorio\*  |
+| Campo                 | Descripción                                                                             | Obligatoriedad |
+| --------------------- | --------------------------------------------------------------------------------------- | -------------- |
+| **ID**                | Identificador único del documento                                                       | Obligatorio    |
+| **Documento**         | Nombre completo del documento                                                           | Obligatorio    |
+| **Código corto**      | Código sin prefijo `EE` (p. ej. `DOC-002`)                                              | Obligatorio    |
+| **Tipo**              | Tipo de documento                                                                       | Obligatorio    |
+| **Clasificación**     | Clasificación del documento                                                             | Obligatorio    |
+| **Nivel**             | Nivel jerárquico                                                                        | Obligatorio    |
+| **Normativo**         | Indica si es normativo                                                                  | Obligatorio    |
+| **Versión**           | Versión semántica                                                                       | Obligatorio    |
+| **Estado**            | Estado del ciclo de vida                                                                | Obligatorio    |
+| **Propietario**       | Equipo responsable                                                                      | Obligatorio    |
+| **Documento padre**   | ID del documento padre                                                                  | Opcional       |
+| **Dependencias**      | IDs de dependencia de **contenido/lectura** (no orden de implementación; EE-DOC-001 R7) | Opcional       |
+| **Aprobado por**      | Equipo que aprueba                                                                      | Opcional       |
+| **Audiencia**         | Público objetivo                                                                        | Obligatorio    |
+| **Fecha de creación** | Fecha de creación                                                                       | Obligatorio    |
+| **Última revisión**   | Fecha de última revisión                                                                | Obligatorio    |
+| **Próxima revisión**  | Fecha de próxima revisión                                                               | Obligatorio\*  |
 
 > **(\*) Próxima revisión — excepción Congelado:** Si el **Estado** del documento es **Congelado**, el valor obligatorio del campo es `No aplica — Documento Congelado` (no se exige una fecha futura de revisión mientras permanezca congelado). Cualquier descongelamiento o nueva versión vuelve a exigir fecha o la misma excepción según el nuevo estado.
+
+> **Campos adicionales por tipo (plantillas §18)** — no son excepciones al **Código corto** (regla general §05/§16: sin prefijo `EE`; p. ej. `DOC-002`, `ADR-001`, `RFC-001`):
+>
+> | Tipo                  | Campos adicionales / notas                                                                                                                                                                                                                                                                                                       |
+> | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+> | **EE-ADR**            | `Fase`, `Fase de implementación`, `Decisión relacionada`, `Prioridad`                                                                                                                                                                                                                                                            |
+> | **EE-RFC**            | `Title` (**siempre en inglés** `en-US`; es el título canónico del RFC, no una excepción de idioma). Campos adicionales: `Solicitante`, `Documentos normativos afectados`, `Documento de dominio`, `ADR asociado`, `Clasificación EE-DOC-005`, `Responsable de decisión`. El campo `Documento` (si se usa) no sustituye a `Title` |
+> | **EE-IMP / EE-TEC**   | `Fase` (IMP) obligatorio cuando aplique; `Normativo` = No                                                                                                                                                                                                                                                                        |
+> | **EE-VAL / EE-WAIVE** | Ver §18.6; `Normativo` = No                                                                                                                                                                                                                                                                                                      |
 
 > **Regla de Inmutabilidad:** Los campos **ID**, **Código corto** y **Fecha de creación** son inmutables una vez que el documento ha sido aprobado. No pueden modificarse bajo ninguna circunstancia.
 
 ---
+
+### 05.1. Catálogo cerrado de Tipo, Clasificación y Nivel
+
+Valores permitidos (SSOT de este estándar para metadatos). El **Nivel** de EE-DOC se alinea a §03.1.
+
+| Campo                        | Valores permitidos                                                                                                                  | Notas                                                                                   |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| **Tipo** (EE-DOC)            | `Documento Normativo`                                                                                                               | Preferido para EE-DOC del índice                                                        |
+| **Tipo** (EE-ADR)            | `Architectural Decision Record`                                                                                                     | —                                                                                       |
+| **Tipo** (EE-RFC)            | `Request for Comments (Cambio gobernado)`                                                                                           | —                                                                                       |
+| **Tipo** (EE-IMP)            | `Documento Técnico de Implementación`                                                                                               | —                                                                                       |
+| **Tipo** (EE-TEC)            | `Documentación Técnica Consolidada`                                                                                                 | —                                                                                       |
+| **Tipo** (EE-VAL / EE-WAIVE) | `Evidencia de Validación` / `Waiver de Quality Gate`                                                                                | §18.6                                                                                   |
+| **Clasificación** (EE-DOC)   | `Fundacional` \| `Implementable` \| `Especializado`                                                                                 | Fundacional ≈ 001–005; Implementable ≈ 006+ con fases; Especializado según índice       |
+| **Clasificación** (otros)    | `Arquitectura / Decisión Arquitectónica` \| `Implementación` \| `Técnico / As-Built` \| `Cambio gobernado (Tipo D)` \| `Validación` | Según tipo de artefacto                                                                 |
+| **Nivel** (EE-DOC)           | `Estratégico` \| `Táctico` \| `Operativo`                                                                                           | Mapear a §03.1: niveles 1–3 suelen Estratégico; 4 Táctico/Estratégico; 5+ según dominio |
+| **Nivel** (ADR)              | `Arquitectónico` \| `Estratégico` \| `Táctico`                                                                                      | —                                                                                       |
+| **Nivel** (IMP/TEC)          | `Técnico` \| `Operativo`                                                                                                            | —                                                                                       |
+| **Normativo**                | `Sí` \| `No`                                                                                                                        | IMP/TEC/VAL/WAIVE = No salvo excepción documentada                                      |
+
+Variantes históricas incoherentes en documentos ya emitidos se corrigen en su próxima edición gobernada (Tipo A).
 
 ## 06. Convenciones de Numeración
 
@@ -138,6 +182,10 @@ Todos los documentos deben incluir la siguiente tabla de metadatos al inicio:
 | **Listas**                | Viñetas o números       | `- Elemento` o `1. Elemento`  |
 
 > **Regla de Renumeración:** La numeración de secciones es **continua**. Si una sección se elimina, el documento debe renumerarse antes de avanzar al estado **Aprobado**. Las referencias a secciones eliminadas deben actualizarse o eliminarse.
+>
+> **SSOT de numeración de secciones:** Esta sección (§06) es la **única** fuente normativa del formato de numeración de encabezados en documentos EE. No se redefine en EE-DOC-001 ni en otros documentos. Formato obligatorio de secciones principales: **dos dígitos** (`01`, `02`, … `09`, `10`, …).
+>
+> **Prohibición de índice cero:** No existe subsección numerada `x.0` (p. ej. `### 18.0`, `### 15.0`). La **primera** subsección numerada de un bloque es siempre **`x.1`**.
 
 ---
 
@@ -154,13 +202,13 @@ Todos los documentos deben incluir la siguiente tabla de metadatos al inicio:
 
 ## 08. Reglas para Tablas
 
-| Regla              | Descripción                                                              |
-| ------------------ | ------------------------------------------------------------------------ |
-| **Encabezados**    | Todas las tablas deben tener encabezados claros                          |
-| **Alineación**     | Usar alineación consistente (izquierda para texto, derecha para números) |
-| **Formato**        | Los encabezados en negrita y Title Case                                  |
-| **Separadores**    | Usar `\|` para columnas y `---` para separadores                         |
-| **Simplificación** | Evitar tablas excesivamente complejas                                    |
+| Regla              | Descripción                                                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Encabezados**    | Todas las tablas deben tener encabezados claros                                                                                |
+| **Alineación**     | Usar alineación consistente (izquierda para texto, derecha para números)                                                       |
+| **Formato**        | Encabezados claros; **negrita + Title Case recomendados** (no bloquean si el documento usa `**Campo**` en tablas de metadatos) |
+| **Separadores**    | Usar `\|` para columnas y `---` para separadores                                                                               |
+| **Simplificación** | Evitar tablas excesivamente complejas                                                                                          |
 
 **Formato estándar:**
 
@@ -194,13 +242,13 @@ flowchart TD
 
 ## 10. Convenciones de Imágenes
 
-| Regla            | Descripción                                    |
-| ---------------- | ---------------------------------------------- |
-| **Formato**      | Preferir SVG o PNG                             |
-| **Ubicación**    | Almacenar en carpeta `assets/` o `images/`     |
-| **Título**       | Incluir un título antes de la imagen           |
-| **Tamaño**       | Mantener tamaño razonable                      |
-| **Alternativas** | Usar diagramas Mermaid siempre que sea posible |
+| Regla            | Descripción                                        |
+| ---------------- | -------------------------------------------------- |
+| **Formato**      | Preferir SVG o PNG                                 |
+| **Ubicación**    | Almacenar bajo `assets/` (p. ej. `assets/images/`) |
+| **Título**       | Incluir un título antes de la imagen               |
+| **Tamaño**       | Mantener tamaño razonable                          |
+| **Alternativas** | Usar diagramas Mermaid siempre que sea posible     |
 
 ---
 
@@ -240,16 +288,9 @@ flowchart TD
 
 ## 13. Estados Documentales
 
-| Icono | Estado                         | Descripción                                                                                         |
-| :---: | :----------------------------- | :-------------------------------------------------------------------------------------------------- |
-|  ⚪   | **Pendiente**                  | El documento aún no ha comenzado.                                                                   |
-|  🟡   | **En Elaboración**             | El documento está siendo redactado.                                                                 |
-|  🔵   | **En Revisión Arquitectónica** | El documento está en revisión por Arquitectura.                                                     |
-|  🟢   | **Aprobado**                   | El documento fue aprobado y puede implementarse.                                                    |
-|  🟠   | **En Implementación**          | Se está implementando lo definido por el documento.                                                 |
-|  🔷   | **Documentado**                | La documentación técnica derivada ya fue generada y sincronizada.                                   |
-|  🟣   | **En Validación**              | La implementación y documentación está siendo validada.                                             |
-|  ✅   | **Congelado**                  | Documento e implementación sincronizados, validados y formalmente cerrados para la versión vigente. |
+**SSOT:** La taxonomía de estados, iconografía, transiciones y regímenes residuales (**PENDING listado**, **DEGRADED**, etc.) se definen **exclusivamente** en **EE-DOC-001 §08**; los estados operativos de evidencia (**Completado**, **Implementado (documentación)**, **WAIVED**, etc.) en **EE-DOC-001 §08.1**. Este documento **no redefine** esa taxonomía.
+
+Las plantillas §18 pueden mostrar **etiquetas operativas** en ejemplos de metadatos (p. ej. Propuesto, Borrador, Superseded para ADR/RFC; Borrador/Completado para IMP) cuando coincidan con matrices de EE-DOC-001 (§09.1 ADR/RFC) o con uso as-built de evidencia IMP/TEC; la interpretación normativa del ciclo de vida documental prevalece en EE-DOC-001 §08. Las matrices de estado de **ADR/RFC** (p. ej. Aprobado/Propuesto/Rechazado/Superseded) se gobiernan en **EE-DOC-001 §09.1**; ampliar esa taxonomía es cambio en **001**, no en este estándar.
 
 ### 13.1. Integridad normativa durante la implementación
 
@@ -277,6 +318,8 @@ Por lo tanto:
 - Congelado ≠ documento permanentemente inmutable.
 
 #### Evolución de una versión congelada
+
+**Diagrama — Evolución de una versión congelada.**
 
 ```mermaid
 flowchart TD
@@ -310,18 +353,11 @@ flowchart TD
 
 ## 14. Ciclo de Vida Documental
 
-```mermaid
-flowchart TD
-    A["⚪ Pendiente"] --> B["🟡 En Elaboración"]
-    B --> C["🔵 En Revisión Arquitectónica"]
-    C --> D["🟢 Aprobado"]
-    D --> E["🟠 En Implementación"]
-    E --> F["🔷 Documentado"]
-    F --> G["🟣 En Validación"]
-    G --> H["✅ Congelado"]
-```
+**SSOT del flujo de estados:** el diagrama y las transiciones canónicas residen en **EE-DOC-001 §08**. No se reproduce aquí una taxonomía paralela.
 
-> **Nota sobre evolución posterior:** El estado Congelado representa el cierre de la versión vigente, no el cierre definitivo del documento. Cuando exista una necesidad legítima de modificación posterior, deberá iniciarse el mecanismo de cambio gobernado definido en EE-DOC-005, dando lugar a una nueva versión documental.
+El ciclo de **implementación por fases**, validación y documentación técnica se rige por **EE-DOC-005 — Development Workflow**.
+
+> **Nota sobre evolución posterior:** El estado Congelado representa el cierre de la versión vigente, no el cierre definitivo del documento. Cuando exista una necesidad legítima de modificación posterior, deberá iniciarse el mecanismo de cambio gobernado definido en EE-DOC-005, dando lugar a una nueva versión documental. Ver también §13.2 (Congelado ≠ inmutable).
 
 ---
 
@@ -340,27 +376,27 @@ flowchart TD
 
 > **Regla de Inmutabilidad de Versión:** Una vez que una versión documental alcanza el estado Congelado, su contenido correspondiente a dicha versión no podrá modificarse directamente. Cualquier cambio posterior deberá producir una nueva versión documental y conservar la trazabilidad con respecto a la versión anterior.
 
----
+> **Nota de regularización v1.6.x:** Las ediciones v1.6.1 y v1.6.2 introdujeron cambios de significado normativo (excepción §05, reescritura §18) etiquetados como parche (Z). A partir de **v1.7.0** se corrige el criterio: ese tipo de cambio se emite como **minor (Y)** según §15. No se reescriben los números de versión ya publicados.
 
 ## 16. Convenciones de Nomenclatura
 
-| Elemento         | Formato          | Ejemplo                                 |
-| ---------------- | ---------------- | --------------------------------------- |
-| **IDs**          | `XX-XXX-XXX`     | `EE-DOC-001`                            |
-| **Documentos**   | Title Case       | `Engineering Ecosystem Constitution`    |
-| **Código Corto** | `XX-XXX-XXX`     | `EE-DOC-001`                            |
-| **Archivos**     | kebab-case       | `engineering-ecosystem-constitution.md` |
-| **Roles**        | Title Case       | `Arquitecto`                            |
-| **Herramientas** | Capitalizado     | `VSCode`, `Windsurf`                    |
-| **Paquetes**     | kebab-case       | `kernel-foundation`                     |
-| **Repositorios** | kebab-case       | `eq-labs-platform`                      |
-| **Carpetas**     | kebab-case       | `packages/kernel-foundation/`           |
-| **Variables**    | camelCase        | `knowledgeEngine`                       |
-| **Tipos**        | PascalCase       | `KnowledgeEngine`                       |
-| **Interfaces**   | PascalCase       | `IKnowledgeEngine`                      |
-| **Enums**        | PascalCase       | `KnowledgeStatus`                       |
-| **Constantes**   | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT`                       |
-| **Namespaces**   | dot.case         | `company.domain`                        |
+| Elemento                         | Formato                                                                                                  | Ejemplo                                                                       |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **IDs**                          | `EE-DOC-XXX` / `EE-ADR-XXX` / `EE-IMP-XXX-PXX` / `EE-TEC-XXX` / `EE-RFC-XXX` / `EE-VAL-*` / `EE-WAIVE-*` | `EE-DOC-001`, `EE-IMP-006-P01`, `EE-VAL-…`, `EE-WAIVE-…`                      |
+| **Documentos** (título)          | Title Case                                                                                               | `Engineering Ecosystem Constitution`                                          |
+| **Código Corto**                 | Sin el prefijo `EE`                                                                                      | `DOC-001`, `ADR-001`, `IMP-006-P01`, `TEC-001`, `RFC-001`, `VAL-…`, `WAIVE-…` |
+| **Archivos de documentos EE-\*** | `{ID}_{Nombre}.md` (general); VAL/WAIVE: `{ID}_{Nombre}_{fecha}.md`                                      | `EE-DOC-001_Master_Documentation_Index.md`                                    |
+| **Archivos genéricos (código)**  | kebab-case                                                                                               | `knowledge-engine.ts`                                                         |
+| **Roles**                        | Title Case                                                                                               | `Arquitecto`                                                                  |
+| **Herramientas**                 | Capitalizado                                                                                             | `VSCode`, `Windsurf`                                                          |
+| **Paquetes npm**                 | `@eq-labs/<categoría>-<nombre>`                                                                          | `@eq-labs/foundation-kernel`                                                  |
+| **Repositorios**                 | kebab-case                                                                                               | `ee-monorepo`                                                                 |
+| **Carpetas**                     | kebab-case                                                                                               | `packages/foundation/`                                                        |
+| **Variables**                    | camelCase                                                                                                | `knowledgeEngine`                                                             |
+| **Tipos**                        | PascalCase                                                                                               | `KnowledgeEngine`                                                             |
+| **Interfaces**                   | PascalCase                                                                                               | `IKnowledgeEngine`                                                            |
+| **Enums**                        | PascalCase                                                                                               | `KnowledgeStatus`                                                             |
+| **Constantes**                   | UPPER_SNAKE_CASE                                                                                         | `MAX_RETRY_COUNT`                                                             |
 
 ### 16.1. Política de Idioma por Tipo de Artefacto (Normativo)
 
@@ -368,28 +404,32 @@ El ecosistema establece una regla de separación estricta entre el código de ej
 
 Esta sección es la **Single Source of Truth** de la política de idioma por tipo de artefacto. Los documentos especializados (p. ej. EE-DOC-006, EE-DOC-007) podrán especializar nomenclatura o aplicar la regla a dominios concretos, pero **no deberán redefinir ni duplicar** esta política.
 
-| Tipo de Artefacto                                                  | Idioma Obligatorio | Justificación                                                                |
-| :----------------------------------------------------------------- | :----------------- | :--------------------------------------------------------------------------- |
-| **Código fuente**                                                  | Inglés (`en-US`)   | Compatibilidad con compiladores, linters y estándares internacionales.       |
-| **Comentarios de código y JSDoc**                                  | Inglés (`en-US`)   | Mantenibilidad e inspección por herramientas automatizadas e IA.             |
-| **Nombres de variables, funciones y tipos**                        | Inglés (`en-US`)   | Convención de desarrollo de software profesional.                            |
-| **Nombres de archivos y directorios**                              | Inglés (`en-US`)   | Evitar problemas de codificación y caracteres especiales en SO.              |
-| **Archivos package.json y manifiestos**                            | Inglés (`en-US`)   | Estándar de la industria de gestores de paquetes.                            |
-| **README técnicos de paquetes (`packages/*/README.md`)**           | Inglés (`en-US`)   | Exposición pública y consumo técnico local.                                  |
-| **Ramas Git**                                                      | Inglés (`en-US`)   | Convención de repositorio y compatibilidad con herramientas.                 |
-| **Plantillas de Issue / Pull Request**                             | Inglés (`en-US`)   | Artefactos técnicos de plataforma; consumo por herramientas e integraciones. |
-| **Mensajes y salidas de CI / GitHub Actions / bots de plataforma** | Inglés (`en-US`)   | Artefactos técnicos de automatización e interfaces de plataforma.            |
-| **Nombres de workflows, jobs y steps de CI**                       | Inglés (`en-US`)   | Artefactos técnicos de automatización.                                       |
-| **Documentos normativos (`EE-DOC-XXX`)**                           | Español            | Comprensión, precisión legal y gobernanza directa del equipo.                |
-| **Planes de implementación (`EE-IMP-XXX`)**                        | Español            | Alineación con la gobernanza y el ciclo documental.                          |
-| **Registros de decisión (`EE-ADR-XXX`)**                           | Español            | Claridad en la deliberación y justificación contextual.                      |
-| **Propuestas de cambio (`EE-RFC-XXX`)**                            | Español            | Discusión efectiva y revisión colaborativa de arquitectura.                  |
-| **Documentación técnica consolidada (`EE-TEC-XXX`)**               | Español            | Trazabilidad con la gobernanza del ecosistema.                               |
-| **Documentación arquitectónica y estratégica**                     | Español            | Alineación clara con la dirección de ingeniería y stakeholders.              |
-| **Mensajes y comunicación interna del equipo**                     | Español            | Fluidez operativa de la organización.                                        |
+| Tipo de Artefacto                                                                      | Idioma Obligatorio                                                                                | Justificación                                                                   |
+| :------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------ |
+| **Código fuente**                                                                      | Inglés (`en-US`)                                                                                  | Compatibilidad con compiladores, linters y estándares internacionales.          |
+| **Comentarios de código y JSDoc**                                                      | Inglés (`en-US`)                                                                                  | Mantenibilidad e inspección por herramientas automatizadas e IA.                |
+| **Nombres de variables, funciones y tipos**                                            | Inglés (`en-US`)                                                                                  | Convención de desarrollo de software profesional.                               |
+| **Nombres de archivos y directorios**                                                  | Inglés (`en-US`)                                                                                  | Evitar problemas de codificación y caracteres especiales en SO.                 |
+| **Archivos package.json y manifiestos**                                                | Inglés (`en-US`)                                                                                  | Estándar de la industria de gestores de paquetes.                               |
+| **README técnicos de paquetes (`packages/*/README.md`)**                               | Inglés (`en-US`)                                                                                  | Exposición pública y consumo técnico local.                                     |
+| **Ramas Git**                                                                          | Inglés (`en-US`)                                                                                  | Convención de repositorio y compatibilidad con herramientas.                    |
+| **Plantillas de Issue / Pull Request**                                                 | Inglés (`en-US`)                                                                                  | Artefactos técnicos de plataforma; consumo por herramientas e integraciones.    |
+| **Mensajes y salidas de CI / GitHub Actions / bots de plataforma**                     | Inglés (`en-US`)                                                                                  | Artefactos técnicos de automatización e interfaces de plataforma.               |
+| **Nombres de workflows, jobs y steps de CI**                                           | Inglés (`en-US`)                                                                                  | Artefactos técnicos de automatización.                                          |
+| **Documentos normativos (`EE-DOC-XXX`)**                                               | Español                                                                                           | Comprensión, precisión legal y gobernanza directa del equipo.                   |
+| **Planes de implementación (`EE-IMP-XXX`)**                                            | Español                                                                                           | Alineación con la gobernanza y el ciclo documental.                             |
+| **Registros de decisión (`EE-ADR-XXX`)**                                               | Español                                                                                           | Claridad en la deliberación y justificación contextual.                         |
+| **Propuestas de cambio (`EE-RFC-XXX`)**                                                | Español                                                                                           | Discusión efectiva y revisión colaborativa de arquitectura.                     |
+| **Documentación técnica consolidada (`EE-TEC-XXX`)**                                   | Español                                                                                           | Trazabilidad con la gobernanza del ecosistema.                                  |
+| **Documentación arquitectónica y estratégica**                                         | Español                                                                                           | Alineación clara con la dirección de ingeniería y stakeholders.                 |
+| **Mensajes y comunicación interna del equipo**                                         | Español                                                                                           | Fluidez operativa de la organización.                                           |
+| **EE-VAL-_ / EE-WAIVE-_** (evidencia / waiver)                                         | Español (contenido) + identificadores en inglés                                                   | Gobernanza de validación; IDs en en-US                                          |
+| **README de directorios no-paquete** (`templates/`, `data/`, `docs/validation/`, etc.) | Inglés (`en-US`) para nombre de archivo; contenido EN o ES según audiencia técnica del directorio | Alineado a convención de repo; no redefinir en 006                              |
+| **Mensajes de commit**                                                                 | Inglés (`en-US`) Conventional Commits                                                             | Convención de desarrollo                                                        |
+| **Título de EE-RFC (campo Title / H1 en-US)**                                          | Inglés (`en-US`)                                                                                  | Identificador internacional del cambio; cuerpo del RFC en español de gobernanza |
 
 > **Regla de Oro:** _Código e interfaces en Inglés; Gobernanza y Arquitectura en Español._
-
+>
 > **Evolución del catálogo:** Cualquier ampliación o modificación de esta tabla deberá realizarse únicamente en esta sección (EE-DOC-002 §16.1), mediante el mecanismo de cambio gobernado aplicable. Los documentos especializados actualizarán sus referencias, no la norma.
 
 ---
@@ -415,17 +455,49 @@ A partir de EE-DOC-004, los documentos especializados del Engineering Ecosystem 
 
 Todos los documentos que se elaboren en el **Engineering Ecosystem** deben utilizar obligatoriamente la plantilla correspondiente a su tipo de artefacto. Cada plantilla integra de manera inseparable su **Tabla de Metadatos** al inicio y la **Estructura del Cuerpo** en formato Markdown.
 
-| Subsección | Tipo de artefacto                              |
-| :--------- | :--------------------------------------------- |
-| **§18.1**  | EE-DOC-XXX (normativos)                        |
-| **§18.2**  | EE-ADR-XXX (decisiones arquitectónicas)        |
-| **§18.3**  | EE-IMP-XXX-PXX (implementación por fase)       |
-| **§18.4**  | EE-TEC-XXX (documentación técnica consolidada) |
-| **§18.5**  | EE-RFC-XXX (cambio gobernado Tipo D)           |
+| Subsección | Tipo de artefacto                                            |
+| ---------- | ------------------------------------------------------------ |
+| **§18.1**  | EE-DOC-XXX (normativos)                                      |
+| **§18.2**  | EE-ADR-XXX (decisiones arquitectónicas)                      |
+| **§18.3**  | EE-IMP-XXX-PXX (implementación por fase)                     |
+| **§18.4**  | EE-TEC-XXX (documentación técnica consolidada)               |
+| **§18.5**  | EE-RFC-XXX (cambio gobernado Tipo D)                         |
+| **§18.6**  | `EE-VAL-_ / EE-WAIVE-_` (validación de ecosistema / waivers) |
 
-### 18.1 Tabla de Metadatos para Documentos Normativos (EE-DOC-XXX)
+**Ciclo de implementación (referencia):** el flujo **Implementación → Validación → Documentación Técnica**, la unificación, validación final y congelación se rigen por **EE-DOC-005 — Development Workflow**. No se duplica aquí el workflow de 005.
 
-**Documentos implementables:** Cuando un EE-DOC-XXX genere implementación física (según EE-DOC-001 sección 06, a partir de EE-DOC-006), la plantilla exige las secciones fijas de cierre **XX a CC** (Plan de Implementación y Fases, Evolución, Cumplimiento, Referencias, Historial de Cambios, Cierre Documental). Los documentos conceptuales/fundacionales (EE-DOC-001 a EE-DOC-005) omiten **XX** (Plan de Implementación y Fases) y **CC** (Cierre Documental) cuando no exista implementación física que cerrar; el resto de la cola se adapta según corresponda.
+**Diagrama — Ciclo (referencia a EE-DOC-005).**
+
+```mermaid
+flowchart LR
+    A["Implementación"] --> B["Validación"] --> C["Borrador de Documentación Técnica"]
+```
+
+### 18.1. Tabla de Metadatos para Documentos Normativos (EE-DOC-XXX)
+
+> **Nota de aplicación — as-built EE-DOC:** Estructura y aplicabilidad de la plantilla normativa EE-DOC (§18.1).
+
+**Estructura obligatoria (plantilla).**
+
+| Bloque                                     | ¿Fijo? | Regla                                                                                       |
+| ------------------------------------------ | :----: | ------------------------------------------------------------------------------------------- |
+| Frase de cumplimiento EE-DOC-002 (bajo H1) |   Sí   | Obligatorio                                                                                 |
+| `## METADATOS`                             |   Sí   | Tabla de campos del ejemplo (§05 + tipo)                                                    |
+| `## 01. Propósito`                         |   Sí   | Título fijo                                                                                 |
+| `## 02. Alcance`                           |   Sí   | Título fijo                                                                                 |
+| `## 03` … hasta antes del cierre           | **No** | **Títulos de dominio variables**. _«Contenido Normativo»_ es placeholder, no título literal |
+| Letras XX–CC en el esqueleto               |   —    | Nombran el **rol** de sección; numeración real continua en dos dígitos (§06)                |
+| Numeración                                 |   Sí   | **§06** — dos dígitos (`01`, `02`, …)                                                       |
+
+**Aplicabilidad.**
+
+| Ámbito                                             |   ¿Aplica?   | Regla                                                                                                                                                                       |
+| -------------------------------------------------- | :----------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cuerpo EE-DOC (todos los del índice)               |      Sí      | Frase EE-DOC-002 bajo H1; metadatos §05; numeración §06                                                                                                                     |
+| Cierre fundacional (001–005)                       |  Sí (roles)  | `Referencias` + `Historial de Cambios` (+ `FIN DEL DOCUMENTO`). Sin Plan de Implementación ni Cierre Documental si no hay implementación física                             |
+| Cierre implementable (006+)                        |  Sí (roles)  | `Plan de Implementación y Fases` → `Evolución` → `Cumplimiento` → `Referencias` → `Historial de Cambios` → `Cierre Documental`                                              |
+| Plan de Implementación y Fases / Cierre Documental | Condicional  | Obligatorio si el documento genera implementación física (006+). No aplica a EE-DOC-001…005 sin implementación física. Detalle del ciclo → el preámbulo de §18 y EE-DOC-005 |
+| Contenido de Plan de Fases (XX)                    | Guía externa | No duplicar EE-DOC-005; cada fase traza a EE-IMP-XXX-PXX (el preámbulo de §18)                                                                                              |
 
 ```markdown
 # EE-DOC-XXX — {Nombre del Documento}
@@ -436,25 +508,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## METADATOS
 
-| Campo                 | Valor                        |
-| --------------------- | ---------------------------- |
-| **ID**                | EE-DOC-XXX                   |
-| **Documento**         | Nombre del Documento         |
-| **Código corto**      | EE-DOC-XXX                   |
-| **Tipo**              | Tipo de Documento            |
-| **Clasificación**     | Clasificación                |
-| **Nivel**             | Nivel Jerárquico             |
-| **Normativo**         | Sí                           |
-| **Versión**           | v1.0.0                       |
-| **Estado**            | En Elaboración               |
-| **Propietario**       | Equipo de Arquitectura       |
-| **Documento padre**   | EE-DOC-XXX                   |
-| **Dependencias**      | EE-DOC-XXX, EE-DOC-XXX       |
-| **Aprobado por**      | Equipo de Arquitectura       |
-| **Audiencia**         | Arquitectura, Desarrollo, IA |
-| **Fecha de creación** | YYYY-MM-DD                   |
-| **Última revisión**   | YYYY-MM-DD                   |
-| **Próxima revisión**  | YYYY-MM-DD                   |
+| Campo                 | Valor                                        |
+| --------------------- | -------------------------------------------- |
+| **ID**                | EE-DOC-XXX                                   |
+| **Documento**         | Nombre del Documento                         |
+| **Código corto**      | DOC-XXX                                      |
+| **Tipo**              | Tipo de Documento                            |
+| **Clasificación**     | Clasificación                                |
+| **Nivel**             | Nivel Jerárquico                             |
+| **Normativo**         | Sí                                           |
+| **Versión**           | v1.0.0                                       |
+| **Estado**            | En Elaboración                               |
+| **Propietario**       | Equipo de Arquitectura                       |
+| **Documento padre**   | EE-DOC-XXX                                   |
+| **Dependencias**      | EE-DOC-XXX, EE-DOC-XXX                       |
+| **Aprobado por**      | Equipo de Arquitectura                       |
+| **Audiencia**         | Arquitectura, Desarrollo, IA                 |
+| **Fecha de creación** | YYYY-MM-DD                                   |
+| **Última revisión**   | YYYY-MM-DD                                   |
+| **Próxima revisión**  | YYYY-MM-DD / No aplica — Documento Congelado |
 
 ---
 
@@ -470,49 +542,43 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ---
 
-## 03. Contenido Normativo
+## 03. {Título de dominio 1}
 
-[Contenido normativo específico del documento organizado en subsecciones numeradas.]
+[Primera sección de contenido normativo propio del documento.]
 
-### 03.1. Subsección Normativa
+### 03.1. {Subsección}
 
 [Detalle normativo.]
 
 ---
 
-## [Secciones variables numeradas: 04 a XX-1]
+## 04. {Título de dominio 2}
 
-[Secciones específicas según el dominio del documento.]
+[Siguiente sección de dominio — títulos variables.]
+
+---
+
+## [Secciones variables numeradas: 05 a XX-1]
+
+[Más secciones de dominio según el documento.]
 
 ---
 
 ## XX. Plan de Implementación y Fases (Normativo)
 
-> **Aplicabilidad:** Obligatoria cuando el documento genera implementación física (EE-DOC-006 en adelante). No aplica a EE-DOC-001 a EE-DOC-005.
-
-La implementación física de lo definido por este documento se rige por un flujo secuencial y adaptativo de unidades de implementación (fases). El ciclo de vida de cada unidad (**Implementación**, **Validación** y **Documentación Técnica**), así como la unificación, validación final y congelación, se rigen por **EE-DOC-005 — Development Workflow**.
-
-flowchart LR
-A["Implementación"] --> B["Validación"] --> C["Borrador de Documentación Técnica"]
+[Introducción breve del plan de fases de este documento.]
 
 ### XX.1. Catálogo Oficial de Fases
 
 | Fase       | Identificador  | Propósito Técnico              | Entregable Principal / Artefacto          |
-| :--------- | :------------- | :----------------------------- | :---------------------------------------- |
+| ---------- | -------------- | ------------------------------ | ----------------------------------------- |
 | **Fase N** | [Nombre corto] | [Propósito técnico de la fase] | [Artefacto físico o entregable principal] |
-
-[Cada fase deberá poder trazarse a un documento técnico de implementación **EE-IMP-XXX-PXX**.]
 
 ### XX.2. Especificaciones Técnicas por Unidad de Implementación
 
-Cada unidad de implementación es responsable de materializar los elementos normativos que le correspondan. El detalle físico de archivos, configuración de bajo nivel y evidencia de validación se registra de forma exclusiva en el documento técnico **EE-IMP-XXX-PXX** correspondiente.
-
-Para cada fase se documentará, como mínimo:
-
-- **Propósito** de la fase.
-- **Artefactos físicos** creados o modificados.
-- **Documento de especificación / evidencia:** EE-IMP-XXX-PXX.
-- **Restricciones** o prohibiciones relevantes de la fase, si existen.
+| Fase | Propósito | Artefactos físicos | EE-IMP-XXX-PXX | Restricciones |
+| ---- | --------- | ------------------ | -------------- | ------------- |
+|      |           |                    |                |               |
 
 ---
 
@@ -531,7 +597,7 @@ Para cada fase se documentará, como mínimo:
 ## AA. Referencias
 
 | Código         | Documento                  | Descripción                                       |
-| :------------- | :------------------------- | :------------------------------------------------ |
+| -------------- | -------------------------- | ------------------------------------------------- |
 | **EE-DOC-001** | Master Documentation Index | Índice maestro del ecosistema                     |
 | **EE-DOC-005** | Development Workflow       | Ciclo de implementación, validación y congelación |
 
@@ -540,14 +606,12 @@ Para cada fase se documentará, como mínimo:
 ## BB. Historial de Cambios
 
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo           | Cambios                       | Estado         |
-| :--------- | :--------- | :--------------------- | :--------------------- | :--------------- | :---------------------------- | :------------- |
+| ---------- | ---------- | ---------------------- | ---------------------- | ---------------- | ----------------------------- | -------------- |
 | **v1.0.0** | YYYY-MM-DD | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial | Versión inicial del documento | En Elaboración |
 
 ---
 
 ## CC. Cierre Documental
-
-> **Aplicabilidad:** Obligatoria al completar la validación final de la implementación (documento implementable). Se rellena al cierre del ciclo; permanece pendiente durante Elaboración / Implementación.
 
 ### CC.1. Validación Final
 
@@ -556,7 +620,7 @@ Para cada fase se documentará, como mínimo:
 ### CC.2. Resultado de Quality Gates
 
 | Validación | Resultado |
-| :--------- | :-------: |
+| ---------- | :-------: |
 | [Gate]     |  ✅ / ❌  |
 
 ### CC.3. Dictamen de Cierre
@@ -574,7 +638,31 @@ Para cada fase se documentará, como mínimo:
 
 ---
 
-#### 18.2. Tabla de Metadatos para Registros de Decisión Arquitectónica (EE-ADR-XXX)
+### 18.2. Tabla de Metadatos para Registros de Decisión Arquitectónica (EE-ADR-XXX)
+
+> **Nota de aplicación — as-built ADR:** Estructura y aplicabilidad de la plantilla EE-ADR (§18.2).
+
+**Estructura obligatoria (plantilla).**
+
+| Bloque                                               |   ¿Fijo?   | Regla                                                                                             |
+| ---------------------------------------------------- | :--------: | ------------------------------------------------------------------------------------------------- |
+| Frase / intro EE-DOC-002 (bajo H1)                   |     Sí     | Obligatorio                                                                                       |
+| `## METADATOS`                                       |     Sí     | Juego §05 + metadatos ADR                                                                         |
+| `01. Propósito` … `06. Justificación Arquitectónica` |     Sí     | Títulos fijos (`05. Alcance` con Incluye / No incluye)                                            |
+| `07` … antes de Consecuencias                        |   **No**   | Secciones de desarrollo de la decisión (variables)                                                |
+| Cierre                                               | Sí (roles) | `Consecuencias` → `Referencias` → `Historial de Cambios` (opcional: estado de la decisión)        |
+| Metadatos adicionales                                |     Sí     | `Código corto` = `ADR-XXX`, `Fase`, `Fase de implementación`, `Decisión relacionada`, `Prioridad` |
+| Letras XX–ZZ en el esqueleto                         |     —      | Roles; numeración real §06                                                                        |
+| Numeración                                           |     Sí     | **§06** — dos dígitos                                                                             |
+
+**Aplicabilidad.**
+
+| Ámbito                                      | ¿Aplica? | Regla                                                                                    |
+| ------------------------------------------- | :------: | ---------------------------------------------------------------------------------------- |
+| EE-ADR (decisión arquitectónica vinculante) |    Sí    | Vehículo típico Tipo C (**EE-DOC-005 §04.2**, **EE-DOC-001 R2**)                         |
+| Relación con EE-DOC padre                   |    Sí    | No sustituye el contenido normativo del padre: lo especializa o fija una elección        |
+| Estados típicos                             |    Sí    | Propuesto → Aprobado / Rechazado / Superseded (matrices **EE-DOC-001 §09.1**)            |
+| Metadatos de fase                           |    Sí    | Documento padre, fase y fase de implementación si aplica; decisión relacionada si existe |
 
 ```markdown
 # EE-ADR-XXX — {Nombre de la Decisión Arquitectónica}
@@ -585,35 +673,35 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 
 ## METADATOS
 
-| Campo                      | Valor                                                           |
-| :------------------------- | :-------------------------------------------------------------- |
-| **ID**                     | EE-ADR-XXX                                                      |
-| **Documento**              | Nombre de la Decisión Arquitectónica                            |
-| **Código corto**           | ADR-XXX                                                         |
-| **Fase**                   | Fase Global del Ecosistema                                      |
-| **Fase de implementación** | Fase X — Nombre (Implementación de EE-DOC-XXX)                  |
-| **Tipo**                   | Architectural Decision Record                                   |
-| **Clasificación**          | Arquitectura / Decisión Arquitectónica                          |
-| **Nivel**                  | Arquitectónico                                                  |
-| **Normativo**              | Sí / No                                                         |
-| **Versión**                | v1.0.0                                                          |
-| **Estado**                 | Aprobado / En Revisión Arquitectónica                           |
-| **Propietario**            | Equipo de Arquitectura                                          |
-| **Documento padre**        | EE-DOC-XXX                                                      |
-| **Dependencias**           | EE-DOC-XXX; EE-IMP-006-PXX                                      |
-| **Decisión relacionada**   | EE-ADR-001 — Estrategia de Orquestación de Tareas del Workspace |
-| **Aprobado por**           | Equipo de Arquitectura                                          |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps                                |
-| **Fecha de creación**      | YYYY-MM-DD                                                      |
-| **Última revisión**        | YYYY-MM-DD                                                      |
-| **Próxima revisión**       | YYYY-MM-DD                                                      |
-| **Prioridad**              | Alta                                                            |
+| Campo                      | Valor                                          |
+| -------------------------- | ---------------------------------------------- |
+| **ID**                     | EE-ADR-XXX                                     |
+| **Documento**              | Nombre de la Decisión Arquitectónica           |
+| **Código corto**           | ADR-XXX                                        |
+| **Fase**                   | Fase Global del Ecosistema                     |
+| **Fase de implementación** | Fase X — Nombre (Implementación de EE-DOC-XXX) |
+| **Tipo**                   | Architectural Decision Record                  |
+| **Clasificación**          | Arquitectura / Decisión Arquitectónica         |
+| **Nivel**                  | Arquitectónico                                 |
+| **Normativo**              | Sí / No                                        |
+| **Versión**                | v1.0.0                                         |
+| **Estado**                 | Aprobado / En Revisión Arquitectónica          |
+| **Propietario**            | Equipo de Arquitectura                         |
+| **Documento padre**        | EE-DOC-XXX                                     |
+| **Dependencias**           | EE-DOC-XXX; EE-IMP-XXX-PXX                     |
+| **Decisión relacionada**   | EE-ADR-XXX / Ninguna                           |
+| **Aprobado por**           | Equipo de Arquitectura                         |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps               |
+| **Fecha de creación**      | YYYY-MM-DD                                     |
+| **Última revisión**        | YYYY-MM-DD                                     |
+| **Próxima revisión**       | YYYY-MM-DD / No aplica — Documento Congelado   |
+| **Prioridad**              | Alta                                           |
 
 ---
 
 ## 01. Propósito
 
-[Propósito específico de la decisión arquitectónica.]
+[Una línea clara y concisa que define por qué existe esta decisión arquitectónica.]
 
 ---
 
@@ -674,7 +762,7 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 ## YY. Referencias
 
 | Código         | Documento                  | Descripción                               |
-| :------------- | :------------------------- | :---------------------------------------- |
+| -------------- | -------------------------- | ----------------------------------------- |
 | **EE-DOC-001** | Master Documentation Index | Índice maestro del ecosistema             |
 | **EE-DOC-005** | Development Workflow       | Workflow de desarrollo y cambio gobernado |
 
@@ -683,7 +771,7 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 ## ZZ. Historial de Cambios
 
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo           | Cambios                              | Estado                     |
-| :--------- | :--------- | :--------------------- | :--------------------- | :--------------- | :----------------------------------- | :------------------------- |
+| ---------- | ---------- | ---------------------- | ---------------------- | ---------------- | ------------------------------------ | -------------------------- |
 | **v1.0.0** | YYYY-MM-DD | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial | Propuesta de decisión arquitectónica | En Revisión Arquitectónica |
 
 ---
@@ -691,43 +779,73 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 ## FIN DEL DOCUMENTO
 ```
 
+---
+
 ### 18.3. Tabla de Metadatos para Documentos Técnicos de Implementación (EE-IMP-XXX-PXX)
+
+> **Nota de aplicación — as-built IMP:** Estructura y aplicabilidad de la plantilla EE-IMP (§18.3).
+
+**Estructura obligatoria (plantilla).**
+
+| Bloque                                     |         ¿Fijo?         | Regla                                                                               |
+| ------------------------------------------ | :--------------------: | ----------------------------------------------------------------------------------- |
+| Frase EE-DOC-002 (bajo H1)                 |           Sí           | Obligatorio                                                                         |
+| `## METADATOS`                             |           Sí           | Juego §05 + campo **Fase**                                                          |
+| `01. Objetivo`                             |           Sí           | Título fijo                                                                         |
+| `02. Alcance Implementado`                 |           Sí           | Preferido                                                                           |
+| `03. Estructura Física Implementada`       | Sí (si hay artefactos) | Omitible solo si la fase es puramente procedimental y se justifica                  |
+| `04. Modelo de Orquestación…`              |      Condicional       | Si no toca runtime/orquestación: omitir y renumerar                                 |
+| `05. Especificación Técnica de Artefactos` | Sí (si hay artefactos) | Matriz de archivos/unidades                                                         |
+| Medio (`06` …)                             |         **No**         | Procedimiento, criterios, descubrimientos, evidencia                                |
+| Cierre                                     |       Sí (roles)       | `Validaciones Ejecutadas` → `Trazabilidad` → `Referencias` → `Historial de Cambios` |
+| Metadatos adicionales                      |           Sí           | **`Fase`** obligatorio (`Fase X — Nombre de Fase`)                                  |
+| Numeración                                 |           Sí           | **§06** dos dígitos (legacy a un dígito: migrar en próxima edición)                 |
+
+**Aplicabilidad.**
+
+| Ámbito           |  ¿Aplica?   | Regla                                                                          |
+| ---------------- | :---------: | ------------------------------------------------------------------------------ |
+| EE-IMP por fase  |     Sí      | Un **EE-IMP-XXX-PXX** por fase del catálogo del DOC padre implementable (006+) |
+| Carácter         |     Sí      | Evidencia de implementación; **Normativo = No**; el padre EE-DOC es la norma   |
+| Ciclo de fase    |     Sí      | Según el preámbulo de §18 y EE-DOC-005                                         |
+| §04 Orquestación | Condicional | Solo si la fase afecta runtime/orquestación                                    |
 
 ```markdown
 # EE-IMP-XXX-PXX — {Nombre del Entregable Técnico}
 
-Este documento registra la evidencia técnica de la implementación física y validación correspondiente a la Fase X conforme al estándar **EE-DOC-005**.
+Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ---
 
 ## METADATOS
 
-| Campo                 | Valor                               |
-| :-------------------- | :---------------------------------- |
-| **ID**                | EE-IMP-XXX-PXX                      |
-| **Documento**         | Nombre del Entregable Técnico       |
-| **Código corto**      | EE-IMP-XXX-PXX                      |
-| **Fase**              | Fase X — Nombre de Fase             |
-| **Tipo**              | Documento Técnico de Implementación |
-| **Clasificación**     | Implementación                      |
-| **Nivel**             | Técnico                             |
-| **Normativo**         | No                                  |
-| **Versión**           | v1.0.0                              |
-| **Estado**            | Borrador / En Revisión              |
-| **Propietario**       | Equipo de Arquitectura              |
-| **Documento padre**   | EE-DOC-006                          |
-| **Dependencias**      | EE-DOC-006                          |
-| **Aprobado por**      | Equipo de Arquitectura              |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
-| **Fecha de creación** | YYYY-MM-DD                          |
-| **Última revisión**   | YYYY-MM-DD                          |
-| **Próxima revisión**  | YYYY-MM-DD                          |
+| Campo                      | Valor                                        |
+| -------------------------- | -------------------------------------------- |
+| **ID**                     | EE-IMP-XXX-PXX                               |
+| **Documento**              | Nombre del Entregable Técnico                |
+| **Código corto**           | IMP-XXX-PXX                                  |
+| **Fase**                   | Fase X — Nombre de Fase                      |
+| **Fase de implementación** | {si aplica}                                  |
+| **Tipo**                   | Documento Técnico de Implementación          |
+| **Clasificación**          | Implementación                               |
+| **Nivel**                  | Técnico                                      |
+| **Normativo**              | No                                           |
+| **Versión**                | v1.0.0                                       |
+| **Estado**                 | Borrador / En Revisión / Completado          |
+| **Propietario**            | Equipo de Arquitectura                       |
+| **Documento padre**        | EE-DOC-XXX                                   |
+| **Dependencias**           | EE-DOC-XXX                                   |
+| **Aprobado por**           | Equipo de Arquitectura                       |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps             |
+| **Fecha de creación**      | YYYY-MM-DD                                   |
+| **Última revisión**        | YYYY-MM-DD                                   |
+| **Próxima revisión**       | YYYY-MM-DD / No aplica — Documento Congelado |
 
 ---
 
 ## 01. Objetivo
 
-[Objetivo técnico concreto alcanzado en la fase de implementación.]
+[Una línea clara y concisa del objetivo técnico concreto alcanzado en la fase de implementación.]
 
 ---
 
@@ -739,7 +857,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## 03. Estructura Física Implementada
 
-[Árbol de directorios y archivos físicos reales creados bajo el repositorio]
+[Árbol de directorios y archivos físicos reales creados bajo el repositorio.]
 
 ---
 
@@ -747,15 +865,10 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 [Descripción de la arquitectura de ejecución, componentes involucrados y flujo de orquestación.]
 
-flowchart TD
-A["[Origen / Comando]"] --> B["[Script / Entrypoint]"]
-B --> C["[Orquestador / Herramienta]"]
-C --> D["[Artefacto / Workspace]"]
-
 ### 04.1. Repartición de Responsabilidades
 
 | Componente         | Responsabilidad                  |
-| :----------------- | :------------------------------- |
+| ------------------ | -------------------------------- |
 | **[Componente 1]** | [Descripción de responsabilidad] |
 | **[Componente 2]** | [Descripción de responsabilidad] |
 
@@ -764,7 +877,7 @@ C --> D["[Artefacto / Workspace]"]
 ## 05. Especificación Técnica de Artefactos
 
 | Artefacto / Comando | Ruta Física / CLI  | Descripción                | Mecanismo Principal  |
-| :------------------ | :----------------- | :------------------------- | :------------------- |
+| ------------------- | ------------------ | -------------------------- | -------------------- |
 | **[Comando 1]**     | `[scripts/o_ruta]` | [Propósito del componente] | [Herramienta/Engine] |
 | **[Comando 2]**     | `[scripts/o_ruta]` | [Propósito del componente] | [Herramienta/Engine] |
 
@@ -772,14 +885,14 @@ C --> D["[Artefacto / Workspace]"]
 
 ## [Secciones variables de detalle técnico: 06 a XX-1]
 
-[Especificaciones técnicas, fragmentos de configuración, packages.json, scripts y archivos construidos.]
+[Especificaciones técnicas, fragmentos de configuración, package.json, scripts y archivos construidos.]
 
 ---
 
 ## XX. Validaciones Ejecutadas
 
 | Comando / Pruebas | Resultado  | Detalle / Tiempo                   |
-| :---------------- | :--------- | :--------------------------------- |
+| ----------------- | ---------- | ---------------------------------- |
 | `pnpm install`    | ✅ Exitoso | Proyectos instalados               |
 | `pnpm -r build`   | ✅ Exitoso | Compilación / Typecheck verificado |
 
@@ -796,7 +909,7 @@ C --> D["[Artefacto / Workspace]"]
 ## YY. Trazabilidad
 
 | Elemento                      | Referencia                        |
-| :---------------------------- | :-------------------------------- |
+| ----------------------------- | --------------------------------- |
 | **Documento normativo padre** | EE-DOC-006 — Repository Structure |
 | **Fase**                      | Fase X — Nombre de Fase           |
 | **Implementación**            | EE-IMP-XXX-PXX                    |
@@ -804,14 +917,14 @@ C --> D["[Artefacto / Workspace]"]
 
 ### YY.1 Conformidad
 
-[Declaración de conformidad con EE-DOC-006 y estado del ciclo de vida documental conforme a EE-DOC-005.]
+[Declaración de conformidad con el documento padre y estado del ciclo de vida documental conforme a EE-DOC-005.]
 
 ---
 
 ## ZZ. Referencias
 
 | Código         | Documento            | Descripción                                      |
-| :------------- | :------------------- | :----------------------------------------------- |
+| -------------- | -------------------- | ------------------------------------------------ |
 | **EE-DOC-006** | Repository Structure | Documento normativo de estructura de repositorio |
 
 ---
@@ -819,7 +932,7 @@ C --> D["[Artefacto / Workspace]"]
 ## AA. Historial de Cambios
 
 | Versión    | Fecha      | Autor                  | Aprobado por | Motivo                  | Cambios                                 | Estado   |
-| :--------- | :--------- | :--------------------- | :----------- | :---------------------- | :-------------------------------------- | :------- |
+| ---------- | ---------- | ---------------------- | ------------ | ----------------------- | --------------------------------------- | -------- |
 | **v0.1.0** | YYYY-MM-DD | Equipo de Arquitectura | —            | Creación del DT de Fase | Registro de evidencia de implementación | Borrador |
 
 ---
@@ -827,48 +940,69 @@ C --> D["[Artefacto / Workspace]"]
 ## FIN DEL DOCUMENTO
 ```
 
+---
+
 ### 18.4. Tabla de Metadatos para Documentación Técnica Consolidada (EE-TEC-XXX)
 
-La Documentación Técnica Consolidada (EE-TEC-XXX) es el artefacto que unifica, tras la finalización de todas las fases de implementación de un documento normativo, la evidencia técnica as-built derivada de los documentos EE-IMP-XXX-PXX correspondientes.
+> **Nota de aplicación — as-built TEC:** Estructura y aplicabilidad de la plantilla EE-TEC (§18.4).
 
-Este artefacto forma parte del ciclo documental definido en EE-DOC-005: se elabora después de los borradores de Documentación Técnica por fase y antes de la Validación Final y la Congelación del documento normativo padre.
+**Estructura obligatoria (plantilla).**
 
-La plantilla siguiente es de uso obligatorio para todo documento EE-TEC-XXX.
+| Bloque                                      |   ¿Fijo?   | Regla                                                                                        |
+| ------------------------------------------- | :--------: | -------------------------------------------------------------------------------------------- |
+| Frase EE-DOC-002 (bajo H1)                  |     Sí     | Obligatorio                                                                                  |
+| `## METADATOS`                              |     Sí     | Juego §05; padre = EE-DOC consolidado                                                        |
+| `01. Propósito`                             |     Sí     | Título fijo                                                                                  |
+| `02. Alcance` (Cubierto / No cubierto)      |     Sí     | Título fijo + subsecciones                                                                   |
+| `03. Resumen Ejecutivo del Estado As-Built` |     Sí     | Título fijo                                                                                  |
+| `04. Estructura Física Consolidada`         |     Sí     | Título fijo                                                                                  |
+| Medio (`05` …)                              |   **No**   | Detalle por fase/dominio                                                                     |
+| Cierre                                      | Sí (roles) | Decisiones técnicas → Alineación / Descubrimientos → Quality Gates → Referencias → Historial |
+| Numeración                                  |     Sí     | **§06** dos dígitos                                                                          |
+
+**Aplicabilidad.**
+
+| Ámbito              | ¿Aplica? | Regla                                                                                                                  |
+| ------------------- | :------: | ---------------------------------------------------------------------------------------------------------------------- |
+| EE-TEC              |    Sí    | Consolidar as-built de un EE-DOC implementable tras sus EE-IMP (una TEC por DOC padre, p. ej. EE-TEC-001 - EE-DOC-006) |
+| Carácter            |    Sí    | **Normativo = No**; no reemplaza al DOC padre                                                                          |
+| Alineación as-built |    Sí    | Diferencias padre vs físico: clasificar según **EE-DOC-005**; sin desviaciones silenciosas                             |
+| Ciclo               |    Sí    | Según el preámbulo de §18 y EE-DOC-005                                                                                 |
 
 ```markdown
 # EE-TEC-XXX — {Nombre de la Documentación Técnica Consolidada}
 
-Este documento registra la documentación técnica consolidada (estado as-built) correspondiente a la implementación de **EE-DOC-XXX**, conforme a los estándares **EE-DOC-002** y **EE-DOC-005**.
+Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ---
 
 ## METADATOS
 
-| Campo                 | Valor                                                               |
-| :-------------------- | :------------------------------------------------------------------ |
-| **ID**                | EE-TEC-XXX                                                          |
-| **Documento**         | Nombre de la Documentación Técnica Consolidada                      |
-| **Código corto**      | EE-TEC-XXX                                                          |
-| **Tipo**              | Documento Técnico                                                   |
-| **Clasificación**     | Implementación                                                      |
-| **Nivel**             | Técnico                                                             |
-| **Normativo**         | No                                                                  |
-| **Versión**           | v1.0.0                                                              |
-| **Estado**            | Borrador / En Revisión / Aprobado                                   |
-| **Propietario**       | Equipo de Arquitectura                                              |
-| **Documento padre**   | EE-DOC-XXX                                                          |
-| **Dependencias**      | EE-DOC-XXX, EE-IMP-XXX-P01 … EE-IMP-XXX-PNN, EE-ADR-XXX (si aplica) |
-| **Aprobado por**      | Equipo de Arquitectura                                              |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                |
-| **Fecha de creación** | YYYY-MM-DD                                                          |
-| **Última revisión**   | YYYY-MM-DD                                                          |
-| **Próxima revisión**  | YYYY-MM-DD                                                          |
+| Campo                 | Valor                                              |
+| --------------------- | -------------------------------------------------- |
+| **ID**                | EE-TEC-XXX                                         |
+| **Documento**         | Nombre de la Documentación Técnica Consolidada     |
+| **Código corto**      | TEC-XXX                                            |
+| **Tipo**              | Documentación Técnica Consolidada                  |
+| **Clasificación**     | Implementación                                     |
+| **Nivel**             | Técnico                                            |
+| **Normativo**         | No                                                 |
+| **Versión**           | v1.0.0                                             |
+| **Estado**            | Borrador / En Revisión / Aprobado                  |
+| **Propietario**       | Equipo de Arquitectura                             |
+| **Documento padre**   | EE-DOC-XXX                                         |
+| **Dependencias**      | EE-DOC-XXX, EE-IMP-XXX-PNN, EE-ADR-XXX (si aplica) |
+| **Aprobado por**      | Equipo de Arquitectura                             |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA               |
+| **Fecha de creación** | YYYY-MM-DD                                         |
+| **Última revisión**   | YYYY-MM-DD                                         |
+| **Próxima revisión**  | YYYY-MM-DD / No aplica — Documento Congelado       |
 
 ---
 
 ## 01. Propósito
 
-[Declaración clara del propósito del documento: consolidar el estado as-built de la implementación del documento normativo padre, integrando las evidencias de las fases EE-IMP correspondientes.]
+[Una línea clara y concisa: consolidar el estado as-built de la implementación del documento normativo padre, integrando las evidencias de las fases EE-IMP correspondientes.]
 
 ---
 
@@ -902,13 +1036,11 @@ Este documento registra la documentación técnica consolidada (estado as-built)
 
 [Árbol de directorios y archivos físicos resultantes de la implementación completa, o referencia a la estructura canónica implementada.]
 
-[árbol de estructura]
-
-> **Nota de alineación (cuando aplique):** Registrar cualquier diferencia entre la estructura normativa del documento padre y la estructura física implementada, clasificando el descubrimiento conforme a EE-DOC-005.
+[Diferencias frente al DOC padre, si existen — clasificar según EE-DOC-005.]
 
 ---
 
-## [Secciones variables de detalle técnico Consolidado por Fase / Dominio: 05 a XX-1]
+## [Secciones variables de detalle técnico consolidado por fase / dominio: 05 a XX-1]
 
 [Secciones numeradas que consolidan el contenido técnico relevante de cada fase EE-IMP-XXX-PXX o de cada dominio estructural. Cada sección debe mantener trazabilidad hacia el EE-IMP-XXX-PXX de origen.]
 
@@ -951,7 +1083,7 @@ Este documento registra la documentación técnica consolidada (estado as-built)
 ## AA. Referencias
 
 | Código             | Documento                | Descripción                                        |
-| :----------------- | :----------------------- | :------------------------------------------------- |
+| ------------------ | ------------------------ | -------------------------------------------------- |
 | **EE-DOC-XXX**     | [Nombre]                 | Documento normativo padre                          |
 | **EE-IMP-XXX-P01** | [Nombre]                 | Fase 1 de implementación                           |
 | **EE-IMP-XXX-PNN** | [Nombre]                 | Última fase de implementación                      |
@@ -964,7 +1096,7 @@ Este documento registra la documentación técnica consolidada (estado as-built)
 ## BB. Historial de Cambios
 
 | Versión    | Fecha      | Autor                  | Aprobado por | Motivo                                           | Cambios                               | Estado   |
-| :--------- | :--------- | :--------------------- | :----------- | :----------------------------------------------- | :------------------------------------ | :------- |
+| ---------- | ---------- | ---------------------- | ------------ | ------------------------------------------------ | ------------------------------------- | -------- |
 | **v1.0.0** | YYYY-MM-DD | Equipo de Arquitectura | —            | Creación de la documentación técnica consolidada | Consolidación de EE-IMP-XXX-P01 … PNN | Borrador |
 
 ---
@@ -972,44 +1104,46 @@ Este documento registra la documentación técnica consolidada (estado as-built)
 ## FIN DEL DOCUMENTO
 ```
 
-**Notas de aplicación de la plantilla EE-TEC:**
-
-1. La estructura anterior es la **estructura mínima obligatoria**. Pueden añadirse secciones adicionales cuando la naturaleza del documento normativo padre lo requiera, manteniendo la numeración continua.
-2. El campo **Normativo** debe ser siempre **No**. La Documentación Técnica Consolidada no modifica ni sustituye el contenido normativo del documento padre.
-3. El campo **Documento padre** debe referenciar el EE-DOC-XXX cuya implementación se consolida.
-4. Toda diferencia entre el estado as-built y el contenido normativo del documento padre debe registrarse en la sección de Alineación y tratarse conforme al mecanismo de cambio gobernado de EE-DOC-005.
-5. El estado del documento EE-TEC-XXX avanza de forma independiente al estado del documento normativo padre, pero la Congelación del documento padre requiere que la Documentación Técnica consolidada exista y haya sido validada (EE-DOC-005).
-
 ---
 
 ### 18.5. Tabla de Metadatos y Estructura para Requests for Comments (EE-RFC-XXX)
 
-Los documentos **EE-RFC-XXX** formalizan un **cambio gobernado Tipo D** (EE-DOC-005 §04): cambio significativo o transversal. **No sustituyen** a los documentos normativos; proponen el cambio necesario para autorizarlos o sincronizarlos.
+> **Nota de aplicación — as-built RFC:** Estructura y aplicabilidad de la plantilla EE-RFC (§18.5).
 
-Esta plantilla se deriva de la estructura consolidada de **EE-RFC-001** y **EE-RFC-002** (precedente de procedimiento). El destino físico canónico en el monorepo es **`docs/rfc/`** (EE-DOC-006).
+**Estructura obligatoria (plantilla).**
 
-**Reglas específicas RFC:**
+| Bloque                             | ¿Fijo? | Regla                                                                                                                                                    |
+| ---------------------------------- | :----: | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Frase EE-DOC-002 (bajo H1)         |   Sí   | Obligatorio                                                                                                                                              |
+| `## METADATOS`                     |   Sí   | §05 aplicables + metadatos RFC                                                                                                                           |
+| `01` … `12` (Resumen → Historial)  |   Sí   | Cuerpo canónico con tablas-guía                                                                                                                          |
+| `02. Motivación` / `03. Propuesta` |   Sí   | Subsecciones modelo completo; RFC corto puede condensar redacción, no eliminar roles mínimos                                                             |
+| Metadatos adicionales              |   Sí   | `Title`, `Solicitante`, `Documentos normativos afectados`, `Documento de dominio`, `ADR asociado`, `Clasificación EE-DOC-005`, `Responsable de decisión` |
+| Numeración                         |   Sí   | **§06** dos dígitos                                                                                                                                      |
 
-1. El campo **Clasificación EE-DOC-005** debe ser **D — Cambio Significativo / Transversal** (salvo que Arquitectura documente otra clasificación aplicable).
-2. El RFC **no** materializa por sí solo el cambio físico en el monorepo; define criterios de aceptación y plan post-aprobación.
-3. Cuando el cambio afecte un documento **Congelado** y el índice (**EE-DOC-001**), ambos (o el paquete declarado) forman un **único paquete de sincronización normativa** — no actualizaciones secuenciales informales (precedente RFC-001 / RFC-002).
-4. El **ID** (`EE-RFC-XXX`) lo asigna el proceso de gobernanza / solicitante según EE-DOC-001; el template de generación **no** inventa IDs (alineado a EE-DOC-012 D-01 cuando exista T-DOC RFC).
-5. Estados típicos: **Propuesto** → **Aprobado** → **Implementado (documentación)** y/o **Rechazado** / **Retirado**. No usa el cierre **CC** de EE-DOC-XXX.
+**Aplicabilidad.**
+
+| Ámbito                        |  ¿Aplica?   | Regla                                                                                                         |
+| ----------------------------- | :---------: | ------------------------------------------------------------------------------------------------------------- |
+| EE-RFC                        |     Sí      | Cambio gobernado **Tipo D / transversal** (**EE-DOC-005 §04.2**) que afecte documentos normativos o el índice |
+| vs ADR                        |     Sí      | No sustituye ADR (Tipo C) si la decisión es puramente arquitectónica; §06 del RFC declara si se requiere ADR  |
+| Criterios de aceptación       |     Sí      | Checks **documentales**                                                                                       |
+| Materialización física en git | Condicional | No es criterio del RFC salvo declaración explícita; suele ser **EE-IMP-XXX**                                  |
 
 ```markdown
 # EE-RFC-XXX — {Title in English (normative document name)}
 
-Este documento es una **Request for Comments (RFC)** conforme a **EE-DOC-005 — Development Workflow** (clasificación **Tipo D — Cambio Significativo / Transversal**). No sustituye a los documentos normativos; propone el cambio gobernado necesario para autorizarlos.
+Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ---
 
 ## METADATOS
 
 | Campo                               | Valor                                                             |
-| :---------------------------------- | :---------------------------------------------------------------- |
+| ----------------------------------- | ----------------------------------------------------------------- |
 | **ID**                              | EE-RFC-XXX                                                        |
 | **Title**                           | {Title in English}                                                |
-| **Código corto**                    | EE-RFC-XXX                                                        |
+| **Código corto**                    | RFC-XXX                                                           |
 | **Tipo**                            | Request for Comments (Cambio gobernado)                           |
 | **Clasificación EE-DOC-005**        | **D — Cambio Significativo / Transversal**                        |
 | **Estado**                          | Propuesto                                                         |
@@ -1041,7 +1175,7 @@ Este documento es una **Request for Comments (RFC)** conforme a **EE-DOC-005 —
 ### 02.2. Conflicto normativo actual
 
 | Fuente | Estado |
-| :----- | :----- |
+| ------ | ------ |
 |        |        |
 
 ### 02.3. Interpretación del cambio
@@ -1051,13 +1185,13 @@ Este documento es una **Request for Comments (RFC)** conforme a **EE-DOC-005 —
 ### 02.4. Límite de autoridad
 
 | Documento | Qué autoriza / norma este RFC |
-| :-------- | :---------------------------- |
+| --------- | ----------------------------- |
 |           |                               |
 
 ### 02.5. Delimitación frente a alternativas de ubicación o alcance
 
 | Elemento | Rol | Relación con la propuesta |
-| :------- | :-- | :------------------------ |
+| -------- | --- | ------------------------- |
 |          |     |                           |
 
 ---
@@ -1067,25 +1201,25 @@ Este documento es una **Request for Comments (RFC)** conforme a **EE-DOC-005 —
 ### 03.1. Superficie A — {documento / artefacto principal}
 
 | Sección afectada | Cambio |
-| :--------------- | :----- |
+| ---------------- | ------ |
 |                  |        |
 
 ### 03.2. Superficie B — {p.ej. EE-DOC-001 u otro del mismo paquete}
 
 | Ítem | Cambio |
-| :--- | :----- |
+| ---- | ------ |
 |      |        |
 
 ### 03.3. Lo que este RFC **no** cambia
 
 | Ítem | Tratamiento |
-| :--- | :---------- |
+| ---- | ----------- |
 |      |             |
 
 ### 03.4. Efectos técnicos de la materialización (si aplica; detalle en IMP)
 
 | Efecto | Acción |
-| :----- | :----- |
+| ------ | ------ |
 |        |        |
 
 ---
@@ -1093,7 +1227,7 @@ Este documento es una **Request for Comments (RFC)** conforme a **EE-DOC-005 —
 ## 04. Alternativas consideradas
 
 | ID    | Alternativa              | Dictamen                   | Motivo |
-| :---- | :----------------------- | :------------------------- | :----- |
+| ----- | ------------------------ | -------------------------- | ------ |
 | **A** | {propuesta seleccionada} | **Propuesta seleccionada** |        |
 | **B** |                          | **Rechazada**              |        |
 
@@ -1102,7 +1236,7 @@ Este documento es una **Request for Comments (RFC)** conforme a **EE-DOC-005 —
 ## 05. Impacto
 
 | Ámbito                    | Impacto                             |
-| :------------------------ | :---------------------------------- |
+| ------------------------- | ----------------------------------- |
 | **Documentos normativos** |                                     |
 | **Monorepo físico**       | Ninguno hasta post-aprobación / IMP |
 | **CI / Quality Gates**    |                                     |
@@ -1113,7 +1247,7 @@ Este documento es una **Request for Comments (RFC)** conforme a **EE-DOC-005 —
 ## 06. ADR
 
 | Pregunta                             | Respuesta   |
-| :----------------------------------- | :---------- |
+| ------------------------------------ | ----------- |
 | ¿Se requiere ADR además de este RFC? | **Sí / No** |
 | Justificación                        |             |
 
@@ -1121,23 +1255,17 @@ Este documento es una **Request for Comments (RFC)** conforme a **EE-DOC-005 —
 
 ## 07. Criterios de aceptación
 
-Aplicados en el plano documental cuando se cumplen **todos**:
-
-| #   | Check medible                                                                                       |
-| :-- | :-------------------------------------------------------------------------------------------------- |
-| 1   |                                                                                                     |
-| 2   |                                                                                                     |
-| 3   | Versión e historial de los documentos del paquete actualizados; sin discrepancia SSOT               |
-| 4   | Este RFC en estado **Aprobado**; tras aplicar los diffs, **Implementado (documentación)** si aplica |
-
-La materialización física en git **no** es criterio de este RFC salvo que se declare explícitamente; suele corresponder a **EE-IMP-XXX**.
+| #   | Check medible |
+| --- | ------------- |
+| 1   |               |
+| 2   |               |
 
 ---
 
 ## 08. Plan de aplicación (post-aprobación)
 
 | Orden | Acción                                                                       | Responsable            |
-| :---: | :--------------------------------------------------------------------------- | :--------------------- |
+| :---: | ---------------------------------------------------------------------------- | ---------------------- |
 |   1   | Aprobar EE-RFC-XXX                                                           | Equipo de Arquitectura |
 |   2   | Parche normativo de documentos afectados                                     | Arquitectura           |
 |   3   | Sincronización de EE-DOC-001 (si aplica) — preferible **última** del paquete | Arquitectura           |
@@ -1148,7 +1276,7 @@ La materialización física en git **no** es criterio de este RFC salvo que se d
 ## 09. Riesgos y mitigaciones
 
 | Riesgo | Mitigación |
-| :----- | :--------- |
+| ------ | ---------- |
 |        |            |
 
 ---
@@ -1156,18 +1284,17 @@ La materialización física en git **no** es criterio de este RFC salvo que se d
 ## 10. Referencias
 
 | Código         | Rol                                     |
-| :------------- | :-------------------------------------- |
+| -------------- | --------------------------------------- |
 | **EE-DOC-005** | Tipo D; no desviación unilateral        |
 | **EE-DOC-001** | SSOT del índice                         |
 | **EE-RFC-001** | Precedente de procedimiento (si aplica) |
-|                |                                         |
 
 ---
 
 ## 11. Resolución
 
 | Campo                            | Valor                                                     |
-| :------------------------------- | :-------------------------------------------------------- |
+| -------------------------------- | --------------------------------------------------------- |
 | **Estado**                       | Propuesto                                                 |
 | **Responsable de decisión**      | Equipo de Arquitectura                                    |
 | **Condición de materialización** | {RFC Aprobado + documentos del paquete sincronizados + …} |
@@ -1176,9 +1303,9 @@ La materialización física en git **no** es criterio de este RFC salvo que se d
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Motivo           | Estado    |
-| :--------- | :--------- | :--------------------- | :--------------- | :-------- |
-| **v0.1.0** | YYYY-MM-DD | Equipo de Arquitectura | Creación inicial | Propuesto |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo           | Cambios           | Estado    |
+| ---------- | ---------- | ---------------------- | ------------ | ---------------- | ----------------- | --------- |
+| **v0.1.0** | YYYY-MM-DD | Equipo de Arquitectura | —            | Creación inicial | Propuesta inicial | Propuesto |
 
 ---
 
@@ -1187,9 +1314,118 @@ La materialización física en git **no** es criterio de este RFC salvo que se d
 
 ---
 
+### 18.6. Plantilla mínima — `EE-VAL-_ / EE-WAIVE-_`
+
+> **Nota de aplicación — as-built VAL/WAIVE:** evidencia de validación de ecosistema o waiver de Quality Gate. **Normativo = No.** Archivo: `{ID}_{Nombre}_{fecha}.md`. Campos WAIVED: EE-DOC-010 §04.6.1. Catalogación: EE-DOC-001 §09.4.
+
+**Estructura obligatoria (plantilla).**
+
+| Bloque                                 | ¿Fijo? | Regla                                         |
+| -------------------------------------- | :----: | --------------------------------------------- |
+| Frase EE-DOC-002 (bajo H1)             |   Sí   | Obligatorio                                   |
+| `## METADATOS`                         |   Sí   | §05 + tipo VAL/WAIVE; código corto sin `EE`   |
+| `01. Propósito`                        |   Sí   | Qué gate/evidencia cubre                      |
+| `02. Alcance`                          |   Sí   | Qué incluye / excluye                         |
+| Cuerpo                                 | **No** | Evidencia, resultados, condiciones del waiver |
+| `Referencias` + `Historial de Cambios` |   Sí   | Historial con 7 columnas §11                  |
+
+**Aplicabilidad.**
+
+| Ámbito      | ¿Aplica? | Regla                                                           |
+| ----------- | :------: | --------------------------------------------------------------- |
+| EE-VAL-\*   |    Sí    | Reportes/evidencias de validación (p. ej. cadena EE-DOC-015)    |
+| EE-WAIVE-\* |    Sí    | Waivers de gate; campos WAIVED según EE-DOC-010                 |
+| Precedencia |    Sí    | No anulan EE-DOC normativos; solo documentan excepción aceptada |
+
+```markdown
+# EE-VAL-XXX — {Nombre} # o EE-WAIVE-XXX — {Nombre}
+
+Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
+
+## METADATOS
+
+| Campo                 | Valor                                          |
+| --------------------- | ---------------------------------------------- |
+| **ID**                | EE-VAL-XXX                                     |
+| **Documento**         | {Nombre}                                       |
+| **Código corto**      | VAL-XXX                                        |
+| **Tipo**              | Evidencia de Validación                        |
+| **Clasificación**     | Validación                                     |
+| **Nivel**             | Operativo                                      |
+| **Normativo**         | No                                             |
+| **Versión**           | vX.Y.Z                                         |
+| **Estado**            | {según EE-DOC-001 §08 / operativo documentado} |
+| **Propietario**       | Equipo de Arquitectura                         |
+| **Documento padre**   | EE-DOC-015 / EE-DOC-010                        |
+| **Dependencias**      | EE-DOC-XXX                                     |
+| **Aprobado por**      | Equipo de Arquitectura                         |
+| **Audiencia**         | Arquitectura, QA, DevOps                       |
+| **Fecha de creación** | YYYY-MM-DD                                     |
+| **Última revisión**   | YYYY-MM-DD                                     |
+| **Próxima revisión**  | YYYY-MM-DD / No aplica — Documento Congelado   |
+
+---
+
+## 01. Propósito
+
+[Qué evidencia o waiver documenta.]
+
+---
+
+## 02. Alcance
+
+[Incluye / no incluye.]
+
+---
+
+## 03. Evidencia / Condiciones del waiver
+
+Campos obligatorios si Result = **WAIVED** (**EE-DOC-010 §04.6.1**):
+
+| Campo                         | Valor                                  |
+| ----------------------------- | -------------------------------------- |
+| **gate_id**                   |                                        |
+| **result**                    | WAIVED                                 |
+| **authority**                 | Arquitectura / según EE-DOC-005        |
+| **reason**                    |                                        |
+| **scope**                     |                                        |
+| **effective_from**            | YYYY-MM-DD                             |
+| **expires_at**                | YYYY-MM-DD (máx. 7 días salvo ADR/RFC) |
+| **normalization_plan**        |                                        |
+| **Justificación / evidencia** |                                        |
+
+---
+
+## 04. Referencias
+
+| Código | Documento | Relación |
+| ------ | --------- | -------- |
+|        |           |          |
+
+---
+
+## 05. Historial de Cambios
+
+| Versión    | Fecha      | Autor | Aprobado por | Motivo | Cambios | Estado |
+| ---------- | ---------- | ----- | ------------ | ------ | ------- | ------ |
+| **vX.Y.Z** | YYYY-MM-DD | …     | …            | …      | …       | …      |
+
+---
+
+## FIN DEL DOCUMENTO
+```
+
 ## 19. Checklist de Validación Documental
 
 Lista de verificación antes de aprobar un documento:
+
+**Obligatorios de alta frecuencia (incumplimientos recurrentes):**
+
+- [ ] **Código corto** sin prefijo `EE` (p. ej. `DOC-002`, `IMP-006-P01`) y coherente con el **ID**
+- [ ] **Numeración de secciones** en dos dígitos (`## 01.`, `### 01.1.`) — sin `x.0`
+- [ ] **Próxima revisión** = `No aplica — Documento Congelado` si Estado = Congelado
+- [ ] **Nombre de archivo** EE-\* según §16 / EE-DOC-006 §07.1 (`{ID}_{Nombre}.md`, inglés en el nombre de archivo)
+- [ ] **Historial de Cambios** con las **7 columnas** de §11 (Versión, Fecha, Autor, Aprobado por, Motivo, Cambios, Estado)
 
 **Estructura y Formato:**
 
@@ -1248,6 +1484,8 @@ En cumplimiento del principio SSOT, la taxonomía de estados, iconografía y reg
 
 **Flow chart:**
 
+**Diagrama — Flowchart básico.**
+
 ```mermaid
 flowchart TD
     A[Inicio] --> B[Proceso]
@@ -1255,6 +1493,8 @@ flowchart TD
 ```
 
 **Sequence Diagram:**
+
+**Diagrama — Sequence básico.**
 
 ```mermaid
 sequenceDiagram
@@ -1270,12 +1510,12 @@ Todo documento nuevo deberá cumplir este estándar.
 
 **Reglas de Cumplimiento:**
 
-| Regla  | Descripción                                                                              |
-| ------ | ---------------------------------------------------------------------------------------- |
-| **R1** | Todo documento nuevo debe seguir la estructura definida en este estándar.                |
-| **R2** | Toda excepción deberá ser aprobada mediante RFC.                                         |
-| **R3** | Los documentos que no cumplan este estándar no podrán avanzar al estado **Aprobado**.    |
-| **R4** | Los documentos existentes deberán migrar al nuevo estándar en la próxima revisión mayor. |
+| Regla  | Descripción                                                                                                                                        |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **R1** | Todo documento nuevo debe seguir la estructura definida en este estándar.                                                                          |
+| **R2** | Toda excepción a este estándar requiere cambio gobernado: **RFC y/o ADR** según **EE-DOC-001 R2** y **EE-DOC-005** (no basta aprobación informal). |
+| **R3** | Los documentos que no cumplan este estándar no podrán avanzar al estado **Aprobado**.                                                              |
+| **R4** | Los documentos existentes deberán migrar al nuevo estándar en la próxima edición o revisión gobernada del artefacto afectado.                      |
 
 > **Responsable:** La verificación del cumplimiento corresponde al **Equipo de Arquitectura** durante la revisión arquitectónica previa a la aprobación del documento.
 
@@ -1283,24 +1523,35 @@ Todo documento nuevo deberá cumplir este estándar.
 
 ## 22. Referencias
 
-| Código     | Documento                  | Descripción                   |
-| ---------- | -------------------------- | ----------------------------- |
-| EE-DOC-001 | Master Documentation Index | Índice maestro del ecosistema |
-
----
+| Código         | Documento                                                          | Descripción                                                            |
+| -------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| **EE-DOC-001** | Master Documentation Index                                         | Índice, estados §08/§08.1, matrices, R2/R7, §09.4 VAL/WAIVE            |
+| **EE-DOC-002** | Document Design Template                                           | Este estándar                                                          |
+| **EE-DOC-003** | Engineering Ecosystem Constitution                                 | Gobernanza constitucional; capas EQ-LABS                               |
+| **EE-DOC-004** | Engineering Architecture                                           | Arquitectura del ecosistema (§17)                                      |
+| **EE-DOC-005** | Development Workflow                                               | Ciclo, Descubrimiento, Tipo A/B/C/D                                    |
+| **EE-DOC-006** | Repository Structure                                               | Árbol físico; nomenclatura archivos EE-\*                              |
+| **EE-DOC-010** | Quality Gates                                                      | Result WAIVED y campos §04.6.1                                         |
+| **EE-DOC-015** | Engineering Ecosystem Validation                                   | Validación de ecosistema; padre típico EE-VAL-\*                       |
+| **EE-RFC-003** | Documentation Standards Sync (plantillas VAL/WAIVE y catálogo 002) | Cambio gobernado Tipo D que cubre 002 v1.7.0–v1.9.0 y sync 001 v2.27.0 |
 
 ## 23. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                    | Cambios                                                                                                                                                                   | Estado        |
-| :--------- | :--------- | :--------------------- | :--------------------- | :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------ |
-| **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                          | Versión inicial del estándar documental                                                                                                                                   | **Congelado** |
-| **v1.1.0** | 2026-08-13 | Equipo de Arquitectura | Equipo de Arquitectura | Descubrimiento durante implementación de EE-DOC-006       | Ajustes derivados de la implementación, incluyendo integridad normativa, naturaleza de Congelado y evolución de versiones                                                 | **Congelado** |
-| **v1.2.0** | 2026-09-16 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización y Estandarización de Metadatos             | Inclusión de plantillas de metadatos para EE-ADR y EE-IMP; precisión del estándar SSOT                                                                                    | **Congelado** |
-| **v1.3.0** | 2026-09-20 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización y Estandarización de Metadatos             | Incorporación de 18.4 — Plantilla para Documentación Técnica Consolidada (EE-TEC-XXX)                                                                                     | **Congelado** |
-| **v1.4.0** | 2026-09-21 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación plantilla EE-DOC con documentos implementables | Ampliación de §18.1: cola fija XX Plan de Implementación y Fases, YY Evolución, ZZ Cumplimiento, AA Referencias, BB Historial, CC Cierre Documental                       | **Congelado** |
-| **v1.5.0** | 2026-09-21 | Equipo de Arquitectura | Equipo de Arquitectura | SSOT política de idioma                                   | §16.1 ampliada (plantillas Issue/PR, CI/Actions, workflows, EE-IMP, EE-TEC); declaración explícita de Single Source of Truth; evolución del catálogo solo en esta sección | **Congelado** |
-| **v1.6.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Plantilla EE-RFC                                          | §18.5 Request for Comments (EE-RFC-XXX); derivada de EE-RFC-001/002                                                                                                       | **Congelado** |
-| **v1.6.1** | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) post-auditoría                        | §20.1 → §18 Plantillas Base; §05 excepción Próxima revisión en Congelado; §02 alcance sin redundancia; §13 tilde «documentación»; frase H1 de identidad del estándar      | **Congelado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                    | Cambios                                                                                                                                                                                                                                                                                     | Estado        |
+| :--------- | :--------- | :--------------------- | :--------------------- | :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------ |
+| **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                          | Versión inicial del estándar documental                                                                                                                                                                                                                                                     | **Congelado** |
+| **v1.1.0** | 2026-08-13 | Equipo de Arquitectura | Equipo de Arquitectura | Descubrimiento durante implementación de EE-DOC-006       | Ajustes derivados de la implementación, incluyendo integridad normativa, naturaleza de Congelado y evolución de versiones                                                                                                                                                                   | **Congelado** |
+| **v1.2.0** | 2026-09-16 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización y Estandarización de Metadatos             | Inclusión de plantillas de metadatos para EE-ADR y EE-IMP; precisión del estándar SSOT                                                                                                                                                                                                      | **Congelado** |
+| **v1.3.0** | 2026-09-20 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización y Estandarización de Metadatos             | Incorporación de 18.4 — Plantilla para Documentación Técnica Consolidada (EE-TEC-XXX)                                                                                                                                                                                                       | **Congelado** |
+| **v1.4.0** | 2026-09-21 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación plantilla EE-DOC con documentos implementables | Ampliación de §18.1: cola fija XX Plan de Implementación y Fases, YY Evolución, ZZ Cumplimiento, AA Referencias, BB Historial, CC Cierre Documental                                                                                                                                         | **Congelado** |
+| **v1.5.0** | 2026-09-21 | Equipo de Arquitectura | Equipo de Arquitectura | SSOT política de idioma                                   | §16.1 ampliada (plantillas Issue/PR, CI/Actions, workflows, EE-IMP, EE-TEC); declaración explícita de Single Source of Truth; evolución del catálogo solo en esta sección                                                                                                                   | **Congelado** |
+| **v1.6.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Plantilla EE-RFC                                          | §18.5 Request for Comments (EE-RFC-XXX); derivada de EE-RFC-001/002                                                                                                                                                                                                                         | **Congelado** |
+| **v1.6.1** | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) post-auditoría                        | §20.1 → §18 Plantillas Base; §05 excepción Próxima revisión en Congelado; §02 alcance sin redundancia; §13 tilde «documentación»; frase H1 de identidad del estándar                                                                                                                        | **Congelado** |
+| **v1.6.2** | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) §18 as-built + §06 SSOT               | §18.1–18.5 alineados a DOC/ADR/IMP/TEC/RFC reales: títulos de dominio 03+; roles de cierre con numeración continua; IMP §04 condicional; RFC 02.x opcionales consolidados; SSOT numeración dos dígitos solo en §06                                                                          | **Congelado** |
+| **v1.7.0** | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Minor (Y) post-auditoría — alineación normativa           | §13/§14 SSOT estados→001 §08; §03.1 derivados ADR/RFC/IMP/TEC; §02 alcance IMP/TEC; §05 excepciones meta ADR/RFC; §16 nombres EE-\* y @eq-labs; §22 refs 001–006; §08/§10; §18.1 punto; v1.7.0 (no parche para cambio normativo)                                                            | **Congelado** |
+| **v1.8.0** | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Minor (Y) post-auditoría                                  | §06 prohíbe x.0; §03.1 precedencia sin recencia + fuentes derivados + VAL/WAIVE; §05.1 catálogo Tipo/Clasificación/Nivel; §18 preámbulo ligero + §18.6; §16 VAL/WAIVE; Dependencias solo 001; §18.5 historial 7 col; §19 checks; §21 R2 RFC/ADR                                             | **Congelado** |
+| **v1.9.0** | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo D — EE-RFC-003 (post-auditoría)                      | C-01 registro gobernado; §18.4 Tipo=Documentación Técnica Consolidada; §18.6 campos WAIVED 010 §04.6.1; VAL/WAIVE archivo `{ID}_{Nombre}_{fecha}.md`; §02/§03 ámbito EQ-LABS; menores §05 Dependencias, §13→001 §08.1, §16/§16.1, §22, --- H1, notas as-built, §18.3 Fase de implementación | **Congelado** |
+| **v1.9.1** | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — aclaración metadatos                             | §05: Código corto sin EE es regla general (no excepción ADR); Title RFC siempre en-US; campos adicionales por tipo                                                                                                                                                                          | **Congelado** |
 
 ---
 
