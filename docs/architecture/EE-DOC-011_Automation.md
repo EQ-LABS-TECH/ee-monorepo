@@ -1,4 +1,4 @@
-# EE-DOC-011 — Automation
+﻿# EE-DOC-011 — Automation
 
 Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y se desarrolla conforme al ciclo documental definido por **EE-DOC-005 — Development Workflow**.
 
@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Especializado                                                                                                                                                          |
 | **Nivel**             | Especializado                                                                                                                                                          |
 | **Normativo**         | Sí                                                                                                                                                                     |
-| **Versión**           | v1.1.0                                                                                                                                                                 |
+| **Versión**           | v1.1.1                                                                                                                                                                 |
 | **Estado**            | Congelado                                                                                                                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                                                                                                                 |
 | **Documento padre**   | EE-DOC-006 — Repository Structure                                                                                                                                      |
@@ -23,8 +23,8 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                                                                                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                                               |
 | **Fecha de creación** | 2026-09-30                                                                                                                                                             |
-| **Última revisión**   | 2026-10-01                                                                                                                                                             |
-| **Próxima revisión**  | 2026-12-30                                                                                                                                                             |
+| **Última revisión**   | 2026-10-18                                                                                                                                                             |
+| **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                                        |
 
 > **Jerarquía documental (patrón alineado a EE-DOC-010):**
 >
@@ -65,16 +65,16 @@ Establece:
 
 ### 02.1. Incluye
 
-| Dominio                                   | Descripción                                                                 |
-| :---------------------------------------- | :-------------------------------------------------------------------------- |
-| **Scripts root**                          | Comandos `pnpm run *` materializados en `scripts/`                          |
-| **Comandos root A-REL sin script propio** | `changeset`, `version-packages` (CLI Changesets; EE-DOC-006 §12)            |
-| **CLI de ingeniería del ecosistema**      | `@eq-labs/cli` en `apps/cli`                                                |
-| **Generación de código/artefactos**       | `pnpm run generate` / Plop y convenciones asociadas                         |
-| **Bootstrap y doctor**                    | Arranque y diagnóstico del entorno (coordinación con EE-DOC-008)            |
-| **Release del monorepo / paquetes EE**    | Changesets + `scripts/release` (no release comercial de Product Ecosystems) |
-| **Contrato de estabilidad**               | Nombres, efectos, terminación, exit codes y `scripts/README.md`             |
-| **Fronteras y prohibiciones**             | Qué no debe automatizarse aquí vs 007 / 010 / 012                           |
+| Dominio                                   | Descripción                                                                          |
+| :---------------------------------------- | :----------------------------------------------------------------------------------- |
+| **Scripts root**                          | Comandos `pnpm run *` materializados en `scripts/`                                   |
+| **Comandos root A-REL sin script propio** | `changeset`, `version-packages` (CLI Changesets; EE-DOC-006 §12)                     |
+| **CLI de ingeniería del ecosistema**      | `@eq-labs/cli` en `apps/cli`                                                         |
+| **Generación de código/artefactos**       | `pnpm run generate` / Plop y convenciones asociadas                                  |
+| **Bootstrap y doctor**                    | Arranque y diagnóstico del entorno (coordinación con EE-DOC-008)                     |
+| **Release del monorepo / paquetes EE**    | Changesets + `scripts/commands/release` (no release comercial de Product Ecosystems) |
+| **Contrato de estabilidad**               | Nombres, efectos, terminación, exit codes y `scripts/README.md`                      |
+| **Fronteras y prohibiciones**             | Qué no debe automatizarse aquí vs 007 / 010 / 012                                    |
 
 ### 02.2. No incluye
 
@@ -148,34 +148,35 @@ Derivados de **EE-DOC-003** y aplicables con especial fuerza a la automatizació
 
 ### 04.1. Categorías
 
-| ID         | Categoría                            | Ubicación típica               | Invocación                                                        |
-| :--------- | :----------------------------------- | :----------------------------- | :---------------------------------------------------------------- |
-| **A-ROOT** | Scripts de orquestación del monorepo | `scripts/`                     | `pnpm run <name>`                                                 |
-| **A-CLI**  | CLI de ingeniería del ecosistema     | `apps/cli` (`@eq-labs/cli`)    | binario / filter workspace                                        |
-| **A-GEN**  | Generadores                          | `scripts/generate`, Plop       | `pnpm run generate`                                               |
-| **A-REL**  | Versionado y release del monorepo    | Changesets + `scripts/release` | `pnpm changeset`, `pnpm run version-packages`, `pnpm run release` |
-| **A-PLAT** | CI / Actions                         | `.github/workflows`            | Eventos GitHub — **norma EE-DOC-007**                             |
+| ID         | Categoría                            | Ubicación típica                        | Invocación                                                        |
+| :--------- | :----------------------------------- | :-------------------------------------- | :---------------------------------------------------------------- |
+| **A-ROOT** | Scripts de orquestación del monorepo | `scripts/`                              | `pnpm run <name>`                                                 |
+| **A-CLI**  | CLI de ingeniería del ecosistema     | `apps/cli` (`@eq-labs/cli`)             | binario / filter workspace                                        |
+| **A-GEN**  | Generadores                          | `scripts/commands/generate`, Plop       | `pnpm run generate`                                               |
+| **A-REL**  | Versionado y release del monorepo    | Changesets + `scripts/commands/release` | `pnpm changeset`, `pnpm run version-packages`, `pnpm run release` |
+| **A-PLAT** | CI / Actions                         | `.github/workflows`                     | Eventos GitHub — **norma EE-DOC-007**                             |
 
 Solo **A-ROOT**, **A-CLI**, **A-GEN** y **A-REL** son objeto principal de este documento. **A-PLAT** se referencia como consumidor.
 
 ### 04.2. Comandos root normativos (contrato alineado a EE-DOC-006 §12)
 
-| Comando            | Implementación        | Propósito                                                         | Categoría    |
-| :----------------- | :-------------------- | :---------------------------------------------------------------- | :----------- |
-| `bootstrap`        | `scripts/bootstrap`   | Configuración inicial del entorno                                 | A-ROOT / 008 |
-| `build`            | `scripts/build`       | Compilación de workspaces                                         | A-ROOT       |
-| `dev`              | `scripts/dev`         | Desarrollo local (long-running)                                   | A-ROOT / 008 |
-| `test`             | `scripts/test`        | Pruebas orquestadas                                               | A-ROOT       |
-| `lint`             | `scripts/lint`        | Análisis estático                                                 | A-ROOT       |
-| `format`           | `scripts/format`      | Formateo en modo **write** (herramienta local; **no** es el gate) | A-ROOT       |
-| `typecheck`        | `scripts/typecheck`   | Verificación de tipos                                             | A-ROOT       |
-| `validate`         | `scripts/validate`    | Agregador local de validaciones                                   | A-ROOT       |
-| `doctor`           | `scripts/doctor`      | Diagnóstico de entorno (conveniencia; no sustituye `validate`)    | A-ROOT / 008 |
-| `generate`         | `scripts/generate`    | Scaffolding                                                       | A-GEN        |
-| `release`          | `scripts/release`     | Orquestación de release del monorepo                              | A-REL        |
-| `clean`            | `scripts/clean`       | Limpieza de artefactos                                            | A-ROOT       |
-| `changeset`        | CLI `@changesets/cli` | Declaración interactiva de cambios SemVer                         | A-REL        |
-| `version-packages` | `changeset version`   | Cálculo y actualización de versiones                              | A-REL        |
+| Comando            | Implementación               | Propósito                                                         | Categoría    |
+| :----------------- | :--------------------------- | :---------------------------------------------------------------- | :----------- |
+| `bootstrap`        | `scripts/commands/bootstrap` | Configuración inicial del entorno                                 | A-ROOT / 008 |
+| `build`            | `scripts/commands/build`     | Compilación de workspaces                                         | A-ROOT       |
+| `dev`              | `scripts/commands/dev`       | Desarrollo local (long-running)                                   | A-ROOT / 008 |
+| `test`             | `scripts/commands/test`      | Pruebas orquestadas                                               | A-ROOT       |
+| `lint`             | `scripts/commands/lint`      | Análisis estático                                                 | A-ROOT       |
+| `format`           | `scripts/commands/format`    | Formateo en modo **write** (herramienta local; **no** es el gate) | A-ROOT       |
+| `typecheck`        | `scripts/commands/typecheck` | Verificación de tipos                                             | A-ROOT       |
+| `validate`         | `scripts/commands/validate`  | Agregador local de validaciones                                   | A-ROOT       |
+| `doctor`           | `scripts/commands/doctor`    | Diagnóstico de entorno (conveniencia; no sustituye `validate`)    | A-ROOT / 008 |
+| `generate`         | `scripts/commands/generate`  | Scaffolding                                                       | A-GEN        |
+| `release`          | `scripts/commands/release`   | Orquestación de release del monorepo                              | A-REL        |
+| `clean`            | `scripts/commands/clean`     | Limpieza de artefactos                                            | A-ROOT       |
+| `e2e`              | `scripts/commands/e2e`       | Entrada root E2E (Playwright)                                     | A-ROOT       |
+| `changeset`        | CLI `@changesets/cli`        | Declaración interactiva de cambios SemVer                         | A-REL        |
+| `version-packages` | `changeset version`          | Cálculo y actualización de versiones                              | A-REL        |
 
 **Notas:**
 
@@ -240,10 +241,10 @@ Los scripts **materializan** gates definidos en EE-DOC-010; no los definen. Avai
 
 #### 05.4.2. Gates cuyo enforcement depende de plataforma o de subpasos internos de `validate`
 
-| Mecanismo                                                      | Gate(s)                                           | Norma de enforcement                                                      |
-| :------------------------------------------------------------- | :------------------------------------------------ | :------------------------------------------------------------------------ |
-| Job CI / secret scanning / Gitleaks (plataforma)               | QG-SEC-002                                        | **EE-DOC-007** + catálogo **EE-DOC-010** (no es un comando root dedicado) |
-| Subpasos de estructura/docs/infra dentro de `scripts/validate` | QG-REPO-001, QG-ARCH-001, QG-DOC-\*, QG-INFRA-001 | Implementación en `validate`; IDs y umbrales en **010**                   |
+| Mecanismo                                                               | Gate(s)                                           | Norma de enforcement                                                      |
+| :---------------------------------------------------------------------- | :------------------------------------------------ | :------------------------------------------------------------------------ |
+| Job CI / secret scanning / Gitleaks (plataforma)                        | QG-SEC-002                                        | **EE-DOC-007** + catálogo **EE-DOC-010** (no es un comando root dedicado) |
+| Subpasos de estructura/docs/infra dentro de `scripts/commands/validate` | QG-REPO-001, QG-ARCH-001, QG-DOC-\*, QG-INFRA-001 | Implementación en `validate`; IDs y umbrales en **010**                   |
 
 ### 05.5. Reglas de invocación
 
@@ -327,6 +328,7 @@ Automatización de **versionado y release de paquetes del monorepo Engineering E
 1. No se publica una versión que no haya pasado el conjunto de gates **ACTIVE** aplicables (010 + enforcement 007).
 2. Scripts de release no omiten validación por conveniencia.
 3. Acceso a recursos GitHub protegidos (branches, secrets, environments): solo con permisos y mecanismos autorizados en **EE-DOC-007**; sin escalada implícita.
+4. El release prepara el versionado, ejecuta los gates ACTIVE y el build antes de publicar. El commit/tag de release se crea antes de la publicación; solo se hace push después de que la publicación termine correctamente. El script no debe usar `git add .`: debe limitar el staging a cambios de release identificados y rechazar archivos inesperados. Si la publicación falla después de crear el commit/tag local, la recuperación es explícita y no debe volver a ejecutar versionado a ciegas.
 
 ---
 
@@ -496,6 +498,7 @@ Incumplimiento de un comando root que materializa un gate ACTIVE → agregación
 | **v0.3.0** | 2026-09-30 | Equipo de Arquitectura | —                      | Observaciones residuales       | Invocación canónica vs fachada DX; CI consume canónico (007 compone); §05.4 separada comando/plataforma; mutación vs check; CLI y packages/config; ownership review; EE-TEC-006; P03 alineación vs ADR; sync §14; nota 015 | Borrador      |
 | **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica      | Norma de Automation aprobada; listo para EE-IMP-011-P01                                                                                                                                                                    | Aprobado      |
 | **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Validación Final y Congelación | EE-IMP-011-P01…P05 + EE-TEC-006 Completados; TEC-006 (no TEC-011); diferidos 012/backlog documentados                                                                                                                      | **Congelado** |
+| **v1.1.1** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Fix layout scripts             | §04.2 actualizado a scripts/commands/\*; añadido comando e2e a la tabla                                                                                                                                                    | Congelado     |
 
 ---
 
@@ -529,7 +532,7 @@ Incumplimiento de un comando root que materializa un gate ACTIVE → agregación
 | Campo                      | Valor                      |
 | :------------------------- | :------------------------- |
 | **Estado documental**      | **Congelado**              |
-| **Versión**                | v1.1.0                     |
+| **Versión**                | v1.1.1                     |
 | **Validado**               | ✅ 2026-10-01              |
 | **Congelación**            | ✅ 2026-10-01              |
 | **Próximo hito normativo** | **EE-DOC-012** — Templates |

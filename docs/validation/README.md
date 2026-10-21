@@ -5,19 +5,19 @@ Canonical location for Engineering Ecosystem validation artifacts
 
 ## Layout
 
-| Path               | Purpose                                                          |
-| :----------------- | :--------------------------------------------------------------- |
-| `reports/`         | Formal Validation Reports (`EE-VAL-*`) — produced in IMP-015-P05 |
-| `waivers/`         | Gate WAIVE records (`EE-WAIVE-*`) per **EE-DOC-010**             |
-| `evidence/layers/` | Manual layer-review evidence (V-ARCH-LAYERS)                     |
-| `audit/`           | Documentación: criterios y log de auditoría normativa (progreso) |
+| Path               | Purpose                                                                                             |
+| :----------------- | :-------------------------------------------------------------------------------------------------- |
+| `reports/`         | Formal Validation Reports (`EE-VAL-*`) — produced in IMP-015-P05                                    |
+| `waivers/`         | Gate WAIVE records (`EE-WAIVE-*`) per **EE-DOC-010**                                                |
+| `evidence/layers/` | Manual layer-review evidence (V-ARCH-LAYERS)                                                        |
+| `audit/`           | `EE-AUDIT-Log_Progress_Register`, `EE-AUDIT-Criteria_Audited_Definition`, `EE-AUDIT-Rules_Emerging` |
 
 ## Rules
 
 - Domain Results of **EE-DOC-010** are consumed **without reclassification** (SKIPPED ≠ N/A).
 - DEGRADED domain results require a **valid WAIVE** under `waivers/`.
 - Formal reports live only under this tree (EE-DOC-015).
-- Document audits use `audit/AUDIT-CRITERIA.md` and progress in `audit/AUDIT-LOG.md`.
+- Document audits use `audit/EE-AUDIT-Criteria_Audited_Definition.md` and progress in `audit/EE-AUDIT-Log_Progress_Register.md`.
   Formalization of this subfolder is deferred to the EE-DOC-015 audit turn (no ADR/RFC required to start).
 
 ## References
@@ -26,5 +26,5 @@ Canonical location for Engineering Ecosystem validation artifacts
 - EE-DOC-006 — Repository Structure
 - EE-DOC-010 — Quality Gates
 - EE-IMP-015-P01 — Validation Bootstrap and Inventory
-- `audit/AUDIT-CRITERIA.md` — Operational definition of «auditado»
-- `audit/AUDIT-LOG.md` — Progress log
+- `audit/EE-AUDIT-Criteria_Audited_Definition.md` — Operational definition of «auditado»
+- `audit/EE-AUDIT-Log_Progress_Register.md` — Progress log

@@ -1,4 +1,4 @@
-# EE-DOC-015 — Engineering Ecosystem Validation
+﻿# EE-DOC-015 — Engineering Ecosystem Validation
 
 Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
@@ -17,7 +17,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**       | Especializado                                                                                                                                                                                                                                              |
 | **Nivel**               | Especializado                                                                                                                                                                                                                                              |
 | **Normativo**           | Sí                                                                                                                                                                                                                                                         |
-| **Versión**             | v1.1.0                                                                                                                                                                                                                                                     |
+| **Versión**             | v1.1.1                                                                                                                                                                                                                                                     |
 | **Estado**              | Congelado                                                                                                                                                                                                                                                  |
 | **Propietario**         | Equipo de Arquitectura                                                                                                                                                                                                                                     |
 | **Documento padre**     | EE-DOC-004 — Engineering Architecture (conceptual)                                                                                                                                                                                                         |
@@ -26,8 +26,8 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**        | Equipo de Arquitectura                                                                                                                                                                                                                                     |
 | **Audiencia**           | Arquitectura, Desarrollo, QA, DevOps, IA                                                                                                                                                                                                                   |
 | **Fecha de creación**   | 2026-10-06                                                                                                                                                                                                                                                 |
-| **Última revisión**     | 2026-10-07                                                                                                                                                                                                                                                 |
-| **Próxima revisión**    | Tras cierre EE-IMP-015 (o cambio gobernado)                                                                                                                                                                                                                |
+| **Última revisión**     | 2026-10-18                                                                                                                                                                                                                                                 |
+| **Próxima revisión**    | No aplica — Documento Congelado                                                                                                                                                                                                                            |
 
 > **Precedente de roadmap (EE-DOC-001):** EE-DOC-014 — Knowledge Management (Fase 3 → Fase 4).
 
@@ -296,7 +296,7 @@ Coexistencia Foundation→Intelligence y Foundation→Knowledge desde `apps/*`; 
 | :------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **CLI facade**             | Delega a `pnpm run`; **no reimplementa** Quality Gates ni umbrales                                                                                                                                                                                                                                                                                                                                                                                          |
 | **Composition**            | §05.2.2 (puede residir en el mismo app que la facade)                                                                                                                                                                                                                                                                                                                                                                                                       |
-| Comandos root              | Contrato EE-DOC-011 (sin `e2e` hasta cambio gobernado)                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Comandos root**          | Contrato EE-DOC-011 (incluye `e2e`; el gate V-E2E sigue PENDING hasta integración en CI)                                                                                                                                                                                                                                                                                                                                                                    |
 | **QG-REPO**                | Integridad estructural del repo / templates path → Result del gate                                                                                                                                                                                                                                                                                                                                                                                          |
 | **Templates (EE-DOC-012)** | Validar el **contrato semántico definido por EE-DOC-012** (p. ej. schema, `template.json`, `files/`, outputs, ids). **PASS de QG-REPO no implica PASS del contrato de templates.** Si **EE-DOC-012** exige un mecanismo de validación y **ése** no está materializado → **PENDING**. Si el mecanismo ACTIVE del ref falla → **FAIL**. DEGRADED solo con WAIVE §04.5. EE-DOC-015 **no** inventa obligaciones de enforcement adicionales a las de 012/IMP-012 |
 
@@ -317,7 +317,7 @@ El Validation Report debe mostrar **Result original del gate** y el **mapeo** al
 
 ### 05.8. V-E2E
 
-**PENDING** hasta `pnpm run e2e` + scripts + Turbo (Tipo B/C; sync EE-DOC-011 / EE-DOC-006). Scripts workspace alineados a EE-ADR-002 (`e2e`, no solo alias ad hoc). **Prohibido N/A**.
+**PENDING** como gate bloqueante, aunque el comando root `pnpm run e2e` ya existe. Falta integración en CI (Tipo B/C). Scripts workspace alineados a EE-ADR-002 (`e2e`, no solo alias ad hoc). **Prohibido N/A**.
 
 ### 05.9. V-GOV
 
@@ -442,6 +442,7 @@ Ejemplos: plantillas EE-VAL/EE-WAIVE en EE-DOC-002 (A/B); `pnpm run e2e` (B/C); 
 | **v0.5.2**        | 2026-10-07 | Equipo de Arquitectura | —                      | Higiene revisión arquitectónica     | P01 README; V-QG FMT vía validate; dictamen ≠ aprobado; nota hito LAYERS/E2E                                                                      | **En Revisión Arquitectónica** |
 | **v1.0.0**        | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica           | Congelación del marco de validación de ecosistema; habilita EE-IMP-015                                                                            | **Aprobado**                   |
 | **v1.1.0**        | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre implementación + congelación | IMP-015 P01–P05; EE-VAL-072b5e7; EE-TEC-010; dictamen DEGRADED admisible                                                                          | **Congelado**                  |
+| **v1.1.1**        | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Fix aclaración E2E                  | §05.8 aclara que el comando root e2e existe pero el gate sigue PENDING                                                                            | Congelado                      |
 
 ---
 

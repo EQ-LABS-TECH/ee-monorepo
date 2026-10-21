@@ -19,7 +19,7 @@ Sigue la jerarquía documental de **EE-DOC-001**, la gobernanza de **EE-DOC-003*
 | **Clasificación**          | Decisión Arquitectónica                                                |
 | **Nivel**                  | Arquitectónico                                                         |
 | **Normativo**              | Sí, una vez aprobado                                                   |
-| **Versión**                | v1.3.0                                                                 |
+| **Versión**                | v1.3.1                                                                 |
 | **Estado**                 | Aprobado                                                               |
 | **Propietario**            | Equipo de Arquitectura                                                 |
 | **Documento padre**        | EE-DOC-004                                                             |
@@ -28,7 +28,7 @@ Sigue la jerarquía documental de **EE-DOC-001**, la gobernanza de **EE-DOC-003*
 | **Aprobado por**           | Equipo de Arquitectura                                                 |
 | **Audiencia**              | Arquitectura, Desarrollo, QA, DevOps, IA                               |
 | **Fecha de creación**      | 2026-08-29                                                             |
-| **Última revisión**        | 2026-10-02                                                             |
+| **Última revisión**        | 2026-10-19                                                             |
 | **Próxima revisión**       | —                                                                      |
 | **Prioridad**              | Alta                                                                   |
 
@@ -506,24 +506,29 @@ const result = spawnSync('turbo', ['run', 'test'], {
 process.exit(result.status ?? 1);
 ```
 
-El script `scripts/e2e` seguirá el mismo patrón:
+El script `scripts/e2e` tendrá:
 
 ```javascript
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
 
-const result = spawnSync('turbo', ['run', 'e2e'], {
-  stdio: 'inherit',
-  shell: true,
-});
+const result = spawnSync(
+  'pnpm',
+  ['exec', 'turbo', 'run', 'test:e2e', '--filter=@eq-labs/dashboard'],
+  {
+    stdio: 'inherit',
+    shell: true,
+  },
+);
 
 process.exit(result.status ?? 1);
 ```
 
-Estos scripts no deberán contener lógica de testing.
-
+Estos scripts no deberán contener lógica de testing.  
 Su única responsabilidad es exponer la interfaz root y delegar en Turborepo.
+
+> **As-built:** el contrato de ejecución (`pnpm e2e` → Turbo → Playwright) se mantiene. La implementación materializa `turbo run test:e2e --filter=@eq-labs/dashboard` mientras el gate multi-package no esté cableado. Alineado con `EE-DOC-015 §05.8`.
 
 ---
 
@@ -1521,6 +1526,7 @@ La autoridad de aprobación corresponde al Equipo de Arquitectura.
 | **v1.1.0** | 2026-09-15 | IA Asistente (revisión)  | Pendiente              | Revisión arquitectónica                   | Alcance, configuración compartida, Testing Library, scripts root, workspaces afectados, política Jest, revisión documental, Quality Gates y semántica `NO_TESTS`                                                                                                             | En Revisión Arquitectónica |
 | **v1.2.0** | 2026-09-15 | IA Asistente (revisión)  | Equipo de Arquitectura | Correcciones documentales y de gobernanza | Consolidación de Testing Library, referencias cruzadas, precisión de `--passWithNoTests`, alineación de Fase 2, trazabilidad de ausencia de tests, referencia a EE-DOC-013, revisión extraordinaria por cambios normativos y separación explícita entre autoría y aprobación | **Aprobado**               |
 | **v1.3.0** | 2026-10-02 | Equipo de Arquitectura   | Equipo de Arquitectura | Higiene DOC-002 §18.2                     | Alineación formal de estructura (intro, Alcance, Consecuencias, Referencias, Código corto); sin cambio de decisión                                                                                                                                                           | **Aprobado**               |
+| **v1.3.1** | 2026-10-19 | Equipo de Arquitectura   | Equipo de Arquitectura | As-built e2e                              | §10.3: nota as-built `test:e2e --filter=@eq-labs/dashboard`; alineado con EE-DOC-015 §05.8                                                                                                                                                                                   | Aprobado                   |
 
 > **Regla de autoridad:** La columna `Autor` registra quién elaboró o propuso el cambio. La columna `Aprobado por` registra exclusivamente la autoridad humana que formalmente aprobó la decisión. La IA Asistente no puede figurar como autoridad de aprobación.
 
