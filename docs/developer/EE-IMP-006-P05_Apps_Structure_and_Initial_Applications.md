@@ -1,27 +1,31 @@
 # EE-IMP-006-P05 — Apps Structure
 
+Este documento registra la evidencia técnica de la implementación física y validación correspondiente a la Fase 7 conforme al estándar **EE-DOC-005**.
+
+---
+
 ## METADATOS
 
 | Campo                 | Valor                               |
 | :-------------------- | :---------------------------------- |
 | **ID**                | EE-IMP-006-P05                      |
 | **Documento**         | Apps Structure                      |
-| **Código corto**      | EE-IMP-006-P05                      |
+| **Código corto**      | IMP-006-P05                         |
 | **Fase**              | Fase 5                              |
 | **Tipo**              | Documento Técnico de Implementación |
 | **Clasificación**     | Implementación                      |
 | **Nivel**             | Técnico                             |
 | **Normativo**         | No                                  |
-| **Versión**           | v1.0.0                              |
+| **Versión**           | v1.1.0                              |
 | **Estado**            | Aprobado                            |
 | **Propietario**       | Equipo de Arquitectura              |
 | **Documento padre**   | EE-DOC-006                          |
 | **Dependencias**      | EE-DOC-006, EE-IMP-006-P04          |
 | **Aprobado por**      | Equipo de Arquitectura              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
-| **Fecha de creación** | 2026-08-31                          |
-| **Última revisión**   | 2026-08-31                          |
-| **Próxima revisión**  | —                                   |
+| **Fecha de creación** | 2026-08-29                          |
+| **Última revisión**   | 2026-10-18                          |
+| **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
@@ -95,30 +99,30 @@ La estructura resultante de `apps/` quedó establecida de la siguiente manera:
 ```text
 apps/
 ├── cli/
-│   ├── src/
-│   │   └── index.ts
-│   ├── package.json
-│   ├── README.md
-│   └── tsconfig.json
+│ ├── src/
+│ │ └── index.ts
+│ ├── package.json
+│ ├── README.md
+│ └── tsconfig.json
 │
 ├── dashboard/
-│   ├── src/
-│   │   ├── App.tsx
-│   │   ├── index.css
-│   │   ├── main.tsx
-│   │   └── vite-env.d.ts
-│   ├── index.html
-│   ├── package.json
-│   ├── README.md
-│   ├── tsconfig.json
-│   └── vite.config.ts
+│ ├── src/
+│ │ ├── App.tsx
+│ │ ├── index.css
+│ │ ├── main.tsx
+│ │ └── vite-env.d.ts
+│ ├── index.html
+│ ├── package.json
+│ ├── README.md
+│ ├── tsconfig.json
+│ └── vite.config.ts
 │
 └── extensions/
-    ├── src/
-    │   └── index.ts
-    ├── package.json
-    ├── README.md
-    └── tsconfig.json
+ ├── src/
+ │ └── index.ts
+ ├── package.json
+ ├── README.md
+ └── tsconfig.json
 ```
 
 La estructura establece tres puntos de entrada diferenciados:
@@ -162,7 +166,7 @@ Archivos creados:
 ```text
 apps/cli/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -191,9 +195,9 @@ Los scripts implementados son:
 
 ```json
 "scripts": {
-  "build": "tsc -p tsconfig.json",
-  "typecheck": "tsc -p tsconfig.json --noEmit",
-  "start": "node dist/index.js"
+ "build": "tsc -p tsconfig.json",
+ "typecheck": "tsc -p tsconfig.json --noEmit",
+ "start": "node dist/index.js"
 }
 ```
 
@@ -225,8 +229,6 @@ y establece:
 
 La aplicación dispone de una implementación funcional mínima y queda preparada para futuras capacidades de CLI.
 
----
-
 ### 4.2 `@eq-labs/dashboard`
 
 Se creó el paquete:
@@ -257,10 +259,10 @@ Archivos creados:
 ```text
 apps/dashboard/
 ├── src/
-│   ├── App.tsx
-│   ├── index.css
-│   ├── main.tsx
-│   └── vite-env.d.ts
+│ ├── App.tsx
+│ ├── index.css
+│ ├── main.tsx
+│ └── vite-env.d.ts
 ├── index.html
 ├── package.json
 ├── README.md
@@ -272,12 +274,12 @@ El componente principal implementado es:
 
 ```typescript
 function App() {
-  return (
-    <main>
-      <h1>EQ-LABS Engineering Ecosystem</h1>
-      <p>Dashboard</p>
-    </main>
-  );
+ return (
+ <main>
+ <h1>EQ-LABS Engineering Ecosystem</h1>
+ <p>Dashboard</p>
+ </main>
+ );
 }
 
 export default App;
@@ -293,9 +295,9 @@ import App from './App';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+ <StrictMode>
+ <App />
+ </StrictMode>,
 );
 ```
 
@@ -324,8 +326,8 @@ Las dependencias principales fueron fijadas mediante versiones exactas:
 
 ```json
 "dependencies": {
-  "react": "19.1.1",
-  "react-dom": "19.1.1"
+ "react": "19.1.1",
+ "react-dom": "19.1.1"
 }
 ```
 
@@ -333,17 +335,15 @@ y:
 
 ```json
 "devDependencies": {
-  "@types/react": "19.1.10",
-  "@types/react-dom": "19.1.7",
-  "@vitejs/plugin-react": "5.0.2",
-  "typescript": "5.9.2",
-  "vite": "7.1.3"
+ "@types/react": "19.1.10",
+ "@types/react-dom": "19.1.7",
+ "@vitejs/plugin-react": "5.0.2",
+ "typescript": "5.9.2",
+ "vite": "7.1.3"
 }
 ```
 
 La aplicación genera correctamente el bundle de producción mediante Vite.
-
----
 
 ### 4.3 `@eq-labs/extensions`
 
@@ -366,7 +366,7 @@ Archivos creados:
 ```text
 apps/extensions/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -463,14 +463,14 @@ El `package.json` fue configurado para incluir los archivos JavaScript y sus dec
 
 ```json
 "files": [
-  "base.mjs",
-  "base.d.ts",
-  "library.mjs",
-  "library.d.ts",
-  "react.mjs",
-  "react.d.ts",
-  "README.md",
-  "package.json"
+ "base.mjs",
+ "base.d.ts",
+ "library.mjs",
+ "library.d.ts",
+ "react.mjs",
+ "react.d.ts",
+ "README.md",
+ "package.json"
 ]
 ```
 
@@ -478,18 +478,18 @@ Los exports quedaron definidos de forma explícita:
 
 ```json
 "exports": {
-  "./base": {
-    "types": "./base.d.ts",
-    "import": "./base.mjs"
-  },
-  "./library": {
-    "types": "./library.d.ts",
-    "import": "./library.mjs"
-  },
-  "./react": {
-    "types": "./react.d.ts",
-    "import": "./react.mjs"
-  }
+ "./base": {
+ "types": "./base.d.ts",
+ "import": "./base.mjs"
+ },
+ "./library": {
+ "types": "./library.d.ts",
+ "import": "./library.mjs"
+ },
+ "./react": {
+ "types": "./react.d.ts",
+ "import": "./react.mjs"
+ }
 }
 ```
 
@@ -555,8 +555,8 @@ La solución consistió en definir explícitamente:
 
 ```json
 "./react": {
-  "types": "./react.d.ts",
-  "import": "./react.mjs"
+ "types": "./react.d.ts",
+ "import": "./react.mjs"
 }
 ```
 
@@ -703,9 +703,9 @@ Las aplicaciones cuentan con interfaces de ejecución coherentes con su naturale
 
 ```json
 "scripts": {
-  "build": "tsc -p tsconfig.json",
-  "typecheck": "tsc -p tsconfig.json --noEmit",
-  "start": "node dist/index.js"
+ "build": "tsc -p tsconfig.json",
+ "typecheck": "tsc -p tsconfig.json --noEmit",
+ "start": "node dist/index.js"
 }
 ```
 
@@ -713,10 +713,10 @@ Las aplicaciones cuentan con interfaces de ejecución coherentes con su naturale
 
 ```json
 "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "typecheck": "tsc -p tsconfig.json --noEmit",
-  "preview": "vite preview"
+ "dev": "vite",
+ "build": "vite build",
+ "typecheck": "tsc -p tsconfig.json --noEmit",
+ "preview": "vite preview"
 }
 ```
 
@@ -724,8 +724,8 @@ Las aplicaciones cuentan con interfaces de ejecución coherentes con su naturale
 
 ```json
 "scripts": {
-  "build": "tsc -p tsconfig.json",
-  "typecheck": "tsc -p tsconfig.json --noEmit"
+ "build": "tsc -p tsconfig.json",
+ "typecheck": "tsc -p tsconfig.json --noEmit"
 }
 ```
 
@@ -843,9 +843,9 @@ apps/dashboard build$ vite build
 │ ✓ 29 modules transformed.
 │ rendering chunks...
 │ computing gzip size...
-│ dist/index.html                   0.51 kB
-│ dist/assets/index-B51qReza.css    0.11 kB
-│ dist/assets/index-pyin-Vg4.js   187.48 kB
+│ dist/index.html 0.51 kB
+│ dist/assets/index-B51qReza.css 0.11 kB
+│ dist/assets/index-pyin-Vg4.js 187.48 kB
 │ ✓ built in 2.01s
 └─ Done in 7.4s
 ```
@@ -1019,11 +1019,11 @@ La fase no incorpora todavía funcionalidad de negocio ni capacidades avanzadas 
 | **Validación TypeScript**      | ✅ Completada |
 | **Validación Build**           | ✅ Completada |
 | **Integración con Workspaces** | ✅ Completada |
-| **Documentación**              |  ✅ Borrador  |
+| **Documentación**              |  ✅ Aprobado  |
 
 La implementación y validación técnica de la Fase 5 fueron completadas correctamente.
 
-El documento permanece en estado **Borrador** como documento técnico de implementación de fase.
+El documento permanece en estado **Aprobado** como documento técnico de implementación de fase.
 
 ---
 
@@ -1065,8 +1065,22 @@ El documento permanece en estado **Borrador** como documento técnico de impleme
 
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                                                                               | Cambios                                                | Estado       |
 | :--------- | :--------- | :--------------------- | :--------------------- | :------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------- | :----------- |
-| **v1.0.0** | 2026-08-31 | Equipo de Arquitectura | Equipo de Arquitectura | Creación de EE-IMP-006-P05 y documentación de la implementación de `apps/cli`, `apps/dashboard` y `apps/extensions`. | Registrar la implementación y validación de la Fase 5. | **Aprobado** |
+| **v1.0.0** | 2026-08-29 | Equipo de Arquitectura | Equipo de Arquitectura | Creación de EE-IMP-006-P05 y documentación de la implementación de `apps/cli`, `apps/dashboard` y `apps/extensions`. | Registrar la implementación y validación de la Fase 5. | **Aprobado** |
+| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006                                                                                                 | As-built scripts/commands y estados documentales merge | Aprobado     |
 
 ---
 
-## **FIN DEL DOCUMENTO**
+## FIN DEL DOCUMENTO
+
+### Nota de consistencia de estado (auditoría 2026-10-15)
+
+Los **metadatos** declaran estado **Aprobado** (implementación de fase aceptada). Si el cuerpo aún dice «Borrador»/«En revisión» respecto de la **documentación** de la IMP, se interpreta como redacción histórica a unificar en la próxima edición: el estado canónico de metadatos prevalece hasta corrección explícita del cuerpo.
+
+---
+
+### Addendum auditoría EE-DOC-006 (2026-10-18)
+
+- **Scripts root canónicos:** `scripts/commands/<cmd>` (+ `scripts/lib/`, `scripts/tests/`). Rutas históricas `scripts/<cmd>` plano quedan **superseded**.
+- **Estado:** los metadatos **Aprobado** prevalecen sobre menciones residuales de “Borrador” / “En revisión” en el cuerpo (evidencia histórica de la fase).
+- **As-built monorepo:** `assets/`, `examples/`, `marketplace/`, `data/`, `infra/` materializados (layout + README); detalle en EE-DOC-006 §05 y EE-TEC-001.
+- Este addendum **no** reescribe la evidencia de validación de fase (P01/P02: sin PASS retroactivo — EE-DOC-006 §20.1).

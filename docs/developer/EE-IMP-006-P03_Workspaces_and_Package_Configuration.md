@@ -1,18 +1,22 @@
 # EE-IMP-006-P03 — Workspaces and Package Configuration
 
+Este documento registra la evidencia técnica de la implementación física y validación correspondiente a la Fase 7 conforme al estándar **EE-DOC-005**.
+
+---
+
 ## METADATOS
 
 | Campo                 | Valor                                |
 | :-------------------- | :----------------------------------- |
 | **ID**                | EE-IMP-006-P03                       |
 | **Documento**         | Workspaces and Package Configuration |
-| **Código corto**      | EE-IMP-006-P03                       |
+| **Código corto**      | IMP-006-P03                          |
 | **Fase**              | Fase 3                               |
 | **Tipo**              | Documento Técnico de Implementación  |
 | **Clasificación**     | Implementación                       |
 | **Nivel**             | Técnico                              |
 | **Normativo**         | No                                   |
-| **Versión**           | v1.0.0                               |
+| **Versión**           | v1.1.0                               |
 | **Estado**            | Aprobado                             |
 | **Propietario**       | Equipo de Arquitectura               |
 | **Documento padre**   | EE-DOC-006                           |
@@ -20,8 +24,8 @@
 | **Aprobado por**      | Equipo de Arquitectura               |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps     |
 | **Fecha de creación** | 2026-08-28                           |
-| **Última revisión**   | 2026-08-28                           |
-| **Próxima revisión**  | —                                    |
+| **Última revisión**   | 2026-10-18                           |
+| **Próxima revisión**  | No aplica — Documento Aprobado       |
 
 ---
 
@@ -42,7 +46,7 @@ La Fase 3 comprendió:
 - Configuración de **pnpm** como gestor de paquetes del monorepo.
 - Configuración de **Turborepo** como orquestador de tareas.
 - Definición de workspaces en `pnpm-workspace.yaml`.
-- Identificación y configuración de los seis workspaces especializados de configuración.
+- Identificación y configuración de los siete workspaces especializados de configuración.
 - Configuración de `packages/config/` como contenedor administrativo no consumible.
 - Actualización del `package.json` raíz.
 - Aplicación de la política de versiones definida en **EE-DOC-006 §11.2**.
@@ -59,17 +63,17 @@ La Fase 3 no comprende la validación integral de cumplimiento de **EE-DOC-006**
 
 ## 3. Objetivos de la Fase
 
-| #     | Objetivo                                                                                      | Estado |
-| ----- | :-------------------------------------------------------------------------------------------- | :----: |
-| **1** | Establecer `pnpm` como gestor de paquetes del monorepo.                                       |   ✅   |
-| **2** | Establecer `Turborepo` como orquestador de tareas.                                            |   ✅   |
-| **3** | Definir los workspaces del monorepo mediante `pnpm-workspace.yaml`.                           |   ✅   |
-| **4** | Establecer los seis paquetes especializados de configuración como workspaces válidos de pnpm. |   ✅   |
-| **5** | Establecer `packages/config/` como contenedor administrativo no consumible.                   |   ✅   |
-| **6** | Aplicar la política de versiones definida en EE-DOC-006 §11.2.                                |   ✅   |
-| **7** | Establecer scripts `build` de validación de integridad para los paquetes de configuración.    |   ✅   |
-| **8** | Validar la instalación del workspace mediante `pnpm install`.                                 |   ✅   |
-| **9** | Validar la ejecución recursiva de los scripts `build` mediante `pnpm -r build`.               |   ✅   |
+| #     | Objetivo                                                                                       | Estado |
+| ----- | :--------------------------------------------------------------------------------------------- | :----: |
+| **1** | Establecer `pnpm` como gestor de paquetes del monorepo.                                        |   ✅   |
+| **2** | Establecer `Turborepo` como orquestador de tareas.                                             |   ✅   |
+| **3** | Definir los workspaces del monorepo mediante `pnpm-workspace.yaml`.                            |   ✅   |
+| **4** | Establecer los siete paquetes especializados de configuración como workspaces válidos de pnpm. |   ✅   |
+| **5** | Establecer `packages/config/` como contenedor administrativo no consumible.                    |   ✅   |
+| **6** | Aplicar la política de versiones definida en EE-DOC-006 §11.2.                                 |   ✅   |
+| **7** | Establecer scripts `build` de validación de integridad para los paquetes de configuración.     |   ✅   |
+| **8** | Validar la instalación del workspace mediante `pnpm install`.                                  |   ✅   |
+| **9** | Validar la ejecución recursiva de los scripts `build` mediante `pnpm -r build`.                |   ✅   |
 
 ---
 
@@ -77,7 +81,7 @@ La Fase 3 no comprende la validación integral de cumplimiento de **EE-DOC-006**
 
 La Fase 3 se ejecutó bajo el ciclo establecido por el Engineering Ecosystem: **Implementación → Validación → Documentación**.
 
-La etapa de **Implementación** comprendió la configuración de pnpm, la definición de workspaces, la incorporación de Turborepo, la configuración del contenedor administrativo `packages/config/`, la configuración de los seis paquetes especializados y la aplicación de la política de dependencias y versiones establecida en EE-DOC-006.
+La etapa de **Implementación** comprendió la configuración de pnpm, la definición de workspaces, la incorporación de Turborepo, la configuración del contenedor administrativo `packages/config/`, la configuración de los siete paquetes especializados y la aplicación de la política de dependencias y versiones establecida en EE-DOC-006.
 
 La etapa de **Validación** comprendió la ejecución de `pnpm install` y `pnpm -r build`, así como la revisión de los resultados obtenidos y de los warnings generados durante la instalación.
 
@@ -93,9 +97,9 @@ La validación integral del cumplimiento de EE-DOC-006 no forma parte del alcanc
 
 Se configuró **pnpm** como gestor oficial de paquetes del monorepo mediante la propiedad `packageManager` definida en el `package.json` raíz, estableciendo `pnpm@10.16.1` como versión del gestor utilizada por el repositorio.
 
-La configuración del workspace se estableció mediante `pnpm-workspace.yaml`, utilizando patrones que identifican los paquetes Node.js pertenecientes al monorepo. El directorio `packages/config/` no se registra directamente como workspace; únicamente sus seis paquetes especializados son incluidos mediante el patrón `packages/config/*`.
+La configuración del workspace se estableció mediante `pnpm-workspace.yaml`, utilizando patrones que identifican los paquetes Node.js pertenecientes al monorepo. El directorio `packages/config/` no se registra directamente como workspace; únicamente sus siete paquetes especializados son incluidos mediante el patrón `packages/config/*`.
 
-La configuración fue validada mediante la ejecución de `pnpm install`, que reportó `Scope: all 7 workspace projects`. Este resultado corresponde al proyecto raíz privado y los seis paquetes especializados de configuración. El contenedor administrativo `packages/config/` no fue identificado como workspace independiente.
+La configuración fue validada mediante la ejecución de `pnpm install`, que reportó `Scope: all 8 workspace projects`. Este resultado corresponde al proyecto raíz privado y los siete paquetes especializados de configuración. El contenedor administrativo `packages/config/` no fue identificado como workspace independiente.
 
 ### 5.2. Workspace Configuration
 
@@ -106,20 +110,22 @@ packages:
   - 'apps/*'
   - 'apps/extensions/*'
   - 'connectors/official/*'
+  - 'packages/*'
   - 'packages/config/*'
-  - 'packages/foundation/*'
-  - 'packages/execution/*'
-  - 'packages/intelligence/*'
-  - 'packages/knowledge/*'
-  - 'packages/governance/*'
-  - 'packages/integration/*'
-  - 'packages/registry/*'
-  - 'packages/sdk/*'
+  - 'packages/foundation'
+  - 'packages/shared'
+  - 'packages/execution'
+  - 'packages/intelligence'
+  - 'packages/knowledge'
+  - 'packages/governance'
+  - 'packages/integration'
+  - 'packages/registry'
+  - 'packages/sdk'
 ```
 
 El patrón `packages/config/*` registra como workspaces únicamente los directorios hijos que contienen los paquetes especializados de configuración. El directorio `packages/config/` no constituye un workspace independiente y permanece como un contenedor administrativo de dichos paquetes.
 
-Esta decisión evita convertir una estructura organizativa del repositorio en un paquete consumible por el ecosistema. Los workspaces especializados actualmente identificados son `config-eslint`, `config-jest`, `config-prettier`, `config-typescript`, `config-vite` y `config-vitest`.
+Esta decisión evita convertir una estructura organizativa del repositorio en un paquete consumible por el ecosistema. Los workspaces especializados actualmente identificados son `config-eslint`, `config-jest`, `config-playwright`, `config-prettier`, `config-typescript`, `config-vite` y `config-vitest`.
 
 Los directorios `connectors/community/` y `connectors/experimental/` permanecen fuera del workspace mientras no contengan paquetes Node.js reales, conforme a la definición establecida en EE-DOC-006.
 
@@ -129,33 +135,34 @@ Turborepo fue incorporado al monorepo como dependencia de desarrollo del proyect
 
 ```json
 "devDependencies": {
-  "turbo": "2.5.0"
+  "turbo": "2.11.7"
 }
 ```
 
-El `package.json` raíz utiliza Turborepo como orquestador de las tareas globales del monorepo mediante los scripts `build`, `dev`, `test`, `lint`, `format`, `typecheck`, `validate`, `doctor`, `generate`, `release` y `clean`.
+Los scripts del `package.json` raíz invocalan la suite en `scripts/commands/*` (p. ej. `node scripts/commands/build`). Turborepo es el orquestador de tareas de workspace (`build`, `dev`, `test`, `lint`, `typecheck`, `clean`, `test:e2e`, etc.) según `turbo.json`. El detalle de cada comando root está en **EE-IMP-006-P07**.
 
-El archivo turbo.json constituye la configuración de orquestación de tareas del repositorio.
+El archivo `turbo.json` define el grafo de tareas, caché y salidas. El as-built incluye, entre otras, las tareas `build`, `dev`, `test`, `typecheck`, `lint`, `clean` y `test:e2e`, y `globalPassThroughEnv` para `TMP` / `TEMP` / `TMPDIR` (requerido por Playwright en entornos restringidos).
 
-Durante esta fase se verificó la instalación de Turborepo mediante `pnpm install`, confirmándose la instalación de `turbo 2.5.0`.
+Durante esta fase se verificó la instalación de Turborepo mediante `pnpm install`, confirmándose `turbo` en la versión declarada en el `package.json` raíz.
 
-La ejecución de `pnpm -r build` realizada durante la validación de esta fase corresponde a una ejecución recursiva de los scripts `build` definidos por los workspaces y no debe interpretarse como equivalente a una ejecución de `turbo run build`. La validación específica del comportamiento de la orquestación de Turborepo deberá registrarse cuando se ejecute explícitamente mediante el comando correspondiente.
+La ejecución de `pnpm -r build` corresponde a una ejecución **recursiva de scripts `build` de cada workspace** y **no** es equivalente a `turbo run build`. La validación de la orquestación Turborepo se realiza con `pnpm exec turbo run <task>` (o el script root que la invoque).
 
 ### 5.4. Root package.json
 
-El `package.json` raíz fue actualizado para establecer la identidad y configuración base del monorepo.
+El `package.json` raíz establece la identidad y configuración base del monorepo.
 
-La configuración final incluye:
+La configuración as-built incluye:
 
 - `@eq-labs/ee-monorepo` como nombre del repositorio.
 - `private: true`.
 - `packageManager: "pnpm@10.16.1"`.
-- Restricción de Node.js `>=22.19.0 <23`.
-- Restricción de pnpm `>=10.16.1 <11`.
-- Scripts globales delegados a Turborepo.
-- `turbo: "2.5.0"` como dependencia de desarrollo con versión exacta.
+- `engines.node`: `>=24 <25`.
+- `engines.pnpm`: `>=10.16.1 <11`.
+- Scripts root que delegan en `node scripts/commands/<comando>` (`bootstrap`, `build`, `dev`, `test`, `lint`, `format`, `typecheck`, `validate`, `doctor`, `generate`, `e2e`, `release`, `clean`, más `changeset` / `version-packages`).
+- `devDependencies`: `turbo` en versión exacta `2.11.7`, `@eq-labs/config-prettier` vía `workspace:*`, y el resto de tooling de root (Changesets, Prettier, Plop, etc.).
+- `pnpm.overrides` de seguridad/reproducibilidad según política del repositorio.
 
-La configuración establece al proyecto raíz como punto de entrada para la ejecución de tareas globales del monorepo.
+La raíz es el punto de entrada de tareas globales; no es un paquete de librería publicable.
 
 ### 5.5. packages/config/
 
@@ -174,6 +181,7 @@ El archivo `packages/config/package.json` permanece deliberadamente y define la 
     "vite/",
     "jest/",
     "vitest/",
+    "playwright/",
     "README.md",
     "package.json"
   ]
@@ -182,7 +190,7 @@ El archivo `packages/config/package.json` permanece deliberadamente y define la 
 
 El contenedor no constituye un workspace de pnpm porque `pnpm-workspace.yaml` registra `packages/config/*` y no `packages/config/`.
 
-El archivo `packages/config/package.json` no representa un paquete consumible ni una dependencia interna del ecosistema. Su función es mantener la estructura administrativa de la familia de configuraciones, mientras que los seis paquetes especializados contenidos en el directorio constituyen los workspaces reales y consumibles.
+El archivo `packages/config/package.json` no representa un paquete consumible ni una dependencia interna del ecosistema. Su función es mantener la estructura administrativa de la familia de configuraciones, mientras que los siete paquetes especializados contenidos en el directorio constituyen los workspaces reales y consumibles.
 
 Los workspaces especializados son:
 
@@ -190,6 +198,7 @@ Los workspaces especializados son:
 | :--------------------------- | :---------------------------- |
 | `@eq-labs/config-eslint`     | `packages/config/eslint/`     |
 | `@eq-labs/config-jest`       | `packages/config/jest/`       |
+| `@eq-labs/config-playwright` | `packages/config/playwright/` |
 | `@eq-labs/config-prettier`   | `packages/config/prettier/`   |
 | `@eq-labs/config-typescript` | `packages/config/typescript/` |
 | `@eq-labs/config-vite`       | `packages/config/vite/`       |
@@ -197,13 +206,12 @@ Los workspaces especializados son:
 
 ### 5.6. workspace:\*
 
-Durante la Fase 3 no se incorporaron referencias `workspace:*` porque los seis paquetes especializados de configuración implementados no mantienen actualmente dependencias entre paquetes internos del monorepo.
+La política de **EE-DOC-006 §11.4** obliga a declarar con `workspace:*` toda dependencia entre paquetes internos del monorepo.
 
-La política definida en **EE-DOC-006 §11.4** permanece vigente y establece que, cuando un paquete interno dependa de otro paquete interno perteneciente al mismo monorepo, la dependencia deberá declararse mediante `workspace:*`.
+- **Entre los siete paquetes `@eq-labs/config-*`:** no hay dependencias internas de unos a otros; no aplican referencias `workspace:*` entre ellos.
+- **As-built en la raíz:** el `package.json` root declara `@eq-labs/config-prettier` como `workspace:*` (consumo interno del monorepo). Otras dependencias internas del ecosistema deben seguir el mismo patrón cuando existan.
 
-Por tanto, la ausencia de `workspace:*` durante esta fase no representa una excepción ni una modificación de la política arquitectónica. Responde exclusivamente a la estructura actual de dependencias de los paquetes implementados.
-
-Cuando se incorporen dependencias entre paquetes internos, deberán utilizarse referencias `workspace:*` conforme a EE-DOC-006.
+La fase documentó la ausencia de `workspace:*` **entre paquetes de configuración**. Eso no contradice el uso as-built de `workspace:*` desde root u otros workspaces hacia paquetes internos.
 
 ### 5.7. Política de Versiones
 
@@ -233,23 +241,24 @@ El script `build` no genera archivos de salida, no realiza bundling y no produce
 | `@eq-labs/config-typescript` | `base.json`, `node.json`, `react.json` |
 | `@eq-labs/config-vite`       | `base.mjs`, `library.mjs`, `react.mjs` |
 | `@eq-labs/config-vitest`     | `base.mjs`, `react.mjs`                |
+| `@eq-labs/config-playwright` | `base.mjs`, `base.d.ts`                |
 
 ---
 
 ## 6. Decisiones Arquitectónicas Tomadas
 
-| Decisión                                              | Justificación                                                                                                                                                                                                                |
-| :---------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Turborepo 2.5.0**                                   | Turborepo fue incorporado como dependencia de desarrollo del proyecto raíz utilizando una versión exacta para garantizar reproducibilidad y coherencia con la política de versiones del repositorio.                         |
-| **packages/config/ como contenedor administrativo**   | `packages/config/` agrupa administrativamente los paquetes especializados de configuración, pero no constituye un paquete consumible ni un workspace independiente.                                                          |
-| **packages/config/package.json conservado**           | El archivo identifica y administra el contenedor, manteniéndolo privado y fuera del workspace consumible. Su eliminación habría eliminado la identidad administrativa del contenedor sin aportar una ventaja arquitectónica. |
-| **src/ eliminado del contenedor**                     | El contenedor administrativo no contiene código fuente propio que deba organizarse bajo `src/`. Mantener esta estructura generaba una expectativa incorrecta de compilación del contenedor.                                  |
-| **tsconfig.json del contenedor eliminado**            | `packages/config/` no contiene código TypeScript propio que requiera compilación o typecheck. La existencia de un `tsconfig.json` en este nivel provocaba una configuración sin entradas válidas después de eliminar `src/`. |
-| **Paquetes de configuración sin compilación real**    | Los paquetes contienen archivos `.mjs` y `.json` directamente consumibles por las herramientas correspondientes y no requieren generación de artefactos de compilación.                                                      |
-| **Scripts build como validación de integridad**       | Los scripts `build` verifican la presencia de los archivos de configuración requeridos, permitiendo que los paquetes participen uniformemente en las tareas del monorepo sin generar artefactos innecesarios.                |
-| **dependencies/devDependencies exactas**              | La utilización de versiones exactas aplica la política definida en EE-DOC-006 §11.2 y garantiza reproducibilidad de las dependencias directas.                                                                               |
-| **peerDependencies con rangos**                       | Los rangos en `peerDependencies` expresan compatibilidad soportada por el paquete y no representan una dependencia instalada directamente por el paquete.                                                                    |
-| **workspace:\* condicionado a dependencias internas** | `workspace:*` continúa siendo obligatorio para dependencias entre paquetes internos, pero no fue utilizado durante esta fase porque los paquetes de configuración no mantienen actualmente dependencias entre sí.            |
+| Decisión                                             | Justificación                                                                                                                                                                                                                |
+| :--------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Turborepo 2.11.7**                                 | Turborepo fue incorporado como dependencia de desarrollo del proyecto raíz utilizando una versión exacta para garantizar reproducibilidad y coherencia con la política de versiones del repositorio.                         |
+| **packages/config/ como contenedor administrativo**  | `packages/config/` agrupa administrativamente los paquetes especializados de configuración, pero no constituye un paquete consumible ni un workspace independiente.                                                          |
+| **packages/config/package.json conservado**          | El archivo identifica y administra el contenedor, manteniéndolo privado y fuera del workspace consumible. Su eliminación habría eliminado la identidad administrativa del contenedor sin aportar una ventaja arquitectónica. |
+| **src/ eliminado del contenedor**                    | El contenedor administrativo no contiene código fuente propio que deba organizarse bajo `src/`. Mantener esta estructura generaba una expectativa incorrecta de compilación del contenedor.                                  |
+| **tsconfig.json del contenedor eliminado**           | `packages/config/` no contiene código TypeScript propio que requiera compilación o typecheck. La existencia de un `tsconfig.json` en este nivel provocaba una configuración sin entradas válidas después de eliminar `src/`. |
+| **Paquetes de configuración sin compilación real**   | Los paquetes contienen archivos `.mjs` y `.json` directamente consumibles por las herramientas correspondientes y no requieren generación de artefactos de compilación.                                                      |
+| **Scripts build como validación de integridad**      | Los scripts `build` verifican la presencia de los archivos de configuración requeridos, permitiendo que los paquetes participen uniformemente en las tareas del monorepo sin generar artefactos innecesarios.                |
+| **dependencies/devDependencies exactas**             | La utilización de versiones exactas aplica la política definida en EE-DOC-006 §11.2 y garantiza reproducibilidad de las dependencias directas.                                                                               |
+| **peerDependencies con rangos**                      | Los rangos en `peerDependencies` expresan compatibilidad soportada por el paquete y no representan una dependencia instalada directamente por el paquete.                                                                    |
+| **workspace:\* obligatorio entre paquetes internos** | Conforme a EE-DOC-006 §11.4. Los `@eq-labs/config-*` no dependen entre sí; el as-built root sí usa `workspace:*` hacia `@eq-labs/config-prettier`.                                                                           |
 
 ---
 
@@ -268,22 +277,22 @@ El proceso finalizó correctamente con Done in 22.3s using pnpm v10.16.1.
 La salida de pnpm reportó:
 
 ```powershell
-Scope: all 7 workspace projects
+Scope: all 8 workspace projects
 ```
 
-Los siete proyectos corresponden al proyecto raíz privado y los seis paquetes especializados de configuración registrados mediante `packages/config/*`. El directorio administrativo `packages/config/` no fue contabilizado como workspace independiente.
+Los ocho proyectos del **scope de fase** corresponden al proyecto raíz privado y los siete paquetes especializados de configuración registrados mediante `packages/config/*`. El directorio administrativo `packages/config/` no fue contabilizado como workspace independiente. El monorepo as-built incorpora workspaces adicionales (apps, connectors, paquetes de dominio, etc.); el número total vigente se obtiene con `pnpm m ls --depth -1` o el scope que reporte `pnpm install`.
 
 La instalación resolvió e instaló un total de 416 paquetes en el árbol de dependencias generado por pnpm.
 
 | Resultado                 |             Detalle              |
 | :------------------------ | :------------------------------: |
 | **Estado**                |            ✅ Exitoso            |
-| **Proyectos en el scope** |                7                 |
-| **Composición del scope** | Root + 6 paquetes especializados |
+| **Proyectos en el scope** |                8                 |
+| **Composición del scope** | Root + 7 paquetes especializados |
 | **Paquetes instalados**   |               416                |
 | **Tiempo**                |              22.3s               |
 | **Versión de pnpm**       |             10.16.1              |
-| **Turbo instalado**       |              2.5.0               |
+| **Turbo instalado**       |              2.11.7              |
 
 ### 7.2. Validación recursiva de scripts build
 
@@ -293,18 +302,19 @@ La validación recursiva de los scripts `build` fue ejecutada mediante:
 pnpm -r build
 ```
 
-La ejecución completó satisfactoriamente los scripts `build` definidos en los seis paquetes especializados de configuración.
+La ejecución completó satisfactoriamente los scripts `build` definidos en los siete paquetes especializados de configuración.
 
 Estos scripts realizan validaciones de integridad estructural y no compilaciones tradicionales. La ejecución confirmó que los archivos de configuración requeridos por cada paquete se encontraban presentes y que sus respectivos scripts finalizaron correctamente.
 
 | Paquete                      |       Estado        | Tiempo |
 | :--------------------------- | :-----------------: | :----: |
-| `@eq-labs/config-eslint`     | ✅ Build successful | 250ms  |
-| `@eq-labs/config-jest`       | ✅ Build successful | 296ms  |
-| `@eq-labs/config-prettier`   | ✅ Build successful | 299ms  |
-| `@eq-labs/config-typescript` | ✅ Build successful | 326ms  |
-| `@eq-labs/config-vite`       | ✅ Build successful | 206ms  |
-| `@eq-labs/config-vitest`     | ✅ Build successful | 178ms  |
+| `@eq-labs/config-eslint`     | ✅ Build successful |   —    |
+| `@eq-labs/config-jest`       | ✅ Build successful |   —    |
+| `@eq-labs/config-playwright` | ✅ Build successful |   —    |
+| `@eq-labs/config-prettier`   | ✅ Build successful |   —    |
+| `@eq-labs/config-typescript` | ✅ Build successful |   —    |
+| `@eq-labs/config-vite`       | ✅ Build successful |   —    |
+| `@eq-labs/config-vitest`     | ✅ Build successful |   —    |
 
 El resultado de esta ejecución valida los scripts `build` de los workspaces participantes. No constituye por sí mismo una validación de la ejecución del comando `turbo run build`, la cual deberá ejecutarse y registrarse de forma independiente cuando corresponda.
 
@@ -330,15 +340,15 @@ La existencia de estos warnings no modifica el resultado exitoso de las validaci
 
 ## 9. Estado de la Fase
 
-| Aspecto            |     Estado     |
-| :----------------- | :------------: |
-| **Implementación** | ✅ Completada  |
-| **Validación**     | ✅ Completada  |
-| **Documentación**  | 🟡 En revisión |
+| Aspecto            |                   Estado                    |
+| :----------------- | :-----------------------------------------: |
+| **Implementación** |                ✅ Completada                |
+| **Validación**     |                ✅ Completada                |
+| **Documentación**  | ✅ Aprobado (metadatos; addenda 2026-10-18) |
 
 La implementación técnica de la Fase 3 se encuentra completada. La validación ejecutada mediante `pnpm install` y `pnpm -r build` finalizó satisfactoriamente para los componentes incluidos en el alcance de la fase.
 
-La documentación EE-IMP-006-P03 permanece en estado de borrador hasta concluir la revisión arquitectónica y su aprobación correspondiente.
+La documentación EE-IMP-006-P03 está **Aprobada** en metadatos; el texto de fase es evidencia histórica. Addenda 2026-10-18 (scripts/commands, as-built). La revisión arquitectónica y su aprobación correspondiente.
 
 La validación integral del cumplimiento de EE-DOC-006 no forma parte del cierre de esta fase individual. Dicha validación será realizada posteriormente como parte del proceso global de validación del conjunto de fases de implementación.
 
@@ -348,7 +358,7 @@ La validación integral del cumplimiento de EE-DOC-006 no forma parte del cierre
 
 | Archivo / Directorio                      | Cambio                                                                                                                                             |
 | :---------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `package.json`                            | Añadido `turbo: "2.5.0"` como `devDependency`, junto con la configuración de pnpm y los scripts globales delegados a Turborepo.                    |
+| `package.json`                            | Añadido `turbo: "2.11.7"` como `devDependency`, junto con la configuración de pnpm y los scripts globales delegados a Turborepo.                   |
 | `pnpm-workspace.yaml`                     | Definición de los patrones de workspaces del monorepo, incluyendo `packages/config/*`.                                                             |
 | `turbo.json`                              | Configuración de la orquestación de tareas mediante Turborepo.                                                                                     |
 | `packages/config/package.json`            | Conservado como contenedor administrativo privado y eliminado su carácter de paquete consumible mediante la limpieza de su configuración anterior. |
@@ -356,6 +366,7 @@ La validación integral del cumplimiento de EE-DOC-006 no forma parte del cierre
 | `packages/config/src/`                    | Eliminado debido a que el contenedor administrativo no posee código fuente propio.                                                                 |
 | `packages/config/eslint/package.json`     | Aplicación de la política de versiones y adición del script `build` de validación.                                                                 |
 | `packages/config/jest/package.json`       | Aplicación de la política de versiones y adición del script `build` de validación.                                                                 |
+| `packages/config/playwright/package.json` | Aplicación de la política de versiones y adición del script `build` de validación.                                                                 |
 | `packages/config/prettier/package.json`   | Aplicación de la política de versiones y adición del script `build` de validación.                                                                 |
 | `packages/config/typescript/package.json` | Aplicación de la política de versiones y adición del script `build` de validación.                                                                 |
 | `packages/config/vite/package.json`       | Aplicación de la política de versiones y adición del script `build` de validación.                                                                 |
@@ -386,10 +397,24 @@ EE-IMP-006-P03 no sustituye ni modifica el contenido normativo de EE-DOC-006. La
 
 ## 13. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                    | Cambios                                | Estado       |
-| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------- | :------------------------------------- | :----------- |
-| **v1.0.0** | 2026-08-28 | Equipo de Arquitectura | Equipo de Arquitectura | Creación del DT de la Fase 3 — Workspaces | Documentar la implementación realizada | **Aprobado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                    | Cambios                                                | Estado       |
+| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------- | :----------------------------------------------------- | :----------- |
+| **v1.0.0** | 2026-08-28 | Equipo de Arquitectura | Equipo de Arquitectura | Creación del DT de la Fase 3 — Workspaces | Documentar la implementación realizada                 | **Aprobado** |
+| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006                      | As-built scripts/commands y estados documentales merge | Aprobado     |
 
 ---
 
-## **FIN DEL DOCUMENTO**
+## FIN DEL DOCUMENTO
+
+### Nota de consistencia de estado (auditoría 2026-10-15)
+
+Los **metadatos** declaran estado **Aprobado** (implementación de fase aceptada). Si el cuerpo aún dice «Borrador»/«En revisión» respecto de la **documentación** de la IMP, se interpreta como redacción histórica a unificar en la próxima edición: el estado canónico de metadatos prevalece hasta corrección explícita del cuerpo.
+
+---
+
+### Addendum auditoría EE-DOC-006 (2026-10-18)
+
+- **Scripts root canónicos:** `scripts/commands/<cmd>` (+ `scripts/lib/`, `scripts/tests/`). Rutas históricas `scripts/<cmd>` plano quedan **superseded**.
+- **Estado:** los metadatos **Aprobado** prevalecen sobre menciones residuales de “Borrador” / “En revisión” en el cuerpo (evidencia histórica de la fase).
+- **As-built monorepo:** `assets/`, `examples/`, `marketplace/`, `data/`, `infra/` materializados (layout + README); detalle en EE-DOC-006 §05 y EE-TEC-001.
+- Este addendum **no** reescribe la evidencia de validación de fase (P01/P02: sin PASS retroactivo — EE-DOC-006 §20.1).

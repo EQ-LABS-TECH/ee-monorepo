@@ -1,12 +1,16 @@
 # EE-IMP-006-P02 — Monorepo Shared Configuration
 
+Este documento registra la evidencia técnica de la implementación física y validación correspondiente a la Fase 7 conforme al estándar **EE-DOC-005**.
+
+---
+
 ## METADATOS
 
 | Campo                 | Valor                               |
 | :-------------------- | :---------------------------------- |
 | **ID**                | EE-IMP-006-P02                      |
 | **Documento**         | Monorepo Shared Configuration       |
-| **Código corto**      | EE-IMP-006-P02                      |
+| **Código corto**      | IMP-006-P02                         |
 | **Fase**              | Fase 2                              |
 | **Tipo**              | Documento Técnico de Implementación |
 | **Clasificación**     | Implementación                      |
@@ -20,8 +24,8 @@
 | **Aprobado por**      | Equipo de Arquitectura              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
 | **Fecha de creación** | 2026-08-21                          |
-| **Última revisión**   | 2026-08-28                          |
-| **Próxima revisión**  | —                                   |
+| **Última revisión**   | 2026-10-18                          |
+| **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
@@ -69,10 +73,13 @@ La implementación inicial contemplaba un paquete raíz @eq-labs/config y los pa
 - `@eq-labs/config-vite`
 - `@eq-labs/config-jest`
 - `@eq-labs/config-vitest`
+- `@eq-labs/config-playwright`
 
-Durante la Fase 3 se realizó una revisión arquitectónica de la estructura de workspaces y se determinó que el paquete raíz `@eq-labs/config` no debía constituir un workspace consumible. En consecuencia, `packages/config/` pasó a funcionar exclusivamente como contenedor administrativo, mientras que los seis paquetes especializados constituyen los workspaces reales.
+Durante la Fase 3 se realizó una revisión arquitectónica de la estructura de workspaces y se determinó que el paquete raíz `@eq-labs/config` no debía constituir un workspace consumible. En consecuencia, `packages/config/` pasó a funcionar exclusivamente como contenedor administrativo, mientras que los siete paquetes especializados constituyen los workspaces reales.
 
 Los cambios posteriores sobre la estructura física no modifican el propósito original de la Fase 2; representan una evolución arquitectónica realizada en la Fase 3 y se encuentran documentados en EE-IMP-006-P03 — Workspaces.
+
+---
 
 ## 3. Estructura física implementada
 
@@ -129,6 +136,8 @@ Asimismo, el `tsconfig.json` asociado al contenedor administrativo fue eliminado
 
 La estructura vigente y las decisiones que justifican estas modificaciones se encuentran documentadas en EE-IMP-006-P03 — Workspaces.
 
+---
+
 ## 4. Implementación del paquete `@eq-labs/config`
 
 ### 4.1 `package.json`
@@ -164,7 +173,7 @@ El estado vigente del archivo es:
 
 El paquete raíz mantiene `private: true` y no declara `exports`, código fuente, configuración TypeScript ni una API programática propia.
 
-Los paquetes consumibles son los seis paquetes especializados:
+Los paquetes consumibles son los siete paquetes especializados:
 
 - `@eq-labs/config-typescript`
 - `@eq-labs/config-eslint`
@@ -172,6 +181,7 @@ Los paquetes consumibles son los seis paquetes especializados:
 - `@eq-labs/config-vite`
 - `@eq-labs/config-jest`
 - `@eq-labs/config-vitest`
+- `@eq-labs/config-playwright`
 
 Cada uno de estos paquetes posee su propio `package.json`, sus propias dependencias y su propio contrato de consumo.
 
@@ -179,7 +189,7 @@ En consecuencia, `packages/config/package.json` debe interpretarse como el manif
 
 Esta redefinición fue realizada durante la Fase 3 y se encuentra documentada en EE-IMP-006-P03 — Workspaces.
 
-El campo `files` identifica los directorios y archivos administrativos que forman parte de la estructura del contenedor `packages/config/`. Su presencia no convierte a `@eq-labs/config` en un paquete consumible ni establece una interfaz pública para los paquetes especializados. Los contratos públicos de consumo pertenecen exclusivamente a los seis paquetes especializados, cada uno definido mediante su propio `package.json` y sus respectivos `exports`. El contenedor raíz no debe utilizarse como punto de acceso para consumir configuraciones individuales.
+El campo `files` identifica los directorios y archivos administrativos que forman parte de la estructura del contenedor `packages/config/`. Su presencia no convierte a `@eq-labs/config` en un paquete consumible ni establece una interfaz pública para los paquetes especializados. Los contratos públicos de consumo pertenecen exclusivamente a los siete paquetes especializados, cada uno definido mediante su propio `package.json` y sus respectivos `exports`. El contenedor raíz no debe utilizarse como punto de acceso para consumir configuraciones individuales.
 
 `@eq-labs/config` no constituye actualmente una unidad independiente de distribución ni un paquete destinado a ser consumido por otros workspaces. Su responsabilidad se limita a proporcionar una estructura administrativa para los paquetes especializados de configuración.
 
@@ -223,6 +233,8 @@ El README documenta correctamente los paquetes independientes que componen la co
 Cada uno de estos paquetes es independiente y expone sus propias configuraciones mediante sus respectivos subpaths, documentados en sus propios README. El paquete raíz `@eq-labs/config` no declara subpath exports hacia los paquetes especializados.
 
 El README establece claramente que los consumidores deben utilizar estas rutas públicas en lugar de referenciar rutas internas del sistema de archivos.
+
+---
 
 ## 5. Configuración TypeScript
 
@@ -314,7 +326,7 @@ Se documentaron:
 - Configuración React.
 - Uso.
 - Principios de configuración.
-- Relación con Node.js 22 LTS.
+- Relación con Node.js 24 LTS.
 - Responsabilidad de los workspaces consumidores.
 
 La documentación cubre tres perfiles de configuración:
@@ -322,6 +334,8 @@ La documentación cubre tres perfiles de configuración:
 - **Base:** Configuración común para todo el ecosistema.
 - **Node.js:** Especialización para proyectos Node.js.
 - **React:** Especialización para proyectos React (establece `jsx: "react-jsx"`).
+
+---
 
 ## 6. Configuración ESLint
 
@@ -398,6 +412,8 @@ Se documentaron:
 
 Se establece explícitamente que el repositorio utiliza ESLint Flat Config y no las configuraciones legacy `.eslintrc`.
 
+---
+
 ## 7. Configuración Prettier
 
 ### 7.1 Estructura
@@ -456,6 +472,8 @@ Se documentó:
 - Responsabilidades.
 - Relación con `.editorconfig`.
 - Relación con `.gitattributes`.
+
+---
 
 ## 8. Configuración Vite
 
@@ -525,6 +543,8 @@ Se documentaron las configuraciones:
 
 También se estableció la separación entre configuración compartida y configuración específica del workspace.
 
+---
+
 ## 9. Configuración Jest
 
 ### 9.1 Estructura
@@ -586,6 +606,8 @@ Se documentaron:
 - Coverage.
 - Responsabilidades.
 
+---
+
 ## 10. Configuración Vitest
 
 ### 10.1 Estructura
@@ -594,6 +616,11 @@ Se documentaron:
 packages/config/vitest/
 ├── base.mjs
 ├── react.mjs
+├── package.json
+└── README.md
+
+packages/config/playwright/
+├── base.mjs
 ├── package.json
 └── README.md
 ```
@@ -652,6 +679,8 @@ Se documentaron:
 - Responsabilidades.
 - Dependencias específicas del workspace consumidor.
 
+---
+
 ## 11. Evolución del punto de entrada del paquete raíz
 
 La implementación inicial de la Fase 2 incluyó:
@@ -679,7 +708,7 @@ packages/config/src/index.ts
 
 La eliminación evita mantener código marcador sin responsabilidad funcional y establece que el paquete raíz actúa exclusivamente como contenedor administrativo.
 
-Las configuraciones compartidas son proporcionadas por los seis paquetes especializados:
+Las configuraciones compartidas son proporcionadas por los siete paquetes especializados:
 
 ```text
 @eq-labs/config-typescript
@@ -688,9 +717,12 @@ Las configuraciones compartidas son proporcionadas por los seis paquetes especia
 @eq-labs/config-vite
 @eq-labs/config-jest
 @eq-labs/config-vitest
+@eq-labs/config-playwright
 ```
 
 La eliminación de `src/index.ts` y la redefinición del papel del paquete raíz forman parte de la implementación de la Fase 3 y se encuentran documentadas en **EE-IMP-006-P03 — Workspaces**.
+
+---
 
 ## 12. Documentación implementada
 
@@ -704,6 +736,9 @@ packages/config/
 │   └── README.md
 │
 ├── jest/
+│   └── README.md
+│
+├── playwright/
 │   └── README.md
 │
 ├── prettier/
@@ -721,6 +756,8 @@ packages/config/
 
 La documentación describe el propósito, alcance, uso y responsabilidades de cada configuración.
 
+---
+
 ## 13. Principios de implementación
 
 La implementación de la Fase 2 establece una arquitectura de configuración centralizada.
@@ -735,6 +772,8 @@ Los principios observables en la implementación son:
 - Ausencia de lógica de negocio.
 - Configuración específica mantenida por el workspace consumidor cuando corresponde.
 - Declaración explícita de API pública: Cada paquete de configuración declara su API pública mediante su propio `package.json` y sus `exports`. Esta declaración constituye el contrato público del paquete y debe coincidir exactamente con la documentación del README correspondiente. No existe un mecanismo global de subpath exports que se aplique uniformemente a todos los paquetes; cada paquete define su propia interfaz según su naturaleza.
+
+---
 
 ## 14. Resultado de la implementación
 
@@ -752,8 +791,11 @@ Con configuraciones centralizadas para:
 | Vite       | Sí           |
 | Jest       | Sí           |
 | Vitest     | Sí           |
+| Playwright | Sí           |
 
 La estructura permite que los workspaces posteriores consuman configuraciones compartidas sin duplicar las reglas comunes.
+
+---
 
 ## 15. Validación de la fase
 
@@ -776,6 +818,8 @@ Los resultados de dichas validaciones se encuentran documentados en **EE-IMP-006
 
 Por tanto, EE-IMP-006-P02 no declara que la Fase 2 haya sido validada mediante los comandos ejecutados durante la Fase 3. Este documento conserva correctamente el estado histórico de validación correspondiente al momento de implementación de la Fase 2.
 
+---
+
 ## 16. Correcciones durante la implementación
 
 No se registran correcciones adicionales correspondientes al ciclo original de implementación de la Fase 2 en la información histórica documentada para esta fase.
@@ -788,10 +832,12 @@ Entre las modificaciones posteriores se encuentran:
 - Eliminación de `packages/config/src/index.ts`.
 - Eliminación del `tsconfig.json` asociado al contenedor administrativo.
 - Redefinición de `packages/config/package.json` como manifiesto administrativo.
-- Consolidación de los seis paquetes especializados como workspaces independientes.
+- Consolidación de los siete paquetes especializados como workspaces independientes.
 - Incorporación de mecanismos de validación `build` en los paquetes de configuración.
 
 Estas modificaciones forman parte del ciclo de implementación, validación y documentación de la Fase 3 y se encuentran documentadas en **EE-IMP-006-P03 — Workspaces**.
+
+---
 
 ## 17. Trazabilidad
 
@@ -812,12 +858,16 @@ Estas modificaciones forman parte del ciclo de implementación, validación y do
 | **Validación posterior relacionada** | Documentada en EE-IMP-006-P03                       |
 | **Documentación técnica**            | EE-IMP-006-P02                                      |
 
+---
+
 ## 18. REFERENCIAS
 
 | Referencia         | Descripción                                                                                                                                                                                                             |
 | :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **EE-DOC-006**     | _Repository Structure_ — documento normativo padre que define la estructura y las fases de implementación del repositorio, incluida la Fase 2.                                                                          |
 | **EE-IMP-006-P03** | _Workspaces y Package Configuration_ — documento técnico de implementación de la Fase 3 que documenta la evolución de la estructura de workspaces y las modificaciones posteriores realizadas sobre `packages/config/`. |
+
+---
 
 ## 19. HISTORIAL DE CAMBIOS
 
@@ -828,4 +878,17 @@ Estas modificaciones forman parte del ciclo de implementación, validación y do
 
 ---
 
-## **FIN DEL DOCUMENTO**
+## FIN DEL DOCUMENTO
+
+### Addendum de validación (auditoría 2026-10-15)
+
+Se mantiene el criterio de esta IMP: las validaciones ejecutadas en **P03** (u otras fases posteriores) **no se atribuyen retroactivamente** a P01/P02. Deuda de validación de fase = documentada; cierre de EE-DOC-006 no implica PASS de P02.
+
+---
+
+### Addendum auditoría EE-DOC-006 (2026-10-18)
+
+- **Scripts root canónicos:** `scripts/commands/<cmd>` (+ `scripts/lib/`, `scripts/tests/`). Rutas históricas `scripts/<cmd>` plano quedan **superseded**.
+- **Estado:** los metadatos **Aprobado** prevalecen sobre menciones residuales de “Borrador” / “En revisión” en el cuerpo (evidencia histórica de la fase).
+- **As-built monorepo:** `assets/`, `examples/`, `marketplace/`, `data/`, `infra/` materializados (layout + README); detalle en EE-DOC-006 §05 y EE-TEC-001.
+- Este addendum **no** reescribe la evidencia de validación de fase (P01/P02: sin PASS retroactivo — EE-DOC-006 §20.1).
