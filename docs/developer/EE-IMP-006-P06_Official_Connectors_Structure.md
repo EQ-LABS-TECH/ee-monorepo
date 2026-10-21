@@ -1,27 +1,31 @@
 # EE-IMP-006-P06 — Official Connectors Structure
 
+Este documento registra la evidencia técnica de la implementación física y validación correspondiente a la Fase 7 conforme al estándar **EE-DOC-005**.
+
+---
+
 ## METADATOS
 
 | Campo                 | Valor                               |
 | :-------------------- | :---------------------------------- |
 | **ID**                | EE-IMP-006-P06                      |
 | **Documento**         | Official Connectors Structure       |
-| **Código corto**      | EE-IMP-006-P06                      |
+| **Código corto**      | IMP-006-P06                         |
 | **Fase**              | Fase 6                              |
 | **Tipo**              | Documento Técnico de Implementación |
 | **Clasificación**     | Implementación                      |
 | **Nivel**             | Técnico                             |
 | **Normativo**         | No                                  |
-| **Versión**           | v1.0.0                              |
+| **Versión**           | v1.1.0                              |
 | **Estado**            | Aprobado                            |
 | **Propietario**       | Equipo de Arquitectura              |
 | **Documento padre**   | EE-DOC-006                          |
 | **Dependencias**      | EE-DOC-006, EE-IMP-006-P05          |
 | **Aprobado por**      | Equipo de Arquitectura              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
-| **Fecha de creación** | 2026-08-16                          |
-| **Última revisión**   | 2026-08-16                          |
-| **Próxima revisión**  | —                                   |
+| **Fecha de creación** | 2026-08-31                          |
+| **Última revisión**   | 2026-10-18                          |
+| **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
@@ -85,53 +89,53 @@ La estructura resultante de `connectors/` quedó establecida de la siguiente man
 ```text
 connectors/
 ├── official/
-│   ├── github/
-│   │   ├── src/
-│   │   │   └── index.ts
-│   │   ├── package.json
-│   │   ├── README.md
-│   │   └── tsconfig.json
-│   │
-│   ├── docker/
-│   │   ├── src/
-│   │   │   └── index.ts
-│   │   ├── package.json
-│   │   ├── README.md
-│   │   └── tsconfig.json
-│   │
-│   ├── kubernetes/
-│   │   ├── src/
-│   │   │   └── index.ts
-│   │   ├── package.json
-│   │   ├── README.md
-│   │   └── tsconfig.json
-│   │
-│   ├── notebooklm/
-│   │   ├── src/
-│   │   │   └── index.ts
-│   │   ├── package.json
-│   │   ├── README.md
-│   │   └── tsconfig.json
-│   │
-│   ├── mcp/
-│   │   ├── src/
-│   │   │   └── index.ts
-│   │   ├── package.json
-│   │   ├── README.md
-│   │   └── tsconfig.json
-│   │
-│   └── a2a/
-│       ├── src/
-│       │   └── index.ts
-│       ├── package.json
-│       ├── README.md
-│       └── tsconfig.json
+│ ├── github/
+│ │ ├── src/
+│ │ │ └── index.ts
+│ │ ├── package.json
+│ │ ├── README.md
+│ │ └── tsconfig.json
+│ │
+│ ├── docker/
+│ │ ├── src/
+│ │ │ └── index.ts
+│ │ ├── package.json
+│ │ ├── README.md
+│ │ └── tsconfig.json
+│ │
+│ ├── kubernetes/
+│ │ ├── src/
+│ │ │ └── index.ts
+│ │ ├── package.json
+│ │ ├── README.md
+│ │ └── tsconfig.json
+│ │
+│ ├── notebooklm/
+│ │ ├── src/
+│ │ │ └── index.ts
+│ │ ├── package.json
+│ │ ├── README.md
+│ │ └── tsconfig.json
+│ │
+│ ├── mcp/
+│ │ ├── src/
+│ │ │ └── index.ts
+│ │ ├── package.json
+│ │ ├── README.md
+│ │ └── tsconfig.json
+│ │
+│ └── a2a/
+│ ├── src/
+│ │ └── index.ts
+│ ├── package.json
+│ ├── README.md
+│ └── tsconfig.json
 │
 ├── community/
-│   └── README.md
+│ └── README.md
 │
 └── experimental/
-    └── README.md
+ └── README.md
 ```
 
 La estructura mantiene separadas las integraciones oficiales de las categorías destinadas a conectores comunitarios y experimentales.
@@ -177,7 +181,7 @@ Archivos implementados:
 ```text
 connectors/official/github/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -188,8 +192,6 @@ El punto de entrada contiene:
 ```typescript
 export {};
 ```
-
----
 
 ### 4.2 `@eq-labs/connector-docker`
 
@@ -224,7 +226,7 @@ Archivos implementados:
 ```text
 connectors/official/docker/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -235,8 +237,6 @@ El punto de entrada contiene:
 ```typescript
 export {};
 ```
-
----
 
 ### 4.3 `@eq-labs/connector-kubernetes`
 
@@ -273,7 +273,7 @@ Archivos implementados:
 ```text
 connectors/official/kubernetes/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -284,8 +284,6 @@ El punto de entrada contiene:
 ```typescript
 export {};
 ```
-
----
 
 ### 4.4 `@eq-labs/connector-notebooklm`
 
@@ -320,7 +318,7 @@ Archivos implementados:
 ```text
 connectors/official/notebooklm/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -331,8 +329,6 @@ El punto de entrada contiene:
 ```typescript
 export {};
 ```
-
----
 
 ### 4.5 `@eq-labs/connector-mcp`
 
@@ -376,7 +372,7 @@ Archivos implementados:
 ```text
 connectors/official/mcp/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -387,8 +383,6 @@ El punto de entrada contiene:
 ```typescript
 export {};
 ```
-
----
 
 ### 4.6 `@eq-labs/connector-a2a`
 
@@ -424,7 +418,7 @@ Archivos implementados:
 ```text
 connectors/official/a2a/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -445,7 +439,7 @@ Los seis conectores oficiales utilizan una estructura homogénea:
 ```text
 <connector>/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -533,8 +527,8 @@ Cada conector declara la configuración TypeScript compartida mediante:
 
 ```json
 "devDependencies": {
-  "@eq-labs/config-typescript": "workspace:*",
-  "typescript": "5.9.2"
+ "@eq-labs/config-typescript": "workspace:*",
+ "typescript": "5.9.2"
 }
 ```
 
@@ -556,8 +550,8 @@ Los seis conectores oficiales utilizan una interfaz homogénea de scripts:
 
 ```json
 "scripts": {
-  "build": "tsc -p tsconfig.json",
-  "typecheck": "tsc -p tsconfig.json --noEmit"
+ "build": "tsc -p tsconfig.json",
+ "typecheck": "tsc -p tsconfig.json --noEmit"
 }
 ```
 
@@ -904,13 +898,13 @@ La validación realizada sobre el monorepo confirmó correctamente la instalaci�
 | **Workspaces**               |  ✅ Validados  |
 | **TypeScript**               |  ✅ Validado   |
 | **Build**                    |  ✅ Validado   |
-| **Documentación**            |  ✅ Borrador   |
+| **Documentación**            |  ✅ Aprobado   |
 
 La implementación técnica de la **Fase 6 — Connectors** fue completada.
 
 Los seis conectores oficiales definidos fueron creados, incorporados al monorepo y validados mediante los comandos recursivos correspondientes.
 
-El documento permanece en estado **Borrador** como documento técnico de implementación de fase.
+El documento permanece en estado **Aprobado** como documento técnico de implementación de fase.
 
 ---
 
@@ -953,8 +947,22 @@ El documento permanece en estado **Borrador** como documento técnico de impleme
 
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                                                                              | Cambios                                                | Estado       |
 | :--------- | :--------- | :--------------------- | :--------------------- | :------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------- | :----------- |
-| **v1.0.0** | 2026-08-29 | Equipo de Arquitectura | Equipo de Arquitectura | Creación de EE-IMP-006-P06 y documentación de la estructura de conectores oficiales, comunitarios y experimentales. | Registrar la implementación y validación de la Fase 6. | **Aprobado** |
+| **v1.0.0** | 2026-08-31 | Equipo de Arquitectura | Equipo de Arquitectura | Creación de EE-IMP-006-P06 y documentación de la estructura de conectores oficiales, comunitarios y experimentales. | Registrar la implementación y validación de la Fase 6. | **Aprobado** |
+| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006                                                                                                | As-built scripts/commands y estados documentales merge | Aprobado     |
 
 ---
 
-## **FIN DEL DOCUMENTO**
+## FIN DEL DOCUMENTO
+
+### Nota de consistencia de estado (auditoría 2026-10-15)
+
+Los **metadatos** declaran estado **Aprobado** (implementación de fase aceptada). Si el cuerpo aún dice «Borrador»/«En revisión» respecto de la **documentación** de la IMP, se interpreta como redacción histórica a unificar en la próxima edición: el estado canónico de metadatos prevalece hasta corrección explícita del cuerpo.
+
+---
+
+### Addendum auditoría EE-DOC-006 (2026-10-18)
+
+- **Scripts root canónicos:** `scripts/commands/<cmd>` (+ `scripts/lib/`, `scripts/tests/`). Rutas históricas `scripts/<cmd>` plano quedan **superseded**.
+- **Estado:** los metadatos **Aprobado** prevalecen sobre menciones residuales de “Borrador” / “En revisión” en el cuerpo (evidencia histórica de la fase).
+- **As-built monorepo:** `assets/`, `examples/`, `marketplace/`, `data/`, `infra/` materializados (layout + README); detalle en EE-DOC-006 §05 y EE-TEC-001.
+- Este addendum **no** reescribe la evidencia de validación de fase (P01/P02: sin PASS retroactivo — EE-DOC-006 §20.1).

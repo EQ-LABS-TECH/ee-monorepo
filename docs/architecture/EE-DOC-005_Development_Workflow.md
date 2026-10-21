@@ -1,30 +1,30 @@
 # EE-DOC-005 — Development Workflow
 
-Este documento sigue el estándar EE-DOC-002 — Document Design Template.
+Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ---
 
 ## METADATOS
 
-| Campo                 | Valor                                                                  |
-| --------------------- | ---------------------------------------------------------------------- |
-| **ID**                | EE-DOC-005                                                             |
-| **Documento**         | Development Workflow                                                   |
-| **Código corto**      | EE-DOC-005                                                             |
-| **Tipo**              | Documento Normativo                                                    |
-| **Clasificación**     | Workflow                                                               |
-| **Nivel**             | Estratégico                                                            |
-| **Normativo**         | Sí                                                                     |
-| **Versión**           | v1.4.0                                                                 |
-| **Estado**            | Congelado                                                              |
-| **Propietario**       | Equipo de Arquitectura                                                 |
-| **Documento padre**   | EE-DOC-004                                                             |
-| **Dependencias**      | EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-ADR-001, EE-ADR-002 |
-| **Aprobado por**      | Equipo de Arquitectura                                                 |
-| **Audiencia**         | Arquitectura, Desarrollo, IA, DevOps                                   |
-| **Fecha de creación** | 2026-08-02                                                             |
-| **Última revisión**   | 2026-09-29                                                             |
-| **Próxima revisión**  | No aplica — Documento Congelado                                        |
+| Campo                 | Valor                                                                      |
+| --------------------- | -------------------------------------------------------------------------- |
+| **ID**                | EE-DOC-005                                                                 |
+| **Documento**         | Development Workflow                                                       |
+| **Código corto**      | DOC-005                                                                    |
+| **Tipo**              | Documento Normativo                                                        |
+| **Clasificación**     | Fundacional                                                                |
+| **Nivel**             | Estratégico                                                                |
+| **Normativo**         | Sí                                                                         |
+| **Versión**           | v1.4.0                                                                     |
+| **Estado**            | Congelado                                                                  |
+| **Propietario**       | Equipo de Arquitectura                                                     |
+| **Documento padre**   | EE-DOC-004                                                                 |
+| **Dependencias**      | padre=EE-DOC-004; contenido=EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004 |
+| **Aprobado por**      | Equipo de Arquitectura                                                     |
+| **Audiencia**         | Arquitectura, Desarrollo, IA, DevOps                                       |
+| **Fecha de creación** | 2026-08-02                                                                 |
+| **Última revisión**   | 2026-10-14                                                                 |
+| **Próxima revisión**  | No aplica — Documento Congelado                                            |
 
 ---
 
@@ -34,7 +34,7 @@ Este documento define el workflow operativo del Engineering Ecosystem y especifi
 
 El workflow abarca desde la concepción de una idea hasta la entrega en producción, incluyendo branching, commits, pull requests, code review, quality gates, releases, despliegues, monitoreo y mejora continua.
 
-**El workflow es Documentation Driven y Governed by Controlled Adaptability.** La implementación se inicia sobre una especificación documentada y aprobada. Durante las etapas de Implementación, Documentación Técnica, Validación Final y Congelación pueden surgir descubrimientos que requieran aclaraciones, especializaciones técnicas, decisiones arquitectónicas o cambios significativos. Estos descubrimientos deberán gestionarse mediante el mecanismo de cambio gobernado definido en este documento.
+**El workflow es Documentation First and Governed by Controlled Adaptability.** La implementación se inicia sobre una especificación documentada y aprobada. Durante las etapas de Implementación, Documentación Técnica, Validación Final y Congelación pueden surgir descubrimientos que requieran aclaraciones, especializaciones técnicas, decisiones arquitectónicas o cambios significativos. Estos descubrimientos deberán gestionarse mediante el mecanismo de cambio gobernado definido en este documento.
 
 ---
 
@@ -75,13 +75,13 @@ Este documento **no cubre**:
 
 | #   | Principio                     | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | --- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **Documentation Driven**      | Toda implementación debe partir de una especificación documentada y aprobada. Los descubrimientos que surjan durante las etapas de Implementación, Documentación Técnica, Validación Final o Congelación deberán gestionarse mediante el mecanismo de Implementación Adaptativa Controlada definido en este documento.                                                                                                                          |
+| 1   | **Documentation First**       | Toda implementación debe partir de una especificación documentada y aprobada. Los descubrimientos que surjan durante las etapas de Implementación, Documentación Técnica, Validación Final o Congelación deberán gestionarse mediante el mecanismo de Implementación Adaptativa Controlada definido en este documento.                                                                                                                          |
 | 2   | **Small Incremental Changes** | Los cambios deben ser pequeños, frecuentes y reversibles.                                                                                                                                                                                                                                                                                                                                                                                       |
 | 3   | **Traceability**              | Todo cambio debe ser trazable hasta su origen (issue, RFC, ADR).                                                                                                                                                                                                                                                                                                                                                                                |
 | 4   | **Review Before Merge**       | Todo cambio debe ser revisado antes de ser fusionado.                                                                                                                                                                                                                                                                                                                                                                                           |
 | 5   | **Automation First**          | Todo proceso repetitivo debe estar automatizado.                                                                                                                                                                                                                                                                                                                                                                                                |
 | 6   | **Quality Gates**             | Todo cambio debe pasar los quality gates definidos.                                                                                                                                                                                                                                                                                                                                                                                             |
-| 7   | **Security by Default**       | La seguridad está incorporada en cada etapa del workflow.                                                                                                                                                                                                                                                                                                                                                                                       |
+| 7   | **Security by Design**        | La seguridad está incorporada en cada etapa del workflow.                                                                                                                                                                                                                                                                                                                                                                                       |
 | 8   | **Continuous Integration**    | El código se integra de forma continua y automática.                                                                                                                                                                                                                                                                                                                                                                                            |
 | 9   | **Continuous Delivery**       | El código está siempre en un estado desplegable.                                                                                                                                                                                                                                                                                                                                                                                                |
 | 10  | **Fail Fast**                 | Los errores se detectan lo antes posible en el ciclo.                                                                                                                                                                                                                                                                                                                                                                                           |
@@ -113,17 +113,17 @@ Un documento normativo aprobado constituye la referencia normativa vigente duran
 
 > **Regla de Evolución sincronizada por fase:**
 > Cada fase de la etapa de Implementación debe ser seguida por su correspondiente Validación y por la elaboración o actualización del borrador de Documentación Técnica asociado. La implementación, su validación y el borrador documental evolucionan conjuntamente durante cada fase, sin considerar la documentación definitiva hasta completar la etapa correspondiente.
->
+
 > **Regla fundamental:**
 > Las etapas de Implementación, Documentación Técnica, Validación Final y Congelación pueden producir descubrimientos. Todo descubrimiento relevante debe ser registrado y evaluado. Su resultado debe quedar formalmente registrado como Rechazado, Diferido o Adoptado. Todo descubrimiento Adoptado que afecte la especificación normativa debe completar el mecanismo de cambio gobernado correspondiente antes de que el documento pueda ser congelado.
->
+
 > **Regla de no desviación unilateral:**
 > Ningún descubrimiento durante las etapas de Implementación, Documentación Técnica, Validación Final o Congelación podrá resolverse mediante una desviación silenciosa respecto de la especificación normativa vigente. Toda desviación conocida deberá ser identificada, evaluada y gestionada mediante el mecanismo de cambio gobernado definido en este documento.
->
+
 > **Regla de Registro por Acción:**
 > La ausencia de descubrimiento no constituye una decisión de gobernanza y, por tanto, no requiere un registro de decisión.
 > El registro de decisiones se limita exclusivamente a los casos en que se ha identificado, evaluado y clasificado un descubrimiento, y se ha adoptado una resolución (Rechazar, Diferir o Adoptar).
->
+
 > **Regla de aplicabilidad:**
 > El mecanismo definido en esta sección es obligatorio para EE-DOC-006 y para todos los documentos normativos posteriores cuyo contenido sea objeto de Implementación, Documentación Técnica, Validación Final o Congelación. El Descubrimiento no constituye una etapa del ciclo documental ni una fase adicional de implementación; constituye un mecanismo transversal de gobernanza que puede activarse cuando una de estas etapas identifique una desviación, ambigüedad, necesidad, contradicción o mejora respecto de la especificación vigente.
 
@@ -232,7 +232,7 @@ flowchart TD
 
 > **Nota sobre el gráfico:**
 > El gráfico representa el mecanismo de Implementación Adaptativa Controlada durante la fase 🟠 En Implementación del ciclo de vida documental definido en EE-DOC-002, Sección 14. Las fases previas (⚪ Pendiente, 🟡 En Elaboración, 🔵 En Revisión Arquitectónica, 🟢 Aprobado) no se representan porque el mecanismo solo aplica una vez que el documento ha sido aprobado y está en implementación.
->
+
 > **Nota sobre las fases de implementación:**
 > Las fases de implementación (Fase 1, Fase 2, ..., Fase N) son específicas de cada documento normativo. Por ejemplo, para EE-DOC-006 corresponden a las fases definidas en su plan de implementación (Bootstrap, Configuración Compartida, Workspaces, etc.). El descubrimiento puede surgir en cualquier fase.
 
@@ -240,12 +240,12 @@ flowchart TD
 
 Los descubrimientos que hayan sido evaluados como Adoptados deben clasificarse según su naturaleza e impacto, independientemente de la etapa desde la cual se hayan identificado.
 
-|                    Tipo                    | Descripción                                                                                                                                                                                                                                                                                                                                                                             | Tratamiento                                                                                                                                                                                         |
-| :----------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|             **A — Aclaración**             | Las etapas de Implementación, incluyendo cualquiera de sus fases, Validaciones correspondientes y Borradores de Documentación Técnica, así como la Documentación Técnica consolidada, Validación Final o Congelación, revelan una ambigüedad, omisión menor o necesidad de precisión sin alterar la arquitectura.                                                                       | Actualizar documento.                                                                                                                                                                               |
-|      **B — Especialización Técnica**       | Las etapas de Implementación, incluyendo cualquiera de sus fases, Validaciones correspondientes y Borradores de Documentación Técnica, así como la Documentación Técnica consolidada, Validación Final o Congelación, requieren una decisión técnica específica dentro de la arquitectura ya aprobada, sin contradecir principios, restricciones o decisiones arquitectónicas vigentes. | Actualizar el documento. Se genera ADR cuando la decisión técnica tenga relevancia arquitectónica, afecte futuras implementaciones o requiera preservar explícitamente su contexto y justificación. |
-|      **C — Decisión Arquitectónica**       | El descubrimiento requiere modificar, extender o introducir una decisión arquitectónica respecto de la arquitectura vigente.                                                                                                                                                                                                                                                            | ADR aprobado + actualización del documento normativo afectado cuando corresponda.                                                                                                                   |
-| **D — Cambio Significativo / Transversal** | El descubrimiento afecta múltiples dominios, documentos, proyectos, capas, principios o componentes del Engineering Ecosystem y requiere una evaluación coordinada del impacto.                                                                                                                                                                                                         | RFC aprobado + actualización de los documentos normativos afectados cuando corresponda.                                                                                                             |
+|                    Tipo                    | Descripción                                                                                                                                                                                                                                                                                                       | Tratamiento                                                                                                                                                                                                        |
+| :----------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|             **A — Aclaración**             | Las etapas de Implementación, incluyendo cualquiera de sus fases, Validaciones correspondientes y Borradores de Documentación Técnica, así como la Documentación Técnica consolidada, Validación Final o Congelación, revelan una ambigüedad, omisión menor o necesidad de precisión sin alterar la arquitectura. | Actualizar documento.                                                                                                                                                                                              |
+|      **B — Especialización Técnica**       | Decisión técnica específica dentro de la arquitectura ya aprobada, sin contradecir principios ni decisiones vigentes.                                                                                                                                                                                             | **Actualizar el documento** (EE-DOC-001 R2 / EE-DOC-002 §21 R2). Un **ADR es opcional** solo si conviene preservar contexto arquitectónico; **no** cambia el tipo a C ni sustituye la actualización del documento. |
+|      **C — Decisión Arquitectónica**       | El descubrimiento requiere modificar, extender o introducir una decisión arquitectónica respecto de la arquitectura vigente.                                                                                                                                                                                      | ADR aprobado + actualización del documento normativo afectado cuando corresponda.                                                                                                                                  |
+| **D — Cambio Significativo / Transversal** | El descubrimiento afecta múltiples dominios, documentos, proyectos, capas, principios o componentes del Engineering Ecosystem y requiere una evaluación coordinada del impacto.                                                                                                                                   | RFC aprobado + actualización de los documentos normativos afectados cuando corresponda.                                                                                                                            |
 
 #### Resultado de la Evaluación
 
@@ -368,7 +368,7 @@ La evaluación debe considerar:
 
 | Nivel                     | Característica                                                                       | Mecanismo                                        |
 | :------------------------ | :----------------------------------------------------------------------------------- | :----------------------------------------------- |
-| **Bajo**                  | Impacto localizado, aclaración u omisión menor.                                      | AAclaración / actualización documental           |
+| **Bajo**                  | Impacto localizado, aclaración u omisión menor.                                      | Aclaración / actualización documental            |
 | **Medio**                 | Impacto técnico localizado dentro de la arquitectura vigente.                        | Especialización Técnica / ADR cuando corresponda |
 | **Alto**                  | Impacto sobre decisiones o estructura arquitectónica.                                | ADR                                              |
 | **Crítico / Transversal** | Impacto sobre múltiples dominios, documentos, proyectos o principios del ecosistema. | RFC                                              |
@@ -811,6 +811,8 @@ flowchart TD
 > **Regla de trazabilidad:**
 > Ningún descubrimiento puede quedar sin un resultado de evaluación y tratamiento registrado. Un descubrimiento Diferido puede permanecer pendiente de implementación, pero debe quedar registrado como trabajo futuro mediante el mecanismo de seguimiento correspondiente.
 
+> **Congelación con residuales:** ver **EE-DOC-001 R9** y **EE-DOC-015 §04.4** (PENDING listado / dictamen DEGRADED admisible). No exigir PASS total de gates aún PENDING para congelar si el régimen de 015 lo autoriza.
+
 ---
 
 ## 05. Workflow General
@@ -820,7 +822,7 @@ flowchart TD
 El workflow del Engineering Ecosystem comprende dos flujos relacionados pero semánticamente distintos:
 
 1. SDLC de Ingeniería, que define el flujo operativo desde la idea hasta la mejora continua.
-2. Ciclo Documental Normativo, definido en EE-DOC-002, que gobierna el estado de los documentos normativos y su relación con la Implementación, estructurada en fases sucesivas donde cada fase es seguida por su Validación correspondiente y la elaboración o actualización de su Borrador de Documentación Técnica, seguida posteriormente por la Documentación Técnica consolidada, la Validación Final y la Congelación.
+2. Ciclo Documental Normativo: **taxonomía y flujo de estados en EE-DOC-001 §08 / §08.1** (SSOT; EE-DOC-002 §13/§14/§20.2 delegan). Gobierna el estado de los documentos normativos y su relación con la Implementación, estructurada en fases sucesivas donde cada fase es seguida por su Validación correspondiente y la elaboración o actualización de su Borrador de Documentación Técnica, seguida posteriormente por la Documentación Técnica consolidada, la Validación Final y la Congelación.
 
 El mecanismo de Implementación Adaptativa Controlada definido en la Sección 04 pertenece al ciclo documental normativo y no debe interpretarse como una etapa adicional ni como un mecanismo aplicable indiscriminadamente a todas las fases del SDLC.
 
@@ -866,7 +868,7 @@ flowchart TD
     %% =========================================================
     %% CICLO DOCUMENTAL NORMATIVO
     %% =========================================================
-    subgraph DOC["CICLO DOCUMENTAL NORMATIVO — EE-DOC-002 §14"]
+    subgraph DOC["CICLO DOCUMENTAL NORMATIVO — EE-DOC-001 §08"]
         D1[Documento Normativo Aprobado]
         D1 --> D2[Implementación]
 
@@ -962,7 +964,7 @@ flowchart TD
 > El SDLC de Ingeniería y el Ciclo Documental Normativo representan flujos relacionados pero distintos.
 > El SDLC define el flujo operativo de ingeniería desde la concepción de una iniciativa hasta su implementación, revisión, integración, despliegue, monitoreo y mejora continua.
 > El Ciclo Documental Normativo define el estado y control de los documentos normativos desde su aprobación hasta su implementación, validación, documentación técnica y eventual congelación, conforme al ciclo documental establecido en EE-DOC-002, Sección 14.
->
+
 > **Nota de Integración:**
 > El mecanismo de Implementación Adaptativa Controlada, definido en la Sección 04, pertenece al Ciclo Documental Normativo y constituye un mecanismo transversal de gobernanza. No representa una etapa adicional del ciclo documental ni del SDLC.
 > El mecanismo puede activarse ante un descubrimiento identificado durante cualquiera de las siguientes superficies del ciclo documental:
@@ -974,7 +976,7 @@ flowchart TD
 >
 > El mecanismo no constituye una etapa adicional del SDLC ni se activa indiscriminadamente desde Commit, Push, Pull Request, Code Review, Merge, Release, Deployment, Monitoring o Feedback.
 > Cuando un descubrimiento tenga impacto normativo, deberá seguir el mecanismo de cambio gobernado definido en la Sección 04 antes de que la especificación resultante pueda considerarse vigente.
->
+
 > **Nota de Relación entre ambos ciclos:**
 > Durante la ejecución del SDLC, las actividades de Development, Code Review y Quality Gates pueden materializar o validar artefactos correspondientes a una especificación normativa en implementación. Sin embargo, la determinación de si existe un descubrimiento normativo y su tratamiento mediante Rechazo, Diferimiento o Adopción corresponde al mecanismo transversal definido en la Sección 04. Dicho mecanismo puede activarse durante Implementación, Documentación Técnica, Validación Final o Congelación, sin constituir una etapa adicional del SDLC ni del ciclo documental normativo.
 
@@ -1017,6 +1019,8 @@ flowchart TD
 
 ### 05.2. Fases del Workflow
 
+> Las filas mezclan **gobernanza** (RFC/ADR) y **ejecución** (branch/commit/PR). La columna Artefacto indica el tipo; no todas las filas son fases de código.
+
 | Fase              | Descripción                                                                                                                                                                                                     | Artefacto                                                       |
 | :---------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------- |
 | **Idea**          | Concepción de una nueva funcionalidad, mejora o corrección que constituye el punto inicial del workflow.                                                                                                        | Registro de idea, propuesta o Issue inicial, según corresponda. |
@@ -1058,7 +1062,10 @@ El desarrollador interactúa con el flujo SDLC descrito en este documento (Branc
 ### 06.1. Estrategias Soportadas
 
 El Engineering Ecosystem soporta dos modelos de branching, dependiendo de la complejidad del proyecto y la estructura del equipo.
-El modelo de branching es una decisión de cada proyecto dentro de las estrategias soportadas por el Engineering Ecosystem. La selección debe registrarse mediante ADR durante la inicialización del proyecto y debe respetar las restricciones de protección, integración y release establecidas por este documento.
+
+**ee-monorepo (Engineering Ecosystem):** estrategia **Main-oriented** as-built; el SSOT operativo de protecciones y flujo es **EE-DOC-007** (y evidencia TEC asociada). No se exige un ADR de branching adicional del ecosistema mientras 007 cubra el modelo.
+
+**Proyectos de producto** sobre el ecosistema: eligen un modelo soportado en esta sección y lo documentan en inicialización (ADR de proyecto o registro equivalente), respetando protecciones, integración y release de este documento y de EE-DOC-007.
 
 | Modelo                      | Descripción                                                                                                                                                                                           | Recomendado para                                                         |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
@@ -1168,7 +1175,11 @@ El modelo de branching es una decisión de cada proyecto dentro de las estrategi
 | **R2** | Los PRs deben ser pequeños y enfocados (máximo 400 líneas de cambio), salvo que la naturaleza del cambio justifique un tamaño superior.. |
 | **R3** | Los PRs deben incluir referencia al Issue correspondiente.                                                                               |
 
-### 08.2. Template Obligatorio
+### 08.2. Template de Pull Request
+
+**Contenido mínimo recomendado** de la descripción del PR:
+
+> **Availability:** la plantilla en `.github/PULL_REQUEST_TEMPLATE*` y su obligatoriedad en merge se rigen por **EE-DOC-007**. Si solo existe `.gitkeep` o 007 no la exige, este requisito permanece **PENDING** (§10.4) hasta IMP — no es gate Enforced por sí solo.
 
 | Sección               | Descripción                             |
 | :-------------------- | :-------------------------------------- |
@@ -1181,19 +1192,19 @@ El modelo de branching es una decisión de cada proyecto dentro de las estrategi
 
 ### 08.3. Reviewers y Approvals
 
-| Regla  | Descripción                                                                  |
-| :----: | :--------------------------------------------------------------------------- |
-| **R1** | Al menos 1 approval de un reviewer calificado.                               |
-| **R2** | Los reviewers deben ser asignados automáticamente basándose en `CODEOWNERS`. |
-| **R3** | Los cambios críticos requieren al menos 2 approvals.                         |
+| Regla  | Descripción                                                                                                                                                                                                                                                                                                                                                                                            |
+| :----: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **R1** | Al menos 1 approval de un reviewer calificado.                                                                                                                                                                                                                                                                                                                                                         |
+| **R2** | Los reviewers deben ser asignados automáticamente basándose en `CODEOWNERS`.                                                                                                                                                                                                                                                                                                                           |
+| **R3** | **Cambio crítico** (definición en este documento): afecta seguridad, datos productivos, release/hotfix a `main`, o contratos públicos de paquetes publicados. Requiere **≥2 approvals** de reviewers calificados **o** el umbral que fije **CODEOWNERS** / EE-DOC-007 si es más estricto. Si el ruleset as-built exige solo 1 approval, el umbral 2 es **objetivo PENDING** hasta materializar en 007. |
 
 ### 08.4. Merge Strategy
 
-| Estrategia           | Uso                                                                     |
-| :------------------- | :---------------------------------------------------------------------- |
-| **Squash and Merge** | Obligatorio para `feature/*` y `bugfix/*`. Unifica commits en uno solo. |
-| **Rebase and Merge** | Opcional para ramas con múltiples colaboradores.                        |
-| **Merge Commit**     | Prohibido en todos los casos.                                           |
+| Estrategia           | Uso                                                                                                                                                                                                                       |
+| :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Squash and Merge** | Obligatorio para `feature/*` y `bugfix/*`. Unifica commits en uno solo.                                                                                                                                                   |
+| **Rebase and Merge** | Opcional para ramas con múltiples colaboradores.                                                                                                                                                                          |
+| **Merge Commit**     | **Prohibido** en integración a `main` vía feature/bugfix (política: **Squash and Merge**). Excepciones de orquestación release/hotfix solo si EE-DOC-007 las define explícitamente; no usar merge commit “por costumbre”. |
 
 ### 08.5. Resolución de Conflictos
 
@@ -1233,20 +1244,18 @@ El modelo de branching es una decisión de cada proyecto dentro de las estrategi
 
 ### 10.1. Mandatory Gates (Obligatorios)
 
-| Gate                         | Descripción                                                         | Ejecutor / Estándar                                                                                                                                                   | Fallo             |
-| :--------------------------- | :------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------- |
-| **Build Validation**         | Verifica que todos los workspaces compilan correctamente.           | Turborepo (`pnpm build`)                                                                                                                                              | Bloquea el merge. |
-| **Lint**                     | Verificación de estilo de código y reglas estáticas.                | ESLint (`pnpm lint`)                                                                                                                                                  | Bloquea el merge. |
-| **Formatting**               | Verificación de formato de código fuente (**check**, no escritura). | Prettier check (`prettier --check` vía suite de validación / EE-DOC-010 QG-FMT-001). El comando de escritura local (`pnpm format`) **no** constituye el Quality Gate. | Bloquea el merge. |
-| **Unit & Integration Tests** | Ejecución de pruebas unitarias, de integración y componentes.       | Vitest (`pnpm test` / EE-ADR-002)                                                                                                                                     | Bloquea el merge. |
-| **E2E Tests**                | Ejecución de pruebas End-to-End en aplicaciones con interfaz.       | Playwright (`pnpm e2e` / EE-ADR-002)                                                                                                                                  | Bloquea el merge. |
-| **Architecture & Structure** | Verificación de estructura, dependencias entre capas e imports.     | Script (`pnpm validate` / EE-DOC-006)                                                                                                                                 | Bloquea el merge. |
-| **Secret Scanning**          | Verificación de ausencias de credenciales o secretos en el código.  | Security Scan / CI Pipeline                                                                                                                                           | Bloquea el merge. |
-| **Documentation Validation** | Verificación de documentación técnica sincronizada y actualizada.   | Compliance Check                                                                                                                                                      | Bloquea el merge. |
+| Gate                         | Descripción                                                               | Ejecutor / Estándar                                                                                                                                                                                    | Availability (EE-DOC-010)                                      | Fallo                                             |
+| :--------------------------- | :------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------- | :------------------------------------------------ |
+| **Build Validation**         | Verifica que todos los workspaces compilan correctamente.                 | Turborepo (`pnpm build`)                                                                                                                                                                               | Ver EE-DOC-010 (QG build)                                      | Bloquea el merge.                                 |
+| **Lint**                     | Verificación de estilo de código y reglas estáticas.                      | ESLint (`pnpm lint`)                                                                                                                                                                                   | Ver EE-DOC-010                                                 | Bloquea el merge.                                 |
+| **Formatting**               | Verificación de formato (**check**, no escritura).                        | Prettier `--check` / QG-FMT-001 (EE-DOC-010). `pnpm format` es local, no es el gate.                                                                                                                   | Ver EE-DOC-010                                                 | Bloquea el merge.                                 |
+| **Unit & Integration Tests** | Pruebas unitarias, integración y componentes.                             | Vitest (`pnpm test` / EE-ADR-002)                                                                                                                                                                      | Ver EE-DOC-010                                                 | Bloquea el merge.                                 |
+| **E2E Tests**                | Pruebas End-to-End en apps con interfaz.                                  | Playwright (EE-ADR-002). **Comando raíz:** el script canónico se define en EE-DOC-006 / EE-DOC-011 / `package.json`; si no existe `pnpm e2e`, el gate queda **PENDING** (§10.4) hasta materialización. | **PENDING** si no hay script/orquestación (V-E2E / EE-DOC-015) | Bloquea el merge **cuando Implemented+Enforced**. |
+| **Architecture & Structure** | Estructura y top-level; **capas/ciclos de imports** según disponibilidad. | `pnpm validate` / QG-ARCH-001. QG-ARCH-001 **as-built** valida top-level; capas y ciclos = **PENDING** (V-ARCH-LAYERS).                                                                                | Top-level: según 010; capas: **PENDING**                       | Bloquea el merge según Availability.              |
+| **Documentation Validation** | Gates documentales definidos en EE-DOC-010 / EE-DOC-012.                  | QG-DOC (as-built: archivos raíz / `package.json` según 010). Ampliación corpus = **PENDING** (`PA-001` / validateDocumentation).                                                                       | Ver EE-DOC-010; ampliación **PENDING**                         | Bloquea según Availability.                       |
+| **Security Audit**           | Auditoría de dependencias / secret scanning según EE-DOC-010.             | `pnpm audit` / secret scan (waivers EE-WAIVE / 010 §04.6.1)                                                                                                                                            | Ver EE-DOC-010                                                 | Bloquea según régimen / waiver.                   |
 
-> **SSOT de detalle:** el catálogo de identificadores, severidad, disponibilidad, agregación y evidencia vive en **EE-DOC-010 — Quality Gates**.
-> **Esta sección** define el conjunto **Mandatory** del workflow. EE-DOC-010 **no puede eliminar ni relajar** el carácter obligatorio de estos gates.
-> **Adopción progresiva:** un Mandatory Gate puede estar aún no materializado (`PENDING_IMPLEMENTATION` en EE-DOC-010). Eso **no** lo hace opcional; rige el **§10.4** y **EE-ADR-004**.
+> **Availability:** el detalle de materialización (Implemented / Enforced / PENDING) es SSOT en **EE-DOC-010**. Este documento declara el **Mandatory**; no inventa PASS donde el mecanismo aún es PENDING (§10.4 / EE-ADR-004).
 
 ### 10.2. Conditional Gates (Condicionales)
 
@@ -1256,6 +1265,8 @@ El modelo de branching es una decisión de cada proyecto dentro de las estrategi
 | **Security Scanning** | Obligatorio cuando el cambio afecte componentes, dependencias, exposición o superficies de seguridad relevantes. |
 | **Code Coverage**     | Aplicable según las políticas de calidad del proyecto.                                                           |
 | **Mutation Testing**  | Aplicable a componentes críticos cuando sea requerido por la política de calidad.                                |
+
+> Gates condicionales (p. ej. Mutation Testing) requieren **ID** en el catálogo **EE-DOC-010** cuando se activen. Bypass/waiver: **EE-DOC-010 §04.6.1** y plantilla **EE-DOC-002 §18.6** (`EE-WAIVE-*`).
 
 ### 10.3. Bypass Policy (ad hoc)
 
@@ -1268,6 +1279,8 @@ Bypass **puntual** de un gate **ya evaluable** (p.ej. incidente, hotfix acotado)
 | **R3** | El bypass tiene una validez máxima de **7 días**.                                                                                                                     |
 | **R4** | Los bypasses deben ser revisados en la próxima auditoría.                                                                                                             |
 | **R5** | Un bypass ad hoc **no** autoriza declarar **PASS** de un gate no ejecutado ni omitir de forma indefinida un Mandatory Gate pendiente de materialización (usar §10.4). |
+
+> **Régimen transitorio (bootstrap / operador único):** excepciones de protección de rama o bypass más allá de R3 (7 días) — p. ej. ausencia de segundo maintainer — **no** quedan al margen de este documento. Deben: (1) registrarse como excepción documentada (Issue/TEC/waiver según aplique), (2) tener **cierre** (p. ej. 2º maintainer) y (3) **fecha objetivo** o revisión. Choca con §08.3 R1 y EE-DOC-003 §11 (autor ≠ aprobador) si se prolonga sin plan. Preferir cerrar el régimen o promover a §15 excepción explícita con plazo.
 
 ### 10.4. Adopción progresiva de Mandatory Gates (EE-ADR-004)
 
@@ -1304,9 +1317,9 @@ Mientras un Mandatory Gate esté `PENDING_IMPLEMENTATION`:
    - riesgos aceptados explícitamente.
 4. La transición **PENDING → ACTIVE** requiere la cadena:
 
-```text
-definition → implementation → invocation → result → evidence → CI → enforcement → actualización documental (EE-DOC-010)
-```
+   ```text
+   definition → implementation → invocation → result → evidence → CI → enforcement → actualización documental (EE-DOC-010)
+   ```
 
 5. EE-DOC-007 solo incorpora al required check / Ruleset los gates **ACTIVE**; al activar un gate, el enforcement de plataforma debe actualizarse en la misma ola de implementación cuando corresponda.
 
@@ -1354,16 +1367,18 @@ EE-DOC-007  → enforcement efectivo de lo ACTIVE
 
 El ciclo de publicación y versionado del monorepo utiliza **Changesets** (`@changesets/cli`) como motor oficial conforme a **EE-ADR-001**:
 
+**Diagrama — Proceso de Release (orquestado).**
+
 ```mermaid
 flowchart TD
     A[Code Ready en Main] --> B[Crear Changeset: pnpm changeset]
     B --> C[Ejecutar Validaciones: pnpm validate]
-    C -->|Pass| D[Calcular Versiones: pnpm version-packages]
-    D --> E[Sincronizar Versión Máster en package.json]
-    E --> F[Publicación NPM: pnpm release]
-    F --> G[Generar Git Tag vX.Y.Z y Commit de Release]
-    G --> H[Push a Remoto y Release Notes]
+    C -->|Pass| D["pnpm release — orquesta version-packages + publish + tag (EE-DOC-011 §08)"]
+    D --> E[Git Tag vX.Y.Z y Release Notes]
+    E --> F[Push a Remoto]
 ```
+
+> **As-built:** no ejecutar `pnpm version-packages` **y** después `pnpm release` como pasos separados si `scripts/release` **ya** invoca el versionado: se consumirían los changesets antes de tiempo. El comando canónico de publicación es **`pnpm release`** (detalle en **EE-DOC-011 §08** / EE-DOC-006 scripts). `pnpm version-packages` queda para casos documentados en 011, no como paso previo obligatorio duplicado.
 
 1. **Declaración de Cambios:** Todo cambio destinado a producción debe incorporar un archivo changeset (`pnpm changeset`) que describa el impacto (major, minor, patch) en los paquetes afectados.
 2. **Versionado Automático:** El comando `pnpm version-packages` actualiza los `package.json` individuales y el `CHANGELOG.md` del monorepo.
@@ -1558,14 +1573,24 @@ Una excepción de workflow modifica temporalmente la forma de ejecución del wor
 
 ---
 
+> **Availability:** hooks pre-commit/pre-push, husky y commitlint son **PENDING** de materialización salvo evidencia en el repo; la verificación continua de Conventional Commits se apoya en CI/PR según EE-DOC-007 / EE-DOC-010 cuando existan checks.
+
 ## 17. Referencias
 
-| Código         | Documento                          | Descripción                        |
-| :------------- | :--------------------------------- | :--------------------------------- |
-| **EE-DOC-001** | Master Documentation Index         | Índice maestro del ecosistema      |
-| **EE-DOC-002** | Document Design Template           | Estándar documental del ecosistema |
-| **EE-DOC-003** | Engineering Ecosystem Constitution | Constitución del ecosistema        |
-| **EE-DOC-004** | Engineering Architecture           | Arquitectura del ecosistema        |
+| Código         | Documento                              | Descripción                                                     |
+| :------------- | :------------------------------------- | :-------------------------------------------------------------- |
+| **EE-DOC-001** | Master Documentation Index             | Índice; estados §08/§08.1; R2/R7/R9                             |
+| **EE-DOC-002** | Document Design Template               | Plantilla; §05/§18; R2 A/B/C/D                                  |
+| **EE-DOC-003** | Engineering Ecosystem Constitution     | Principios (Documentation First, Security by Design); §11 roles |
+| **EE-DOC-004** | Engineering Architecture               | Arquitectura lógica; límites                                    |
+| **EE-DOC-006** | Repository Structure                   | Árbol físico; scripts; workspaces                               |
+| **EE-DOC-007** | GitHub Governance                      | Protecciones, PR, CODEOWNERS, rulesets                          |
+| **EE-DOC-010** | Quality Gates                          | Catálogo QG; Availability; WAIVED §04.6.1                       |
+| **EE-DOC-011** | Automation                             | Orquestación `pnpm release` / validate                          |
+| **EE-DOC-015** | Engineering Ecosystem Validation       | PENDING listado; DEGRADED; V-E2E / V-ARCH-LAYERS                |
+| **EE-ADR-001** | Workspace Task Orchestration Strategy  | Turborepo, pnpm, Changesets                                     |
+| **EE-ADR-002** | Engineering Ecosystem Testing Standard | Vitest + Playwright                                             |
+| **EE-ADR-004** | Quality Gates Progressive Adoption     | Mandatory ≠ Implemented ≠ Enforced                              |
 
 ---
 
@@ -1578,7 +1603,7 @@ Una excepción de workflow modifica temporalmente la forma de ejecución del wor
 | **v1.2.0** | 2026-08-21 | Equipo de Arquitectura | Equipo de Arquitectura | Implementación por fase y reordenamiento documental   | Se añadió Implementación → Validación → Borrador DT por fase; DT precede a Validación Final y Congelación apunta a Descubrimiento. | **Congelado** |
 | **v1.3.0** | 2026-09-17 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets      | Integración de Changesets en Release Workflow, especificación de Vitest/Playwright en Quality Gates y precisión SSOT.              | Congelado     |
 | **v1.3.1** | 2026-09-29 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación Formatting con EE-DOC-010                  | Gate Formatting = Prettier **check** (no write); puntero SSOT a EE-DOC-010                                                         | Congelado     |
-| **v1.4.0** | 2026-09-29 | Equipo de Arquitectura | Equipo de Arquitectura | EE-ADR-004 Adopción progresiva QG                     | §10.4 Mandatory ≠ Implemented ≠ Enforced; §10.3 R5; régimen transitorio; cadena PENDING→ACTIVE                                     | **Congelado** |
+| **v1.4.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — auditoría 001–004                          | Meta DOC-005/Fundacional/deps; First; Tipo B; gates PENDING; release; refs                                                         | **Congelado** |
 
 ---
 

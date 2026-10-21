@@ -10,13 +10,13 @@ Este documento registra la evidencia técnica de la implementación física y va
 | :-------------------- | :---------------------------------------- |
 | **ID**                | EE-IMP-006-P08                            |
 | **Documento**         | Repository Support Structure              |
-| **Código corto**      | EE-IMP-006-P08                            |
+| **Código corto**      | IMP-006-P08                               |
 | **Fase**              | Fase 08–12 — Repository Support Structure |
 | **Tipo**              | Documento Técnico de Implementación       |
 | **Clasificación**     | Implementación                            |
 | **Nivel**             | Técnico                                   |
 | **Normativo**         | No                                        |
-| **Versión**           | v1.0.0                                    |
+| **Versión**           | v1.1.0                                    |
 | **Estado**            | Aprobado                                  |
 | **Propietario**       | Equipo de Arquitectura                    |
 | **Documento padre**   | EE-DOC-006                                |
@@ -24,8 +24,8 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Aprobado por**      | Equipo de Arquitectura                    |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps          |
 | **Fecha de creación** | 2026-09-19                                |
-| **Última revisión**   | 2026-09-19                                |
-| **Próxima revisión**  | —                                         |
+| **Última revisión**   | 2026-10-18                                |
+| **Próxima revisión**  | No aplica — Documento Aprobado            |
 
 ---
 
@@ -76,31 +76,31 @@ La estructura física implementada corresponde a la especificación establecida 
 ```text
 ee-monorepo/
 ├── assets/
-│   ├── images/
-│   ├── fonts/
-│   └── templates/
+│ ├── images/
+│ ├── fonts/
+│ └── templates/
 │
 ├── docs/
-│   ├── architecture/
-│   ├── developer/
-│   └── adr/
+│ ├── architecture/
+│ ├── developer/
+│ └── adr/
 │
 ├── data/
-│   ├── benchmarks/
-│   ├── datasets/
-│   └── models/
+│ ├── benchmarks/
+│ ├── datasets/
+│ └── models/
 │
 ├── examples/
-│   ├── erp/
-│   ├── microservices/
-│   └── ddd/
+│ ├── erp/
+│ ├── microservices/
+│ └── ddd/
 │
 └── marketplace/
-    ├── plugins/
-    ├── agents/
-    ├── prompts/
-    ├── skills/
-    └── templates/
+ ├── plugins/
+ ├── agents/
+ ├── prompts/
+ ├── skills/
+ └── templates/
 ```
 
 La especificación normativa define estos directorios como los artefactos físicos correspondientes a la unidad consolidada Fase 08–12.
@@ -200,31 +200,31 @@ La validación de la estructura se integra en el mecanismo existente de validaci
 
 ```mermaid
 flowchart TD
-    A["Repositorio ee-monorepo"] --> B["Estructura de soporte"]
+ A["Repositorio ee-monorepo"] --> B["Estructura de soporte"]
 
-    B --> C["assets/"]
-    B --> D["docs/"]
-    B --> E["data/"]
-    B --> F["examples/"]
-    B --> G["marketplace/"]
+ B --> C["assets/"]
+ B --> D["docs/"]
+ B --> E["data/"]
+ B --> F["examples/"]
+ B --> G["marketplace/"]
 
-    A --> H["scripts/validate"]
+ A --> H["scripts/validate"]
 
-    H --> I["Validación de estructura"]
-    H --> J["Validación de workspace"]
-    H --> K["Typecheck"]
-    H --> L["Lint"]
-    H --> M["Tests"]
-    H --> N["Format"]
-    H --> O["Security Audit"]
+ H --> I["Validación de estructura"]
+ H --> J["Validación de workspace"]
+ H --> K["Typecheck"]
+ H --> L["Lint"]
+ H --> M["Tests"]
+ H --> N["Format"]
+ H --> O["Security Audit"]
 
-    I --> P["Resultado de validación"]
-    J --> P
-    K --> P
-    L --> P
-    M --> P
-    N --> P
-    O --> P
+ I --> P["Resultado de validación"]
+ J --> P
+ K --> P
+ L --> P
+ M --> P
+ N --> P
+ O --> P
 ```
 
 La función de `scripts/validate` como punto de entrada integral de validación se encuentra establecida en EE-DOC-006.
@@ -276,39 +276,39 @@ La unidad Repository Support Structure se integra con la estructura existente de
 
 ```mermaid
 flowchart LR
-    Root["ee-monorepo/"]
+ Root["ee-monorepo/"]
 
-    Core["Núcleo del Ecosistema"]
-    Support["Soporte"]
-    Data["Datos, Ejemplos y Extensibilidad"]
+ Core["Núcleo del Ecosistema"]
+ Support["Soporte"]
+ Data["Datos, Ejemplos y Extensibilidad"]
 
-    Packages["packages/"]
-    Apps["apps/"]
-    Connectors["connectors/"]
+ Packages["packages/"]
+ Apps["apps/"]
+ Connectors["connectors/"]
 
-    Scripts["scripts/"]
-    Docs["docs/"]
-    Assets["assets/"]
+ Scripts["scripts/"]
+ Docs["docs/"]
+ Assets["assets/"]
 
-    DataDir["data/"]
-    Examples["examples/"]
-    Marketplace["marketplace/"]
+ DataDir["data/"]
+ Examples["examples/"]
+ Marketplace["marketplace/"]
 
-    Root --> Core
-    Root --> Support
-    Root --> Data
+ Root --> Core
+ Root --> Support
+ Root --> Data
 
-    Core --> Packages
-    Core --> Apps
-    Core --> Connectors
+ Core --> Packages
+ Core --> Apps
+ Core --> Connectors
 
-    Support --> Scripts
-    Support --> Docs
-    Support --> Assets
+ Support --> Scripts
+ Support --> Docs
+ Support --> Assets
 
-    Data --> DataDir
-    Data --> Examples
-    Data --> Marketplace
+ Data --> DataDir
+ Data --> Examples
+ Data --> Marketplace
 ```
 
 La organización en estas tres agrupaciones funcionales corresponde al modelo definido por EE-DOC-006.
@@ -427,7 +427,7 @@ Por tanto, esta implementación mantiene:
 
 ```text
 Fase 08–12
-    └── EE-IMP-006-P08
+ └── EE-IMP-006-P08
 ```
 
 y no genera:
@@ -463,17 +463,17 @@ pnpm validate
 
 ### 10.1. Resultados
 
-| Comando / Pruebas       | Resultado   | Detalle / Tiempo                               |
-| :---------------------- | :---------- | :--------------------------------------------- |
-| `pnpm validate`         | ✅ Exitoso  | Suite integral completada correctamente        |
-| Typecheck               | ✅ Exitoso  | 18 / 18 tareas exitosas                        |
-| Lint                    | ✅ Exitoso  | 25 / 25 tareas exitosas                        |
-| Tests                   | ✅ Exitoso  | 0 tareas ejecutadas / 0 total                  |
-| Format                  | ✅ Exitoso  | Todos los archivos cumplen Prettier            |
-| Security Audit          | ⚠️ Warnings | 11 vulnerabilidades: 2 low, 6 moderate, 3 high |
-| Project Structure       | ✅ Exitoso  | Estructura del repositorio validada            |
-| Workspace Configuration | ✅ Exitoso  | Configuración de workspaces validada           |
-| Resultado final         | ✅ Exitoso  | `All validations passed successfully!`         |
+| Comando / Pruebas       | Resultado   | Detalle / Tiempo                                             |
+| :---------------------- | :---------- | :----------------------------------------------------------- |
+| `pnpm validate`         | ✅ Exitoso  | Suite integral completada correctamente                      |
+| Typecheck               | ✅ Exitoso  | 18 / 18 tareas exitosas                                      |
+| Lint                    | ✅ Exitoso  | 25 / 25 tareas exitosas                                      |
+| Tests                   | ✅ Exitoso  | 7 tests passed. Los demás workspaces no definen tarea `test` |
+| Format                  | ✅ Exitoso  | Todos los archivos cumplen Prettier                          |
+| Security Audit          | ⚠️ Warnings | 11 vulnerabilidades: 2 low, 6 moderate, 3 high               |
+| Project Structure       | ✅ Exitoso  | Estructura del repositorio validada                          |
+| Workspace Configuration | ✅ Exitoso  | Configuración de workspaces validada                         |
+| Resultado final         | ✅ Exitoso  | `All validations passed successfully!`                       |
 
 ### 10.2. Resultado de la Implementación y Estado de la Fase
 
@@ -553,7 +553,15 @@ El ciclo de vida documental y las transiciones de aprobación, validación y con
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                  | Cambios                                                                                                 | Estado       |
 | :--------- | :--------- | :--------------------- | :--------------------- | :---------------------- | :------------------------------------------------------------------------------------------------------ | :----------- |
 | **v1.0.0** | 2026-09-19 | Equipo de Arquitectura | Equipo de Arquitectura | Creación del DT de Fase | Registro inicial de la evidencia técnica de implementación y validación de Repository Support Structure | **Aprobado** |
+| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006    | As-built scripts/commands y estados documentales merge                                                  | Aprobado     |
 
 ---
 
 ## FIN DEL DOCUMENTO
+
+### Addendum auditoría EE-DOC-006 (2026-10-18)
+
+- **Scripts root canónicos:** `scripts/commands/<cmd>` (+ `scripts/lib/`, `scripts/tests/`). Rutas históricas `scripts/<cmd>` plano quedan **superseded**.
+- **Estado:** los metadatos **Aprobado** prevalecen sobre menciones residuales de “Borrador” / “En revisión” en el cuerpo (evidencia histórica de la fase).
+- **As-built monorepo:** `assets/`, `examples/`, `marketplace/`, `data/`, `infra/` materializados (layout + README); detalle en EE-DOC-006 §05 y EE-TEC-001.
+- Este addendum **no** reescribe la evidencia de validación de fase (P01/P02: sin PASS retroactivo — EE-DOC-006 §20.1).

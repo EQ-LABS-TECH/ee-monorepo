@@ -1,18 +1,22 @@
 # EE-IMP-006-P04 — Core Packages Structure
 
+Este documento registra la evidencia técnica de la implementación física y validación correspondiente a la Fase 7 conforme al estándar **EE-DOC-005**.
+
+---
+
 ## METADATOS
 
 | Campo                 | Valor                               |
 | :-------------------- | :---------------------------------- |
 | **ID**                | EE-IMP-006-P04                      |
 | **Documento**         | Core Packages Structure             |
-| **Código corto**      | EE-IMP-006-P04                      |
+| **Código corto**      | IMP-006-P04                         |
 | **Fase**              | Fase 4                              |
 | **Tipo**              | Documento Técnico de Implementación |
 | **Clasificación**     | Implementación                      |
 | **Nivel**             | Técnico                             |
 | **Normativo**         | No                                  |
-| **Versión**           | v1.0.0                              |
+| **Versión**           | v1.1.0                              |
 | **Estado**            | Aprobado                            |
 | **Propietario**       | Equipo de Arquitectura              |
 | **Documento padre**   | EE-DOC-006                          |
@@ -20,8 +24,8 @@
 | **Aprobado por**      | Equipo de Arquitectura              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
 | **Fecha de creación** | 2026-08-29                          |
-| **Última revisión**   | 2026-08-29                          |
-| **Próxima revisión**  | —                                   |
+| **Última revisión**   | 2026-10-18                          |
+| **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
@@ -70,75 +74,75 @@ La estructura resultante de `packages/` quedó establecida de la siguiente maner
 ```text
 packages/
 ├── config/
-│   ├── eslint/
-│   ├── jest/
-│   ├── prettier/
-│   ├── typescript/
-│   ├── vite/
-│   └── vitest/
+│ ├── eslint/
+│ ├── jest/
+│ ├── prettier/
+│ ├── typescript/
+│ ├── vite/
+│ └── vitest/
 │
 ├── execution/
-│   ├── src/
-│   │   └── index.ts
-│   ├── package.json
-│   ├── README.md
-│   └── tsconfig.json
+│ ├── src/
+│ │ └── index.ts
+│ ├── package.json
+│ ├── README.md
+│ └── tsconfig.json
 │
 ├── foundation/
-│   ├── src/
-│   │   └── index.ts
-│   ├── package.json
-│   ├── README.md
-│   └── tsconfig.json
+│ ├── src/
+│ │ └── index.ts
+│ ├── package.json
+│ ├── README.md
+│ └── tsconfig.json
 │
 ├── governance/
-│   ├── src/
-│   │   └── index.ts
-│   ├── package.json
-│   ├── README.md
-│   └── tsconfig.json
+│ ├── src/
+│ │ └── index.ts
+│ ├── package.json
+│ ├── README.md
+│ └── tsconfig.json
 │
 ├── integration/
-│   ├── src/
-│   │   └── index.ts
-│   ├── package.json
-│   ├── README.md
-│   └── tsconfig.json
+│ ├── src/
+│ │ └── index.ts
+│ ├── package.json
+│ ├── README.md
+│ └── tsconfig.json
 │
 ├── intelligence/
-│   ├── src/
-│   │   └── index.ts
-│   ├── package.json
-│   ├── README.md
-│   └── tsconfig.json
+│ ├── src/
+│ │ └── index.ts
+│ ├── package.json
+│ ├── README.md
+│ └── tsconfig.json
 │
 ├── knowledge/
-│   ├── src/
-│   │   └── index.ts
-│   ├── package.json
-│   ├── README.md
-│   └── tsconfig.json
+│ ├── src/
+│ │ └── index.ts
+│ ├── package.json
+│ ├── README.md
+│ └── tsconfig.json
 │
 ├── registry/
-│   ├── src/
-│   │   └── index.ts
-│   ├── package.json
-│   ├── README.md
-│   └── tsconfig.json
+│ ├── src/
+│ │ └── index.ts
+│ ├── package.json
+│ ├── README.md
+│ └── tsconfig.json
 │
 ├── sdk/
-│   ├── src/
-│   │   └── index.ts
-│   ├── package.json
-│   ├── README.md
-│   └── tsconfig.json
+│ ├── src/
+│ │ └── index.ts
+│ ├── package.json
+│ ├── README.md
+│ └── tsconfig.json
 │
 └── shared/
-    ├── src/
-    │   └── index.ts
-    ├── package.json
-    ├── README.md
-    └── tsconfig.json
+ ├── src/
+ │ └── index.ts
+ ├── package.json
+ ├── README.md
+ └── tsconfig.json
 ```
 
 El directorio `packages/config/` mantiene su función de contenedor administrativo establecida durante las fases anteriores y no constituye un paquete consumible independiente.
@@ -170,7 +174,7 @@ Archivos creados:
 ```text
 packages/foundation/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -181,8 +185,6 @@ El punto de entrada contiene únicamente:
 ```typescript
 export {};
 ```
-
----
 
 ### 4.2 `@eq-labs/shared`
 
@@ -207,7 +209,7 @@ Archivos creados:
 ```text
 packages/shared/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -218,8 +220,6 @@ El punto de entrada contiene únicamente:
 ```typescript
 export {};
 ```
-
----
 
 ### 4.3 `@eq-labs/execution`
 
@@ -244,13 +244,11 @@ Archivos creados:
 ```text
 packages/execution/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
 ```
-
----
 
 ### 4.4 `@eq-labs/intelligence`
 
@@ -275,13 +273,11 @@ Archivos creados:
 ```text
 packages/intelligence/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
 ```
-
----
 
 ### 4.5 `@eq-labs/knowledge`
 
@@ -306,13 +302,11 @@ Archivos creados:
 ```text
 packages/knowledge/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
 ```
-
----
 
 ### 4.6 `@eq-labs/governance`
 
@@ -337,13 +331,11 @@ Archivos creados:
 ```text
 packages/governance/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
 ```
-
----
 
 ### 4.7 `@eq-labs/integration`
 
@@ -368,13 +360,11 @@ Archivos creados:
 ```text
 packages/integration/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
 ```
-
----
 
 ### 4.8 `@eq-labs/registry`
 
@@ -399,13 +389,11 @@ Archivos creados:
 ```text
 packages/registry/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
 ```
-
----
 
 ### 4.9 `@eq-labs/sdk`
 
@@ -430,7 +418,7 @@ Archivos creados:
 ```text
 packages/sdk/
 ├── src/
-│   └── index.ts
+│ └── index.ts
 ├── package.json
 ├── README.md
 └── tsconfig.json
@@ -450,8 +438,8 @@ Cada paquete declara esta dependencia mediante el workspace:
 
 ```json
 "devDependencies": {
-  "@eq-labs/config-typescript": "workspace:*",
-  "typescript": "5.9.2"
+ "@eq-labs/config-typescript": "workspace:*",
+ "typescript": "5.9.2"
 }
 ```
 
@@ -493,8 +481,8 @@ Cada paquete implementa los scripts:
 
 ```json
 "scripts": {
-  "build": "tsc -p tsconfig.json",
-  "typecheck": "tsc -p tsconfig.json --noEmit"
+ "build": "tsc -p tsconfig.json",
+ "typecheck": "tsc -p tsconfig.json --noEmit"
 }
 ```
 
@@ -559,27 +547,26 @@ packages/execution/*
 
 Estos patrones no correspondían a la estructura física utilizada, debido a que cada paquete de esta fase se encuentra directamente en:
 
-```text
+````text
 packages/foundation/
 packages/shared/
 packages/execution/
 ...
-```
 
 La configuración fue corregida utilizando los directorios como workspaces individuales:
 
 ```yaml
 packages:
-  - 'packages/foundation'
-  - 'packages/shared'
-  - 'packages/execution'
-  - 'packages/intelligence'
-  - 'packages/knowledge'
-  - 'packages/governance'
-  - 'packages/integration'
-  - 'packages/registry'
-  - 'packages/sdk'
-```
+ - 'packages/foundation'
+ - 'packages/shared'
+ - 'packages/execution'
+ - 'packages/intelligence'
+ - 'packages/knowledge'
+ - 'packages/governance'
+ - 'packages/integration'
+ - 'packages/registry'
+ - 'packages/sdk'
+````
 
 Adicionalmente, los nueve paquetes fueron configurados para declarar:
 
@@ -656,10 +643,10 @@ Packages: +1
 Done in 12.4s using pnpm v10.16.1
 ```
 
-La salida confirmó el reconocimiento de los 16 workspaces:
+La salida confirmó el reconocimiento de los 17 workspaces:
 
 - Root workspace.
-- 6 paquetes de `packages/config/`.
+- 7 paquetes de `packages/config/`.
 - 9 paquetes creados durante la Fase 4.
 
 ---
@@ -699,7 +686,7 @@ pnpm -r typecheck
 Resultado:
 
 ```text
-Scope: 15 of 16 workspace projects
+Scope: 16 of 17 workspace projects
 ```
 
 Todos los paquetes de Fase 4 finalizaron correctamente:
@@ -731,7 +718,7 @@ pnpm -r build
 Resultado:
 
 ```text
-Scope: 15 of 16 workspace projects
+Scope: 16 of 17 workspace projects
 ```
 
 Los nueve paquetes de Fase 4 finalizaron correctamente:
@@ -748,7 +735,7 @@ Los nueve paquetes de Fase 4 finalizaron correctamente:
 | `@eq-labs/sdk`          |    ✅     |  1.7s  |
 | `@eq-labs/shared`       |    ✅     | 935ms  |
 
-Los seis paquetes de configuración existentes también finalizaron correctamente sus scripts de validación `build`.
+Los siete paquetes de configuración existentes también finalizaron correctamente sus scripts de validación `build`.
 
 ---
 
@@ -809,11 +796,11 @@ No se implementó lógica funcional dentro de los paquetes, manteniendo el alcan
 | :----------------- | :-----------: |
 | **Implementación** | ✅ Completada |
 | **Validación**     | ✅ Completada |
-| **Documentación**  |  ✅ Borrador  |
+| **Documentación**  |  ✅ Aprobado  |
 
 La implementación y validación técnica de la Fase 4 fueron completadas correctamente.
 
-El documento permanece en estado **Borrador** como documento técnico de implementación de fase. La consolidación final y validación integral contra **EE-DOC-006** corresponden a la etapa de consolidación definida para el proyecto.
+El documento permanece en estado **Aprobado** como documento técnico de implementación de fase. La consolidación final y validación integral contra **EE-DOC-006** corresponden a la etapa de consolidación definida para el proyecto.
 
 ---
 
@@ -849,7 +836,21 @@ El documento permanece en estado **Borrador** como documento técnico de impleme
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                        | Cambios                                                | Estado       |
 | :--------- | :--------- | :--------------------- | :--------------------- | :------------------------------------------------------------ | :----------------------------------------------------- | :----------- |
 | **v1.0.0** | 2026-08-29 | Equipo de Arquitectura | Equipo de Arquitectura | Creación de EE-IMP-006-P04 y documentación de los 9 paquetes. | Registrar la implementación y validación de la Fase 4. | **Aprobado** |
+| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006                                          | As-built scripts/commands y estados documentales merge | Aprobado     |
 
 ---
 
-## **FIN DEL DOCUMENTO**
+## FIN DEL DOCUMENTO
+
+### Nota de consistencia de estado (auditoría 2026-10-15)
+
+Los **metadatos** declaran estado **Aprobado** (implementación de fase aceptada). Si el cuerpo aún dice «Borrador»/«En revisión» respecto de la **documentación** de la IMP, se interpreta como redacción histórica a unificar en la próxima edición: el estado canónico de metadatos prevalece hasta corrección explícita del cuerpo.
+
+---
+
+### Addendum auditoría EE-DOC-006 (2026-10-18)
+
+- **Scripts root canónicos:** `scripts/commands/<cmd>` (+ `scripts/lib/`, `scripts/tests/`). Rutas históricas `scripts/<cmd>` plano quedan **superseded**.
+- **Estado:** los metadatos **Aprobado** prevalecen sobre menciones residuales de “Borrador” / “En revisión” en el cuerpo (evidencia histórica de la fase).
+- **As-built monorepo:** `assets/`, `examples/`, `marketplace/`, `data/`, `infra/` materializados (layout + README); detalle en EE-DOC-006 §05 y EE-TEC-001.
+- Este addendum **no** reescribe la evidencia de validación de fase (P01/P02: sin PASS retroactivo — EE-DOC-006 §20.1).
