@@ -1,4 +1,4 @@
-# Criterio operativo — Documento «Auditado»
+# EE-AUDIT-Criteria_Audited_Definition — Criterio operativo «Auditado»
 
 Definición operativa para auditorías de documentación del Engineering Ecosystem
 (gobernanza EE-DOC / EE-ADR / EE-RFC / EE-IMP / EE-TEC y evidencias asociadas).
@@ -11,14 +11,14 @@ cuando el hallazgo lo exija.
 
 ## 1. Veredicto
 
-| Veredicto                 | Significado                                                                                             |
-| :------------------------ | :------------------------------------------------------------------------------------------------------ |
-| **CONFORME**              | Cumple todos los criterios obligatorios; hallazgos abiertos solo Menores aceptados o diferidos con plan |
-| **NO CONFORME**           | Existe al menos un Bloqueante o Crítico abierto, o Mayor sin plan de cierre                             |
-| **CONFORME CON RESERVAS** | Sin Bloqueantes/Críticos; Mayores diferidos con mecanismo formal (Aclaración / ADR / RFC) y registro    |
+| Veredicto                      | Significado                                                                                             |
+| :----------------------------- | :------------------------------------------------------------------------------------------------------ |
+| **CONFORME**                   | Cumple todos los criterios obligatorios; hallazgos abiertos solo Menores aceptados o diferidos con plan |
+| **NO CONFORME**                | Existe al menos un Bloqueante o Crítico abierto, o Mayor sin plan de cierre                             |
+| **CONFORME CON OBSERVACIONES** | Sin Bloqueantes/Críticos; Mayores diferidos con mecanismo formal (Aclaración / ADR / RFC) y registro    |
 
 Un documento solo se marca **Auditado** en el AUDIT-LOG cuando el veredicto es
-**CONFORME** o **CONFORME CON RESERVAS** y la fila del log está completa.
+**CONFORME** o **CONFORME CON OBSERVACIONES** y la fila del log está completa.
 
 ---
 
@@ -71,7 +71,7 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 
 - [ ] Hallazgos clasificados: Bloqueante / Crítico / Mayor / Menor
 - [ ] Abiertos: plan de cierre o diferido explícito
-- [ ] Fila actualizada en `docs/validation/audit/AUDIT-LOG.md`
+- [ ] Fila actualizada en `docs/validation/audit/EE-AUDIT-Log_Progress_Register.md`
 - [ ] Fecha, versión del documento y veredicto registrados
 
 ---
@@ -93,7 +93,7 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 | :-------------------------------- | :------------------------------------------------------------- |
 | Lectura / exploración / checklist | `main` actualizado                                             |
 | Correcciones                      | Rama `docs/…` o `audit/…` desde `main` → PR → Squash and Merge |
-| Registro de progreso              | `docs/validation/audit/AUDIT-LOG.md`                           |
+| Registro de progreso              | `docs/validation/audit/EE-AUDIT-Log_Progress_Register.md`      |
 
 **Prohibido:** commits directos de correcciones normativas en `main` eludiendo PR.
 
@@ -111,4 +111,4 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 
 ## Reglas emergentes
 
-Las reglas detectadas en auditoría (aún no necesariamente volcadas a EE-DOC) se registran en **`AUDIT-RULES.md`** de esta misma carpeta.
+Las reglas detectadas en auditoría (aún no necesariamente volcadas a EE-DOC) se registran en **`EE-AUDIT-Rules_Emerging.md`** de esta misma carpeta.

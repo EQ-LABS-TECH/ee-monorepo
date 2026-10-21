@@ -17,7 +17,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Especializado                                                                                                                                                                                  |
 | **Nivel**             | Especializado                                                                                                                                                                                  |
 | **Normativo**         | Sí                                                                                                                                                                                             |
-| **Versión**           | v1.1.0                                                                                                                                                                                         |
+| **Versión**           | v1.1.1                                                                                                                                                                                         |
 | **Estado**            | Congelado                                                                                                                                                                                      |
 | **Propietario**       | Equipo de Arquitectura                                                                                                                                                                         |
 | **Documento padre**   | EE-DOC-004 — Engineering Architecture                                                                                                                                                          |
@@ -26,7 +26,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                                                                       |
 | **Fecha de creación** | 2026-10-02                                                                                                                                                                                     |
 | **Última revisión**   | 2026-10-03                                                                                                                                                                                     |
-| **Próxima revisión**  | 2026-10-17                                                                                                                                                                                     |
+| **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                                                                |
 
 > **Jerarquía documental:**
 >
@@ -158,12 +158,12 @@ flowchart LR
 
 ### 04.2. Matriz capas EE-DOC-004 ↔ EE-DOC-006 §13.2
 
-| Concepto 004 | Categoría 006 | Capa | Intelligence puede **importar** paquete de…        |
-| :----------- | :------------ | :--: | :------------------------------------------------- |
-| AI Layer     | Intelligence  |  3   | **Foundation, Execution, Intelligence** únicamente |
-| Knowledge    | Knowledge     |  4   | **No**                                             |
-| Registry     | Registry      |  7   | **No**                                             |
-| Governance   | Governance    |  5   | Política vía **contratos/eventos** de Foundation   |
+| Concepto 004 | Categoría 006 | Capa | Intelligence puede **importar** paquete de…      |
+| :----------- | :------------ | :--: | :----------------------------------------------- |
+| AI Layer     | Intelligence  |  3   | **Foundation, Intelligence** únicamente          |
+| Knowledge    | Knowledge     |  4   | **No**                                           |
+| Registry     | Registry      |  7   | **No**                                           |
+| Governance   | Governance    |  5   | Política vía **contratos/eventos** de Foundation |
 
 **Inversión de dependencias (obligatoria):**
 
@@ -672,6 +672,7 @@ Clasificación A/B/C/D (EE-DOC-005). Ejemplos:
 | **v0.7.1** | 2026-10-03 | Equipo de Arquitectura | —                      | Revisión (Sí/Parcial)                     | Composition root `apps/*` + 006 §13.5; sin “sin o”; §07.2 Degradation policy; constraint Local Runtime; sync ADR-005 v1.3.1                                                                     | **En Revisión Arquitectónica** |
 | **v1.0.0** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación                                | Estado **Aprobado**; OBS-02/03 (ADR sin pin de versión en §17.3; PR-08 → §13.2/§13.4)                                                                                                           | **Aprobado**                   |
 | **v1.1.0** | 2026-10-05 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre IMP                                | EE-IMP-013-P01…P06 + EE-TEC-008; estado **Congelado**                                                                                                                                           | **Congelado**                  |
+| **v1.1.1** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación con EE-ADR-006                 | §04.2: Intelligence ya no lista Execution en la matriz de imports.                                                                                                                              | Congelado                      |
 
 ---
 
@@ -689,7 +690,7 @@ Clasificación A/B/C/D (EE-DOC-005). Ejemplos:
 | Campo            | Valor                                                                |
 | :--------------- | :------------------------------------------------------------------- |
 | **Estado**       | **Congelado**                                                        |
-| **Versión**      | v1.1.0                                                               |
+| **Versión**      | v1.1.1                                                               |
 | **TEC**          | EE-TEC-008 — **Completado**                                          |
 | **Próximo hito** | Consumo normativo por EE-DOC-014 / evolución vía descubrimientos 005 |
 

@@ -8,11 +8,9 @@ This repository contains the official implementation of the Engineering Ecosyste
 
 ## Project Status
 
-Current Implementation Phase:
+**Current baseline (as-built):** structure and toolchains through **EE-DOC-006** support phases — packages, apps, connectors, root scripts (`scripts/commands/`), shared config, infra, templates, data, assets, examples and marketplace **layouts** are present in the repository.
 
-- **Phase 7 — Scripts**
-
-Implemented phases:
+Implemented (repository structure track):
 
 - Phase 0 — Initialization
 - Phase 1 — Bootstrap
@@ -21,19 +19,15 @@ Implemented phases:
 - Phase 4 — Packages
 - Phase 5 — Apps
 - Phase 6 — Connectors
-- Phase 7 — Scripts
+- Phase 7 — Scripts (`scripts/commands/*`, `scripts/lib/`, `scripts/tests/`)
+- Phase 8+ layouts — Assets, Data, Examples, Marketplace, Infra, Templates (layout + README; content grows by product phase)
 
-Next implementation phases:
-
-- Phase 8 — Assets
-- Phase 9 — Docs
-- Phase 10 — Data
-- Phase 11 — Examples
-- Phase 12 — Marketplace
+**Documentation (`docs/`) and ecosystem validation** follow the EE-DOC series and EE-DOC-015; keep docs synchronized with `main`.
 
 Repository Status:
 
-- 🚧 Under Implementation
+- Structure baseline: **available** (see EE-DOC-006)
+- Product / domain depth: **evolving** by EE-DOC-007+ and package implementation
 
 ---
 
@@ -41,9 +35,9 @@ Repository Status:
 
 The repository structure is defined by:
 
-- EE-DOC-006 — Repository Structure
+- **EE-DOC-006 — Repository Structure**
 
-The implementation follows the thirteen-phase repository implementation plan defined by EE-DOC-006.
+Canonical root commands live under `scripts/commands/<cmd>` (invoked via `package.json`). Details: EE-DOC-006 §05 / §12.
 
 ---
 
@@ -53,7 +47,7 @@ The implementation follows the thirteen-phase repository implementation plan def
 
 > **Official Node.js Version:** The Engineering Ecosystem uses the LTS version specified in the `.nvmrc` file. All contributors should use that version (or a compatible version within the same LTS release) to ensure a consistent development environment.
 
-- PNPM
+- PNPM ≥ 10.16.1
 - Git
 
 ---
@@ -92,7 +86,7 @@ PNPM remains responsible for package management and package-level operations.
 
 The task orchestration strategy is defined by:
 
-- ADR-001 — Estrategia de Orquestación de Tareas del Workspace
+- **EE-ADR-001 — Workspace Task Orchestration Strategy**
 
 ---
 
@@ -108,7 +102,7 @@ pnpm dev
 
 ## Repository Commands
 
-The repository exposes stable root commands for common engineering operations:
+Stable root commands (implementation: `scripts/commands/<cmd>`):
 
 ```bash
 pnpm bootstrap
@@ -121,9 +115,14 @@ pnpm typecheck
 pnpm validate
 pnpm doctor
 pnpm generate
+pnpm e2e
 pnpm release
 pnpm clean
 ```
+
+Also: `pnpm changeset`, `pnpm version-packages` (Changesets CLI).
+
+> **E2E:** `pnpm e2e` is the root entrypoint. Ecosystem-level E2E **gate** enforcement may remain PENDING until EE-DOC-010 / 015 / multi-package orchestration (ADR-002) are fully ACTIVE.
 
 ---
 
@@ -131,7 +130,7 @@ pnpm clean
 
 The Engineering Ecosystem testing strategy is defined by:
 
-- EE-ADR-002 — Testing Standard
+- **EE-ADR-002 — Testing Standard**
 
 The repository uses:
 
@@ -158,14 +157,12 @@ Architectural decisions are recorded through the applicable ADR or RFC mechanism
 
 ## Documentation
 
-The official documentation of the Engineering Ecosystem is maintained through the EE-DOC documentation series.
-
-The implementation of this repository follows the specifications defined in those documents.
+The official documentation of the Engineering Ecosystem is maintained through the EE-DOC documentation series under `docs/` (when present in the working tree).
 
 The repository implementation lifecycle is governed by:
 
-- EE-DOC-005 — Development Workflow
-- EE-DOC-006 — Repository Structure
+- **EE-DOC-005 — Development Workflow**
+- **EE-DOC-006 — Repository Structure**
 
 ---
 
@@ -174,5 +171,3 @@ The repository implementation lifecycle is governed by:
 Engineering Ecosystem (EE) is licensed under the Apache License 2.0.
 
 See the LICENSE file for details.
-
----

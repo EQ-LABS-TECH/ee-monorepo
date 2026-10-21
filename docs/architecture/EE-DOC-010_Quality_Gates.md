@@ -1,4 +1,4 @@
-# EE-DOC-010 — Quality Gates
+﻿# EE-DOC-010 — Quality Gates
 
 Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y se desarrolla conforme al ciclo documental definido por **EE-DOC-005 — Development Workflow**.
 
@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Especializado                                                                                                                                  |
 | **Nivel**             | Especializado                                                                                                                                  |
 | **Normativo**         | Sí                                                                                                                                             |
-| **Versión**           | v1.5.1                                                                                                                                         |
+| **Versión**           | v1.5.2                                                                                                                                         |
 | **Estado**            | Congelado                                                                                                                                      |
 | **Propietario**       | Equipo de Arquitectura                                                                                                                         |
 | **Documento padre**   | EE-DOC-006 — Repository Structure                                                                                                              |
@@ -23,8 +23,8 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                                                                                         |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                       |
 | **Fecha de creación** | 2026-09-26                                                                                                                                     |
-| **Última revisión**   | 2026-10-06                                                                                                                                     |
-| **Próxima revisión**  | 2026-12-29                                                                                                                                     |
+| **Última revisión**   | 2026-10-18                                                                                                                                     |
+| **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                |
 
 ---
 
@@ -95,6 +95,8 @@ Queda prohibido un catálogo paralelo de Quality Gates en 007 o 009.
 | Dictamen de validación del **ecosistema** (dominios V-\*) en un ref     | No                            | **Sí**                                                                                            |
 | Required check / Rulesets                                               | Vía contrato `Validate` + 007 | No bypassea 007/010                                                                               |
 | Residuales **WAIVED vigentes** (010 §04.6.1)                            | Result de gate **WAIVED**     | Mapeo a dominio 015 (p. ej. V-QG **DEGRADED**). **High sin WAIVE → FAIL de dominio**, no DEGRADED |
+
+---
 
 ## 03. Principios
 
@@ -177,7 +179,7 @@ Tipo de cambio, paths/packages, tipo de artefacto, contexto (local / CI PR / mai
 
 #### 04.6.1. WAIVED
 
-Requiere: justificación, autoridad Arquitectura / EE-DOC-005, `gate_id`, `authority`, `reason`, `scope`, `effective_from`, `expires_at` (**máximo 7 días** salvo ADR/RFC que autorice otra ventana — alineado a EE-DOC-005 §10.3), `normalization_plan`. No elimina el gate del catálogo.
+Requiere: justificación, autoridad Arquitectura / EE-DOC-005, `gate_id`, `package`, `advisory`, `authority`, `reason`, `scope`, `effective_from`, `expires_at` (**máximo 7 días** salvo ADR/RFC que autorice otra ventana — alineado a EE-DOC-005 §10.3), `normalization_plan`. No elimina el gate del catálogo.
 
 ### 04.7. Severity
 
@@ -251,9 +253,9 @@ PENDING y DEPRECATED **no** entran en la agregación de bloqueo del merge (no ha
 
 > **Mandatory (005)** = obligación normativa del workflow. **Availability (010)** = estado de materialización. Un gate puede ser Mandatory **y** PENDING a la vez (**EE-ADR-004**).  
 > **PENDING** = falta de implementación/enforcement del **mecanismo del gate**, no “ausencia de tests/comando” ni “gate opcional”.  
-> **QG-TEST-001 ACTIVE (v1.1.0 / EE-IMP-010-P02):** `pnpm run test` + paso CI; **0 tasks → SKIPPED** (no PASS).  
-> **QG-BUILD-001 ACTIVE (v1.1.0 / EE-IMP-010-P02):** `pnpm run build` en `validate` y step **Build** en job `Validate`.  
-> **Alcance ACTIVE (v1.4.0 / EE-IMP-010-P05):** TEST-001 cubre unit/integration/component; E2E y la verificación de ciclos/capas de ARCH-001 permanecen PENDING bajo régimen transitorio (EE-IMP-010-P05 §06).  
+> **QG-TEST-001 ACTIVE (EE-IMP-010-P02):** `pnpm run test` + paso CI; **0 tasks → SKIPPED** (no PASS).  
+> **QG-BUILD-001 ACTIVE (EE-IMP-010-P02):** `pnpm run build` en `validate` y step **Build** en job `Validate`.  
+> **Alcance ACTIVE (EE-IMP-010-P05):** TEST-001 cubre unit/integration/component; E2E y la verificación de ciclos/capas de ARCH-001 permanecen PENDING bajo régimen transitorio (EE-IMP-010-P05 §06).  
 > Gates Mandatory + PENDING: régimen transitorio **EE-DOC-005 §10.4** (plan Arquitectura + IMP-010), no PASS simulado.
 
 ### 05.2. Mapeo baseline y required check
@@ -288,7 +290,7 @@ Contrato de comandos root: **EE-DOC-006**.
 | **Baseline P01**                     | TYPE, LINT, FMT, SEC-001, REPO                              |
 | **Tras P02**                         | + QG-TEST-001, QG-BUILD-001                                 |
 | **Tras P03**                         | + QG-SEC-002, QG-ARCH-001                                   |
-| **Tras P04 (vigente v1.4.0)**        | + QG-DOC-001, QG-DOC-002, QG-INFRA-001                      |
+| **Tras P04**                         | + QG-DOC-001, QG-DOC-002, QG-INFRA-001                      |
 | **Pendiente (régimen §10.4 de 005)** | QG-SEC-003, QG-PERF-001, QG-COV-001; E2E; ARCH capas/ciclos |
 
 La columna de fases describe **materialización**, no “cuando el gate pasa a ser obligatorio”.
@@ -314,13 +316,13 @@ La columna de fases describe **materialización**, no “cuando el gate pasa a s
 | **Availability**  | ¿El **mecanismo del gate** está implementado y cableado (evaluación → Result → agregación)? |
 | **Applicability** | ¿**Este cambio** tiene superficie de test que deba ejecutarse?                              |
 
-- **Availability = ACTIVE** (v1.1.0 / EE-IMP-010-P02): mecanismo cableado en `scripts/test`, `scripts/validate` y job CI `Validate`.
+- **Availability = ACTIVE** (EE-IMP-010-P02): mecanismo cableado en `scripts/test`, `scripts/validate` y job CI `Validate`.
 - **Regla cero tareas (implementada):** exit 0 con 0 tasks → **SKIPPED** con mensaje contractual `QG-TEST-001: SKIPPED` — **nunca PASS** (EE-DOC-010 §05.4).
 - Target/cambio **sin tests aplicables** con tasks en scope vacío a nivel monorepo → **SKIPPED** (baseline actual); cuando existan suites en packages afectados → ejecución real → PASS/FAIL; sin superficie aplicable → **NOT_APPLICABLE** + evidencia.
 
-**Alcance ACTIVE (v1.4.0):** unit / integration / component (Vitest, `pnpm run test`).
+**Alcance ACTIVE:** unit / integration / component (Vitest, `pnpm run test`).
 
-**E2E (Playwright):** Mandatory en EE-DOC-005 §10.1, **sin cableado** (no existe script root `e2e`, tarea Turbo ni step CI). Permanece bajo el régimen transitorio de **EE-DOC-005 §10.4** (EE-IMP-010-P05 §06). Al cablearse: PASS si la suite E2E aplicable es exitosa; NOT_APPLICABLE con evidencia si no hay superficie E2E afectada.
+**E2E (Playwright):** Mandatory en EE-DOC-005 §10.1. Existe la tarea Turbo `test:e2e` conectada al script `apps/dashboard:test:e2e`; existe la invocación root `pnpm run e2e` (mapea a `turbo run test:e2e`), pero aún no está integrada como gate bloqueante en `validate` ni en CI. Por tanto, el gate E2E permanece bajo el régimen transitorio de **EE-DOC-005 §10.4** (EE-IMP-010-P05 §06) hasta completar ese cableado. Al activarse: PASS si la suite E2E aplicable es exitosa; NOT_APPLICABLE con evidencia si no hay superficie E2E afectada.
 
 **Regla cero tareas:** exit 0 con **0 tasks** ≠ PASS. Mientras **ningún workspace defina `test`**, ese caso se resuelve como **SKIPPED con justificación contractual** (no constituye incumplimiento BLOCKING, §04.8). Desde que exista la primera suite, 0 tareas sobre un ámbito con superficie de test es incumplimiento (SKIPPED sin justificación).
 
@@ -330,7 +332,7 @@ La columna de fases describe **materialización**, no “cuando el gate pasa a s
 
 **Mecanismo contractual:** construcción de artefactos aplicables al cambio.
 
-- **Availability = ACTIVE** (v1.1.0 / EE-IMP-010-P02).
+- **Availability = ACTIVE** (EE-IMP-010-P02).
 - El comando root **`pnpm run build`** existe y está integrado en `scripts/validate` (fase Build, critical) y en `.github/workflows/ci.yml` (step Build).
 - Al activarse: **PASS** si build aplicable exitoso; **NOT_APPLICABLE** si el cambio no es susceptible de build (con evidencia).
 
@@ -338,24 +340,24 @@ La columna de fases describe **materialización**, no “cuando el gate pasa a s
 
 - **FAIL** si existen vulnerabilidades **high** o **critical** en el alcance de la auditoría.
 - **low / moderate** no producen FAIL de BLOCKING por sí solas.
-- **Materialización (v1.4.0):** `pnpm audit --audit-level high`, incluyendo devDependencies (sin `--prod`).
+- **Materialización:** `pnpm audit --audit-level high`, incluyendo devDependencies (sin `--prod`).
 - **devDependencies:** high/critical **sí** producen FAIL (tooling/CI es supply chain). Solo low/moderate en devDependencies pueden no bloquear.
 - Cualquier cambio de umbral normativo requiere **modificación gobernada de EE-DOC-010**. La implementación (IMP/suite) materializa **exactamente** el umbral de este documento — no lo redefine.
 
 ### 05.7. QG-SEC-002 / QG-SEC-003
 
-- **QG-SEC-002 — ACTIVE (v1.2.0):** GitHub secret scanning + push protection y step **Gitleaks CLI** en el job `Validate`. Verificado con prueba negativa (regla `github-pat`, EE-IMP-010-P05 N11). **Límite conocido:** el checkout superficial escanea solo el commit evaluado, no el historial (observación W-P05-001).
+- **QG-SEC-002 — ACTIVE:** GitHub secret scanning + push protection y step **Gitleaks CLI** en el job `Validate`. Verificado con prueba negativa (regla `github-pat`, EE-IMP-010-P05 N11). **Límite conocido:** el checkout superficial escanea solo el commit evaluado, no el historial (observación W-P05-001).
 - **QG-SEC-003 — PENDING_IMPLEMENTATION:** SAST no materializado; adopción de herramienta vía EE-DOC-005 (ADR).
 
 ### 05.8. QG-ARCH-001
 
-**Contrato ACTIVE (v1.4.0):** directorios requeridos + allowlist/forbidden de directorios top-level (EE-DOC-006 / EE-RFC-001), en `scripts/validate`.
+**Contrato ACTIVE:** directorios requeridos + allowlist/forbidden de directorios top-level (EE-DOC-006 / EE-RFC-001), en `scripts/validate`.
 
 **PENDING (régimen §10.4 de 005):** dependencias circulares, dependencias prohibidas entre capas (EE-DOC-006 §13.2) y fronteras apps / packages / connectors. Fuera de gate: design review / ADR narrativo.
 
 ### 05.9. QG-DOC-001 / QG-DOC-002
 
-**ACTIVE (v1.3.0):** DOC-001 verifica README, LICENSE, NOTICE, CHANGELOG; DOC-002 verifica `name` y `engines.node` alineado con `.nvmrc`.
+**ACTIVE:** DOC-001 verifica README, LICENSE, NOTICE, CHANGELOG; DOC-002 verifica `name` y `engines.node` alineado con `.nvmrc`.
 
 ### 05.10. QG-REPO-001
 
@@ -363,7 +365,7 @@ ACTIVE. Integridad EE-DOC-006.
 
 ### 05.11. QG-INFRA-001
 
-**Severity: BLOCKING.** Availability: **ACTIVE** (v1.3.0; alcance: existencia de `infra/{containers,orchestration,secrets}` y `infra/secrets/.gitignore`; el análisis de contenido de manifiestos se incorpora al existir manifiestos). Vendor Agnostic (EE-DOC-003): sin amarre a cloud vendor. Requisitos de dominio en 009; enforcement aquí.
+**Severity: BLOCKING.** Availability: **ACTIVE** (alcance: existencia de `infra/{containers,orchestration,secrets}` y `infra/secrets/.gitignore`; el análisis de contenido de manifiestos se incorpora al existir manifiestos). Vendor Agnostic (EE-DOC-003): sin amarre a cloud vendor. Requisitos de dominio en 009; enforcement aquí.
 
 ### 05.12. QG-PERF-001 / QG-COV-001
 
@@ -444,13 +446,13 @@ Runtime y estándares de apoyo: Node ≥ 24 (EE-ADR-003), Vitest/Playwright (EE-
 
 ### 07.2. Gaps (PENDING_IMPLEMENTATION)
 
-| Gate                       | Motivo de PENDING                                   | Unidad IMP prevista                   |
-| :------------------------- | :-------------------------------------------------- | :------------------------------------ |
-| QG-SEC-003                 | SAST no materializado (sin CodeQL/Semgrep cableado) | EE-IMP-010-P03 (diferido) / posterior |
-| QG-PERF-001 / QG-COV-001   | Sin política de umbrales publicada                  | Posterior a umbral normativo en 010   |
-| QG-TEST-001 (E2E)          | Sin script root `e2e`, tarea Turbo ni step CI       | Régimen §10.4 — EE-IMP-010-P05 §06    |
-| QG-ARCH-001 (capas/ciclos) | Validador no implementado                           | Régimen §10.4 — EE-IMP-010-P05 §06    |
-| Evidencia por gate (§06.2) | `validate` sin reporte estructurado                 | Observación D6 — EE-IMP-010-P05 §06   |
+| Gate                       | Motivo de PENDING                                                                        | Unidad IMP prevista                   |
+| :------------------------- | :--------------------------------------------------------------------------------------- | :------------------------------------ |
+| QG-SEC-003                 | SAST no materializado (sin CodeQL/Semgrep cableado)                                      | EE-IMP-010-P03 (diferido) / posterior |
+| QG-PERF-001 / QG-COV-001   | Sin política de umbrales publicada                                                       | Posterior a umbral normativo en 010   |
+| QG-TEST-001 (E2E)          | Tarea Turbo `test:e2e` disponible; sin invocación root en `validate` ni step CI dedicado | Régimen §10.4 — EE-IMP-010-P05 §06    |
+| QG-ARCH-001 (capas/ciclos) | Validador no implementado                                                                | Régimen §10.4 — EE-IMP-010-P05 §06    |
+| Evidencia por gate (§06.2) | `validate` sin reporte estructurado                                                      | Observación D6 — EE-IMP-010-P05 §06   |
 
 Los gaps **Mandatory** (005 §10.1) permanecen bajo régimen transitorio **EE-DOC-005 §10.4**.
 
@@ -557,22 +559,22 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 
 ## 12. Referencias
 
-| Código         | Documento                          | Descripción                                                                |
-| :------------- | :--------------------------------- | :------------------------------------------------------------------------- |
-| **EE-DOC-001** | Master Documentation Index         | Roadmap; sincronizar al Aprobar                                            |
-| **EE-DOC-002** | Document Design Template           | Plantilla; §18.4 TEC                                                       |
-| **EE-DOC-003** | Constitution                       | Vendor Agnostic                                                            |
-| **EE-DOC-004** | Engineering Architecture           | Capa quality                                                               |
-| **EE-DOC-005** | Development Workflow               | §10 Mandatory; §10.3 bypass ad hoc; **§10.4 adopción progresiva** (v1.4.0) |
-| **EE-DOC-006** | Repository Structure               | Padre; comandos root                                                       |
-| **EE-DOC-007** | GitHub Governance                  | Required check `Validate`                                                  |
-| **EE-DOC-008** | Development Environment            | Paridad local                                                              |
-| **EE-DOC-009** | Infrastructure                     | Dominio infra; precedente roadmap                                          |
-| **EE-DOC-011** | Automation                         | Comandos root / orquestación (no catálogo QG)                              |
-| **EE-DOC-015** | Ecosystem Validation               | Dictamen de ecosistema por dominios (no merge gates)                       |
-| **EE-ADR-002** | Testing Standard                   | Vitest / Playwright                                                        |
-| **EE-ADR-003** | Node 24 LTS                        | Runtime                                                                    |
-| **EE-ADR-004** | Quality Gates Progressive Adoption | Mandatory ≠ Implemented ≠ Enforced                                         |
+| Código         | Documento                          | Descripción                                                       |
+| :------------- | :--------------------------------- | :---------------------------------------------------------------- |
+| **EE-DOC-001** | Master Documentation Index         | Roadmap; sincronizar al Aprobar                                   |
+| **EE-DOC-002** | Document Design Template           | Plantilla; §18.4 TEC                                              |
+| **EE-DOC-003** | Constitution                       | Vendor Agnostic                                                   |
+| **EE-DOC-004** | Engineering Architecture           | Capa quality                                                      |
+| **EE-DOC-005** | Development Workflow               | §10 Mandatory; §10.3 bypass ad hoc; **§10.4 adopción progresiva** |
+| **EE-DOC-006** | Repository Structure               | Padre; comandos root                                              |
+| **EE-DOC-007** | GitHub Governance                  | Required check `Validate`                                         |
+| **EE-DOC-008** | Development Environment            | Paridad local                                                     |
+| **EE-DOC-009** | Infrastructure                     | Dominio infra; precedente roadmap                                 |
+| **EE-DOC-011** | Automation                         | Comandos root / orquestación (no catálogo QG)                     |
+| **EE-DOC-015** | Ecosystem Validation               | Dictamen de ecosistema por dominios (no merge gates)              |
+| **EE-ADR-002** | Testing Standard                   | Vitest / Playwright                                               |
+| **EE-ADR-003** | Node 24 LTS                        | Runtime                                                           |
+| **EE-ADR-004** | Quality Gates Progressive Adoption | Mandatory ≠ Implemented ≠ Enforced                                |
 
 ---
 
@@ -593,6 +595,7 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 | **v1.4.0**        | 2026-09-30    | Equipo de Arquitectura | Equipo de Arquitectura | Congelación post-Validación Final             | EE-IMP-010-P05 Completado; EE-TEC-005 Completado; Validación Final §14; estado **Congelado**                                                                                                                                                                                         | **Congelado**              |
 | **v1.5.0**        | 2026-10-06    | Equipo de Arquitectura | Equipo de Arquitectura | Sync frontera 015 (B1)                        | Quita «no vinculante» 011/015; §02.6 frontera 010↔015; 011/015 fuera del catálogo de merge                                                                                                                                                                                          | **Congelado**              |
 | **v1.5.1**        | 2026-10-06    | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A frontera 015                           | §02.6: solo WAIVED vigentes → DEGRADED en 015; high sin WAIVE no DEGRADED                                                                                                                                                                                                            | **Congelado**              |
+| **v1.5.2**        | 2026-10-18    | Equipo de Arquitectura | Equipo de Arquitectura | Fix aclaración E2E                            | §05.4 aclara que el comando root e2e existe pero el gate sigue PENDING                                                                                                                                                                                                               | Congelado                  |
 
 ---
 
@@ -602,11 +605,11 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 
 ### 14.1. Validación Final
 
-| Campo                     | Valor                                                                                                                                               |
-| :------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Fecha**                 | 2026-09-30                                                                                                                                          |
-| **Evidencias utilizadas** | EE-IMP-010-P01…P05; EE-TEC-005 v1.0.0; `pnpm run validate` PASS; CI Validate success (`e2400d3`, run `36652601997`); pruebas negativas N1–N13 (P05) |
-| **Responsable**           | Equipo de Arquitectura                                                                                                                              |
+| Campo                     | Valor                                                                                                                                        |
+| :------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Fecha**                 | 2026-09-30                                                                                                                                   |
+| **Evidencias utilizadas** | EE-IMP-010-P01…P05; EE-TEC-005; `pnpm run validate` PASS; CI Validate success (`e2400d3`, run `36652601997`); pruebas negativas N1–N13 (P05) |
+| **Responsable**           | Equipo de Arquitectura                                                                                                                       |
 
 ### 14.2. Dictamen de Cierre
 
@@ -617,7 +620,7 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 | Campo                 | Valor                                                                                                 |
 | :-------------------- | :---------------------------------------------------------------------------------------------------- |
 | **Estado documental** | **Congelado**                                                                                         |
-| **Versión**           | v1.5.1                                                                                                |
+| **Versión**           | v1.5.2                                                                                                |
 | **Congelación**       | **2026-09-30** (norma); sync frontera **2026-10-06**                                                  |
 | **Próximo hito**      | Evolución PENDING vía IMP; frontera **EE-DOC-015** vigente (§02.6); cambio de catálogo solo gobernado |
 
