@@ -46,6 +46,6 @@
       "required": false
     }
   ],
-  "outputs": ["body.md"],
+  "outputs": ["EE-TEC-XXX_Title.md"],
   "preconditions": ["destination under docs/ only"]
 }

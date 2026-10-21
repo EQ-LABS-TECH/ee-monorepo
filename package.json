@@ -10,24 +10,27 @@
     "pnpm": ">=10.16.1 <11"
   },
   "scripts": {
-    "bootstrap": "node scripts/bootstrap",
-    "build": "node scripts/build",
-    "dev": "node scripts/dev",
-    "test": "node scripts/test",
-    "lint": "node scripts/lint",
-    "format": "node scripts/format",
-    "typecheck": "node scripts/typecheck",
-    "validate": "node scripts/validate",
-    "doctor": "node scripts/doctor",
-    "generate": "node scripts/generate",
-    "release": "node scripts/release",
-    "clean": "node scripts/clean",
+    "bootstrap": "node scripts/commands/bootstrap",
+    "build": "node scripts/commands/build",
+    "dev": "node scripts/commands/dev",
+    "test": "node scripts/commands/test",
+    "test:scripts": "node scripts/lib/run-script-tests.mjs",
+    "lint": "node scripts/commands/lint",
+    "format": "node scripts/commands/format",
+    "typecheck": "node scripts/commands/typecheck",
+    "validate": "node scripts/commands/validate",
+    "doctor": "node scripts/commands/doctor",
+    "generate": "node scripts/commands/generate",
+    "e2e": "node scripts/commands/e2e",
+    "release": "node scripts/commands/release",
+    "clean": "node scripts/commands/clean",
     "changeset": "changeset",
     "version-packages": "changeset version"
   },
   "devDependencies": {
     "@eq-labs/config-prettier": "workspace:*",
     "@changesets/cli": "3.0.2",
+    "ajv": "8.20.0",
     "plop": "4.0.0",
     "prettier": "3.6.2",
     "rimraf": "5.0.0",
@@ -43,14 +46,9 @@
       "brace-expansion@>=4.0.0 <5.0.12": "5.0.12",
       "source-map-js@<1.2.2": "1.2.2",
       "tinypool@<2.1.2": "2.1.2",
-      "shell-quote": ">=1.11.0",
-      "handlebars": ">=4.7.10"
-    },
-    "auditConfig": {
-      "ignoreGhsas": [
-        "GHSA-vfj7-8cjw-p6xm",
-        "GHSA-hp3w-g68c-fv3c"
-      ]
+      "shell-quote": "1.11.0",
+      "handlebars": "4.7.10",
+      "launch-editor": "2.14.2"
     }
   }
 }
