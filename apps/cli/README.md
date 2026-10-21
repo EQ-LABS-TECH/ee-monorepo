@@ -36,3 +36,8 @@ pnpm --filter @eq-labs/cli run lint
 
 - EE-DOC-011 — Automation §06
 - EE-IMP-011-P03 — CLI Surface
+
+## Composition
+
+The CLI serves as the **composition root** for the runtime, wiring both AI and Knowledge ports.
+Run `ee composition` to see the wired ports.

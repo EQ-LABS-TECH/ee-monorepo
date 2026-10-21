@@ -33,6 +33,9 @@ export default [
       '**/bin/**',
       '**/coverage/**',
       '**/.turbo/**',
+      '**/.tmp/**',
+      '**/test-results/**',
+      '**/playwright-report/**',
     ],
   },
 ];

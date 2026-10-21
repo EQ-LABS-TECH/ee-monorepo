@@ -10,8 +10,11 @@ contracts required by other packages in the ecosystem.
 ## Current Status
 
 This package was created during Phase 4 — Packages.
+The package includes foundational contracts and ports:
 
-No functional implementation is included at this stage.
+- AI Provider SPI (from EE-DOC-013, EE-ADR-005)
+- Catalog port
+- Knowledge Port (from EE-DOC-014)
 
 ## Configuration
 

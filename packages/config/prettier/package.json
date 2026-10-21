@@ -1,7 +1,7 @@
 {
   "name": "@eq-labs/config-prettier",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
   "type": "module",
   "main": "./index.mjs",
   "exports": {

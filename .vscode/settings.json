@@ -14,7 +14,8 @@
   "files.exclude": {
     "**/node_modules": true,
     "**/.turbo": true,
-    "**/dist": true
+    "**/dist": true,
+    "**/.tmp": true
   },
   "markdownlint.ignore": [".github/CODEOWNERS", "LICENSE", "NOTICE"],
   "files.associations": {

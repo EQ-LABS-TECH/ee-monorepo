@@ -6,7 +6,7 @@ Knowledge layer of the EQ-LABS Engineering Ecosystem (**EE-DOC-014**).
 
 - **Form:** flat package (`packages/knowledge`) — not nested workspaces
 - **Visibility:** `private: true` (workspace API via `exports`; no npm publish in this cycle)
-- **Contracts:** `KnowledgePort` / embedding ABI → **EE-IMP-014-P03+** (Foundation)
+- **Contracts:** `KnowledgePort` (Foundation) — already implemented and tested
 
 ## Scripts
 
