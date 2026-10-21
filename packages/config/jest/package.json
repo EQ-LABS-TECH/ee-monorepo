@@ -17,7 +17,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "eslint": "9.35.0",
+    "eslint": "10.13.0",
     "@eq-labs/config-eslint": "workspace:*"
   },
   "exports": {
