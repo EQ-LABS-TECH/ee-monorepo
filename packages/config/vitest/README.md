@@ -47,6 +47,10 @@ The preset does not install or configure React Testing Library.
 
 ---
 
+## Package exports
+
+The package manifest explicitly exports `./base`, `./base.mjs`, `./react` and `./react.mjs`. Keep these paths aligned with the examples below and with consuming workspace imports.
+
 ## Usage
 
 A workspace using the base configuration can extend it with:

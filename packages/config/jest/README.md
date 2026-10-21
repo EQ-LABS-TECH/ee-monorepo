@@ -56,6 +56,10 @@ The transformation mechanism remains the responsibility of the consuming workspa
 
 ---
 
+## Package exports
+
+The package manifest explicitly exports `./base`, `./base.mjs`, `./typescript` and `./typescript.mjs`. Keep these paths aligned with the examples below and with consuming workspace imports.
+
 ## Usage
 
 A JavaScript workspace can consume the base configuration:

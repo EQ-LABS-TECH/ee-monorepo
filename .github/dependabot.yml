@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 10
+    groups:
+      all-actions:
+        patterns: ['*']
+    ignore:
+      # pnpm/action-setup tiene force-push de tags; mantener manual
+      - dependency-name: 'pnpm/action-setup'
+
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    groups:
+      all-deps:
+        patterns: ['*']

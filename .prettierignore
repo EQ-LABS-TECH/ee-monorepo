@@ -1,14 +1,21 @@
+# Temporary directories (Playwright, Node compile cache, etc.)
+**/.tmp/
+**/node-compile-cache/
+**/playwright-transform-cache/
+**/test-results/
+**/playwright-report/
+
+# Existing ignores...
 node_modules/
 .turbo/
 dist/
 build/
-lib/
-out/Bin/
+/lib/
+out/
 coverage/
 
-Turbo-build-dry.json
-
-# Exclusión de archivos de gobernanza para evitar falsos positivos de formato
+# Governance files are not source code and are excluded from formatting checks.
 .github/CODEOWNERS
 
-templates/**/files/**
+# Handlebars templates contain literal template expressions and must be preserved.
+templates/**/files/**/*.hbs
