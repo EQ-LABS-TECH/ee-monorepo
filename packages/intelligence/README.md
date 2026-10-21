@@ -14,13 +14,13 @@ Intelligence layer of the EQ-LABS Engineering Ecosystem (**EE-DOC-013**).
 
 ## Layer rules (EE-DOC-006 §13.2)
 
-- **May depend on:** Foundation, Execution, Intelligence.
+- **May depend on:** Foundation, Intelligence (see EE-DOC-006 §13.2, updated by EE-ADR-006).
 - **Must not depend on:** Registry, Knowledge, Connectors (runtime).
 
 ## Current status
 
-Baseline package (EE-IMP-013-P02). No functional Router yet.
-SPI and adapters: **EE-IMP-013-P03**. Routing wiring: **P04**.
+Functional package (EE-IMP-013-P01–P06).
+Includes ProviderRouter, SpecializationRouter, and observability logging.
 
 ## Development
 

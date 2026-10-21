@@ -40,6 +40,12 @@ packages/knowledge/             @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintai
 packages/foundation/src/contracts/knowledge.ts  @EQ-LABS-TECH/architecture
 packages/foundation/src/contracts/knowledge*.ts @EQ-LABS-TECH/architecture
 
+# AI Provider SPI contracts (EE-DOC-013 §11 #12)
+packages/foundation/src/contracts/provider.ts    @EQ-LABS-TECH/architecture
+packages/foundation/src/contracts/inference.ts   @EQ-LABS-TECH/architecture
+packages/foundation/src/contracts/generation.ts  @EQ-LABS-TECH/architecture
+packages/foundation/src/contracts/error.ts       @EQ-LABS-TECH/architecture
+
 # Automation scripts
 scripts/                        @EQ-LABS-TECH/repository-admin @EQ-LABS-TECH/maintainers
 

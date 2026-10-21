@@ -2,6 +2,7 @@ packages:
   - apps/*
   - apps/extensions/*
   - connectors/official/*
+  - packages/*
   - packages/config/*
   - packages/foundation
   - packages/shared

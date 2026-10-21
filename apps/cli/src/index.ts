@@ -13,6 +13,7 @@ const ALLOWED = new Set([
   'format',
   'bootstrap',
   'clean',
+  'e2e',
 ]);
 
 function printHelp(): void {

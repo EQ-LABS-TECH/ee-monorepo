@@ -26,7 +26,9 @@ yarn.lock
 
 dist/
 build/
-lib/
+/lib/
+!scripts/lib/
+!scripts/lib/**
 out/
 bin/
 coverage/
@@ -165,10 +167,8 @@ docker-volumes/
 ###############################################################################
 
 data/datasets/**
-!data/datasets/.gitkeep
 !data/datasets/README.md
 data/models/**
-!data/models/.gitkeep
 !data/models/README.md
 
 *.onnx
@@ -179,3 +179,9 @@ data/models/**
 
 **/.knowledge-cache/
 **/knowledge-index/
+
+###############################################################################
+# Local TEMP for Playwright
+###############################################################################
+.tmp/
+apps/dashboard/.tmp/

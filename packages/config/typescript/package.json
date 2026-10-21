@@ -1,7 +1,7 @@
 {
   "name": "@eq-labs/config-typescript",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
   "type": "module",
   "files": [
     "base.json",

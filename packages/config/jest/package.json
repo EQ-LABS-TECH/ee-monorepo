@@ -1,7 +1,7 @@
 {
   "name": "@eq-labs/config-jest",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
   "type": "module",
   "files": [
     "base.mjs",
@@ -19,5 +19,11 @@
   "devDependencies": {
     "eslint": "9.35.0",
     "@eq-labs/config-eslint": "workspace:*"
+  },
+  "exports": {
+    "./base": "./base.mjs",
+    "./base.mjs": "./base.mjs",
+    "./typescript": "./typescript.mjs",
+    "./typescript.mjs": "./typescript.mjs"
   }
 }

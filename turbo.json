@@ -1,4 +1,5 @@
 {
+  "globalPassThroughEnv": ["TMP", "TEMP", "TMPDIR"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -9,7 +10,8 @@
       "persistent": true
     },
     "test": {
-      "outputs": ["coverage/**"]
+      "dependsOn": ["^build"],
+      "outputs": []
     },
     "typecheck": {
       "dependsOn": ["^build"],
@@ -20,6 +22,11 @@
     },
     "clean": {
       "cache": false
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "outputs": ["playwright-report/**", "test-results/**"]
     }
   }
 }
