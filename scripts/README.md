@@ -45,22 +45,23 @@ The architectural decision is defined by **ADR-001 — Estrategia de Orquestaci�
 Normative contract: **EE-DOC-011 — Automation**. This README is operational
 documentation derived from that contract — not an independent source of truth.
 
-| Command            | Implementation      | Category | Responsibility                                       |
-| ------------------ | ------------------- | -------- | ---------------------------------------------------- |
-| `bootstrap`        | `scripts/bootstrap` | A-ROOT   | Environment setup                                    |
-| `build`            | `scripts/build`     | A-ROOT   | Workspace build (QG-BUILD-001)                       |
-| `dev`              | `scripts/dev`       | A-ROOT   | Local development (long-running)                     |
-| `test`             | `scripts/test`      | A-ROOT   | Orchestrated tests (QG-TEST-001)                     |
-| `lint`             | `scripts/lint`      | A-ROOT   | Lint (QG-LINT-001)                                   |
-| `format`           | `scripts/format`    | A-ROOT   | Prettier **write** (local tool; not the format gate) |
-| `typecheck`        | `scripts/typecheck` | A-ROOT   | Typecheck (QG-TYPE-001)                              |
-| `validate`         | `scripts/validate`  | A-ROOT   | Local validation aggregator (EE-DOC-010)             |
-| `doctor`           | `scripts/doctor`    | A-ROOT   | Environment diagnostics (does not replace validate)  |
-| `generate`         | `scripts/generate`  | A-GEN    | Scaffolding (Plop)                                   |
-| `release`          | `scripts/release`   | A-REL    | Monorepo release orchestration                       |
-| `clean`            | `scripts/clean`     | A-ROOT   | Clean build artifacts / caches                       |
-| `changeset`        | `@changesets/cli`   | A-REL    | Declare SemVer changes (no file under `scripts/`)    |
-| `version-packages` | `changeset version` | A-REL    | Apply package versions (no file under `scripts/`)    |
+| Command            | Implementation               | Category | Responsibility                                       |
+| ------------------ | ---------------------------- | -------- | ---------------------------------------------------- |
+| `bootstrap`        | `scripts/commands/bootstrap` | A-ROOT   | Environment setup                                    |
+| `build`            | `scripts/commands/build`     | A-ROOT   | Workspace build (QG-BUILD-001)                       |
+| `dev`              | `scripts/commands/dev`       | A-ROOT   | Local development (long-running)                     |
+| `test`             | `scripts/commands/test`      | A-ROOT   | Orchestrated tests (QG-TEST-001)                     |
+| `lint`             | `scripts/commands/lint`      | A-ROOT   | Lint (QG-LINT-001)                                   |
+| `format`           | `scripts/commands/format`    | A-ROOT   | Prettier **write** (local tool; not the format gate) |
+| `typecheck`        | `scripts/commands/typecheck` | A-ROOT   | Typecheck (QG-TYPE-001)                              |
+| `validate`         | `scripts/commands/validate`  | A-ROOT   | Local validation aggregator (EE-DOC-010)             |
+| `doctor`           | `scripts/commands/doctor`    | A-ROOT   | Environment diagnostics (does not replace validate)  |
+| `generate`         | `scripts/commands/generate`  | A-GEN    | Scaffolding (Plop)                                   |
+| `e2e`              | `scripts/commands/e2e`       | A-ROOT   | End-to-end tests (Playwright)                        |
+| `release`          | `scripts/commands/release`   | A-REL    | Monorepo release orchestration                       |
+| `clean`            | `scripts/commands/clean`     | A-ROOT   | Clean build artifacts / caches                       |
+| `changeset`        | `@changesets/cli`            | A-REL    | Declare SemVer changes (no file under `scripts/`)    |
+| `version-packages` | `changeset version`          | A-REL    | Apply package versions (no file under `scripts/`)    |
 
 ### Format write vs check
 
@@ -70,9 +71,8 @@ documentation derived from that contract — not an independent source of truth.
 
 ### Auxiliary files
 
-| File                 | Role                                                        |
-| -------------------- | ----------------------------------------------------------- |
-| `configure-lint.mjs` | Tooling helper — **not** a root command in EE-DOC-011 §04.2 |
+The command implementations live under `scripts/commands/`; shared helpers and
+regression tests are kept in `scripts/lib/` and `scripts/tests/`, respectively.
 
 ## Prospective Dependencies
 
@@ -249,9 +249,51 @@ Significant or cross-cutting changes must comply with the Engineering Ecosystem 
 
 Examples:
 
-`powershell
-pnpm run generate -- app-node --name sample-app
-pnpm run generate -- connector-typescript --name sample-conn
-`
+Examples:
+
+```bash
+pnpm run generate -- app-node sample-app
+pnpm run generate -- connector-typescript sample-conn
+```
 
 Missing registry ⇒ exit code ≠ 0 (No False Pass). Do not commit sample trees.
+
+## E2E orchestration
+
+The dashboard E2E suite is invoked through its existing workspace script and the matching Turbo task:
+
+```bash
+pnpm exec turbo run test:e2e --filter=@eq-labs/dashboard
+```
+
+Turbo declares `test:e2e` with `cache: false` and a dependency on upstream workspace builds. The task runs `apps/dashboard`'s `test:e2e` script; it does not imply that the E2E gate is wired into the root `validate` command or CI. Quality-gate availability remains governed by EE-DOC-010 and CI composition by EE-DOC-007.
+
+## Windows: Vitest and %TEMP%
+
+`@eq-labs/knowledge` uses Vitest. On Windows, Vitest workers create
+subdirectories under `%TEMP%`, which is frequently blocked by antivirus
+or restricted permissions (`EPERM`).
+
+`scripts/commands/test` redirects `TMP`/`TEMP`/`TMPDIR` to
+`<root>/.tmp/vitest` before invoking Turbo, and `turbo.json` declares
+`globalPassThroughEnv` so Turbo propagates them to each task.
+
+**Consequences:**
+
+- `pnpm test` and `pnpm run validate` are safe on Windows.
+- `pnpm exec turbo run test` (direct, bypassing the wrapper) is **not
+  supported on Windows**: it will re-use the system `%TEMP%` and may fail
+  with `EPERM`. Use `pnpm test` instead.
+
+## Release safety
+
+`pnpm run release` requires a clean working tree, versions packages through Changesets, runs validation and build, stages only tracked release changes plus generated `CHANGELOG.md` files, and creates the release commit/tag before publication. It does not use `git add .`. If publication fails after the local release commit/tag is created, inspect the local release state and resume deliberately; do not rerun versioning blindly.
+
+## Known issues
+
+### sprintf-js (moderate, no upstream fix)
+
+`GHSA-hp3w-g68c-fv3c` — sprintf-js <=1.1.3 has no patched release.
+Transitive via `jest > @jest/transform > babel-plugin-istanbul > @istanbuljs/load-nyc-config > js-yaml > argparse > sprintf-js`.
+Does not block QG-SEC-001 (script filters by high/critical).
+Tracked for review when upstream ships a fix.

@@ -6,9 +6,24 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, sep } from 'node:path';
 import { parse as parseYaml } from 'yaml';
+import { assertDocIdUnique } from './lib/plop-utils.mjs';
 
 const ROOT = process.cwd();
 const TEMPLATES_ROOT = join(ROOT, 'templates');
+
+/** Sanitizes a user-provided title so it cannot escape docs/. (Tipo A M-07) */
+function sanitizeDocTitle(title) {
+  const raw = String(title ?? '').trim();
+  if (!raw) throw new Error('T-DOC title is required');
+  if (raw.includes('..') || raw.includes('/') || raw.includes('\\')) {
+    throw new Error(`Invalid T-DOC title (must not contain path separators or ".."): ${raw}`);
+  }
+  const safe = raw.replace(/[^A-Za-z0-9 ._-]+/g, '_').replace(/\s+/g, '_');
+  if (!safe || safe === '.' || safe === '..') {
+    throw new Error(`Invalid T-DOC title after sanitization: ${raw}`);
+  }
+  return safe;
+}
 
 function loadWorkspaceGlobs() {
   const raw = readFileSync(join(ROOT, 'pnpm-workspace.yaml'), 'utf8');
@@ -95,6 +110,20 @@ function docBodyTemplate(meta, filesDir) {
   return full;
 }
 
+/**
+ * M-06a — default `createdAt` for T-DOC bodies.
+ * Plop 4 does not evaluate `default` as a function in inputs[], so a dynamic
+ * value must be injected into the render context here. Mutation of `data` is
+ * the effective mechanism (Plop merges the generator data into the template
+ * context); the explicit `data` field on the action is added as a belt-and-
+ * suspenders measure in case Plop behavior changes.
+ */
+function ensureCreatedAt(data) {
+  if (typeof data.createdAt !== 'string' || data.createdAt.trim() === '') {
+    data.createdAt = new Date().toISOString().slice(0, 10);
+  }
+}
+
 function assertGuards(meta, data, destRel) {
   const globs = loadWorkspaceGlobs();
   const destAbs = join(ROOT, destRel);
@@ -163,13 +192,16 @@ export default function (plop) {
           assertGuards(meta, data, destRel);
 
           if (meta.category === 'T-DOC') {
-            const title = String(data.title || 'Title').replace(/\s+/g, '_');
+            assertDocIdUnique(data.docId, join(ROOT, 'docs'));
+            ensureCreatedAt(data);
+            const title = sanitizeDocTitle(data.title);
             const baseName = `${data.docId}_${title}.md`;
             return [
               {
                 type: 'add',
                 path: join(ROOT, destRel, baseName),
                 templateFile: docBodyTemplate(meta, filesDir),
+                data: { ...data },
               },
             ];
           }

@@ -1,5 +1,15 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
+import { mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+
+// Redirigir TEMP/TMP/TMPDIR al directorio local del proyecto
+// para evitar EPERM en Windows con workers de Turbo.
+const localTmp = join(process.cwd(), '.tmp', 'vitest');
+mkdirSync(localTmp, { recursive: true });
+process.env.TMP = localTmp;
+process.env.TEMP = localTmp;
+process.env.TMPDIR = localTmp;
 
 console.log('🧪 Running tests (QG-TEST-001)...');
 console.log('');
@@ -20,7 +30,7 @@ const zeroTasks =
   /No tasks were executed as part of this run/i.test(combined) ||
   /Tasks:\s*0 successful,\s*0 total/i.test(combined);
 
-if (result.status !== 0 && result.status !== null) {
+if (result.status !== 0) {
   console.error('');
   console.error('❌ QG-TEST-001: FAIL');
   process.exit(result.status ?? 1);
