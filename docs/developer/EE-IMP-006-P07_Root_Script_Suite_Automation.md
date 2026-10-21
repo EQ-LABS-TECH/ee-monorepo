@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                          |
-| :-------------------- | :--------------------------------------------------------------------------------------------- |
-| **ID**                | EE-IMP-006-P07                                                                                 |
-| **Documento**         | Root Script Suite Automation                                                                   |
-| **Código corto**      | EE-IMP-006-P07                                                                                 |
-| **Fase**              | Fase 7                                                                                         |
-| **Tipo**              | Documento Técnico de Implementación                                                            |
-| **Clasificación**     | Implementación                                                                                 |
-| **Nivel**             | Técnico                                                                                        |
-| **Normativo**         | NO, especificación de implementación derivada de EE-DOC-006                                    |
-| **Versión**           | v1.0.0                                                                                         |
-| **Estado**            | Aprobado                                                                                       |
-| **Propietario**       | Equipo de Arquitectura                                                                         |
-| **Documento padre**   | EE-DOC-006                                                                                     |
-| **Dependencias**      | EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-DOC-005, EE-DOC-006, EE-ADR-001, EE-ADR-002 |
-| **Aprobado por**      | Equipo de Arquitectura                                                                         |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                                               |
-| **Fecha de creación** | 2026-09-18                                                                                     |
-| **Última revisión**   | 2026-09-18                                                                                     |
-| **Próxima revisión**  | —                                                                                              |
+| Campo                 | Valor                                          |
+| :-------------------- | :--------------------------------------------- |
+| **ID**                | EE-IMP-006-P07                                 |
+| **Documento**         | Root Script Suite Automation                   |
+| **Código corto**      | IMP-006-P07                                    |
+| **Fase**              | Fase 7                                         |
+| **Tipo**              | Documento Técnico de Implementación            |
+| **Clasificación**     | Implementación                                 |
+| **Nivel**             | Técnico                                        |
+| **Normativo**         | No                                             |
+| **Versión**           | v1.1.0                                         |
+| **Estado**            | Aprobado                                       |
+| **Propietario**       | Equipo de Arquitectura                         |
+| **Documento padre**   | EE-DOC-006                                     |
+| **Dependencias**      | padre=EE-DOC-006; contenido=EE-IMP-006-P01…P06 |
+| **Aprobado por**      | Equipo de Arquitectura                         |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps               |
+| **Fecha de creación** | 2026-09-18                                     |
+| **Última revisión**   | 2026-10-18                                     |
+| **Próxima revisión**  | No aplica — Documento Aprobado                 |
 
 ---
 
@@ -78,37 +78,28 @@ Esta documentación no redefine:
 ```text
 ee-monorepo/
 ├── scripts/
-│   ├── bootstrap                 # Inicialización y validación de entorno
-│   ├── build                     # Orquestación de build
-│   ├── dev                       # Orquestación de modo desarrollo
-│   ├── test                      # Orquestación de tests
-│   ├── lint                      # Orquestación de linting
-│   ├── format                    # Formateo mediante Prettier
-│   ├── typecheck                 # Orquestación de TypeScript
-│   ├── validate                  # Validación integral del repositorio
-│   ├── doctor                    # Diagnóstico del entorno
-│   ├── generate                  # Generación de código mediante Plop
-│   ├── release                   # Gestión del release
-│   ├── clean                     # Limpieza de artefactos
-│   ├── configure-lint.mjs        # Configuración automatizada de ESLint
-│   └── README.md                 # Documentación local de scripts
+│   ├── commands/
+│   │   ├── bootstrap   # Inicialización y validación de entorno
+│   │   ├── build       # Orquestación de build
+│   │   ├── clean       # Limpieza de artefactos
+│   │   ├── dev         # Orquestación de modo desarrollo
+│   │   ├── doctor      # Diagnóstico del entorno
+│   │   ├── e2e         # Orquestación E2E (Playwright / turbo test:e2e)
+│   │   ├── format      # Formateo mediante Prettier
+│   │   ├── generate    # Generación de código mediante Plop
+│   │   ├── lint        # Orquestación de linting
+│   │   ├── release     # Gestión del release
+│   │   ├── test        # Orquestación de tests
+│   │   ├── typecheck   # Orquestación de TypeScript
+│   │   └── validate    # Validación integral del repositorio
+│   ├── lib/            # Lógica compartida de scripts
+│   ├── tests/          # Pruebas de los comandos
+│   └── README.md       # Documentación local de scripts
 │
-└── package.json                  # Define comandos root y dependencias
+└── package.json        # Define comandos root y dependencias
     └── scripts:
-        bootstrap
-        build
-        dev
-        test
-        lint
-        format
-        typecheck
-        validate
-        doctor
-        generate
-        release
-        clean
-        changeset (directo Changesets)
-        version-packages (directo Changesets)
+        bootstrap | build | dev | test | e2e | lint | format |
+        typecheck | validate | doctor | generate | release | clean
 ```
 
 ```text
@@ -144,16 +135,16 @@ Cuando una operación corresponde a tareas distribuidas entre workspaces, el scr
 
 ```mermaid
 flowchart TD
-    Root["Comando root<br/>pnpm &lt;task&gt;"]
-    Script["Repository Script<br/>scripts/&lt;task&gt;"]
-    Turbo["Turborepo"]
-    Graph["Workspace Task Graph"]
-    Workspace["Workspace Scripts"]
+ Root["Comando root<br/>pnpm &lt;task&gt;"]
+ Script["Repository Script<br/>scripts/commands/&lt;task&gt;"]
+ Turbo["Turborepo"]
+ Graph["Workspace Task Graph"]
+ Workspace["Workspace Scripts"]
 
-    Root --> Script
-    Script --> Turbo
-    Turbo --> Graph
-    Graph --> Workspace
+ Root --> Script
+ Script --> Turbo
+ Turbo --> Graph
+ Graph --> Workspace
 ```
 
 Turborepo mantiene la responsabilidad sobre:
@@ -173,14 +164,14 @@ Las operaciones de administración de paquetes utilizan PNPM.
 
 ```mermaid
 flowchart TD
-    Root["Comando root"]
-    Script["Repository Script"]
-    PNPM["PNPM"]
-    Operation["Package Operation"]
+ Root["Comando root"]
+ Script["Repository Script"]
+ PNPM["PNPM"]
+ Operation["Package Operation"]
 
-    Root --> Script
-    Script --> PNPM
-    PNPM --> Operation
+ Root --> Script
+ Script --> PNPM
+ PNPM --> Operation
 ```
 
 PNPM mantiene la responsabilidad sobre:
@@ -207,26 +198,26 @@ PNPM mantiene la responsabilidad sobre:
 
 ## 05. Especificación Técnica de Artefactos y Comandos
 
-| Comando            | Ruta Física         | Responsabilidad                 | Mecanismo principal          |
-| :----------------- | :------------------ | :------------------------------ | :--------------------------- |
-| `bootstrap`        | `scripts/bootstrap` | Preparación inicial del entorno | PNPM + SemVer                |
-| `build`            | `scripts/build`     | Build de workspaces             | Turborepo                    |
-| `dev`              | `scripts/dev`       | Modo desarrollo                 | Turborepo                    |
-| `test`             | `scripts/test`      | Ejecución de tests disponibles  | Turborepo                    |
-| `lint`             | `scripts/lint`      | Lint de workspaces              | Turborepo                    |
-| `format`           | `scripts/format`    | Formateo del repositorio        | Prettier                     |
-| `typecheck`        | `scripts/typecheck` | Verificación de tipos           | Turborepo + TypeScript       |
-| `validate`         | `scripts/validate`  | Validación integral             | Turbo + validaciones locales |
-| `doctor`           | `scripts/doctor`    | Diagnóstico del entorno         | Node.js + PNPM + Git         |
-| `generate`         | `scripts/generate`  | Generación de código            | Plop + PNPM                  |
-| `release`          | `scripts/release`   | Release del ecosistema          | Changesets + PNPM + Git      |
-| `clean`            | `scripts/clean`     | Limpieza de workspaces          | Turborepo                    |
-| `changeset`        | CLI directa         | Declaración de cambios          | Changesets                   |
-| `version-packages` | CLI directa         | Versionado de paquetes          | Changesets                   |
+| Comando            | Ruta Física                  | Responsabilidad                 | Mecanismo principal          |
+| :----------------- | :--------------------------- | :------------------------------ | :--------------------------- |
+| `bootstrap`        | `scripts/commands/bootstrap` | Preparación inicial del entorno | PNPM + SemVer                |
+| `build`            | `scripts/commands/build`     | Build de workspaces             | Turborepo                    |
+| `dev`              | `scripts/commands/dev`       | Modo desarrollo                 | Turborepo                    |
+| `test`             | `scripts/commands/test`      | Ejecución de tests disponibles  | Turborepo                    |
+| `lint`             | `scripts/commands/lint`      | Lint de workspaces              | Turborepo                    |
+| `format`           | `scripts/commands/format`    | Formateo del repositorio        | Prettier                     |
+| `typecheck`        | `scripts/commands/typecheck` | Verificación de tipos           | Turborepo + TypeScript       |
+| `validate`         | `scripts/commands/validate`  | Validación integral             | Turbo + validaciones locales |
+| `doctor`           | `scripts/commands/doctor`    | Diagnóstico del entorno         | Node.js + PNPM + Git         |
+| `generate`         | `scripts/commands/generate`  | Generación de código            | Plop + PNPM                  |
+| `release`          | `scripts/commands/release`   | Release del ecosistema          | Changesets + PNPM + Git      |
+| `clean`            | `scripts/commands/clean`     | Limpieza de workspaces          | Turborepo                    |
+| `changeset`        | CLI directa                  | Declaración de cambios          | Changesets                   |
+| `version-packages` | CLI directa                  | Versionado de paquetes          | Changesets                   |
 
 ### 05.1. Bootstrap
 
-El script `scripts/bootstrap` es el punto de entrada de Inicialización del monorepo.
+El script `scripts/commands/bootstrap` es el punto de entrada de Inicialización del monorepo.
 
 Antes de instalar dependencias valida los requisitos declarados en el `package.json` root:
 
@@ -240,7 +231,7 @@ La validación utiliza SemVer para comprobar que las versiones actuales satisfac
 Actualmente se declaran:
 
 ```text
-Node.js >=22.19.0 <23
+Node.js >=24 <25
 PNPM >=10.16.1 <11
 ```
 
@@ -248,23 +239,23 @@ Flujo:
 
 ```mermaid
 flowchart TD
-    A["pnpm bootstrap"] --> B["scripts/bootstrap"]
-    B --> C["Leer package.json"]
-    C --> D["Validar Node.js"]
-    D --> E["Validar pnpm"]
-    E --> F{"¿Requisitos válidos?"}
-    F -->|No| G["Error y exit 1"]
-    F -->|Sí| H["pnpm install"]
-    H --> I{"¿Instalación correcta?"}
-    I -->|No| J["Error"]
-    I -->|Sí| K["Bootstrap completado"]
+ A["pnpm bootstrap"] --> B["scripts/commands/bootstrap"]
+ B --> C["Leer package.json"]
+ C --> D["Validar Node.js"]
+ D --> E["Validar pnpm"]
+ E --> F{"¿Requisitos válidos?"}
+ F -->|No| G["Error y exit 1"]
+ F -->|Sí| H["pnpm install"]
+ H --> I{"¿Instalación correcta?"}
+ I -->|No| J["Error"]
+ I -->|Sí| K["Bootstrap completado"]
 ```
 
 El bootstrap finaliza con error cuando los requisitos de entorno o la instalación no son satisfactorios.
 
 ### 05.2. Build
 
-El script `scripts/build` delega el build de los workspaces a Turborepo mediante:
+El script `scripts/commands/build` delega el build de los workspaces a Turborepo mediante:
 
 ```text
 turbo run build
@@ -274,9 +265,9 @@ Flujo:
 
 ```mermaid
 flowchart LR
-    A["pnpm build"] --> B["scripts/build"]
-    B --> C["turbo run build"]
-    C --> D["Workspace build tasks"]
+ A["pnpm build"] --> B["scripts/commands/build"]
+ B --> C["turbo run build"]
+ C --> D["Workspace build tasks"]
 ```
 
 La suite root no implementa la lógica de compilación específica de cada workspace.
@@ -285,7 +276,7 @@ La responsabilidad de cada build permanece en el `package.json` del workspace y 
 
 ### 05.3. Development
 
-El script `scripts/dev` delega el modo desarrollo mediante:
+El script `scripts/commands/dev` delega el modo desarrollo mediante:
 
 ```text
 turbo run dev
@@ -295,9 +286,9 @@ Flujo:
 
 ```mermaid
 flowchart LR
-    A["pnpm dev"] --> B["scripts/dev"]
-    B --> C["turbo run dev"]
-    C --> D["Workspace dev tasks"]
+ A["pnpm dev"] --> B["scripts/commands/dev"]
+ B --> C["turbo run dev"]
+ C --> D["Workspace dev tasks"]
 ```
 
 La configuración global de Turborepo define `dev` como:
@@ -307,7 +298,7 @@ La configuración global de Turborepo define `dev` como:
 
 ### 05.4. Testing
 
-El script `scripts/test` delega la ejecución de las tareas `test` a Turborepo:
+El script `scripts/commands/test` delega la ejecución de las tareas `test` a Turborepo:
 
 ```text
 turbo run test
@@ -317,10 +308,10 @@ Flujo:
 
 ```mermaid
 flowchart TD
-    A["pnpm test"] --> B["scripts/test"]
-    B --> C["turbo run test"]
-    C --> D["Workspaces con tarea test"]
-    D --> E["Testing Runner"]
+ A["pnpm test"] --> B["scripts/commands/test"]
+ B --> C["turbo run test"]
+ C --> D["Workspaces con tarea test"]
+ D --> E["Testing Runner"]
 ```
 
 El runner concreto depende del workspace y de las reglas de **EE-ADR-002**.
@@ -356,11 +347,11 @@ cuando ningún workspace participante define una tarea `test`.
 
 Este estado se interpreta conforme a la política de adopción progresiva de EE-ADR-002 y no constituye por sí mismo un fallo de la suite root.
 
-El script `scripts/test` informa explícitamente esta posibilidad.
+El script `scripts/commands/test` informa explícitamente esta posibilidad.
 
 ### 05.5. Lint
 
-El script `scripts/lint` delega el linting a Turborepo:
+El script `scripts/commands/lint` delega el linting a Turborepo:
 
 ```text
 turbo run lint
@@ -370,10 +361,10 @@ Flujo:
 
 ```mermaid
 flowchart LR
-    A["pnpm lint"] --> B["scripts/lint"]
-    B --> C["turbo run lint"]
-    C --> D["Workspace lint tasks"]
-    D --> E["ESLint"]
+ A["pnpm lint"] --> B["scripts/commands/lint"]
+ B --> C["turbo run lint"]
+ C --> D["Workspace lint tasks"]
+ D --> E["ESLint"]
 ```
 
 La configuración compartida de ESLint reside en:
@@ -411,16 +402,16 @@ Flujo conceptual:
 
 ```mermaid
 flowchart TD
-    A["configure-lint.mjs"] --> B["Validar workspaces"]
-    B --> C["Leer package.json"]
-    C --> D["Configurar lint"]
-    D --> E["Configurar eslint.config.mjs"]
-    E --> F["Workspace preparado"]
+ A["configure-lint.mjs"] --> B["Validar workspaces"]
+ B --> C["Leer package.json"]
+ C --> D["Configurar lint"]
+ D --> E["Configurar eslint.config.mjs"]
+ E --> F["Workspace preparado"]
 ```
 
 ### 05.6. Format
 
-El script `scripts/format` proporciona el punto de entrada root para Prettier.
+El script `scripts/commands/format` proporciona el punto de entrada root para Prettier.
 
 Primero comprueba que Prettier está disponible mediante:
 
@@ -438,10 +429,10 @@ Flujo:
 
 ```mermaid
 flowchart LR
-    A["pnpm format"] --> B["scripts/format"]
-    B --> C["Check Prettier"]
-    C --> D["Prettier --write"]
-    D --> E["Repository files"]
+ A["pnpm format"] --> B["scripts/commands/format"]
+ B --> C["Check Prettier"]
+ C --> D["Prettier --write"]
+ D --> E["Repository files"]
 ```
 
 La configuración compartida de Prettier pertenece a:
@@ -452,7 +443,7 @@ packages/config/prettier/
 
 ### 05.7. Typecheck
 
-El script `scripts/typecheck` delega la comprobación de tipos a:
+El script `scripts/commands/typecheck` delega la comprobación de tipos a:
 
 ```text
 turbo run typecheck
@@ -462,17 +453,17 @@ Flujo:
 
 ```mermaid
 flowchart LR
-    A["pnpm typecheck"] --> B["scripts/typecheck"]
-    B --> C["turbo run typecheck"]
-    C --> D["Workspace typecheck tasks"]
-    D --> E["TypeScript"]
+ A["pnpm typecheck"] --> B["scripts/commands/typecheck"]
+ B --> C["turbo run typecheck"]
+ C --> D["Workspace typecheck tasks"]
+ D --> E["TypeScript"]
 ```
 
 Cada workspace participante define su propia tarea `typecheck` y consume las configuraciones compartidas correspondientes.
 
 ### 05.8. Validate
 
-El script `scripts/validate` constituye el punto de entrada para la validación integral del repositorio.
+El script `scripts/commands/validate` constituye el punto de entrada para la validación integral del repositorio.
 
 Su implementación combina ejecución de tareas y validaciones locales.
 
@@ -480,33 +471,33 @@ Su implementación combina ejecución de tareas y validaciones locales.
 
 ```mermaid
 flowchart TD
-    V["scripts/validate"]
+ V["scripts/commands/validate"]
 
-    T["Typecheck"]
-    L["Lint"]
-    TS["Tests"]
-    F["Format"]
-    S["Security Audit"]
-    ST["Project Structure"]
-    W["Workspace Configuration"]
+ T["Typecheck"]
+ L["Lint"]
+ TS["Tests"]
+ F["Format"]
+ S["Security Audit"]
+ ST["Project Structure"]
+ W["Workspace Configuration"]
 
-    R["Validation Summary"]
+ R["Validation Summary"]
 
-    V --> T
-    V --> L
-    V --> TS
-    V --> F
-    V --> S
-    V --> ST
-    V --> W
+ V --> T
+ V --> L
+ V --> TS
+ V --> F
+ V --> S
+ V --> ST
+ V --> W
 
-    T --> R
-    L --> R
-    TS --> R
-    F --> R
-    S --> R
-    ST --> R
-    W --> R
+ T --> R
+ L --> R
+ TS --> R
+ F --> R
+ S --> R
+ ST --> R
+ W --> R
 ```
 
 #### 05.8.2. Project Structure
@@ -571,12 +562,12 @@ La ejecución global registrada para el estado actual produjo:
 
 ```text
 Typecheck: 18 successful / 18 total
-Lint:      25 successful / 25 total
-Tests:     0 tasks executed
-Format:    All matched files use Prettier code style!
+Lint: 25 successful / 25 total
+Tests: 0 tasks executed
+Format: All matched files use Prettier code style!
 Structure: PASS
 Workspace: PASS
-Final:     All validations passed successfully!
+Final: All validations passed successfully!
 ```
 
 La auditoría de seguridad registró:
@@ -592,7 +583,7 @@ Este resultado se registra como **WARN** dentro de la validación actual y no im
 
 ### 05.9. Doctor
 
-El script `scripts/doctor` proporciona diagnóstico del entorno local.
+El script `scripts/commands/doctor` proporciona diagnóstico del entorno local.
 
 Comprueba herramientas fundamentales:
 
@@ -642,7 +633,7 @@ El script finaliza con error cuando detecta un requisito estructural o de entorn
 
 ### 05.10. Generate
 
-El script `scripts/generate` proporciona la interfaz root para generación de código mediante Plop.
+El script `scripts/commands/generate` proporciona la interfaz root para generación de código mediante Plop.
 
 Primero valida que Plop esté disponible:
 
@@ -653,12 +644,12 @@ pnpm exec plop --version
 Después comprueba:
 
 ```text
-plopfile.js
+plopfile.mjs
 ```
 
 #### 05.10.1. Templates no Configurados
 
-Cuando `plopfile.js` no existe, la implementación actual:
+Cuando `plopfile.mjs` no existe, la implementación actual:
 
 1. informa que los templates todavía no están configurados;
 2. indica que esta condición es esperada hasta la implementación de EE-DOC-012;
@@ -669,22 +660,22 @@ Flujo:
 
 ```mermaid
 flowchart TD
-    A["pnpm generate"] --> B["scripts/generate"]
-    B --> C["Check Plop"]
-    C --> D{"¿Existe plopfile.js?"}
-    D -->|No| E["Informar pendiente"]
-    E --> F["Exit 0"]
-    D -->|Sí| G["pnpm exec plop"]
-    G --> H{"¿Generación correcta?"}
-    H -->|No| I["Error"]
-    H -->|Sí| J["Generación completada"]
+ A["pnpm generate"] --> B["scripts/commands/generate"]
+ B --> C["Check Plop"]
+ C --> D{"¿Existe plopfile.mjs?"}
+ D -->|No| E["Informar pendiente"]
+ E --> F["Exit 0"]
+ D -->|Sí| G["pnpm exec plop"]
+ G --> H{"¿Generación correcta?"}
+ H -->|No| I["Error"]
+ H -->|Sí| J["Generación completada"]
 ```
 
 La generación efectiva queda condicionada a la implementación de templates definida por **EE-DOC-012**.
 
 ### 05.11. Release
 
-El script `scripts/release` implementa el proceso de release del Engineering Ecosystem.
+El script `scripts/commands/release` implementa el proceso de release del Engineering Ecosystem.
 
 La implementación integra:
 
@@ -706,19 +697,19 @@ La política establece:
 
 ```text
 package.json root.version
-        ↓
+ ↓
 Versión canónica del Engineering Ecosystem
 ```
 
 Los workspaces mantienen sus propias versiones para publicación y son versionados mediante Changesets.
 
-| Elemento                 | Responsabilidad                         |
-| :----------------------- | :-------------------------------------- |
-| Root `package.json`      | Versión canónica del EE                 |
-| Workspace `package.json` | Versión individual del paquete          |
-| Changesets               | Determinación de releases de workspaces |
-| `scripts/release`        | Sincronización y ejecución del release  |
-| Git tag                  | Identificación del release completo     |
+| Elemento                   | Responsabilidad                         |
+| :------------------------- | :-------------------------------------- |
+| Root `package.json`        | Versión canónica del EE                 |
+| Workspace `package.json`   | Versión individual del paquete          |
+| Changesets                 | Determinación de releases de workspaces |
+| `scripts/commands/release` | Sincronización y ejecución del release  |
+| Git tag                    | Identificación del release completo     |
 
 El tag global utiliza:
 
@@ -746,18 +737,18 @@ En ausencia de ambos, se utiliza `patch`, siempre que exista un release versiona
 
 ```mermaid
 flowchart TD
-    A["pnpm release"] --> B["scripts/release"]
-    B --> C["Leer versión root"]
-    C --> D["Evaluar Changesets"]
-    D --> E["Calcular siguiente versión EE"]
-    E --> F["pnpm version-packages"]
-    F --> G["Sincronizar versión root"]
-    G --> H["pnpm validate"]
-    H --> I["turbo run build"]
-    I --> J["pnpm -r publish --access public"]
-    J --> K["Crear commit release"]
-    K --> L["Crear tag vX.Y.Z"]
-    L --> M["git push --follow-tags"]
+ A["pnpm release"] --> B["scripts/commands/release"]
+ B --> C["Leer versión root"]
+ C --> D["Evaluar Changesets"]
+ D --> E["Calcular siguiente versión EE"]
+ E --> F["pnpm version-packages"]
+ F --> G["Sincronizar versión root"]
+ G --> H["pnpm validate"]
+ H --> I["turbo run build"]
+ I --> J["pnpm -r publish --access public"]
+ J --> K["Crear commit release"]
+ K --> L["Crear tag vX.Y.Z"]
+ L --> M["git push --follow-tags"]
 ```
 
 #### 05.11.4. Publicación
@@ -782,7 +773,7 @@ La modificación de la política de visibilidad o registry distribution no forma
 
 ### 05.12. Clean
 
-El script `scripts/clean` delega la limpieza en:
+El script `scripts/commands/clean` delega la limpieza en:
 
 ```text
 turbo run clean
@@ -792,10 +783,10 @@ Flujo:
 
 ```mermaid
 flowchart LR
-    A["pnpm clean"] --> B["scripts/clean"]
-    B --> C["turbo run clean"]
-    C --> D["Workspace clean tasks"]
-    D --> E["Artifacts removed"]
+ A["pnpm clean"] --> B["scripts/commands/clean"]
+ B --> C["turbo run clean"]
+ C --> D["Workspace clean tasks"]
+ D --> E["Artifacts removed"]
 ```
 
 La tarea global `clean` está configurada sin caching.
@@ -813,6 +804,7 @@ pnpm bootstrap
 pnpm build
 pnpm dev
 pnpm test
+pnpm e2e
 pnpm lint
 pnpm format
 pnpm typecheck
@@ -827,16 +819,16 @@ La relación general es:
 
 ```text
 pnpm <command>
-       ↓
-node scripts/<command>
+ ↓
+node scripts/commands/<command>
 ```
 
 Ejemplo:
 
 ```text
 pnpm build
-    ↓
-node scripts/build
+ ↓
+node scripts/commands/build
 ```
 
 ### 06.2. Comandos Directos de Changesets
@@ -869,7 +861,7 @@ La configuración actual es:
 
 ```json
 {
-  "ui": "tui",
+  "globalPassThroughEnv": ["TMP", "TEMP", "TMPDIR"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -880,16 +872,23 @@ La configuración actual es:
       "persistent": true
     },
     "test": {
-      "outputs": ["coverage/**"]
+      "dependsOn": ["^build"],
+      "outputs": []
     },
     "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "lint": {
       "outputs": []
     },
     "clean": {
       "cache": false
     },
-    "lint": {
-      "outputs": []
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "outputs": ["playwright-report/**", "test-results/**"]
     }
   }
 }
@@ -1018,15 +1017,15 @@ La suite root implementa el punto de entrada:
 
 ```text
 Usuario
-  ↓
+ ↓
 PNPM
-  ↓
+ ↓
 Root Script
-  ↓
+ ↓
 Turborepo
-  ↓
+ ↓
 Workspace Task Graph
-  ↓
+ ↓
 Workspace
 ```
 
@@ -1036,7 +1035,7 @@ Los scripts root funcionan como una capa de interfaz y coordinación de nivel re
 
 ## 12. Integración con EE-ADR-002
 
-La suite `scripts/test` no define por sí misma los runners de testing.
+La suite `scripts/commands/test` no define por sí misma los runners de testing.
 
 Su responsabilidad es exponer:
 
@@ -1056,13 +1055,13 @@ El modelo actual es:
 
 ```text
 Root
-  ↓
-scripts/test
-  ↓
+ ↓
+scripts/commands/test
+ ↓
 Turborepo
-  ↓
+ ↓
 Workspace
-  ↓
+ ↓
 Vitest / Playwright / Jest exception
 ```
 
@@ -1098,7 +1097,7 @@ No se introduce una nueva decisión arquitectónica por este hallazgo.
 
 ### 13.3. Estado de Templates
 
-La capacidad `generate` está preparada para Plop, pero la generación efectiva depende de la existencia de `plopfile.js`.
+La capacidad `generate` está preparada para Plop, pero la generación efectiva depende de la existencia de `plopfile.mjs`.
 
 La ausencia actual de templates se considera una condición pendiente de **EE-DOC-012**, no un fallo de la interfaz root.
 
@@ -1147,11 +1146,11 @@ La implementación materializa:
 
 ```text
 scripts/
-    ↓
+ ↓
 Root Commands
-    ↓
+ ↓
 Repository Automation
-    ↓
+ ↓
 Turborepo / PNPM / Tooling
 ```
 
@@ -1185,20 +1184,20 @@ La implementación no introduce una nueva arquitectura de orquestación.
 
 - **Seguridad:** 11 vulnerabilidades detectadas en auditoría (El hallazgo se registra como resultado de seguridad del estado actual y no como fallo de la implementación de scripts.);
 - **Tests:** Estado `NO_TESTS` es válido conforme a adopción progresiva de EE-ADR-002;
-- **Generación:** Plop está disponible pero `plopfile.js` no existe (condición esperada, pendiente de EE-DOC-012).
+- **Generación:** Plop está disponible pero `plopfile.mjs` no existe (condición esperada, pendiente de EE-DOC-012).
 
 ---
 
 ## 15. Trazabilidad
 
-| Elemento                           | Referencia                                          |
-| :--------------------------------- | :-------------------------------------------------- |
-| **Documento normativo padre**      | EE-DOC-006 — Repository Structure                   |
-| **Fase**                           | Fase 7 — Root Script Suite Automation               |
-| **Implementación**                 | EE-IMP-006-P07                                      |
-| **Artefactos físicos**             | `scripts/` y configuración en `package.json` root   |
-| **Especificación de orquestación** | EE-ADR-001 — Workspace Task Orchestration Strategy  |
-| **Especificación de testing**      | EE-ADR-002 — Engineering Ecosystem Testing Standard |
+| Elemento                           | Referencia                                                                             |
+| :--------------------------------- | :------------------------------------------------------------------------------------- |
+| **Documento normativo padre**      | EE-DOC-006 — Repository Structure                                                      |
+| **Fase**                           | Fase 7 — Root Script Suite Automation                                                  |
+| **Implementación**                 | EE-IMP-006-P07                                                                         |
+| **Artefactos físicos**             | `scripts/commands/`, `scripts/lib/`, `scripts/tests/` y scripts en `package.json` root |
+| **Especificación de orquestación** | EE-ADR-001 — Workspace Task Orchestration Strategy                                     |
+| **Especificación de testing**      | EE-ADR-002 — Engineering Ecosystem Testing Standard                                    |
 
 ### 15.1. Conformidad
 
@@ -1216,8 +1215,6 @@ La implementación documentada en este documento es conforme con el alcance de l
 - los descubrimientos relevantes quedan registrados;
 - la documentación técnica acompaña la implementación y validación de la fase.
 
----
-
 ### 15.2. Estado Documental
 
 Este documento constituye la **Documentación Técnica de Implementación** correspondiente a la **Fase 7 — Scripts** de **EE-DOC-006 — Repository Structure**.
@@ -1226,24 +1223,24 @@ La Fase 7 forma parte de la etapa de **Implementación** de EE-DOC-006 y sigue e
 
 ```mermaid
 flowchart TD
-    A["Implementación de la Fase 7"]
-    B["Validación de la Fase 7"]
-    C["Documentación Técnica de la Fase 7"]
-    D["Revisión Arquitectónica"]
-    E["Aprobación"]
-    F["Congelación de la Fase 7"]
+ A["Implementación de la Fase 7"]
+ B["Validación de la Fase 7"]
+ C["Documentación Técnica de la Fase 7"]
+ D["Revisión Arquitectónica"]
+ E["Aprobación"]
+ F["Congelación de la Fase 7"]
 
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
+ A --> B
+ B --> C
+ C --> D
+ D --> E
+ E --> F
 ```
 
 El estado actual de este documento es:
 
 ```text
-En Revisión Arquitectónica
+Aprobado
 ```
 
 La secuencia de aprobación de esta fase es independiente del estado global de EE-DOC-006.
@@ -1254,13 +1251,13 @@ EE-DOC-006 solo podrá pasar a su proceso de documentación consolidada, Validac
 
 ```text
 Implementación
-    ↓
+ ↓
 Validación
-    ↓
+ ↓
 Documentación
-    ↓
+ ↓
 Aprobación
-    ↓
+ ↓
 Congelación de la Fase
 ```
 
@@ -1268,14 +1265,14 @@ Una vez finalizadas todas las fases:
 
 ```mermaid
 flowchart TD
-    P["Fases 0–12 completadas"]
-    D["Documentación técnica consolidada"]
-    V["Validación Final de EE-DOC-006"]
-    F["Congelación de EE-DOC-006"]
+ P["Fases 0–12 completadas"]
+ D["Documentación técnica consolidada"]
+ V["Validación Final de EE-DOC-006"]
+ F["Congelación de EE-DOC-006"]
 
-    P --> D
-    D --> V
-    V --> F
+ P --> D
+ D --> V
+ V --> F
 ```
 
 ---
@@ -1297,12 +1294,34 @@ flowchart TD
 
 ## 17. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por | Motivo           | Cambios                                                                                                                                          | Estado       |
-| :--------- | :--------- | :----------------------- | :----------- | :--------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- | :----------- |
-| **v1.0.0** | 2026-09-18 | IA Asistente (propuesta) | Pendiente    | Creación inicial | Generación desde cero de la documentación técnica de la Fase 7, alineada con EE-DOC-006 v1.2.0, la implementación física registrada y EE-ADR-002 | **Aprobado** |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo               | Cambios                                                                                                                                          | Estado       |
+| :--------- | :--------- | :----------------------- | :--------------------- | :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- | :----------- |
+| **v1.0.0** | 2026-09-18 | IA Asistente (propuesta) | Pendiente              | Creación inicial     | Generación desde cero de la documentación técnica de la Fase 7, alineada con EE-DOC-006 v1.2.0, la implementación física registrada y EE-ADR-002 | **Aprobado** |
+| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura   | Equipo de Arquitectura | Auditoría EE-DOC-006 | As-built scripts/commands y estados documentales merge                                                                                           | Aprobado     |
 
 > **Regla de autoridad:** La columna **Autor** registra quién elaboró o propuso el documento. La columna **Aprobado por** registra exclusivamente la autoridad humana que formalmente aprueba el documento. La IA Asistente no constituye autoridad de aprobación.
+
+> **Árbol as-built P07:** `scripts/commands/*`, `scripts/lib/*`, `scripts/tests/*`, `plopfile.mjs`. Diagramas con `scripts/<cmd>` plano son históricos.
 
 ---
 
 ## FIN DEL DOCUMENTO
+
+### Nota de consistencia de estado (auditoría 2026-10-15)
+
+Los **metadatos** declaran estado **Aprobado** (implementación de fase aceptada). Si el cuerpo aún dice «Borrador»/«En revisión» respecto de la **documentación** de la IMP, se interpreta como redacción histórica a unificar en la próxima edición: el estado canónico de metadatos prevalece hasta corrección explícita del cuerpo.
+
+---
+
+### Addendum as-built scripts/commands (auditoría 2026-10-17)
+
+La implementación vigente de comandos root está en **`scripts/commands/<cmd>`**, con **`scripts/lib/`** (p. ej. `security-audit.mjs`) y **`scripts/tests/`**. Las referencias históricas a `scripts/<cmd>` plano en este IMP se consideran **superseded**. El comando root **`pnpm e2e`** existe; el gate E2E de ecosistema puede seguir PENDING de enforcement.
+
+---
+
+### Addendum auditoría EE-DOC-006 (2026-10-18)
+
+- **Scripts root canónicos:** `scripts/commands/<cmd>` (+ `scripts/lib/`, `scripts/tests/`). Rutas históricas `scripts/<cmd>` plano quedan **superseded**.
+- **Estado:** los metadatos **Aprobado** prevalecen sobre menciones residuales de “Borrador” / “En revisión” en el cuerpo (evidencia histórica de la fase).
+- **As-built monorepo:** `assets/`, `examples/`, `marketplace/`, `data/`, `infra/` materializados (layout + README); detalle en EE-DOC-006 §05 y EE-TEC-001.
+- Este addendum **no** reescribe la evidencia de validación de fase (P01/P02: sin PASS retroactivo — EE-DOC-006 §20.1).

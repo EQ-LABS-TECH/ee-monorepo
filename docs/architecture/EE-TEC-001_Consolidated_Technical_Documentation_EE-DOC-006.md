@@ -10,12 +10,12 @@ Este documento sigue el estándar EE-DOC-002 — Document Design Template y regi
 | --------------------- | ------------------------------------------------------------------- |
 | **ID**                | EE-TEC-001                                                          |
 | **Documento**         | Consolidated Technical Documentation of EE-DOC-006                  |
-| **Código corto**      | EE-TEC-001                                                          |
+| **Código corto**      | TEC-001                                                             |
 | **Tipo**              | Documento Técnico                                                   |
 | **Clasificación**     | Implementación                                                      |
 | **Nivel**             | Técnico                                                             |
 | **Normativo**         | No                                                                  |
-| **Versión**           | v1.0.0                                                              |
+| **Versión**           | v1.1.0                                                              |
 | **Estado**            | Congelado                                                           |
 | **Propietario**       | Equipo de Arquitectura                                              |
 | **Documento padre**   | EE-DOC-006                                                          |
@@ -23,8 +23,8 @@ Este documento sigue el estándar EE-DOC-002 — Document Design Template y regi
 | **Aprobado por**      | Equipo de Arquitectura                                              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                |
 | **Fecha de creación** | 2026-09-20                                                          |
-| **Última revisión**   | 2026-09-20                                                          |
-| **Próxima revisión**  | 2026-12-20                                                          |
+| **Última revisión**   | 2026-10-19                                                          |
+| **Próxima revisión**  | No aplica — Documento Congelado                                     |
 
 ---
 
@@ -93,113 +93,95 @@ Este documento **no sustituye** EE-DOC-006. La fuente de verdad normativa perman
 | Versión actual  | `1.0.0`                |
 | Licencia        | Apache-2.0             |
 | Package Manager | `pnpm@10.16.1`         |
-| Node.js         | `>=22.19.0 <23`        |
-| Orquestador     | Turborepo `2.5.0`      |
+| Node.js         | `>=24 <25`             |
+| Orquestador     | Turborepo `2.11.7`     |
 | Versionado      | Changesets             |
 
 ---
 
 ## 04. Estructura Física Consolidada del Repositorio
 
+> **As-built (corte 2026-10-18):** alineado a EE-DOC-006 §05 y al monorepo inventariado. Ramas con solo layout/README se indican como layout.
+
 ```text
 ee-monorepo/
-├── .changeset/                          # Infraestructura Changesets
-├── .github/                             # Gobernanza GitHub (estructura base)
+├── .changeset/                           # Changesets (config + changesets de trabajo)
+├── .github/                              # Gobernanza GitHub (EE-DOC-007)
 │   ├── CODEOWNERS
 │   ├── ISSUE_TEMPLATE/
 │   ├── PULL_REQUEST_TEMPLATE/
 │   └── workflows/
-├── packages/
-│   ├── config/                          # Contenedor administrativo (NO workspace)
-│   │   ├── eslint/                      # @eq-labs/config-eslint
-│   │   ├── jest/                        # @eq-labs/config-jest
-│   │   ├── prettier/                    # @eq-labs/config-prettier
-│   │   ├── typescript/                  # @eq-labs/config-typescript
-│   │   ├── vite/                        # @eq-labs/config-vite
-│   │   └── vitest/                      # @eq-labs/config-vitest
-│   ├── foundation/                      # @eq-labs/foundation (esqueleto)
-│   ├── shared/                          # @eq-labs/shared (esqueleto)
-│   ├── execution/                       # @eq-labs/execution (esqueleto)
-│   ├── intelligence/                    # @eq-labs/intelligence (esqueleto)
-│   ├── knowledge/                       # @eq-labs/knowledge (esqueleto)
-│   ├── governance/                      # @eq-labs/governance (esqueleto)
-│   ├── integration/                     # @eq-labs/integration (esqueleto)
-│   ├── registry/                        # @eq-labs/registry (esqueleto)
-│   └── sdk/                             # @eq-labs/sdk (esqueleto)
+├── .vscode/                              # Workspace editor (EE-DOC-008)
 ├── apps/
-│   ├── cli/                             # @eq-labs/cli
-│   ├── dashboard/                       # @eq-labs/dashboard
-│   └── extensions/                      # @eq-labs/extensions (estructura base)
+│   ├── cli/                              # @eq-labs/cli
+│   ├── dashboard/                        # @eq-labs/dashboard (+ Playwright E2E)
+│   └── extensions/                       # @eq-labs/extensions
+├── assets/                               # Layout: fonts/, images/, templates/
 ├── connectors/
-│   ├── official/
-│   │   ├── github/                      # @eq-labs/connector-github
-│   │   ├── docker/                      # @eq-labs/connector-docker
-│   │   ├── kubernetes/                  # @eq-labs/connector-kubernetes
-│   │   ├── notebooklm/                  # @eq-labs/connector-notebooklm
-│   │   ├── mcp/                         # @eq-labs/connector-mcp
-│   │   └── a2a/                         # @eq-labs/connector-a2a
-│   ├── community/                       # README (futuro)
-│   └── experimental/                    # README (futuro)
-├── scripts/
-│   ├── bootstrap
-│   ├── build
-│   ├── dev
-│   ├── test
-│   ├── lint
-│   ├── format
-│   ├── typecheck
-│   ├── validate
-│   ├── doctor
-│   ├── generate
-│   ├── release
-│   ├── clean
-│   ├── configure-lint.mjs
+│   ├── community/                        # Reservado
+│   ├── experimental/                     # Reservado
+│   └── official/
+│       ├── a2a/                          # @eq-labs/connector-a2a
+│       ├── docker/
+│       ├── github/
+│       ├── kubernetes/
+│       ├── mcp/
+│       └── notebooklm/
+├── data/                                 # Layout: benchmarks/, datasets/, models/
+├── docs/                                 # EE-DOC / ADR / IMP / RFC / validation (repo de trabajo)
+├── examples/                             # Layout: ddd/, erp/, microservices/
+├── infra/                                # EE-RFC-001
+│   ├── containers/
+│   ├── orchestration/
+│   └── secrets/
+├── marketplace/                          # Layout: agents/, plugins/, prompts/, skills/, templates/
+├── packages/
+│   ├── config/                           # Contenedor; workspaces = hijos
+│   │   ├── eslint/                       # @eq-labs/config-eslint
+│   │   ├── jest/
+│   │   ├── playwright/                   # @eq-labs/config-playwright
+│   │   ├── prettier/
+│   │   ├── typescript/
+│   │   ├── vite/
+│   │   └── vitest/
+│   ├── foundation/                       # @eq-labs/foundation
+│   ├── shared/
+│   ├── execution/
+│   ├── intelligence/
+│   ├── knowledge/
+│   ├── governance/
+│   ├── integration/
+│   ├── registry/
+│   └── sdk/
+├── scripts/                              # No es workspace pnpm
+│   ├── commands/                         # bootstrap…validate, e2e (entrypoints root)
+│   ├── lib/                              # configure-lint.mjs, security-audit.mjs
+│   ├── tests/                            # p. ej. security-audit.test.mjs
+│   ├── plopfile.mjs
 │   └── README.md
-├── assets/
-│   ├── images/
-│   ├── fonts/
-│   └── templates/
-├── docs/
-│   ├── architecture/
-│   ├── developer/
-│   └── adr/
-├── data/
-│   ├── benchmarks/
-│   ├── datasets/
-│   └── models/
-├── examples/
-│   ├── erp/
-│   ├── microservices/
-│   └── ddd/
-├── marketplace/
-│   ├── plugins/
-│   ├── agents/
-│   ├── prompts/
-│   ├── skills/
-│   └── templates/
+├── templates/                            # EE-RFC-002 / EE-DOC-012
+│   ├── app/
+│   ├── connector/
+│   ├── document/
+│   ├── package/
+│   └── template.schema.json
 ├── .editorconfig
 ├── .gitattributes
-├── .gitignore
+├── .gitignore                            # /lib/ + !scripts/lib/ (as-built)
+├── .markdownlint.json
 ├── .npmrc
-├── .nvmrc
+├── .nvmrc                                # Node 24 LTS (EE-ADR-003)
+├── .prettierignore
 ├── CHANGELOG.md
 ├── LICENSE
 ├── NOTICE
-├── package.json
+├── package.json                          # scripts → node scripts/commands/<cmd>
 ├── pnpm-workspace.yaml
+├── pnpm-lock.yaml
+├── prettier.config.mjs
 ├── README.md
-└── turbo.json
+└── turbo.json                            # EE-ADR-001
 ```
-
-> **Nota de alineación:** `EE-DOC-006` define la estructura normativa y el estado objetivo (blueprint) del repositorio. La implementación registrada en este documento representa exclusivamente el estado as-built alcanzado durante las fases de implementación correspondientes a `EE-DOC-006`.
->
-> La existencia de estructuras todavía no materializadas físicamente no constituye una desviación normativa cuando su implementación está prevista en etapas posteriores del roadmap documental del Engineering Ecosystem. La materialización de los componentes definidos por `EE-DOC-006` continuará progresivamente mediante `EE-DOC-007` a `EE-DOC-014`, según las responsabilidades y dependencias establecidas en `EE-DOC-001`.
->
-> Por tanto, las diferencias entre la estructura normativa completa definida por `EE-DOC-006` y la estructura física registrada en este documento deben interpretarse como `estado de implementación progresiva`, y no como incumplimiento de la especificación normativa.
->
-> La validación de la correspondencia global entre la arquitectura diseñada y el estado final materializado del Engineering Ecosystem corresponde a `EE-DOC-015 — Engineering Ecosystem Validation`.
-
----
 
 ## 05. Bootstrap del Repositorio (Fase 1 — EE-IMP-006-P01)
 
@@ -211,7 +193,7 @@ ee-monorepo/
 | `.gitattributes`      | Normalización de finales de línea, binarios, estrategias de merge                      |
 | `.gitignore`          | Exclusión de node_modules, builds, logs, secretos, IDE, etc. (conserva `.env.example`) |
 | `.npmrc`              | Configuración pnpm (workspace links, lockfile, peers, save-exact)                      |
-| `.nvmrc`              | Node.js 22                                                                             |
+| `.nvmrc`              | Node.js 24                                                                             |
 | `package.json`        | Identidad del monorepo, engines, scripts root, packageManager                          |
 | `pnpm-workspace.yaml` | Definición de workspaces                                                               |
 | `turbo.json`          | Pipeline de tareas Turborepo                                                           |
@@ -238,7 +220,7 @@ Estructura física inicial y configuración base del monorepo lista para las fas
 - No tiene `src/` ni `tsconfig.json`.
 - Su `package.json` es privado y solo identifica el contenedor.
 
-Los **seis paquetes especializados** son los workspaces reales y consumibles:
+Los **siete paquetes especializados** son los workspaces reales y consumibles:
 
 | Paquete                      | Ruta                          | Exports principales                    |
 | ---------------------------- | ----------------------------- | -------------------------------------- |
@@ -248,6 +230,7 @@ Los **seis paquetes especializados** son los workspaces reales y consumibles:
 | `@eq-labs/config-vite`       | `packages/config/vite/`       | `base.mjs`, `library.mjs`, `react.mjs` |
 | `@eq-labs/config-jest`       | `packages/config/jest/`       | `base.mjs`, `typescript.mjs`           |
 | `@eq-labs/config-vitest`     | `packages/config/vitest/`     | `base.mjs`, `react.mjs`                |
+| `@eq-labs/config-playwright` | `packages/config/playwright/` | `base.mjs`, `base.d.ts`                |
 
 ### 06.2. TypeScript (`@eq-labs/config-typescript`)
 
@@ -299,6 +282,7 @@ packages:
   - 'apps/*'
   - 'apps/extensions/*'
   - 'connectors/official/*'
+  - 'packages/*'
   - 'packages/config/*'
   - 'packages/foundation'
   - 'packages/shared'
@@ -311,7 +295,7 @@ packages:
   - 'packages/sdk'
 ```
 
-> Los patrones `packages/foundation/*` (y similares) aparecen en algunas revisiones intermedias. El estado consolidado registra los paquetes de primer nivel como workspaces según la implementación de Fase 4. La evolución a subpaquetes requerirá actualización coordinada de workspace + estructura.
+> El estado consolidado incluye el patrón `packages/*` (paquetes de primer nivel bajo `packages/`), `packages/config/*` y la lista explícita de paquetes de dominio. Los patrones históricos del tipo `packages/foundation/*` no son el contrato vigente. La materialización actual es un directorio de primer nivel por paquete de dominio, alineado con EE-DOC-006 §06.1.
 
 ### 07.2. Políticas aplicadas
 
@@ -324,9 +308,10 @@ packages:
 
 ### 07.3. Validación Fase 3
 
-- `pnpm install` → Scope: 7 workspace projects (root + 6 config).
-- `pnpm -r build` → 6/6 config packages OK.
-- Warnings registrados (eslint deprecated, glob deprecated, build scripts ignorados) → deuda técnica, no bloqueantes.
+- `pnpm install` → root + workspaces de configuración bajo `packages/config/*` (**siete** paquetes: typescript, eslint, prettier, vite, jest, vitest, playwright).
+- Verificación as-built: `pnpm -r --filter "@eq-labs/config-*" build` → **7/7 OK** (`@eq-labs/config-eslint`, `config-jest`, `config-playwright`, `config-prettier`, `config-typescript`, `config-vite`, `config-vitest`). Scope: 7 of 27 workspace projects.
+- Un resultado parcial (p. ej. N/7) sin nominar el paquete fallido, la causa y la disposición **no** se interpreta como PASS completo del conjunto de config (No False Pass).
+- Warnings (eslint/glob deprecated, build scripts ignorados), si reaparecen → deuda técnica, no bloqueantes de estructura 006.
 
 ---
 
@@ -353,7 +338,7 @@ README.md
 | `@eq-labs/registry`     | Registros de sistema y especialistas                    |
 | `@eq-labs/sdk`          | SDKs de routing, workflow, context, artifact, knowledge |
 
-**Ningún paquete contiene lógica funcional.** Están preparados para especialización futura conforme a EE-DOC-006 y EE-DOC-004.
+**Los esqueletos de dominio evolucionan: foundation, intelligence y knowledge ya incluyen contratos y lógica de dominio parcial (as-built); el resto puede permanecer en esqueleto.** Están preparados para especialización futura conforme a EE-DOC-006 y EE-DOC-004.
 
 ---
 
@@ -408,7 +393,7 @@ Sin lógica de integración, autenticación ni transporte. Workspaces registrado
 ### 11.1. Modelo de orquestación
 
 ```text
-pnpm <comando>  →  scripts/<comando>  →  Turborepo | PNPM | herramienta especializada
+pnpm <comando>  →  scripts/commands/<comando>  →  Turborepo | PNPM | herramienta especializada
 ```
 
 - **Task graph de workspaces** → Turborepo (EE-ADR-001).
@@ -419,22 +404,23 @@ pnpm <comando>  →  scripts/<comando>  →  Turborepo | PNPM | herramienta espe
 
 ### 11.2. Comandos root
 
-| Comando            | Script físico       | Mecanismo principal                        |
-| ------------------ | ------------------- | ------------------------------------------ |
-| `bootstrap`        | `scripts/bootstrap` | PNPM + SemVer (valida engines)             |
-| `build`            | `scripts/build`     | Turborepo                                  |
-| `dev`              | `scripts/dev`       | Turborepo                                  |
-| `test`             | `scripts/test`      | Turborepo                                  |
-| `lint`             | `scripts/lint`      | Turborepo                                  |
-| `format`           | `scripts/format`    | Prettier                                   |
-| `typecheck`        | `scripts/typecheck` | Turborepo + TypeScript                     |
-| `validate`         | `scripts/validate`  | Turbo + validaciones locales de estructura |
-| `doctor`           | `scripts/doctor`    | Node + PNPM + Git                          |
-| `generate`         | `scripts/generate`  | Plop                                       |
-| `release`          | `scripts/release`   | Changesets + PNPM + Git                    |
-| `clean`            | `scripts/clean`     | Turborepo                                  |
-| `changeset`        | CLI directa         | Changesets                                 |
-| `version-packages` | CLI directa         | Changesets                                 |
+| Comando            | Script físico                | Mecanismo principal                        |
+| ------------------ | ---------------------------- | ------------------------------------------ |
+| `bootstrap`        | `scripts/commands/bootstrap` | PNPM + SemVer (valida engines)             |
+| `build`            | `scripts/commands/build`     | Turborepo                                  |
+| `dev`              | `scripts/commands/dev`       | Turborepo                                  |
+| `test`             | `scripts/commands/test`      | Turborepo                                  |
+| `e2e`              | `scripts/commands/e2e`       | Turborepo `test:e2e` (Playwright)          |
+| `lint`             | `scripts/commands/lint`      | Turborepo                                  |
+| `format`           | `scripts/commands/format`    | Prettier                                   |
+| `typecheck`        | `scripts/commands/typecheck` | Turborepo + TypeScript                     |
+| `validate`         | `scripts/commands/validate`  | Turbo + validaciones locales de estructura |
+| `doctor`           | `scripts/commands/doctor`    | Node + PNPM + Git                          |
+| `generate`         | `scripts/commands/generate`  | Plop                                       |
+| `release`          | `scripts/commands/release`   | Changesets + PNPM + Git                    |
+| `clean`            | `scripts/commands/clean`     | Turborepo                                  |
+| `changeset`        | CLI directa                  | Changesets                                 |
+| `version-packages` | CLI directa                  | Changesets                                 |
 
 `configure-lint.mjs` es artefacto de soporte (no comando root público).
 
@@ -454,7 +440,7 @@ La interfaz de comandos root es estable. Los scripts internos pueden evolucionar
 | `examples/`    | erp/, microservices/, ddd/                       | Ejemplos técnicos            |
 | `marketplace/` | plugins/, agents/, prompts/, skills/, templates/ | Extensibilidad               |
 
-Ninguno de estos directorios constituye workspace pnpm. Su validación se integra en `scripts/validate`.
+Ninguno de estos directorios constituye workspace pnpm. Su validación se integra en `scripts/commands/validate`.
 
 ---
 
@@ -550,9 +536,10 @@ La validación integral de estructura se ejecuta mediante `pnpm validate` (Fases
 
 ## 17. Historial de Cambios
 
-| Versión  | Fecha      | Autor                                             | Cambios                                                                                                       | Motivo                                                   | Estado        |
-| -------- | ---------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------- |
-| `v1.0.0` | 2026-09-20 | Equipo de Arquitectura / AI Engineering Assistant | Creación de la documentación técnica consolidada a partir de EE-IMP-006-P01…P08 y el inventario de artefactos | Cierre de la fase de Documentación Técnica de EE-DOC-006 | **Congelado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                  | Cambios                                                           | Estado    |
+| :--------- | :--------- | :--------------------- | :--------------------- | :-------------------------------------- | :---------------------------------------------------------------- | :-------- |
+| **v1.0.0** | 2026-09-20 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre documentación técnica EE-DOC-006 | Consolidación IMP-006-P01…P08 e inventario                        | Congelado |
+| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | As-built auditoría 006                  | §04 árbol commands/playwright/tops; Node 24; Código corto TEC-001 | Congelado |
 
 ---
 

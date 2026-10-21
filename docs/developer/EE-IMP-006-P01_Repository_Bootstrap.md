@@ -1,18 +1,22 @@
 # EE-IMP-006-P01 — Repository Bootstrap
 
-## METADATOS propuestos
+Este documento registra la evidencia técnica de la implementación física y validación correspondiente a la Fase 7 conforme al estándar **EE-DOC-005**.
+
+---
+
+## METADATOS
 
 | Campo                 | Valor                               |
 | :-------------------- | :---------------------------------- |
 | **ID**                | EE-IMP-006-P01                      |
 | **Documento**         | Repository Bootstrap                |
-| **Código corto**      | EE-IMP-006-P01                      |
+| **Código corto**      | IMP-006-P01                         |
 | **Fase**              | Fase 1                              |
 | **Tipo**              | Documento Técnico de Implementación |
 | **Clasificación**     | Implementación                      |
 | **Nivel**             | Técnico                             |
 | **Normativo**         | No                                  |
-| **Versión**           | v1.0.0                              |
+| **Versión**           | v1.1.0                              |
 | **Estado**            | Aprobado                            |
 | **Propietario**       | Equipo de Arquitectura              |
 | **Documento padre**   | EE-DOC-006                          |
@@ -20,8 +24,8 @@
 | **Aprobado por**      | Equipo de Arquitectura              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
 | **Fecha de creación** | 2026-08-21                          |
-| **Última revisión**   | 2026-08-21                          |
-| **Próxima revisión**  | —                                   |
+| **Última revisión**   | 2026-10-18                          |
+| **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
@@ -75,6 +79,8 @@ ee-monorepo/
 > **Nota:**  
 > Los elementos `.github/CODEOWNERS`, `.github/ISSUE_TEMPLATE/`, `.github/PULL_REQUEST_TEMPLATE/` y `.github/workflows/` se encuentran creados como estructura base y permanecen vacíos en esta fase.
 
+---
+
 ## 4. Archivos implementados
 
 ### 4.1 `.editorconfig`
@@ -127,7 +133,7 @@ Se estableció PNPM como gestor oficial del repositorio y se configuró:
 
 ### 4.5 `.nvmrc`
 
-Se estableció `22` como versión principal de Node.js utilizada por el repositorio.
+Se estableció `24` como versión principal de Node.js utilizada por el repositorio.
 
 ### 4.6 `package.json`
 
@@ -216,6 +222,8 @@ Se creó la estructura base para los mecanismos de colaboración y gobierno del 
 
 En esta fase no se implementaron contenidos adicionales dentro de estos elementos.
 
+---
+
 ## 5. Resultado de la implementación
 
 Al finalizar la Fase 1, el repositorio dispone de:
@@ -245,6 +253,14 @@ Por tanto, este documento no registra resultados de validación, pruebas ejecuta
 
 ---
 
+### Addendum de validación (auditoría 2026-10-15)
+
+La validación de fase **no se ejecutó** en el momento de cierre de esta IMP (estado original: «No realizada»). Conforme a **EE-DOC-005 §04.6**, ello **no** se interpreta como PASS retroactivo por validaciones de fases posteriores (p. ej. P03).
+
+**Estado documental:** deuda de validación de fase registrada. El cierre de **EE-DOC-006** no la extingue; cualquier aceptación formal requiere evidencia posterior (CI/`pnpm validate` fechado, EE-VAL/EE-TEC) o dictamen DEGRADED/PENDING listado según **EE-DOC-015** / **EE-DOC-001 R9**.
+
+---
+
 ## 7. Correcciones durante la implementación
 
 No se registraron correcciones durante la Fase 1.
@@ -263,7 +279,7 @@ No se registraron correcciones durante la Fase 1.
 
 ---
 
-## 10. REFERENCIAS
+## 09. REFERENCIAS
 
 | Referencia      | Descripción                                                                                      |
 | :-------------- | :----------------------------------------------------------------------------------------------- |
@@ -272,12 +288,20 @@ No se registraron correcciones durante la Fase 1.
 
 ---
 
-## 11. HISTORIAL DE CAMBIOS
+## 10. HISTORIAL DE CAMBIOS
 
-| Versión  | Fecha      | Autor                  | Aprobado por           | Motivo                                                   | Cambios                                | Estado       |
-| :------- | :--------- | :--------------------- | :--------------------- | :------------------------------------------------------- | :------------------------------------- | :----------- |
-| `v1.0.0` | 2026-08-21 | Equipo de Arquitectura | Equipo de Arquitectura | Creación del DT de la Fase 1 — Bootstrap del Repositorio | Documentar la implementación realizada | **Aprobado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                   | Cambios                                          | Estado       |
+| :--------- | :--------- | :--------------------- | :--------------------- | :------------------------------------------------------- | :----------------------------------------------- | :----------- |
+| **v1.0.0** | 2026-08-21 | Equipo de Arquitectura | Equipo de Arquitectura | Creación del DT de la Fase 1 — Bootstrap del Repositorio | Documentar la implementación realizada           | **Aprobado** |
+| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006                                     | As-built scripts/commands y estados documentales | **Aprobado** |
 
 ---
 
-## **FIN DEL DOCUMENTO**
+## FIN DEL DOCUMENTO
+
+### Addendum auditoría EE-DOC-006 (2026-10-18)
+
+- **Scripts root canónicos:** `scripts/commands/<cmd>` (+ `scripts/lib/`, `scripts/tests/`). Rutas históricas `scripts/<cmd>` plano quedan **superseded**.
+- **Estado:** los metadatos **Aprobado** prevalecen sobre menciones residuales de “Borrador” / “En revisión” en el cuerpo (evidencia histórica de la fase).
+- **As-built monorepo:** `assets/`, `examples/`, `marketplace/`, `data/`, `infra/` materializados (layout + README); detalle en EE-DOC-006 §05 y EE-TEC-001.
+- Este addendum **no** reescribe la evidencia de validación de fase (P01/P02: sin PASS retroactivo — EE-DOC-006 §20.1).

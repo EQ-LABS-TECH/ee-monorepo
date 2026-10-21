@@ -1,30 +1,30 @@
 # EE-DOC-006 — Repository Structure
 
-Este documento sigue el estándar EE-DOC-002 — Document Design Template y EE-DOC-005 - Development Workflow.
+Este documento sigue el estándar **EE-DOC-002 — Document Design Template**. El ciclo de implementación y validación se rige por **EE-DOC-005 — Development Workflow**.
 
 ---
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                                                  |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| **ID**                | EE-DOC-006                                                                                                             |
-| **Documento**         | Repository Structure                                                                                                   |
-| **Código corto**      | EE-DOC-006                                                                                                             |
-| **Tipo**              | Documento Técnico                                                                                                      |
-| **Clasificación**     | Implementación                                                                                                         |
-| **Nivel**             | Técnico                                                                                                                |
-| **Normativo**         | Sí                                                                                                                     |
-| **Versión**           | v1.8.1                                                                                                                 |
-| **Estado**            | Congelado                                                                                                              |
-| **Propietario**       | Equipo de Arquitectura                                                                                                 |
-| **Documento padre**   | EE-DOC-005                                                                                                             |
-| **Dependencias**      | EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-DOC-005, EE-ADR-001, EE-ADR-002, EE-ADR-005, EE-RFC-001, EE-RFC-002 |
-| **Aprobado por**      | Equipo de Arquitectura                                                                                                 |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                                                                       |
-| **Fecha de creación** | 2026-08-03                                                                                                             |
-| **Última revisión**   | 2026-10-06                                                                                                             |
-| **Próxima revisión**  | No aplica — Documento Congelado                                                                                        |
+| Campo                 | Valor                                                                                  |
+| --------------------- | -------------------------------------------------------------------------------------- |
+| **ID**                | EE-DOC-006                                                                             |
+| **Documento**         | Repository Structure                                                                   |
+| **Código corto**      | DOC-006                                                                                |
+| **Tipo**              | Documento Normativo                                                                    |
+| **Clasificación**     | Implementable                                                                          |
+| **Nivel**             | Táctico                                                                                |
+| **Normativo**         | Sí                                                                                     |
+| **Versión**           | v1.9.0                                                                                 |
+| **Estado**            | Congelado                                                                              |
+| **Propietario**       | Equipo de Arquitectura                                                                 |
+| **Documento padre**   | EE-DOC-005                                                                             |
+| **Dependencias**      | padre=EE-DOC-005; contenido=EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-DOC-005 |
+| **Aprobado por**      | Equipo de Arquitectura                                                                 |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                                       |
+| **Fecha de creación** | 2026-08-03                                                                             |
+| **Última revisión**   | 2026-10-19                                                                             |
+| **Próxima revisión**  | No aplica — Documento Congelado                                                        |
 
 ---
 
@@ -71,7 +71,7 @@ Este documento **no cubre**:
 | 5   | **Escalabilidad**                   | La estructura permite añadir nuevos paquetes sin reestructurar el repositorio.            |
 | 6   | **Local First**                     | La estructura debe funcionar completamente en entornos locales sin dependencias externas. |
 | 7   | **Vendor Agnostic**                 | La estructura no depende de un proveedor específico.                                      |
-| 8   | **Documentation Driven**            | La estructura está documentada antes de implementarse.                                    |
+| 8   | **Documentation First**             | La estructura está documentada antes de implementarse.                                    |
 
 ---
 
@@ -79,261 +79,228 @@ Este documento **no cubre**:
 
 ```mermaid
 flowchart LR
-    subgraph Repo["Engineering Ecosystem Repository"]
-        root[Root]
+ subgraph Repo["Engineering Ecosystem Repository"]
+ root[Root]
 
-        subgraph Core["Núcleo"]
-            Packages[packages/]
-            Apps[apps/]
-            Connectors[connectors/]
-        end
+ subgraph Core["Núcleo"]
+ Packages[packages/]
+ Apps[apps/]
+ Connectors[connectors/]
+ end
 
-        subgraph Support["Soporte"]
-            Scripts[scripts/]
-            Docs[docs/]
-            Assets[assets/]
-            Templates[templates/]
-        end
+ subgraph Support["Soporte"]
+ Scripts[scripts/]
+ Docs[docs/]
+ Assets[assets/]
+ Templates[templates/]
+ end
 
-        subgraph DataGroup["Datos y Ejemplos"]
-            DataNode[data/]
-            Examples[examples/]
-            Marketplace[marketplace/]
-        end
+ subgraph DataGroup["Datos y Ejemplos"]
+ DataNode[data/]
+ Examples[examples/]
+ Marketplace[marketplace/]
+ end
 
-        subgraph Platform["Plataforma / Infrastructure"]
-            Infra[infra/]
-        end
+ subgraph Platform["Plataforma / Infrastructure"]
+ Infra[infra/]
+ end
 
-        root --> Core
-        root --> Support
-        root --> DataGroup
-        root --> Platform
+ root --> Core
+ root --> Support
+ root --> DataGroup
+ root --> Platform
 
-        Core --> Packages
-        Core --> Apps
-        Core --> Connectors
+ Core --> Packages
+ Core --> Apps
+ Core --> Connectors
 
-        Support --> Scripts
-        Support --> Docs
-        Support --> Assets
-        Support --> Templates
+ Support --> Scripts
+ Support --> Docs
+ Support --> Assets
+ Support --> Templates
 
-        DataGroup --> DataNode
-        DataGroup --> Examples
-        DataGroup --> Marketplace
+ DataGroup --> DataNode
+ DataGroup --> Examples
+ DataGroup --> Marketplace
 
-        Platform --> Infra
-    end
+ Platform --> Infra
+ end
 ```
 
-> **Nota:**
-> El diagrama representa la estructura completa de directorios de primer nivel del repositorio. Los directorios de primer nivel se agrupan en **cuatro** categorías funcionales: Núcleo del Ecosistema (`packages/`, `apps/` y `connectors/`), Soporte (`scripts/`, `docs/`, `assets/` y `templates/`), Datos, Ejemplos y Extensibilidad (`data/`, `examples/` y `marketplace/`), y **Plataforma / Infrastructure** (`infra/`). Las configuraciones compartidas forman parte de `packages/config/` y se documentan en el desglose interno de `packages/` definido en la Sección 05. El **contenido semántico** de `infra/` se rige por **EE-DOC-009**; este documento registra únicamente el **nivel estructural autorizado** (EE-RFC-001).
+> **Nota:** El diagrama representa la estructura completa de directorios de primer nivel del repositorio. Los directorios de primer nivel se agrupan en **cuatro** categorías funcionales: Núcleo del Ecosistema (`packages/`, `apps/` y `connectors/`), Soporte (`scripts/`, `docs/`, `assets/` y `templates/`), Datos, Ejemplos y Extensibilidad (`data/`, `examples/` y `marketplace/`), y **Plataforma / Infrastructure** (`infra/`). Las configuraciones compartidas forman parte de `packages/config/` y se documentan en el desglose interno de `packages/` definido en la Sección 05. El **contenido semántico** de `infra/` se rige por **EE-DOC-009**; este documento registra únicamente el **nivel estructural autorizado** (EE-RFC-001).
 
 ---
 
 ## 05. Estructura de Directorios
 
+> **As-built (fuente de contraste):** el árbol siguiente refleja la **organización canónica alineada al monorepo implementado** (workspaces, scripts, packages, apps, connectors, infra, templates, data y archivos de gobernanza de raíz). Ramas **aún no materializadas** se marcan explícitamente como _blueprint / pendiente de materialización_ (no se presentan como si ya existieran en disco). El detalle de evidencia por fase permanece en EE-IMP-006-P0x, EE-TEC-001 e inventario (`git ls-files` + SHA preferible).
+
 ```text
-ee-monorepo/
-├── .changeset/                           # Infraestructura de Changesets (versionado / releases)
-│   └── config.json                       # Configuración de Changesets
+ee-monorepo/                   # Raíz del monorepo Engineering Ecosystem
+├── .changeset/                # Infraestructura Changesets (versionado SemVer / releases)
+│   ├── calm-exports-glow.md   # Changeset de trabajo (exports config; nombre variable)
+│   ├── config.json            # Configuración de Changesets
+│   └── README.md              # Guía de uso de Changesets en el monorepo
 │
-├── .github/                              # Gobernanza GitHub (EE-DOC-007)
-│   ├── ISSUE_TEMPLATE/                   # Plantillas de issues
-│   ├── PULL_REQUEST_TEMPLATE/            # Plantillas de pull request
-│   ├── workflows/                        # GitHub Actions (CI de plataforma)
-│   └── CODEOWNERS                        # Ownership de rutas
+├── .github/                   # Gobernanza GitHub (EE-DOC-007)
+│   ├── ISSUE_TEMPLATE/        # Plantillas de issues
+│   ├── PULL_REQUEST_TEMPLATE/ # Plantillas de pull request
+│   ├── workflows/             # GitHub Actions (CI de plataforma)
+│   └── CODEOWNERS             # Ownership de rutas del repositorio
 │
-├── .vscode/                              # Workspace VS Code / editor compartido (EE-DOC-008)
-│   ├── extensions.json                   # Extensiones recomendadas
-│   └── settings.json                     # Ajustes de editor del workspace
+├── .vscode/                   # Workspace VS Code / editor compartido (EE-DOC-008)
+│   ├── extensions.json        # Extensiones recomendadas del workspace
+│   └── settings.json          # Ajustes de editor del workspace
 │
-├── apps/                                 # Aplicaciones del ecosistema
-│   ├── cli/                              # CLI del Engineering Ecosystem
-│   ├── dashboard/                        # Dashboard web
-│   └── extensions/                       # Extensiones para IDEs
-│       ├── windsurf/                     # Extensión para Windsurf
-│       └── vscode/                       # Extensión para VS Code
+├── apps/                      # Aplicaciones del ecosistema (@eq-labs/*)
+│   ├── cli/                   # CLI del Engineering Ecosystem
+│   ├── dashboard/             # Dashboard web (+ Playwright E2E)
+│   └── extensions/            # Workspace de extensiones IDE (paquete; sub-IDE futuras)
 │
-├── assets/                               # Recursos compartidos estáticos (§14)
-│   ├── fonts/                            # Fuentes
-│   ├── images/                           # Imágenes
-│   └── templates/                        # Recursos estáticos de plantilla (no generativos)
+├── assets/                    # Recursos compartidos estáticos
+│   ├── fonts/                 # Fuentes tipográficas compartidas
+│   ├── images/                # Imágenes y gráficos compartidos
+│   └── templates/             # Recursos estáticos de plantilla (no generativos Plop)
 │
-├── connectors/                           # Conectores a servicios externos
-│   ├── community/                        # Conectores mantenidos por la comunidad (futuro)
-│   ├── experimental/                     # Conectores experimentales (futuro)
-│   └── official/                         # Conectores oficiales soportados
-│       ├── a2a/                          # Protocolo A2A
-│       ├── docker/                       # Adaptador de integración Docker
-│       ├── github/                       # Adaptador de integración GitHub
-│       ├── kubernetes/                   # Adaptador de integración Kubernetes
-│       ├── mcp/                          # Servidores MCP
-│       └── notebooklm/                   # Adaptador NotebookLM
+├── connectors/                # Conectores a servicios externos
+│   ├── community/             # Conectores de comunidad (reservado; README)
+│   ├── experimental/          # Conectores experimentales (reservado; README)
+│   └── official/              # Conectores oficiales soportados
+│       ├── a2a/               # Agent-to-Agent
+│       ├── docker/            # Docker
+│       ├── github/            # GitHub
+│       ├── kubernetes/        # Kubernetes
+│       ├── mcp/               # Model Context Protocol
+│       └── notebooklm/        # NotebookLM
 │
-├── data/                                 # Datos del ecosistema
-│   ├── benchmarks/                       # Datos de benchmarks
-│   ├── datasets/                         # Conjuntos de datos
-│   └── models/                           # Modelos / artefactos de modelo (gobierno en EE-DOC-013/014)
+├── data/                      # Datos de conocimiento / modelos (layout)
+│   ├── benchmarks/            # Datos de benchmark / evaluación
+│   ├── datasets/              # Datasets del ecosistema
+│   ├── models/                # Artefactos / referencias de modelos
+│   └── README.md              # Descripción del layout data/
 │
-├── docs/                                 # Documentación del ecosistema
-│   ├── adr/                              # Decisiones arquitectónicas (EE-ADR)
-│   ├── architecture/                     # Documentación de arquitectura (EE-DOC / EE-TEC)
-│   ├── developer/                        # Guías e implementación (EE-IMP)
-│   ├── rfc/                              # Solicitudes de cambio transversal (EE-RFC)
-│   └── validation/                       # Ecosystem Validation (EE-DOC-015): reports, waivers, evidence
-│       ├── README.md                     # Índice del dominio de validación de ecosistema
-│       ├── reports/                      # EE-VAL-* Validation Reports
-│       ├── waivers/                      # EE-WAIVE-* (registro WAIVED de gates, EE-DOC-010)
-│       └── evidence/                     # Evidencias de revisión (p. ej. layers/)
+├── docs/                      # Documentación EE (gobernanza y proceso)
+│   ├── adr/                   # Decisiones arquitectónicas (EE-ADR-*)
+│   ├── architecture/          # Documentos normativos y TEC (EE-DOC-*, EE-TEC-*)
+│   ├── developer/             # Implementación por fases (EE-IMP-*)
+│   ├── rfc/                   # Solicitudes de cambio transversal (EE-RFC-*)
+│   └── validation/            # Evidencia de validación y waivers
+│       ├── audit/             # Registro y criterios de auditoría (EE-AUDIT-*)
+│       ├── evidence/          # Evidencias de validación de ecosistema
+│       ├── reports/           # Informes de validación
+│       └── waivers/           # EE-WAIVE-* (QG-SEC y residuales)
 │
-├── examples/                             # Ejemplos de uso
-│   ├── ddd/                              # Ejemplo de DDD
-│   ├── erp/                              # Ejemplo de ERP
-│   └── microservices/                    # Ejemplo de microservicios
+├── examples/                  # Ejemplos de uso (blueprint / materialización por fase)
+│   ├── ddd/                   # Ejemplo Domain-Driven Design
+│   ├── erp/                   # Ejemplo ERP / dominio empresarial
+│   └── microservices/         # Ejemplo arquitectura de microservicios
 │
-├── infra/                                # Infraestructura de producto/plataforma (EE-DOC-009 / EE-RFC-001)
-│   ├── containers/                       # Contenerización de producto (semántica → EE-DOC-009)
-│   ├── orchestration/                    # Orquestación desplegada (semántica → EE-DOC-009)
-│   └── secrets/                          # Política / convenciones de secretos de runtime (no credenciales)
+├── infra/                     # Infraestructura del ecosistema (EE-RFC-001 / EE-DOC-009)
+│   ├── containers/            # Definiciones de contenedores
+│   ├── orchestration/         # Orquestación (p. ej. manifiestos de despliegue)
+│   ├── secrets/               # Plantillas y políticas de secretos (+ .gitignore)
+│   └── README.md              # Descripción del layout infra/
 │
-├── marketplace/                          # Marketplace de extensibilidad
-│   ├── agents/                           # Agentes
-│   ├── plugins/                          # Plugins
-│   ├── prompts/                          # Prompts
-│   ├── skills/                           # Skills
-│   └── templates/                        # Plantillas de marketplace (≠ templates/ generativos de raíz)
+├── marketplace/               # Marketplace de componentes (blueprint / fase futura)
+│   ├── agents/                # Agentes publicables / compartidos
+│   ├── plugins/               # Plugins del ecosistema
+│   ├── prompts/               # Catálogo de prompts
+│   ├── skills/                # Skills reutilizables
+│   └── templates/             # Plantillas de marketplace (distintas de templates/ root)
 │
-├── packages/                             # Paquetes del ecosistema
-│   ├── config/                           # Configuraciones compartidas (SSOT de tooling)
-│   │   ├── eslint/                       # Configuración base de ESLint
-│   │   ├── jest/                         # Configuración base de Jest (legacy / compat. EE-ADR-002)
-│   │   ├── playwright/                   # Configuración base de Playwright (EE-ADR-002)
-│   │   ├── prettier/                     # Configuración base de Prettier
-│   │   ├── typescript/                   # Configuración base de TypeScript
-│   │   ├── vite/                         # Configuración base de Vite
-│   │   └── vitest/                       # Configuración base de Vitest (EE-ADR-002)
-│   │
-│   ├── execution/                        # Ejecución y orquestación
-│   │   ├── engine/                       # Motor de ejecución
-│   │   ├── workflow/                     # Motor de workflows
-│   │   ├── scheduler/                    # Planificador
-│   │   └── execution-manager/            # Gestor de ejecuciones
-│   │
-│   ├── foundation/                       # Fundación técnica
-│   │   ├── kernel/                       # Núcleo técnico
-│   │   ├── contracts/                    # Contratos e interfaces (p. ej. Provider SPI — EE-ADR-005)
-│   │   ├── core/                         # Servicios centrales
-│   │   ├── shared/                       # Utilidades compartidas de foundation
-│   │   ├── runtime/                      # Infraestructura de ejecución
-│   │   ├── configuration/                # Gestión de configuración
-│   │   ├── cache/                        # Gestión de caché
-│   │   ├── events/                       # Infraestructura de eventos
-│   │   ├── policy/                       # Gestión de políticas
-│   │   └── security/                     # Seguridad base
-│   │
-│   ├── governance/                       # Gobernanza y calidad
-│   │   ├── quality/                      # Puertas de calidad
-│   │   ├── governance-engine/            # Motor de gobernanza
-│   │   ├── metrics/                      # Motor de métricas
-│   │   └── observability/                # Observabilidad
-│   │
-│   ├── integration/                      # Integración y API
-│   │   ├── framework/                    # Framework de integración
-│   │   └── api-gateway/                  # Gateway de API
-│   │
-│   ├── intelligence/                     # Inteligencia artificial (EE-DOC-013)
-│   │   ├── specialization-router/        # Enrutamiento por especialidad
-│   │   ├── provider-router/              # Enrutamiento de proveedores
-│   │   ├── context/                      # Adaptación de contexto hacia el Router
-│   │   ├── complexity/                   # Analizador de complejidad
-│   │   ├── learning/                     # Motor de aprendizaje (diferido según 013)
-│   │   ├── evaluation/                   # Motor de evaluación (≠ QG-010)
-│   │   └── ai-providers/                 # Orquestación/policy de providers (SDK vendor en connectors)
-│   │
-│   ├── knowledge/                        # Gestión del conocimiento
-│   │   ├── knowledge-engine/             # Motor de conocimiento
-│   │   ├── knowledge-acquisition/        # Adquisición de conocimiento
-│   │   ├── knowledge-pipeline/           # Pipeline de conocimiento
-│   │   ├── knowledge-graph/              # Grafo de conocimiento
-│   │   ├── second-brain/                 # Almacenamiento permanente
-│   │   ├── documentation/                # Generación de documentación
-│   │   ├── ontology/                     # Ontología
-│   │   ├── taxonomy/                     # Taxonomía
-│   │   ├── semantic-model/               # Modelo semántico
-│   │   ├── semantic-search/              # Búsqueda semántica
-│   │   └── embeddings/                   # Embeddings vectoriales (SSOT semántico → EE-DOC-014)
-│   │
-│   ├── registry/                         # Registros
-│   │   ├── core/                         # Núcleo del registro
-│   │   ├── system/                       # Sistema de registros
-│   │   └── specialists/                  # Registro de especialistas
-│   │
-│   ├── shared/                           # Componentes y contratos compartidos (paquete plano as-built)
-│   │
-│   └── sdk/                              # SDKs de exposición pública
-│       ├── routing-sdk/                  # SDK de enrutamiento
-│       ├── workflow-sdk/                 # SDK de workflows
-│       ├── context-sdk/                  # SDK de contexto
-│       ├── artifact-sdk/                 # SDK de artefactos
-│       └── knowledge-sdk/                # SDK de conocimiento
+├── packages/                  # Paquetes del monorepo (workspaces pnpm)
+│   ├── config/                # Configuraciones compartidas (SSOT de herramientas)
+│   │   ├── eslint/            # @eq-labs/config-eslint
+│   │   ├── jest/              # @eq-labs/config-jest
+│   │   ├── playwright/        # @eq-labs/config-playwright
+│   │   ├── prettier/          # @eq-labs/config-prettier
+│   │   ├── typescript/        # @eq-labs/config-typescript
+│   │   ├── vite/              # @eq-labs/config-vite
+│   │   ├── vitest/            # @eq-labs/config-vitest
+│   │   ├── package.json       # Metadatos del contenedor config (no publicable como API)
+│   │   └── README.md          # Índice de packages/config
+│   ├── execution/             # @eq-labs/execution — motor de ejecución / workflows
+│   ├── foundation/            # @eq-labs/foundation — kernel, contratos, núcleo
+│   ├── governance/            # @eq-labs/governance — calidad, métricas, gobernanza
+│   ├── integration/           # @eq-labs/integration — framework / API gateway
+│   ├── intelligence/          # @eq-labs/intelligence — routing, AI, contexto
+│   ├── knowledge/             # @eq-labs/knowledge — knowledge engine / grafo
+│   ├── registry/              # @eq-labs/registry — registro de sistema / specialists
+│   ├── sdk/                   # @eq-labs/sdk — SDKs de routing, workflow, etc.
+│   └── shared/                # @eq-labs/shared — utilidades compartidas publicables
 │
-├── scripts/                              # Scripts de automatización (EE-DOC-011)
-│   ├── bootstrap                         # Configuración inicial
-│   ├── build                             # Compilación
-│   ├── clean                             # Limpieza de artefactos
-│   ├── configure-lint.mjs                # Configuración automatizada de ESLint
-│   ├── dev                               # Ejecución en modo desarrollo
-│   ├── doctor                            # Diagnóstico del entorno
-│   ├── format                            # Formateo del repositorio
-│   ├── generate                          # Generación desde templates/ (Plop)
-│   ├── lint                              # Análisis estático y linting
-│   ├── release                           # Gestión de releases
-│   ├── test                              # Ejecución de pruebas
-│   ├── typecheck                         # Verificación de tipos TypeScript
-│   └── validate                          # Validación integral del repositorio
+├── scripts/                   # Automatización root (no es workspace pnpm)
+│   ├── commands/              # Entry points invogados por package.json
+│   │   ├── bootstrap          # pnpm bootstrap — entorno inicial
+│   │   ├── build              # pnpm build — compilación monorepo
+│   │   ├── clean              # pnpm clean — limpieza de artefactos
+│   │   ├── dev                # pnpm dev — desarrollo con recarga
+│   │   ├── doctor             # pnpm doctor — diagnóstico de entorno
+│   │   ├── e2e                # pnpm e2e — entrada root E2E (gate puede ser PENDING)
+│   │   ├── format             # pnpm format — Prettier
+│   │   ├── generate           # pnpm generate — Plop
+│   │   ├── lint               # pnpm lint — ESLint vía Turborepo
+│   │   ├── release            # pnpm release — proceso de release
+│   │   ├── test               # pnpm test — pruebas unitarias/integración
+│   │   ├── typecheck          # pnpm typecheck — TypeScript
+│   │   └── validate           # pnpm validate — suite integral de gates
+│   ├── lib/                   # Librerías compartidas de scripts root
+│   │   ├── configure-lint.mjs # Configuración auxiliar de lint
+│   │   └── security-audit.mjs # Audit + cruce con EE-WAIVE (QG-SEC-001)
+│   ├── tests/                 # Pruebas de la automatización root
+│   │   └── security-audit.test.mjs # Tests de lógica de waivers / audit
+│   ├── plopfile.mjs           # Definición de generadores Plop
+│   └── README.md              # Documentación de scripts root
 │
-├── templates/                            # Templates generativos SSOT (EE-DOC-012 / EE-RFC-002)
-│   ├── app/                              # Categoría T-APP
-│   ├── connector/                        # Categoría T-CON
-│   ├── document/                         # Categoría T-DOC
-│   └── package/                          # Categoría T-PKG
+├── templates/                 # Plantillas generativas (EE-RFC-002 / EE-DOC-012)
+│   ├── app/                   # Categoría T-APP
+│   ├── connector/             # Categoría T-CON
+│   ├── document/              # Categoría T-DOC (EE-DOC/ADR/IMP/TEC/RFC…)
+│   ├── package/               # Categoría T-PKG
+│   ├── template.schema.json   # Esquema JSON de metadatos de plantilla
+│   └── README.md              # Índice de templates/
 │
-├── .editorconfig                         # Estilo de editor (raíz)
-├── .gitattributes                        # Atributos Git
-├── .gitignore                            # Exclusiones Git
-├── .markdownlint.json                    # SSOT markdownlint (editor / higiene docs)
-├── .npmrc                                # Configuración npm/pnpm del monorepo
-├── .nvmrc                                # Pin de Node (EE-ADR-003)
-├── .prettierignore                       # Exclusiones Prettier
-├── CHANGELOG.md                          # Historial de cambios del repositorio
-├── LICENSE                               # Apache License 2.0
-├── NOTICE                                # Avisos de licencia
-├── package.json                          # Manifesto raíz y scripts root
-├── pnpm-lock.yaml                        # Lockfile de dependencias
-├── pnpm-workspace.yaml                   # Definición de workspaces
-├── README.md                             # Introducción al monorepo
-└── turbo.json                            # Pipeline Turborepo (EE-ADR-001)
+├── .editorconfig              # Estilo de edición (indentación, EOL)
+├── .gitattributes             # Atributos Git (EOL, merge, binarios)
+├── .gitignore                 # Exclusiones de versionado
+├── .markdownlint.json         # Reglas markdownlint del repo
+├── .npmrc                     # Configuración pnpm/npm del workspace
+├── .nvmrc                     # Versión Node del baseline (ADR-003)
+├── .prettierignore            # Exclusiones de Prettier
+├── CHANGELOG.md               # Historial de cambios del monorepo
+├── LICENSE                    # Apache License 2.0 (texto íntegro)
+├── NOTICE                     # Avisos legales / atribuciones
+├── package.json               # Orquestación root + scripts pnpm
+├── pnpm-workspace.yaml        # Definición de workspaces pnpm
+├── pnpm-lock.yaml             # Lockfile (versionado en git)
+├── prettier.config.mjs        # Configuración Prettier (raíz)
+├── README.md                  # Introducción y estado del repositorio
+└── turbo.json                 # Pipeline Turborepo (EE-ADR-001)
 ```
 
-> **Nota sobre archivos de configuración en la raíz:**
-> La raíz del repositorio no contiene archivos de configuración de herramientas como `tsconfig.base.json`, `.eslintrc` o `.prettierrc`. Toda la configuración compartida de tooling reside exclusivamente en `packages/config/`. Los únicos archivos de configuración en la raíz son los de orquestación del monorepo (`.npmrc`, `.nvmrc`, `turbo.json`, `pnpm-workspace.yaml`), higiene/editor (`.editorconfig`, `.gitattributes`, `.gitignore`, `.prettierignore`, `.markdownlint.json`) y gobierno del repositorio (`LICENSE`, `NOTICE`).
+> **Notas as-built:**
 >
-> **Nota sobre connectors/:**
-> Los conectores se ubican como carpeta de primer nivel porque representan integraciones externas con servicios fuera del repositorio (GitHub, Docker, Kubernetes, NotebookLM, MCP, A2A). Su ciclo de vida, propósito y dependencias difieren de los paquetes internos de `packages/integration/`, que contienen el framework de integración y el API gateway. Esta separación es coherente con el principio de Separación de Concerns (EE-DOC-004, Sección 04). Las reglas de import de connectors están en **§13.2** (EE-ADR-005).
->
-> **Nota sobre infra/ (EE-RFC-001 / EE-DOC-009):**
-> El directorio de primer nivel `infra/` es la **frontera física** de la infraestructura de producto/plataforma. **EE-DOC-006** autoriza su existencia, categoría y subárbol estructural (`containers/`, `orchestration/`, `secrets/`). **EE-DOC-009** define el significado, reglas y especialización del contenido. Los workspaces `connectors/official/docker` y `connectors/official/kubernetes` son **adaptadores de integración** y **no** alojan manifiestos IaC de plataforma. La materialización física de `infra/` en el monorepo corresponde a **EE-IMP-009**, no a la implementación histórica de EE-DOC-006.
->
-> **Nota sobre templates/ vs assets/templates/ vs marketplace/templates/:**
->
-> - `templates/` (raíz): SSOT de **templates generativos** (EE-DOC-012 / EE-RFC-002); materialización de la capacidad generativa → **EE-IMP-012**.
-> - `assets/templates/`: recursos **estáticos** no generativos (§14).
-> - `marketplace/templates/`: activos de marketplace; no sustituyen la SSOT generativa de raíz.
->
-> **Nota sobre connectors/community y connectors/experimental:**
-> Los directorios `community/` y `experimental/` están definidos en la estructura del repositorio (Sección 05) pero no se incluyen como workspaces hasta que contengan paquetes Node.js reales. Cuando se añadan conectores en esas categorías, se agregarán al `pnpm-workspace.yaml` mediante el patrón `connectors/community/*` o `connectors/experimental/*` según corresponda.
+> - **Comandos root:** implementación en `scripts/commands/<cmd>`; `package.json` invoca `node scripts/commands/<cmd>`. Ver §12.
+> - **`scripts/lib/`** debe versionarse; evitar que el patrón global `lib/` de `.gitignore` lo excluya (preferir `/lib/` o `!scripts/lib/`).
+> - **`docs/`** es top-level normativo y materializado en el repo de trabajo; puede no aparecer en volcados filesystem parciales.
+> - **`assets/`**, **`examples/`**, **`marketplace/`**: **materializados** en el as-built (layout + README por subcarpeta: fonts/images/templates; ddd/erp/microservices; agents/plugins/prompts/skills/templates). Contenido de producto puede seguir creciendo por fase.
+> - **`data/`**, **`infra/`**: materializados (README + layout; infra incluye containers/orchestration/secrets).
+> - **`docs/`**: top-level normativo materializado en el repo de trabajo; puede omitirse en volcados filesystem parciales — preferir `git ls-files` + SHA.
+> - **`apps/extensions`:** workspace presente; subcarpetas por IDE (windsurf, vscode, …) son evolución futura, no requisito del árbol actual.
+> - **`packages/config/playwright`:** materializado y en workspace `packages/config/*`.
+
+### 05.1. Allowlist de top-level (QG-ARCH-001)
+
+La allowlist canónica de entradas de primer nivel autorizadas (alineada a `scripts/commands/validate` / QG-ARCH-001) incluye, como mínimo:
+
+| Entrada                                                                                                                                       | Rol                                             |
+| :-------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------- |
+| `packages/`, `apps/`, `connectors/`, `scripts/`, `docs/`, `infra/`, `templates/`, `data/`, `assets/`, `examples/`, `marketplace/`             | Estructura de producto y soporte                |
+| `.github/`, `.changeset/`, `.vscode/`, `.devcontainer/` (si existe)                                                                           | Gobernanza y entorno                            |
+| `.git/`, `.turbo/`, `node_modules/`                                                                                                           | Runtime Git/tooling (no versionar node_modules) |
+| Archivos raíz de gobierno (`package.json`, `pnpm-workspace.yaml`, `turbo.json`, `.nvmrc`, `LICENSE`, `NOTICE`, configs de formato/lint, etc.) | SSOT de tooling                                 |
+
+> **Nota:** la existencia de `docs/validation/audit/` (EE-AUDIT-\*) forma parte de `docs/validation/` as-built. `prettier.config.mjs`, `scripts/plopfile.mjs` y `scripts/README.md` son artefacto raíz/scripts reconocidos (no se interpretan como top-level prohibido).
 
 ---
 
@@ -346,6 +313,7 @@ packages:
   - 'apps/*'
   - 'apps/extensions/*'
   - 'connectors/official/*'
+  - 'packages/*'
   - 'packages/config/*'
   - 'packages/foundation'
   - 'packages/shared'
@@ -362,6 +330,8 @@ ignoredBuiltDependencies:
   - esbuild
   - unrs-resolver
 ```
+
+> **Nota:** el patrón `packages/*` incluye como workspace cualquier paquete de primer nivel bajo `packages/`. Las entradas explícitas documentan el inventario canónico y facilitan la lectura y la validación. La creación de un nuevo directorio de primer nivel bajo `packages/` implica un nuevo workspace y debe actualizar este documento y EE-TEC-001 en el mismo cambio gobernado.
 
 ---
 
@@ -383,31 +353,32 @@ El repositorio utiliza Turborepo para la orquestación de builds y tareas:
 
 La **política de idioma por tipo de artefacto** se define normativamente en **EE-DOC-002 §16.1 — Política de Idioma por Tipo de Artefacto**. Esta sección **no redefine** dicha política; la aplica y especializa a la **nomenclatura del monorepo**.
 
-| Elemento                                | Regla de Formato                  | Idioma Obligatorio   | Ejemplo                                          |
-| :-------------------------------------- | :-------------------------------- | :------------------- | :----------------------------------------------- |
-| **Namespace Corporativo**               | `@eq-labs/<categoría>-<nombre>`   | Inglés (`en-US`)     | `@eq-labs/foundation-kernel`                     |
-| **Paquetes e Infraestructura**          | `kebab-case`                      | Inglés (`en-US`)     | `@eq-labs/artifact-generator`                    |
-| **Aplicaciones**                        | `kebab-case`                      | Inglés (`en-US`)     | `eq-labs-cli`                                    |
-| **Directorios y Archivos de Código**    | `kebab-case`                      | Inglés (`en-US`)     | `workflow-router.ts`, `artifact-generator/`      |
-| **Clases y Componentes**                | `PascalCase`                      | Inglés (`en-US`)     | `ContextEngine`, `KnowledgeEngine`               |
-| **Interfaces**                          | `PascalCase` (con prefijo `I`)    | Inglés (`en-US`)     | `IWorkflowRouter`, `IKnowledgeEngine`            |
-| **Variables, Funciones y Métodos**      | `camelCase`                       | Inglés (`en-US`)     | `validateArtifact()`, `getKnowledgeById()`       |
-| **Constantes y Enums**                  | `UPPER_SNAKE_CASE` / `PascalCase` | Inglés (`en-US`)     | `MAX_RETRY_COUNT`, `KnowledgeStatus`             |
-| **Pruebas Unitarias e Integración**     | `.test.ts` / `.spec.ts`           | Inglés (`en-US`)     | `knowledge-engine.test.ts`                       |
-| **Pruebas End-to-End (E2E)**            | `.e2e.ts` / `.spec.ts`            | Inglés (`en-US`)     | `knowledge-flow.e2e.ts`                          |
-| **Ramas Git**                           | `tipo/descripción-corta`          | Inglés (`en-US`)     | `feature/add-ai-router`, `fix/governance-parser` |
-| **Documentos de Gobernanza (`EE-DOC`)** | Prefijo + Código + Nombre         | Contenido en Español | `EE-DOC-001_Master_Documentation_Index.md`       |
-| **Planes de Implementación (`EE-IMP`)** | Prefijo + Código + Nombre         | Contenido en Español | `EE-IMP-006-P01_Bootstrap_del_Repositorio.md`    |
-| **Registros de Decisión (`EE-ADR`)**    | Prefijo + Código + Nombre         | Contenido en Español | `EE-ADR-001_Workspace_Task_Orchestration.md`     |
-| **Propuestas de Cambio (`EE-RFC`)**     | Prefijo + Código + Nombre         | Contenido en Español | `EE-RFC-001_Layer_Responsibilities.md`           |
+| Elemento                                | Regla de Formato                                                                              | Idioma Obligatorio   | Ejemplo                                               |
+| :-------------------------------------- | :-------------------------------------------------------------------------------------------- | :------------------- | :---------------------------------------------------- |
+| **Paquetes y Namespace Corporativo**    | `@eq-labs/<categoría>-<nombre>` (`kebab-case`; nombre opcional si el paquete es la categoría) | Inglés (`en-US`)     | `@eq-labs/foundation`, `@eq-labs/connector-github`    |
+| **Aplicaciones**                        | `@eq-labs/<nombre>` (`kebab-case`)                                                            | Inglés (`en-US`)     | `@eq-labs/cli`, `@eq-labs/dashboard`                  |
+| **Directorios y Archivos de Código**    | `kebab-case`                                                                                  | Inglés (`en-US`)     | `workflow-router.ts`, `artifact-generator/`           |
+| **Clases y Componentes**                | `PascalCase`                                                                                  | Inglés (`en-US`)     | `ContextEngine`, `KnowledgeEngine`                    |
+| **Interfaces**                          | `PascalCase`                                                                                  | Inglés (`en-US`)     | `WorkflowRouter`, `KnowledgeEngine`                   |
+| **Variables, Funciones y Métodos**      | `camelCase`                                                                                   | Inglés (`en-US`)     | `validateArtifact()`, `getKnowledgeById()`            |
+| **Constantes y Enums**                  | `UPPER_SNAKE_CASE` / `PascalCase`                                                             | Inglés (`en-US`)     | `MAX_RETRY_COUNT`, `KnowledgeStatus`                  |
+| **Pruebas Unitarias e Integración**     | `.test.ts` / `.spec.ts`                                                                       | Inglés (`en-US`)     | `knowledge-engine.test.ts`                            |
+| **Pruebas End-to-End (E2E)**            | `.e2e.ts` / `.spec.ts`                                                                        | Inglés (`en-US`)     | `knowledge-flow.e2e.ts`                               |
+| **Ramas Git**                           | `tipo/descripción-corta`                                                                      | Inglés (`en-US`)     | `feature/add-ai-router`, `fix/governance-parser`      |
+| **Documentos de Gobernanza (`EE-DOC`)** | Prefijo + Código + Nombre                                                                     | Contenido en Español | `EE-DOC-001_Master_Documentation_Index.md`            |
+| **Planes de Implementación (`EE-IMP`)** | Prefijo + Código + Nombre                                                                     | Contenido en Español | `EE-IMP-006-P01_Repository_Bootstrap.md`              |
+| **Registros de Decisión (`EE-ADR`)**    | Prefijo + Código + Nombre                                                                     | Contenido en Español | `EE-ADR-001_Workspace_Task_Orchestration_Strategy.md` |
+| **Propuestas de Cambio (`EE-RFC`)**     | Prefijo + Código + Nombre                                                                     | Contenido en Español | `EE-RFC-001_Infra_Top-Level_Directory.md`             |
 
 > **Nota sobre idioma:** El idioma de cada fila deriva de **EE-DOC-002 §16.1**. Cualquier cambio de política de idioma se realiza únicamente en EE-DOC-002; esta sección se actualiza solo si cambia la nomenclatura del monorepo o la aplicación de esa norma.
->
+
 > **Nota sobre nombres de paquetes:**
-> El formato de los nombres de paquetes sigue el patrón `@eq-labs/<categoría>-<nombre>`, donde:
+> El formato de los nombres de paquetes sigue el patrón `@eq-labs/<categoría>[-<nombre>]`, donde:
 >
 > - **`categoría`** corresponde a la capa o dominio del paquete (ej. `foundation`, `execution`, `config`, `intelligence`, `knowledge`, `governance`, `integration`, `registry`, `sdk`).
-> - **`nombre`** corresponde al componente específico dentro de la categoría (ej. `kernel`, `core`, `typescript`, `engine`).
+> - **`nombre`** es **opcional**. Se utiliza cuando la categoría contiene múltiples componentes (ej. `@eq-labs/connector-github`, `@eq-labs/config-typescript`). Si el paquete representa la categoría completa, se omite (ej. `@eq-labs/foundation`).
+
+> **Nota as-built:** las interfaces del ecosistema usan `PascalCase` sin prefijo `I` (`AIProvider`, `CatalogPort`, `KnowledgePort`). Los paquetes que representan una categoría completa omiten el sufijo `-<nombre>` (`@eq-labs/foundation`, `@eq-labs/intelligence`). Las aplicaciones usan `@eq-labs/<nombre>` con scope (`@eq-labs/cli`, `@eq-labs/dashboard`). Ampliación TEC/VAL/WAIVE/AUDIT: EE-DOC-002 §16 y §18.
 
 ---
 
@@ -461,51 +432,51 @@ La **política de idioma por tipo de artefacto** se define normativamente en **E
 | **Playwright**           | **Base**       | Configuración base de Playwright para pruebas E2E.    | `packages/config/playwright/base.mjs`   |
 
 > **Nota:**
-> Cada subdirectorio ubicado dentro de `packages/config/` constituye un paquete independiente del workspace de pnpm. Por ejemplo, `packages/config/typescript`, `packages/config/eslint`, `packages/config/prettier`, `packages/config/vite`, `packages/config/jest` y `packages/config/vitest` son paquetes independientes, cada uno con su propio `package.json`, versión y ciclo de vida. Los demás paquetes del Engineering Ecosystem consumen estas configuraciones mediante sus nombres de paquete (por ejemplo, `@eq-labs/config-typescript`), utilizando el mecanismo de extensión o consumo definido por cada herramienta (por ejemplo `extends`, `presets`, plugins o configuraciones equivalentes). Este enfoque establece una única fuente de verdad para toda la configuración técnica del monorepo, evita duplicación de configuraciones, permite el versionado independiente de cada paquete de configuración y garantiza una evolución consistente y controlada de las herramientas de desarrollo en todo el Engineering Ecosystem.
+> Cada subdirectorio ubicado dentro de `packages/config/` constituye un paquete independiente del workspace de pnpm. Por ejemplo, `packages/config/typescript`, `packages/config/eslint`, `packages/config/prettier`, `packages/config/vite`, `packages/config/jest`, `packages/config/playwright` y `packages/config/vitest` son paquetes independientes, cada uno con su propio `package.json`, versión y ciclo de vida. Los demás paquetes del Engineering Ecosystem consumen estas configuraciones mediante sus nombres de paquete (por ejemplo, `@eq-labs/config-typescript`), utilizando el mecanismo de extensión o consumo definido por cada herramienta (por ejemplo `extends`, `presets`, plugins o configuraciones equivalentes). Este enfoque establece una única fuente de verdad para toda la configuración técnica del monorepo, evita duplicación de configuraciones, permite el versionado independiente de cada paquete de configuración y garantiza una evolución consistente y controlada de las herramientas de desarrollo en todo el Engineering Ecosystem.
 
 ### Estructura Física de configuraciones consumibles (packages/config/)
 
 ```text
 packages/
 └── config/
-    ├── typescript/
-    │   ├── base.json
-    │   ├── node.json
-    │   ├── package.json
-    │   ├── react.json
-    │   └── README.md
-    ├── eslint/
-    │   ├── base.mjs
-    │   ├── package.json
-    │   ├── README.md
-    │   └── typescript.mjs
-    ├── prettier/
-    │   ├── index.mjs
-    │   ├── package.json
-    │   └── README.md
-    ├── vite/
-    │   ├── base.mjs
-    │   ├── library.mjs
-    │   ├── package.json
-    │   ├── react.mjs
-    │   └── README.md
-    ├── jest/
-    │   ├── base.mjs
-    │   ├── package.json
-    │   ├── README.md
-    │   └── typescript.mjs
-    ├── vitest/
-    │   ├── base.mjs
-    │   ├── package.json
-    │   ├── react.mjs
-    │   └── README.md
-    └── playwright/
-        ├── base.mjs
-        ├── base.d.ts
-        ├── package.json
-        ├── eslint.config.mjs
-        ├── turbo.json
-        └── README.md
+ ├── typescript/
+ │ ├── base.json
+ │ ├── node.json
+ │ ├── package.json
+ │ ├── react.json
+ │ └── README.md
+ ├── eslint/
+ │ ├── base.mjs
+ │ ├── package.json
+ │ ├── README.md
+ │ └── typescript.mjs
+ ├── prettier/
+ │ ├── index.mjs
+ │ ├── package.json
+ │ └── README.md
+ ├── vite/
+ │ ├── base.mjs
+ │ ├── library.mjs
+ │ ├── package.json
+ │ ├── react.mjs
+ │ └── README.md
+ ├── jest/
+ │ ├── base.mjs
+ │ ├── package.json
+ │ ├── README.md
+ │ └── typescript.mjs
+ ├── vitest/
+ │ ├── base.mjs
+ │ ├── package.json
+ │ ├── react.mjs
+ │ └── README.md
+ └── playwright/
+ ├── base.mjs
+ ├── base.d.ts
+ ├── package.json
+ ├── eslint.config.mjs
+ ├── turbo.json
+ └── README.md
 ```
 
 ### Reglas de uso
@@ -539,12 +510,12 @@ Las configuraciones `node.json` y `react.json` constituyen especializaciones del
 
 ```mermaid
 flowchart TD
-    Base[base.json<br/>Configuración general]
-    Node[node.json<br/>Especialización Node.js]
-    React[react.json<br/>Especialización React]
+ Base[base.json<br/>Configuración general]
+ Node[node.json<br/>Especialización Node.js]
+ React[react.json<br/>Especialización React]
 
-    Base --> Node
-    Base --> React
+ Base --> Node
+ Base --> React
 ```
 
 ---
@@ -593,25 +564,30 @@ El repositorio utiliza **pnpm** como gestor de paquetes:
 
 ## 12. Organización de Scripts y Comandos Root
 
-| Comando              | Implementación      | Propósito                                             | Frecuencia          |
-| :------------------- | :------------------ | :---------------------------------------------------- | :------------------ |
-| **bootstrap**        | `scripts/bootstrap` | Configuración inicial del entorno.                    | Una vez.            |
-| **build**            | `scripts/build`     | Compilación de todos los paquetes.                    | Por cambio.         |
-| **dev**              | `scripts/dev`       | Ejecución en modo desarrollo con recarga en caliente. | Durante desarrollo. |
-| **test**             | `scripts/test`      | Ejecución de todas las pruebas disponibles.           | Por cambio.         |
-| **lint**             | `scripts/lint`      | Análisis estático y linting.                          | Por cambio.         |
-| **format**           | `scripts/format`    | Formateo del repositorio mediante Prettier.           | Por cambio.         |
-| **typecheck**        | `scripts/typecheck` | Verificación de tipos TypeScript.                     | Por cambio.         |
-| **validate**         | `scripts/validate`  | Validación integral del repositorio.                  | Por cambio.         |
-| **doctor**           | `scripts/doctor`    | Diagnóstico del entorno de desarrollo.                | Por necesidad.      |
-| **generate**         | `scripts/generate`  | Generación de código mediante Plop.                   | Por necesidad.      |
-| **release**          | `scripts/release`   | Gestión del proceso de release.                       | Por release.        |
-| **clean**            | `scripts/clean`     | Limpieza de artefactos de compilación y cachés.       | Por necesidad.      |
-| **changeset**        | `changeset`         | Declaración interactiva de cambios y SemVer.          | Por cambio.         |
-| **version-packages** | `changeset version` | Cálculo y actualización de versiones en el monorepo.  | Por release.        |
+La implementación física de los comandos root vive bajo **`scripts/commands/<cmd>`**, con librerías compartidas en **`scripts/lib/`** (p. ej. `security-audit.mjs`) y pruebas en **`scripts/tests/`**. `scripts/plopfile.mjs` permanece en la raíz de `scripts/`. Las entradas de `package.json` invocan `node scripts/commands/<cmd>`.
+
+| Comando              | Implementación               | Propósito                                                              | Frecuencia          |
+| :------------------- | :--------------------------- | :--------------------------------------------------------------------- | :------------------ |
+| **bootstrap**        | `scripts/commands/bootstrap` | Configuración inicial del entorno.                                     | Una vez.            |
+| **build**            | `scripts/commands/build`     | Compilación de todos los paquetes.                                     | Por cambio.         |
+| **dev**              | `scripts/commands/dev`       | Ejecución en modo desarrollo con recarga en caliente.                  | Durante desarrollo. |
+| **test**             | `scripts/commands/test`      | Ejecución de todas las pruebas disponibles.                            | Por cambio.         |
+| **lint**             | `scripts/commands/lint`      | Análisis estático y linting.                                           | Por cambio.         |
+| **format**           | `scripts/commands/format`    | Formateo del repositorio mediante Prettier.                            | Por cambio.         |
+| **typecheck**        | `scripts/commands/typecheck` | Verificación de tipos TypeScript.                                      | Por cambio.         |
+| **validate**         | `scripts/commands/validate`  | Validación integral del repositorio (incl. QG-SEC con EE-WAIVE).       | Por cambio.         |
+| **doctor**           | `scripts/commands/doctor`    | Diagnóstico del entorno de desarrollo.                                 | Por necesidad.      |
+| **generate**         | `scripts/commands/generate`  | Generación de código mediante Plop.                                    | Por necesidad.      |
+| **release**          | `scripts/commands/release`   | Gestión del proceso de release.                                        | Por release.        |
+| **clean**            | `scripts/commands/clean`     | Limpieza de artefactos de compilación y cachés.                        | Por necesidad.      |
+| **e2e**              | `scripts/commands/e2e`       | Entrada root E2E (orquestación actual: `turbo run test:e2e` filtrado). | Por cambio / CI.    |
+| **changeset**        | `changeset`                  | Declaración interactiva de cambios y SemVer.                           | Por cambio.         |
+| **version-packages** | `changeset version`          | Cálculo y actualización de versiones en el monorepo.                   | Por release.        |
 
 > **Nota:**
-> Esta lista constituye el contrato oficial de comandos root del repositorio. Los comandos mantienen interfaces estables y no deben cambiar de forma incompatible. Los comandos que requieren implementación mediante archivos de automatización delegan en `scripts/`; los comandos `changeset` y `version-packages` son invocados directamente mediante la CLI de Changesets. Turborepo se utiliza para la orquestación de tareas de workspace cuando corresponde.
+> Esta lista constituye el contrato oficial de **nombres** de comandos root (`pnpm <cmd>`). La **ruta de implementación** canónica es `scripts/commands/<cmd>` (no `scripts/<cmd>` plano). `changeset` / `version-packages` se invocan vía CLI de Changesets. Turborepo orquesta tareas de workspace cuando corresponde.
+
+> **E2E (Availability del gate):** el script root **`pnpm e2e`** existe y delega en la implementación actual (`test:e2e` de package(s), p. ej. dashboard). El **gate E2E de ecosistema** (QG / V-E2E) permanece **PENDING** de enforcement en `validate`/CI y de alineación plena con ADR-002 (`turbo run e2e` multi-package sin filtro fijo), conforme EE-DOC-005 §10.4 / EE-DOC-010 / EE-DOC-015. `test:e2e` de un package **no** cierra solo el gate de ecosistema.
 
 ---
 
@@ -636,24 +612,37 @@ El repositorio utiliza **pnpm** como gestor de paquetes:
 
 ### 13.2. Dependencias Permitidas
 
-| Categoría        |      Capa      | Puede importar de                                                                                                                                                                                                                                                                 |
-| :--------------- | :------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Config**       |       0        | Ninguno.                                                                                                                                                                                                                                                                          |
-| **Foundation**   |       1        | Config, Foundation.                                                                                                                                                                                                                                                               |
-| **Execution**    |       2        | Foundation, Execution.                                                                                                                                                                                                                                                            |
-| **Intelligence** |       3        | Foundation, Execution, Intelligence.                                                                                                                                                                                                                                              |
-| **Knowledge**    |       4        | Foundation, Execution, Intelligence, Knowledge.                                                                                                                                                                                                                                   |
-| **Governance**   |       5        | Foundation, Execution, Knowledge, Governance.                                                                                                                                                                                                                                     |
-| **Integration**  |       6        | Foundation, Execution, Governance, Integration.                                                                                                                                                                                                                                   |
-| **Registry**     |       7        | Foundation, Knowledge, Registry.                                                                                                                                                                                                                                                  |
-| **SDK**          |       8        | Foundation, Execution, Intelligence, Knowledge, Governance, Integration, Registry. **No** Connectors (ni como wiring de provider; SDK no es composition root — **§13.5** / EE-ADR-005).                                                                                           |
-| **Connectors**   | Límite externo | **Runtime/contrato:** solo **Foundation**. **Tooling:** `packages/config/*` como `devDependency` (TypeScript, ESLint, etc.). **Prohibido en runtime:** Intelligence, Registry, Knowledge, Execution, Governance, Integration, SDK, otros connectors como dependencia de contrato. |
+| Categoría        |         Capa         | Puede importar de                                                                                                                                                                                                                                                                 |
+| :--------------- | :------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Config**       |          0           | Ninguno.                                                                                                                                                                                                                                                                          |
+| **Foundation**   |          1           | Config, Foundation.                                                                                                                                                                                                                                                               |
+| **Execution**    |          2           | Foundation, Execution.                                                                                                                                                                                                                                                            |
+| **Intelligence** |          3           | Foundation, Intelligence.                                                                                                                                                                                                                                                         |
+| **Knowledge**    |          4           | Foundation, Knowledge.                                                                                                                                                                                                                                                            |
+| **Governance**   |          5           | Foundation, Execution, Knowledge, Governance.                                                                                                                                                                                                                                     |
+| **Integration**  |          6           | Foundation, Execution, Governance, Integration.                                                                                                                                                                                                                                   |
+| **Registry**     |          7           | Foundation, Knowledge, Registry.                                                                                                                                                                                                                                                  |
+| **SDK**          |          8           | Foundation, Execution, Intelligence, Knowledge, Governance, Integration, Registry. **No** Connectors (ni como wiring de provider; SDK no es composition root — **§13.5** / EE-ADR-005).                                                                                           |
+| **Shared**       | Utilidad transversal | Config, Foundation, Shared. No depende de Execution ni capas superiores de dominio.                                                                                                                                                                                               |
+| **Apps**         |     Composición      | Config (tooling), Foundation, Shared, y capas de dominio necesarias para el composition root (p. ej. Intelligence, Knowledge) según el app. No exporta contratos de capa hacia packages.                                                                                          |
+| **Connectors**   |    Límite externo    | **Runtime/contrato:** solo **Foundation**. **Tooling:** `packages/config/*` como `devDependency` (TypeScript, ESLint, etc.). **Prohibido en runtime:** Intelligence, Registry, Knowledge, Execution, Governance, Integration, SDK, otros connectors como dependencia de contrato. |
 
-> **Nota sobre la arquitectura en capas:**
-> La tabla anterior define la matriz oficial de dependencias permitidas del Engineering Ecosystem. Aunque las categorías se organizan en capas, cada paquete únicamente puede depender de otros paquetes pertenecientes a las categorías expresamente autorizadas en esta matriz. Por ejemplo, **Governance (Capa 5)** puede depender de **Knowledge (Capa 4)** porque requiere inspeccionar el conocimiento para aplicar políticas de calidad, métricas u observabilidad, mientras que Knowledge no puede depender de Governance.
-> **Enforcement:** la validación automática completa de capas/ciclos en `scripts/validate` puede estar **PENDING** conforme a **EE-DOC-010** (No False Pass). Hasta que el gate esté **ACTIVE**, el cumplimiento se garantiza por revisión arquitectónica, CODEOWNERS y criterios de **EE-IMP** aplicables — **no** se declara PASS de matriz si el mecanismo no existe.
+> **Coexistencia con EE-DOC-004 §11 (nota de mapeo — PN-008, 2026-10-18):**
 >
-> **Config como tooling (todas las categorías de packages y connectors):**
+> | Pregunta                                                             | Norma que manda                     |
+> | :------------------------------------------------------------------- | :---------------------------------- |
+> | ¿Qué capa lógica puede depender de qué capa?                         | **EE-DOC-004 §11**                  |
+> | ¿Qué workspace/paquete npm puede importar a qué otro en el monorepo? | **EE-DOC-006 §13.2** (esta sección) |
+>
+> Las filas **Shared** y **Apps** son de matriz **física** (utilidad transversal y composition root). No sustituyen las capas lógicas de 004. Si una arista de paquete **contradice** de forma incompatible la matriz lógica sin mediación por puertos (004 §06/§11.2), no se “arregla” omitiendo 004: se escala a **EE-RFC-003** u otro cambio Tipo D.
+
+> **Resolución (EE-ADR-006):** las aristas `Intelligence → Execution`, `Knowledge → Intelligence` y `Knowledge → Execution` fueron **eliminadas** de esta matriz para alinearla con la matriz lógica de `EE-DOC-004 §11.1` y la política efectiva de `EE-DOC-014 §04.5`. El código no las usaba. Toda interacción entre Workflow (`execution`) e IA (`intelligence`) o Knowledge (`knowledge`) se realiza por **puertos tipados en Foundation**, inyectados desde el composition root (`apps/*`, §13.5). Ver `EE-ADR-006`.
+
+> **Nota sobre la arquitectura en capas:** La tabla anterior define la matriz oficial de dependencias permitidas del Engineering Ecosystem. Aunque las categorías se organizan en capas, cada paquete únicamente puede depender de otros paquetes pertenecientes a las categorías expresamente autorizadas en esta matriz. Por ejemplo, **Governance (Capa 5)** puede depender de **Knowledge (Capa 4)** porque requiere inspeccionar el conocimiento para aplicar políticas de calidad, métricas u observabilidad, mientras que Knowledge no puede depender de Governance.
+>
+> **Enforcement:** la validación automática completa de capas/ciclos en `scripts/commands/validate` puede estar **PENDING** conforme a **EE-DOC-010** (No False Pass). Hasta que el gate esté **ACTIVE**, el cumplimiento se garantiza por revisión arquitectónica, CODEOWNERS y criterios de **EE-IMP** aplicables — **no** se declara PASS de matriz si el mecanismo no existe.
+
+> **Config como tooling (todas las categorías de packages y connectors):**  
 > Dependencias de `@eq-labs/config-*` en `devDependencies` **no** se interpretan como violación de la matriz de runtime. Config es capa 0 de tooling compartido.
 >
 > **Extensión Connectors (EE-ADR-005):**
@@ -737,7 +726,7 @@ La implementación física de la estructura del repositorio se rige por un flujo
 
 ```mermaid
 flowchart LR
-    A["Implementación"] --> B["Validación"] --> C["Borrador de Documentación Técnica"]
+ A["Implementación"] --> B["Validación"] --> C["Borrador de Documentación Técnica"]
 ```
 
 ### 15.1. Catálogo Oficial de Fases de la Estructura
@@ -753,6 +742,8 @@ flowchart LR
 | **Fase 6**     | Connectors                   | Puntos de integración formales con infraestructura, protocolos y entornos externos.                                                            | Directorios de conectores bajo `connectors/official/` (`mcp`, `a2a`, `github`, etc.).              |
 | **Fase 7**     | Scripts                      | Suite de automatización root para el control, build, validación, generación, release y limpieza del monorepo.                                  | Directorio `scripts/` y sus puntos de entrada de automatización.                                   |
 | **Fase 08–12** | Repository Support Structure | Creación física de las carpetas de soporte del monorepo para activos, documentación normada, bases de conocimiento, ejemplos y extensibilidad. | Directorios de primer nivel `assets/`, `docs/`, `data/`, `examples/` y `marketplace/`.             |
+
+> **As-built Fase 7:** entrypoints en `scripts/commands/<cmd>` (incl. `e2e`); helpers en `scripts/lib/`; tests de scripts en `scripts/tests/`. Descripciones históricas con `scripts/<cmd>` plano quedan supersedidas por §05 y §12.
 
 ### 15.2. Especificaciones Técnicas por Unidad de Implementación
 
@@ -840,75 +831,84 @@ Cada unidad de implementación física del monorepo es responsable de materializ
 
 ### 17.1. Mecanismos de Validación
 
-| Mecanismo                | Descripción                                                                                      | Responsable            | Frecuencia    |
-| :----------------------- | :----------------------------------------------------------------------------------------------- | :--------------------- | :------------ |
-| **Script de validación** | `scripts/validate` — verifica estructura de directorios, convenciones de nombres y dependencias. | Developer (local) / CI | Por cambio.   |
-| **CI Pipeline**          | Ejecuta `scripts/validate` en cada PR como parte de los Quality Gates (EE-DOC-010).              | CI / GitHub Actions    | Por PR.       |
-| **Quality Gates**        | La validación de estructura es un gate obligatorio definido en EE-DOC-010.                       | CI / GitHub Actions    | Por PR.       |
-| **Tooling interno**      | El CLI del Engineering Ecosystem (`ee validate`) ejecuta las mismas validaciones.                | Developer              | Bajo demanda. |
-| **Auditorías**           | Revisión periódica manual por el Equipo de Arquitectura.                                         | Equipo de Arquitectura | Trimestral.   |
+| Mecanismo                | Descripción                                                                                                                                                                                                                                                                         | Responsable            | Frecuencia    |
+| :----------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------- | :------------ |
+| **Script de validación** | `scripts/commands/validate` — verifica estructura de directorios top-level/workspace, gates documentales/infra/templates según implementación actual (EE-DOC-010). **No** equivale aún a enforcement completo de convenciones de nombres ni de la matriz §13.2 (capas **PENDING**). | Developer (local) / CI | Por cambio.   |
+| **CI Pipeline**          | Ejecuta `scripts/commands/validate` en cada PR como parte de los Quality Gates (EE-DOC-010).                                                                                                                                                                                        | CI / GitHub Actions    | Por PR.       |
+| **Quality Gates**        | La validación de estructura es un gate obligatorio definido en EE-DOC-010.                                                                                                                                                                                                          | CI / GitHub Actions    | Por PR.       |
+| **Tooling interno**      | CLI: preferir `ee run validate` / `pnpm validate` según entrada publicada del CLI (EE-DOC-011).                                                                                                                                                                                     | Developer              | Bajo demanda. |
+| **Auditorías**           | Revisión periódica manual por el Equipo de Arquitectura.                                                                                                                                                                                                                            | Equipo de Arquitectura | Trimestral.   |
 
 > **Nota:**
-> La integración con el pipeline y los quality gates se detalla en **EE-DOC-010** (Quality Gates) y **EE-DOC-011** (Automation). El script `scripts/validate` es el punto de entrada único para todas las validaciones de estructura, garantizando consistencia entre entornos locales y CI.
+> La integración con el pipeline y los quality gates se detalla en **EE-DOC-010** (Quality Gates) y **EE-DOC-011** (Automation). El script `scripts/commands/validate` es el punto de entrada único para todas las validaciones de estructura, garantizando consistencia entre entornos locales y CI.
 
 ### 17.2. Reglas de Cumplimiento
 
-| Regla  | Descripción                                                                      |
-| :----: | :------------------------------------------------------------------------------- |
-| **R1** | Todos los paquetes deben seguir las convenciones de nombres.                     |
-| **R2** | Las dependencias deben respetar las reglas de imports.                           |
-| **R3** | No se permiten dependencias circulares.                                          |
-| **R4** | La estructura de directorios debe mantenerse consistente.                        |
-| **R5** | El script `scripts/validate` debe pasar sin errores para que un PR sea aprobado. |
+| Regla  | Descripción                                                                               |
+| :----: | :---------------------------------------------------------------------------------------- |
+| **R1** | Todos los paquetes deben seguir las convenciones de nombres.                              |
+| **R2** | Las dependencias deben respetar las reglas de imports.                                    |
+| **R3** | No se permiten dependencias circulares.                                                   |
+| **R4** | La estructura de directorios debe mantenerse consistente.                                 |
+| **R5** | El script `scripts/commands/validate` debe pasar sin errores para que un PR sea aprobado. |
 
 ---
 
 ## 18. Referencias
 
-| Código         | Documento                              | Uso en este documento                                    |
-| :------------- | :------------------------------------- | :------------------------------------------------------- |
-| **EE-DOC-001** | Master Documentation Index             | Índice y roadmap                                         |
-| **EE-DOC-002** | Document Design Template               | Plantilla y ciclo documental                             |
-| **EE-DOC-003** | Engineering Ecosystem Constitution     | Principios (Vendor Agnostic, etc.)                       |
-| **EE-DOC-004** | Engineering Architecture               | Capas lógicas; Adapter Pattern                           |
-| **EE-DOC-005** | Development Workflow                   | Implementación, cambio gobernado                         |
-| **EE-DOC-007** | GitHub Governance                      | `.github/`, CODEOWNERS                                   |
-| **EE-DOC-008** | Development Environment                | `.vscode/`, runtime local                                |
-| **EE-DOC-009** | Infrastructure                         | Semántica de `infra/`                                    |
-| **EE-DOC-010** | Quality Gates                          | Enforcement; No False Pass                               |
-| **EE-DOC-011** | Automation                             | Scripts root; release                                    |
-| **EE-DOC-012** | Templates                              | `templates/`; T-CON / T-PKG                              |
-| **EE-DOC-013** | AI Ecosystem                           | Intelligence; consumo de connectors vía composition root |
-| **EE-ADR-001** | Workspace Task Orchestration Strategy  | Turborepo / pnpm                                         |
-| **EE-ADR-002** | Engineering Ecosystem Testing Standard | Vitest / Playwright                                      |
-| **EE-ADR-003** | Node.js Baseline Upgrade to 24 LTS     | `.nvmrc` / engines                                       |
-| **EE-ADR-005** | AI Provider SPI and Connector Adapters | SPI en Foundation; connectors; composition root          |
-| **EE-RFC-001** | Infra Top-Level Directory              | Incorporación de `infra/`                                |
-| **EE-RFC-002** | Templates Top-Level Directory          | Incorporación de `templates/`                            |
-| **EE-IMP-006** | (histórico)                            | Materialización de la estructura base                    |
-| **EE-IMP-009** | Infrastructure implementation          | Materialización de `infra/`                              |
-| **EE-IMP-012** | Templates implementation               | Materialización generativa de `templates/`               |
+| Código         | Documento                                              | Uso en este documento                                                        |
+| :------------- | :----------------------------------------------------- | :--------------------------------------------------------------------------- |
+| **EE-DOC-001** | Master Documentation Index                             | Índice y roadmap                                                             |
+| **EE-DOC-002** | Document Design Template                               | Plantilla y ciclo documental                                                 |
+| **EE-DOC-003** | Engineering Ecosystem Constitution                     | Principios (Vendor Agnostic, etc.)                                           |
+| **EE-DOC-004** | Engineering Architecture                               | Capas lógicas; Adapter Pattern                                               |
+| **EE-DOC-005** | Development Workflow                                   | Implementación, cambio gobernado                                             |
+| **EE-DOC-007** | GitHub Governance                                      | `.github/`, CODEOWNERS                                                       |
+| **EE-DOC-008** | Development Environment                                | `.vscode/`, runtime local                                                    |
+| **EE-DOC-009** | Infrastructure                                         | Semántica de `infra/`                                                        |
+| **EE-DOC-010** | Quality Gates                                          | Enforcement; No False Pass, Availability, WAIVE, QG-ARCH                     |
+| **EE-DOC-011** | Automation                                             | Scripts root; release                                                        |
+| **EE-DOC-012** | Templates                                              | `templates/`; T-CON / T-PKG                                                  |
+| **EE-DOC-013** | AI Ecosystem                                           | Intelligence; consumo de connectors vía composition root                     |
+| **EE-DOC-014** | Knowledge Management                                   | Restricciones de import knowledge                                            |
+| **EE-DOC-015** | Engineering Ecosystem Validation                       | PENDING/DEGRADED; V-E2E                                                      |
+| **EE-ADR-001** | Workspace Task Orchestration Strategy                  | Turborepo / pnpm / Changesets                                                |
+| **EE-ADR-002** | Engineering Ecosystem Testing Standard                 | Vitest / Playwright, e2e                                                     |
+| **EE-ADR-003** | Node.js Baseline Upgrade to 24 LTS                     | `.nvmrc` / engines                                                           |
+| **EE-ADR-004** | Node / toolchain (si aplica)                           | Quality Gates Progressive Adoption                                           |
+| **EE-ADR-005** | AI Provider SPI and Connector Adapters                 | SPI en Foundation; connectors; composition root                              |
+| **EE-ADR-006** | Workflow-AI Interaction via Injected Ports             | Aristas Intelligence↔Execution y Knowledge→Intelligence; puertos inyectados |
+| **EE-RFC-001** | Infra Top-Level Directory                              | Incorporación de `infra/`                                                    |
+| **EE-RFC-002** | Templates Top-Level Directory                          | Incorporación de `templates/`                                                |
+| **EE-RFC-003** | Sync estándares documentación; mapeo 004↔006 (PN-008) |                                                                              |
+| **EE-TEC-001** | Consolidated Technical Documentation EE-DOC-006        | As-built consolidado                                                         |
+| **EE-IMP-006** | (histórico)                                            | Materialización de la estructura base                                        |
+| **EE-IMP-009** | Infrastructure implementation                          | Materialización de `infra/`                                                  |
+| **EE-IMP-012** | Templates implementation                               | Materialización generativa de `templates/`                                   |
 
 ---
 
 ## 19. Historial de Cambios
 
-|  Versión   |   Fecha    | Autor                   | Aprobado por           | Motivo                                           | Cambios                                                                                                                                                                                                                       |        Estado         |
-| :--------: | :--------: | :---------------------- | :--------------------- | :----------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------: |
-| **v1.0.0** | 2026-08-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Creación inicial                                 | Versión inicial de la estructura del repositorio                                                                                                                                                                              | **En Implementación** |
-| **v1.1.0** | 2026-09-17 | Equipo de Arquitectura  | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets | Inclusión de config/playwright, .changeset, ignoredBuiltDependencies y scripts de Changesets.                                                                                                                                 | **En Implementación** |
-| **v1.2.0** | 2026-09-18 | IA Asistente (revisión) | Equipo de Arquitectura | Sincronización con la implementación actual      | Alineación de la estructura de `scripts/`, comandos root, configuración Playwright y especificación de Fase 7 con la referencia de implementación actual.                                                                     | **En Implementación** |
-| **v1.3.0** | 2026-09-19 | IA Asistente (revisión) | Equipo de Arquitectura | Consolidación de las Fases 08–12                 | Consolidación de `assets/`, `docs/`, `data/`, `examples/` y `marketplace/` como una única unidad de implementación y documentación técnica **EE-IMP-006-P08**. Validación Final completada y cierre documental del documento. |     **Congelado**     |
-| **v1.3.1** | 2026-09-21 | Equipo de Arquitectura  | Equipo de Arquitectura | SSOT política de idioma                          | §07.1 declara que el idioma deriva de EE-DOC-002 §16.1; esta sección especializa nomenclatura del monorepo sin redefinir la política                                                                                          |     **Congelado**     |
-| **v1.4.0** | 2026-09-25 | Equipo de Arquitectura  | Equipo de Arquitectura | EE-RFC-001 aprobado                              | Incorporación estructural de `infra/` (§04 diagrama, §05 árbol, nota frontera vs connectors). Semántica de infraestructura permanece en EE-DOC-009. Paquete coordinado con EE-DOC-001                                         |     **Congelado**     |
-| **v1.5.0** | 2026-10-01 | Equipo de Arquitectura  | Equipo de Arquitectura | EE-RFC-002 aprobado                              | Incorporación estructural de `templates/` (§04 Soporte, §05 árbol, §14 frontera assets). Semántica de templates → EE-DOC-012. Paquete coordinado con EE-DOC-001 v2.9.0                                                        |     **Congelado**     |
-| **v1.6.0** | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | EE-ADR-005 / EE-DOC-013                          | §13.2–13.4: categoría Connectors; composition root; R-CONN; higiene §05/§14 (`infra/secrets/`)                                                                                                                                |     **Congelado**     |
-| **v1.6.1** | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Revisión cumplimiento + ADR-005 Aprobado v1.3.0  | Runtime Foundation + Config tooling; composition root **sin** SDK; No False Pass (validate); §12 tabla; §18 refs; §20.4 vigente **v1.6.1**                                                                                    |     **Congelado**     |
-| **v1.7.0** | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | DOC-002 §15 (cambio de significado)              | Reemisión **minor**: matriz Connectors (Foundation + Config tooling); composition root **sin** SDK; No False Pass; cierre distingue validación v1.3.0 vs cambios gobernados v1.4–v1.7.0                                       |     **Congelado**     |
-| **v1.7.1** | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | §13.5 Composition root                           | Subsección composition root (`apps/*`); nota §13.2/R-CONN-3 sin “bootstrap” ambiguo; alineación SDK/Connectors                                                                                                                |     **Congelado**     |
-| **v1.7.2** | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Higiene §13.5                                    | Una sola fila «Qué no es» (sdk + scripts/bootstrap)                                                                                                                                                                           |     **Congelado**     |
-| **v1.8.0** | 2026-10-06 | Equipo de Arquitectura  | Equipo de Arquitectura | Auth docs/validation/                            | Subárbol `docs/validation/{reports,waivers,evidence}` para EE-DOC-015                                                                                                                                                         |     **Congelado**     |
-| **v1.8.1** | 2026-10-06 | Equipo de Arquitectura  | Equipo de Arquitectura | Higiene validation + metadatos                   | `docs/validation/README.md`; unifica declaración de vigencia en metadatos                                                                                                                                                     |     **Congelado**     |
+|  Versión   |   Fecha    | Autor                   | Aprobado por           | Motivo                                           | Cambios                                                                                                                                                                                 |        Estado         |
+| :--------: | :--------: | :---------------------- | :--------------------- | :----------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------: |
+| **v1.0.0** | 2026-08-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Creación inicial                                 | Versión inicial de la estructura del repositorio                                                                                                                                        | **En Implementación** |
+| **v1.1.0** | 2026-09-17 | Equipo de Arquitectura  | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets | Inclusión de config/playwright, .changeset, ignoredBuiltDependencies y scripts de Changesets.                                                                                           | **En Implementación** |
+| **v1.2.0** | 2026-09-18 | IA Asistente (revisión) | Equipo de Arquitectura | Sincronización con la implementación actual      | Alineación de la estructura de `scripts/`, comandos root, configuración Playwright y especificación de Fase 7 con la referencia de implementación actual.                               | **En Implementación** |
+| **v1.3.0** | 2026-09-20 | Equipo de Arquitectura  | Equipo de Arquitectura | Validación final alcance                         | Cierre histórico v1.3.0; IMP P01–P08; detalle en TEC-001                                                                                                                                |     **Congelado**     |
+| **v1.3.1** | 2026-09-21 | Equipo de Arquitectura  | Equipo de Arquitectura | SSOT política de idioma                          | §07.1 declara que el idioma deriva de EE-DOC-002 §16.1; esta sección especializa nomenclatura del monorepo sin redefinir la política                                                    |     **Congelado**     |
+| **v1.4.0** | 2026-09-25 | Equipo de Arquitectura  | Equipo de Arquitectura | EE-RFC-001 aprobado                              | Incorporación estructural de `infra/` (§04 diagrama, §05 árbol, nota frontera vs connectors). Semántica de infraestructura permanece en EE-DOC-009. Paquete coordinado con EE-DOC-001   |     **Congelado**     |
+| **v1.5.0** | 2026-10-01 | Equipo de Arquitectura  | Equipo de Arquitectura | EE-RFC-002 aprobado                              | Incorporación estructural de `templates/` (§04 Soporte, §05 árbol, §14 frontera assets). Semántica de templates → EE-DOC-012. Paquete coordinado con EE-DOC-001 v2.9.0                  |     **Congelado**     |
+| **v1.6.0** | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | EE-ADR-005 / EE-DOC-013                          | §13.2–13.4: categoría Connectors; composition root; R-CONN; higiene §05/§14 (`infra/secrets/`)                                                                                          |     **Congelado**     |
+| **v1.6.1** | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Revisión cumplimiento + ADR-005 Aprobado v1.3.0  | Runtime Foundation + Config tooling; composition root **sin** SDK; No False Pass (validate); §12 tabla; §18 refs; §20.4 vigente **v1.6.1**                                              |     **Congelado**     |
+| **v1.7.0** | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | DOC-002 §15 (cambio de significado)              | Reemisión **minor**: matriz Connectors (Foundation + Config tooling); composition root **sin** SDK; No False Pass; cierre distingue validación v1.3.0 vs cambios gobernados v1.4–v1.7.0 |     **Congelado**     |
+| **v1.7.1** | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | §13.5 Composition root                           | Subsección composition root (`apps/*`); nota §13.2/R-CONN-3 sin “bootstrap” ambiguo; alineación SDK/Connectors                                                                          |     **Congelado**     |
+| **v1.7.2** | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Higiene §13.5                                    | Una sola fila «Qué no es» (sdk + scripts/bootstrap)                                                                                                                                     |     **Congelado**     |
+| **v1.8.0** | 2026-10-06 | Equipo de Arquitectura  | Equipo de Arquitectura | Auth docs/validation/                            | Subárbol `docs/validation/{reports,waivers,evidence}` para EE-DOC-015                                                                                                                   |     **Congelado**     |
+| **v1.8.1** | 2026-10-16 | Equipo de Arquitectura  | Equipo de Arquitectura | Tipo B as-built monorepo                         | §05/§12/§13 Apps-Shared; tops assets/examples/marketplace                                                                                                                               |     **Congelado**     |
+| **v1.9.0** | 2026-10-19 | Equipo de Arquitectura  | Equipo de Arquitectura | **Minor:** ADR-006 aplicado                      | §13.2: eliminadas aristas `Intelligence→Execution` y `Knowledge→Intelligence` (EE-ADR-006); notas de resolución; §07.1 convenciones as-built; §18 referencias actualizadas              |     **Congelado**     |
+
+> **Validación incremental:** la Validación Final histórica (§20.1, v1.3.0) permanece como registro de cierre de fase. Las evoluciones v1.4.0 en adelante (esta edición) se consideran **validadas de forma incremental** en auditoría documental + contraste as-built (`scripts/commands`, e2e root, matriz §13, nota PN-008). El gate V-E2E de ecosistema y gates de 010/015 pueden permanecer PENDING sin invalidar el congelamiento estructural de 006. Evidencia operativa recomendada: `pnpm validate` en `main` + SHA.
 
 ---
 
@@ -916,29 +916,27 @@ Cada unidad de implementación física del monorepo es responsable de materializ
 
 ### 20.1. Validación Final
 
-La Validación Final de **EE-DOC-006 — Repository Structure** fue completada el **2026-09-20** después de finalizar todas las unidades de implementación definidas en la Sección 15.
+La Validación Final de **EE-DOC-006 — Repository Structure** se registró el **2026-09-20** para el **alcance histórico v1.3.0**, con evolución gobernada posterior (v1.4.0–v1.8.x) documentada en el historial.
 
-La validación utilizó como evidencia:
+**Evidencia de trazabilidad (no equivale a PASS de todos los gates ACTIVE):**
 
-- **EE-IMP-006-P01** a **EE-IMP-006-P08**.
-- **EE-TEC-001 — Consolidated Technical Documentation of EE-DOC-006**.
-- El estado físico del repositorio registrado en `Paquetes_Archivos_Monorepo.md`.
-- La ejecución del Quality Gate `pnpm validate`.
-- La ejecución de la suite E2E del Dashboard mediante Playwright.
+- **EE-IMP-006-P01** a **EE-IMP-006-P08** (implementación por fase).
+- **EE-TEC-001** (documentación técnica consolidada; puede requerir refresco as-built).
+- Inventario de repositorio: preferir **`git ls-files` + commit SHA + fecha** (EE-DOC-015). Un volcado filesystem (`Paquetes_Archivos_Monorepo.md`) es auxiliar y puede omitir `docs/` o incluir artefactos ignorados (`.tmp/`).
+- Ejecuciones de `pnpm validate` / gates ACTIVE según EE-DOC-010.
+
+> **Fases y validación (EE-DOC-005 §04.6):** EE-IMP-006-P01 declara validación de fase **no realizada** en el momento de la IMP; P02 indica que validaciones de P03 no se atribuyen retroactivamente a P01/P02. El cierre de 006 **no** reescribe esa historia: los huecos de validación por fase permanecen como deuda documentada (addenda IMP o régimen PENDING/DEGRADED según EE-DOC-015 / 001 R9), no como PASS implícito.
 
 ### 20.2. Resultado de Quality Gates
 
-| Validación                          |                         Resultado                         |
-| :---------------------------------- | :-------------------------------------------------------: |
-| Typecheck                           |                         ✅ 18/18                          |
-| Lint                                |                         ✅ 25/25                          |
-| Tests globales                      | ✅ Conforme al modelo de adopción definido por EE-ADR-002 |
-| Format                              |                        ✅ Conforme                        |
-| Security Audit                      |              ✅ 0 vulnerabilidades conocidas              |
-| Project Structure                   |                        ✅ Conforme                        |
-| Workspace Configuration             |                        ✅ Conforme                        |
-| Dashboard E2E                       |                          ✅ 1/1                           |
-| Validación integral `pnpm validate` |                        ✅ Conforme                        |
+| Validación                    | Resultado (dictamen de cierre)                                                                                                                                                                                                                       |
+| :---------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Typecheck / Lint / Format     | Conforme en el alcance ACTIVE reportado en la validación histórica (detalle en evidencia IMP/TEC/CI).                                                                                                                                                |
+| Tests                         | Conforme al modelo de adopción **EE-ADR-002** (NO_TESTS ≠ PASS automático).                                                                                                                                                                          |
+| Security Audit                | **No** se declara “0 vulnerabilidades” como hecho permanente. El estado real es el de `pnpm audit` / EE-DOC-010; residuales requieren **EE-WAIVE** vigente (≤7 días salvo régimen 010) o remediación. `auditConfig.ignoreGhsas` no sustituye waiver. |
+| Project Structure / Workspace | Conforme a QG-ARCH/workspace **ACTIVE** (allowlist §05.1); no implica enforcement de matriz §13.2 ni de todo el blueprint §05.                                                                                                                       |
+| E2E Dashboard                 | **PENDING** a nivel contrato root (`pnpm e2e` materializado; gate ecosistema PENDING (010/015)). Ejecuciones ad hoc (`test:e2e` de package) no cierran el gate de ecosistema (V-E2E / EE-DOC-015).                                                   |
+| `pnpm validate`               | Conforme a gates **ACTIVE** en la fecha de evidencia; no implica PASS de gates PENDING.                                                                                                                                                              |
 
 ### 20.3. Dictamen de Cierre
 
@@ -948,23 +946,24 @@ Las diferencias correspondientes a componentes cuya materialización se encuentr
 
 No existen hallazgos abiertos que bloqueen el cierre documental del **alcance histórico validado (v1.3.0)**.
 
-Los cambios gobernados **v1.4.0–v1.7.1** (RFC-001, RFC-002, ADR-005 / matriz Connectors y composition root) están **documentados y aprobados** como evolución de la norma. Su **enforcement automatizado** en `scripts/validate` (imports de capas/connectors) permanece sujeto a **EE-DOC-010** (No False Pass) hasta que el gate correspondiente esté ACTIVE.
+Los cambios gobernados **v1.4.0–v1.7.1** (RFC-001, RFC-002, ADR-005 / matriz Connectors y composition root) están **documentados y aprobados** como evolución de la norma. Su **enforcement automatizado** en `scripts/commands/validate` (imports de capas/connectors) permanece sujeto a **EE-DOC-010** (No False Pass) hasta que el gate correspondiente esté ACTIVE.
 
 ### 20.4. Estado Final
 
 La Validación Final original (2026-09-20) cerró el alcance implementado de **v1.3.0**. Versiones posteriores incorporaron cambios gobernados **sin invalidar** aquella validación para el alcance previo:
 
-| Versión    | Cambio gobernado                                                                                   |
-| :--------- | :------------------------------------------------------------------------------------------------- |
-| **v1.4.0** | EE-RFC-001 — `infra/`                                                                              |
-| **v1.5.0** | EE-RFC-002 — `templates/`                                                                          |
-| **v1.6.0** | EE-ADR-005 — Connectors + composition root (§13.2); higiene estructural §05/§14                    |
-| **v1.6.1** | Cumplimiento post-revisión (patch intermedio)                                                      |
-| **v1.7.0** | **Minor:** Config tooling + composition root sin SDK (DOC-002 §15); No False Pass                  |
-| **v1.7.1** | **Patch:** §13.5 Composition root (`apps/*`); desambiguación vs `scripts/bootstrap`; refs R-CONN-3 |
-| **v1.7.2** | **Patch:** §13.5 — una sola fila «Qué no es»                                                       |
-| **v1.8.0** | **Minor:** `docs/validation/` (reports, waivers, evidence)                                         |
-| **v1.8.1** | **Patch:** `docs/validation/README.md`; higiene metadatos                                          |
+| Versión    | Cambio gobernado                                                                                                                 |
+| :--------- | :------------------------------------------------------------------------------------------------------------------------------- |
+| **v1.4.0** | EE-RFC-001 — `infra/`                                                                                                            |
+| **v1.5.0** | EE-RFC-002 — `templates/`                                                                                                        |
+| **v1.6.0** | EE-ADR-005 — Connectors + composition root (§13.2); higiene estructural §05/§14                                                  |
+| **v1.6.1** | Cumplimiento post-revisión (patch intermedio)                                                                                    |
+| **v1.7.0** | **Minor:** Config tooling + composition root sin SDK (DOC-002 §15); No False Pass                                                |
+| **v1.7.1** | **Patch:** §13.5 Composition root (`apps/*`); desambiguación vs `scripts/bootstrap`; refs R-CONN-3                               |
+| **v1.7.2** | **Patch:** §13.5 — una sola fila «Qué no es»                                                                                     |
+| **v1.8.0** | **Minor:** `docs/validation/` (reports, waivers, evidence)                                                                       |
+| **v1.8.1** | **Patch:** `docs/validation/README.md`; higiene metadatos                                                                        |
+| **v1.9.0** | **Minor:** EE-ADR-006 aplicado — quitar aristas `Intelligence→Execution` y `Knowledge→Intelligence`; §07.1 convenciones as-built |
 
 En cumplimiento de **EE-DOC-005**, la versión normativa vigente de **EE-DOC-006 — Repository Structure** es:
 
