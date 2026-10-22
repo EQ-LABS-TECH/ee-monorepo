@@ -124,7 +124,7 @@ La necesidad surge de hacer explícitos los límites de responsabilidad y el cic
 5. **Integración:** solo después de revisión, resolución de observaciones y merge autorizado según la gobernanza aplicable.
 6. **Evidencia:** no declarar lint, typecheck, tests, build, E2E o security gates como aprobados si no se ejecutaron; registrar límites y fallos observados.
 7. **Coherencia documental:** actualizar la documentación afectada cuando el cambio aprobado altere arquitectura, APIs, comportamiento, configuración, workflows o governance.
-8. **Documentos congelados:** no editar directamente sus versiones vigentes en `main`; cualquier modificación normativa debe tramitarse en la rama del cambio y respetar aprobación, versionado e historial exigidos por el estándar.
+8. **Documentos congelados:** la condición de congelado no implica que el cuerpo sea intocable por definición. Las enmiendas de contenido deben tramitarse mediante el cambio gobernado aplicable, con revisión y aprobación antes de integración. Mientras el documento esté congelado, los únicos campos de metadatos que esta propuesta permite actualizar son `Versión` y `Última revisión`; el estado y los demás metadatos no se alteran por conveniencia. La preparación en esta rama no equivale a aprobación ni autoriza cambios directos en `main`.
 9. **Configuración GitHub:** los cambios de reglas, branch protection o checks deben separarse de una edición exclusivamente documental y acompañarse de evidencia verificable.
 10. **Sin cambios de código por parte del asistente:** esta propuesta no concede autorización para modificar código fuente.
 
@@ -249,7 +249,7 @@ La necesidad surge de hacer explícitos los límites de responsabilidad y el cic
 | **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | —            | Conformidad §18.5          | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado | Propuesto |
 | **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | — | Ampliación propuesta de workflow | Incorpora alcance propuesto para colaboración, ramas/PR, responsabilidades, validación y potencial impacto en DOC-005/DOC-007; mantiene RFC abierto y sin declarar aprobación | Propuesto |
 | **v0.5.0** | 2026-10-22 | Equipo de Arquitectura | — | Materialización en rama de la enmienda colaborativa | Prepara DOC-005 v1.5.0 y DOC-007 v1.2.0 en revisión; mantiene RFC abierto y sin declarar cambios aprobados en main | Propuesto |
-| **v0.6.0** | 2026-10-22 | Equipo de Arquitectura | — | Conformidad de metadatos y preservación de documentos congelados | Alinea metadatos RFC con EE-DOC-002 §05/§18.5; mantiene las propuestas de workflow dentro del RFC sin alterar el cuerpo ni el estado congelado de DOC-001, DOC-005 y DOC-007 | Propuesto |
+| **v0.6.0** | 2026-10-22 | Equipo de Arquitectura | — | Conformidad de metadatos y preparación de enmiendas documentales | Alinea metadatos RFC con EE-DOC-002 §05/§18.5; distingue los campos de metadatos permitidos para documentos congelados y prepara enmiendas de contenido en esta rama para revisión, sin afirmar aprobación normativa ni cambios en `main`. | Propuesto |
 
 ---
 
