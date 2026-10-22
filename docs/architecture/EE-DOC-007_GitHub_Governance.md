@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Gobernanza                                                             |
 | **Nivel**             | Especializado                                                          |
 | **Normativo**         | Sí                                                                     |
-| **Versión**           | v1.1.0                                                                 |
+| **Versión**           | v1.2.0                                                                 |
 | **Estado**            | Congelado                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-006                                                             |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                   |
 | **Fecha de creación** | 2026-09-21                                                             |
-| **Última revisión**   | 2026-09-23                                                             |
+| **Última revisión**   | 2026-10-22                                                             |
 | **Próxima revisión**  | No aplica — Documento Congelado (cambio solo vía RFC)                  |
 
 ---
@@ -3595,6 +3595,21 @@ La integración con el Development Workflow será conforme cuando:
 
 ---
 
+### 12.9. Responsabilidad de la Colaboración y Cambios Documentales
+
+EE-DOC-007 materializa en GitHub el flujo de colaboración definido por EE-DOC-005, sin sustituirlo ni crear un proceso paralelo.
+
+- La rama remota debe corresponder a un cambio coherente acordado y tener un objetivo revisable; el número de archivos no determina por sí solo el número de ramas.
+- El responsable humano crea el Pull Request, revisa el diff y decide cuándo solicitar revisión o autorizar la integración, conforme a los permisos y controles vigentes.
+- El asistente de ingeniería puede preparar cambios documentales expresamente autorizados. Esta regla no concede permiso para modificar código fuente ni para realizar merges o crear PRs en nombre del usuario.
+- El PR debe separar los cambios documentales de los cambios de configuración de GitHub cuando estos últimos requieran permisos, validaciones o evidencias operativas diferentes.
+- La descripción y las evidencias del PR deben distinguir los controles realmente ejecutados de los pendientes. La documentación no constituye evidencia de que un ruleset, branch protection, required check o workflow esté configurado; esos hechos deben verificarse en la plataforma.
+- No se debe integrar directamente en `main` al margen del flujo autorizado de PR, revisión y controles requeridos.
+
+Esta sección define responsabilidades documentales y de proceso; no afirma que la configuración actual de GitHub haya sido modificada ni que soporte automáticamente todos los controles descritos.
+
+---
+
 ## 13. Integración con Quality Gates
 
 GitHub Governance deberá proporcionar los mecanismos de plataforma necesarios para ejecutar, reportar y exigir los **Quality Gates** definidos por:
@@ -5918,6 +5933,7 @@ La implementación concreta de herramientas, automatizaciones o políticas que e
 | **v0.1.8** | 2026-09-22 | AI Engineering Assistant                          | —                      | Clarificaciones revisión     | §06.8 nota RACI≠roles GitHub; §12.3 autoridad tracking alternativo; §14 dependencias P01–P08 y ADR branching en P03; §15.11 autoridad clasificación CODEOWNERS                                                             | **En Elaboración** |
 | **v1.0.0** | 2026-09-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Aprobación normativa         | Revisión arquitectónica cerrada; documento aprobado. Próximo hito: Implementación EE-IMP-007-P01…P08                                                                                                                       | **Aprobado**       |
 | **v1.1.0** | 2026-09-23 | Equipo de Arquitectura                            | Equipo de Arquitectura | Cierre Documental            | P01–P08 completados; Validación Final conforme; EE-TEC-002; estado **Congelado**                                                                                                                                           | **Congelado**      |
+| **v1.2.0** | 2026-10-22 | Equipo de Arquitectura | Pendiente — RFC-003 | Enmienda propuesta de workflow colaborativo | Aclara aplicación en GitHub de rama por cambio coherente, PR creado por el usuario, revisión/merge autorizado, separación entre documentación y configuración; propuesta en revisión, sin afirmar controles no verificados. | **Propuesto (RFC-003)** |
 
 ---
 
