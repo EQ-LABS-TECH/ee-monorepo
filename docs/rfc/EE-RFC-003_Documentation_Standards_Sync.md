@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**                   | D — Cambio Significativo / Transversal                                                         |
 | **Nivel**                           | Estratégico                                                                                    |
 | **Normativo**                       | Sí                                                                                             |
-| **Versión**                         | v0.6.0                                                                                         |
+| **Versión**                         | v0.4.0                                                                                         |
 | **Estado**                          | Propuesto (vehículo abierto — auditoría documental)                                            |
 | **Propietario**                     | Equipo de Arquitectura                                                                         |
 | **Documento padre**                 | EE-DOC-005                                                                                     |
@@ -247,9 +247,7 @@ La necesidad surge de hacer explícitos los límites de responsabilidad y el cic
 | **v0.1.0** | 2026-10-11 | Equipo de Arquitectura | —            | C-01 auditoría 002         | Creación RFC Tipo D retroactivo                                                                                                                           | Propuesto |
 | **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | —            | Vehículo abierto auditoría | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                   | Propuesto |
 | **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | —            | Conformidad §18.5          | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado | Propuesto |
-| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | — | Ampliación propuesta de workflow | Incorpora alcance propuesto para colaboración, ramas/PR, responsabilidades, validación y potencial impacto en DOC-005/DOC-007; mantiene RFC abierto y sin declarar aprobación | Propuesto |
-| **v0.5.0** | 2026-10-22 | Equipo de Arquitectura | — | Materialización en rama de la enmienda colaborativa | Prepara DOC-005 v1.5.0 y DOC-007 v1.2.0 en revisión; mantiene RFC abierto y sin declarar cambios aprobados en main | Propuesto |
-| **v0.6.0** | 2026-10-22 | Equipo de Arquitectura | — | Conformidad de metadatos y preparación de enmiendas documentales | Alinea metadatos RFC con EE-DOC-002 §05/§18.5; distingue los campos de metadatos permitidos para documentos congelados y prepara enmiendas de contenido en esta rama para revisión, sin afirmar aprobación normativa ni cambios en `main`. | Propuesto |
+| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | — | Consolidación del paquete de trabajo pre-`main` | Consolida en una única versión de trabajo el alcance de workflow colaborativo, la conformidad de metadatos y las enmiendas propuestas de DOC-001/DOC-005/DOC-007; sigue Propuesto, pendiente de revisión y aprobación. | Propuesto |
 
 ---
 
