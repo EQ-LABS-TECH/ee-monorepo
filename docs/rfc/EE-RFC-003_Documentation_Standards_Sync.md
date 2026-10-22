@@ -14,7 +14,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Tipo**                            | Request for Comments (Cambio gobernado)                                                        |
 | **Clasificación**                   | **D — Cambio Significativo / Transversal**                                                     |
 | **Estado**                          | Propuesto (vehículo abierto — auditoría documental)                                            |
-| **Versión**                         | v0.4.0                                                                                         |
+| **Versión**                         | v0.5.0                                                                                         |
 | **Propietario**                     | Equipo de Arquitectura                                                                         |
 | **Solicitante**                     | Auditoría documental EE-DOC-002 / EE-DOC-001                                                   |
 | **Documentos normativos afectados** | EE-DOC-001, EE-DOC-002 (principal); corpus y forma en 004…015, ADR/RFC/IMP/TEC según hallazgos |
@@ -103,13 +103,13 @@ La necesidad surge de hacer explícitos los límites de responsabilidad y el cic
 | R7                | Dependencias de contenido vs orden de implementación                                                                                   |
 | §09.2 / §14 / §15 | Alta de **EE-RFC-003** en la matriz de RFCs (`Propuesto` → `Implementado (documentación)` al cierre), en Referencias y en el historial |
 
-### 03.3. Superficie C — EE-DOC-005 y EE-DOC-007 (propuesta pendiente de aprobación)
+### 03.3. Superficie C — EE-DOC-005 y EE-DOC-007 (enmienda preparada en rama; RFC general abierto)
 
 | Documento | Cambio propuesto | Límite |
 | --- | --- | --- |
-| **EE-DOC-005 — Development Workflow** | Formalizar una rama por cambio coherente (no por archivo); commits acotados; revisión y validación antes de integrar; responsabilidades explícitas: el usuario implementa código y el asistente puede preparar documentación; documentación alineada con la implementación y la evidencia real | No se editará el documento congelado hasta que la propuesta sea aceptada según el proceso gobernado |
-| **EE-DOC-007 — GitHub Governance** | Aclarar la aplicación del flujo mediante GitHub: rama de trabajo acordada, PR creado por el usuario, revisión y merge autorizado; separar cambios documentales de cambios de configuración | No duplicar el workflow normativo de 005 ni afirmar controles no verificados |
-| **EE-DOC-001 — Master Documentation Index** | Tras la decisión, sincronizar el registro del RFC, referencias y el historial/estado que corresponda | La sincronización se realizará como parte del paquete gobernado, no anticipando una aprobación |
+| **EE-DOC-005 — Development Workflow** | Formalizar una rama por cambio coherente (no por archivo); commits acotados; revisión y validación antes de integrar; responsabilidades explícitas: el usuario implementa código y el asistente puede preparar documentación; documentación alineada con la implementación y la evidencia real | En esta rama se prepara v1.5.0 en revisión; la versión normativa vigente en main no cambia hasta aprobación y merge autorizados |
+| **EE-DOC-007 — GitHub Governance** | Aclarar la aplicación del flujo mediante GitHub: rama de trabajo acordada, PR creado por el usuario, revisión y merge autorizado; separar cambios documentales de cambios de configuración | En esta rama se prepara v1.2.0 en revisión; no duplicar el workflow de 005 ni afirmar controles no verificados |
+| **EE-DOC-001 — Master Documentation Index** | Tras la decisión, sincronizar el registro del RFC, referencias y el historial/estado que corresponda | La sincronización del índice registra las versiones propuestas y su estado de revisión; el RFC general sigue Propuesto hasta el cierre formal de la oleada |
 
 ### 03.4. Reglas de colaboración propuestas
 
@@ -175,7 +175,7 @@ La necesidad surge de hacer explícitos los límites de responsabilidad y el cic
 | 3   | AR registradas de plantilla/metadatos volcadas a **002** (v1.10.0+) o justificadas                                                    |
 | 4   | Sin discrepancia SSOT 002 §18.6 ↔ 001 §09.4 (VAL/WAIVE)                                                                              |
 | 5   | Al **cerrar** la oleada: estado **Aprobado** → **Implementado (documentación)** y dejar de acumular alcance sin nueva versión del RFC |
-| 6   | La propuesta de flujo colaborativo tiene una decisión explícita; los cambios de 005/007/001 se aplican solo tras aprobación |
+| 6   | La decisión de continuar con la enmienda colaborativa queda registrada; las versiones propuestas de 005/007/001 permanecen en revisión hasta aprobación normativa y merge |
 | 7   | No se declara modificada la configuración GitHub sin cambio y evidencia verificables |
 | 8   | No se modifica código fuente como parte de este RFC |
 
@@ -190,8 +190,8 @@ La necesidad surge de hacer explícitos los límites de responsabilidad y el cic
 |   3   | Sincronización de **EE-DOC-001 §15** (historial) — última del paquete                                   | Arquitectura     |
 |   4   | Migraciones de corpus (`PC-*` / `PN-*`) por documento auditado                                          | Equipo auditoría |
 |   5   | Al cierre de oleada: **Aprobado** → **Implementado (documentación)**; enmiendas = nueva versión del RFC | Arquitectura     |
-|   6   | Decidir formalmente la ampliación de workflow colaborativo; mantener 005/007/001 sin cambios hasta aprobación | Equipo de Arquitectura |
-|   7   | Tras aprobación, actualizar 005 y 007; sincronizar 001 al final del paquete y validar referencias/diff | Arquitectura |
+|   6   | Preparar las enmiendas de 005 y 007 en rama dedicada; registrar en 001 el estado de revisión sin afirmar aprobación normativa | Equipo de Arquitectura |
+|   7   | Revisar el paquete de 005/007/001; mantenerlo fuera de main hasta revisión, aprobación normativa y merge autorizados | Arquitectura |
 |   8   | Verificar configuración GitHub por separado; modificar TEC/IMP solo si cambia la configuración real o su evidencia | Arquitectura / responsable de configuración |
 
 ---
@@ -244,6 +244,7 @@ La necesidad surge de hacer explícitos los límites de responsabilidad y el cic
 | **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | —            | Vehículo abierto auditoría | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                   | Propuesto |
 | **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | —            | Conformidad §18.5          | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado | Propuesto |
 | **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | — | Ampliación propuesta de workflow | Incorpora alcance propuesto para colaboración, ramas/PR, responsabilidades, validación y potencial impacto en DOC-005/DOC-007; mantiene RFC abierto y sin declarar aprobación | Propuesto |
+| **v0.5.0** | 2026-10-22 | Equipo de Arquitectura | — | Materialización en rama de la enmienda colaborativa | Prepara DOC-005 v1.5.0 y DOC-007 v1.2.0 en revisión; mantiene RFC abierto y sin declarar cambios aprobados en main | Propuesto |
 
 ---
 
