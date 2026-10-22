@@ -115,18 +115,11 @@ La necesidad surge de hacer explícitos los límites de responsabilidad y el cic
 | **EE-DOC-007 — GitHub Governance** | Aclarar la aplicación del flujo mediante GitHub: rama de trabajo acordada, PR creado por el usuario, revisión y merge autorizado; separar cambios documentales de cambios de configuración | En esta rama se prepara v1.2.0 en revisión; no duplicar el workflow de 005 ni afirmar controles no verificados |
 | **EE-DOC-001 — Master Documentation Index** | Tras la decisión, sincronizar el registro del RFC, referencias y el historial/estado que corresponda | La sincronización del índice registra las versiones propuestas y su estado de revisión; el RFC general sigue Propuesto hasta el cierre formal de la oleada |
 
-### 03.4. Reglas de colaboración propuestas
+### 03.4. Trazabilidad de reglas emergentes de colaboración
 
-1. **Una rama por cambio coherente**, definida por alcance y objetivo, no una rama por archivo.
-2. **Responsabilidades separadas:** el usuario realiza manualmente los cambios de código; el asistente puede inspeccionar el repositorio y preparar cambios documentales autorizados.
-3. **Ramas remotas:** el asistente puede crear y publicar una rama dedicada para el cambio acordado, sin crear un PR en nombre del usuario.
-4. **Pull request:** el usuario crea el PR. No se integra directamente en `main`.
-5. **Integración:** solo después de revisión, resolución de observaciones y merge autorizado según la gobernanza aplicable.
-6. **Evidencia:** no declarar lint, typecheck, tests, build, E2E o security gates como aprobados si no se ejecutaron; registrar límites y fallos observados.
-7. **Coherencia documental:** actualizar la documentación afectada cuando el cambio aprobado altere arquitectura, APIs, comportamiento, configuración, workflows o governance.
-8. **Documentos congelados:** la condición de congelado no implica que el cuerpo sea intocable por definición. Las enmiendas de contenido deben tramitarse mediante el cambio gobernado aplicable, con revisión y aprobación antes de integración. Mientras el documento esté congelado, los únicos campos de metadatos que esta propuesta permite actualizar son `Versión` y `Última revisión`; el estado y los demás metadatos no se alteran por conveniencia. La preparación en esta rama no equivale a aprobación ni autoriza cambios directos en `main`.
-9. **Configuración GitHub:** los cambios de reglas, branch protection o checks deben separarse de una edición exclusivamente documental y acompañarse de evidencia verificable.
-10. **Sin cambios de código por parte del asistente:** esta propuesta no concede autorización para modificar código fuente.
+El detalle de las reglas de colaboración detectadas durante la auditoría se mantiene en **EE-AUDIT-Rules_Emerging.md**, conforme a su función de inventario no normativo y backlog de hallazgos. La propuesta de formalización se conserva como pendiente **PN-035** hasta que se evalúe y se promueva mediante el mecanismo gobernado aplicable.
+
+Este RFC no convierte por sí solo esas reglas en normativa aprobada. Las superficies normativas candidatas y sus límites permanecen descritos en §03.3; la decisión de incorporación se toma al resolver el pendiente y revisar los documentos afectados.
 
 ### 03.5. Fuera de este RFC (explícito) **no** cambia
 
