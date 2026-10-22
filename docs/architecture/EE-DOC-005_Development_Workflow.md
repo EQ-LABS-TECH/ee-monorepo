@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**     | Fundacional                                                                |
 | **Nivel**             | Estratégico                                                                |
 | **Normativo**         | Sí                                                                         |
-| **Versión**           | v1.4.0                                                                     |
+| **Versión**           | v1.5.0                                                                     |
 | **Estado**            | Congelado                                                                  |
 | **Propietario**       | Equipo de Arquitectura                                                     |
 | **Documento padre**   | EE-DOC-004                                                                 |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**      | Equipo de Arquitectura                                                     |
 | **Audiencia**         | Arquitectura, Desarrollo, IA, DevOps                                       |
 | **Fecha de creación** | 2026-08-02                                                                 |
-| **Última revisión**   | 2026-10-14                                                                 |
+| **Última revisión**   | 2026-10-22                                                                 |
 | **Próxima revisión**  | No aplica — Documento Congelado                                            |
 
 ---
@@ -1109,6 +1109,15 @@ El Engineering Ecosystem soporta dos modelos de branching, dependiendo de la com
 | **feature/** | Sin protección especial.                      | PR aprobado, quality gates pasados.                      |
 | **hotfix/**  | Sin protección especial.                      | PR aprobado, quality gates pasados, approval urgente.    |
 
+### 06.3. Unidad de Trabajo y Rama Coherente
+
+Cada rama de trabajo debe representar **un cambio coherente**, delimitado por objetivo y alcance, no un único archivo. Un cambio puede abarcar varios documentos relacionados cuando forman una unidad revisable; no se deben mezclar objetivos independientes en la misma rama.
+
+- Elegir un nombre de rama que describa el objetivo del cambio y usar una rama dedicada respecto de la base acordada.
+- Mantener los commits acotados, descriptivos y trazables al Issue, RFC o ADR aplicable.
+- Separar cambios de documentación de cambios de código cuando tengan responsables, validaciones o ciclos de revisión distintos; mantenerlos juntos solo cuando sean parte inseparable del mismo cambio y la gobernanza lo permita.
+- No integrar directamente en `main`; toda integración sigue el flujo de Pull Request, revisión y controles aplicables.
+
 ---
 
 ## 07. Commit Convention
@@ -1174,6 +1183,9 @@ El Engineering Ecosystem soporta dos modelos de branching, dependiendo de la com
 | **R1** | Un PR debe crearse tan pronto como haya cambios listos para revisión.                                                                    |
 | **R2** | Los PRs deben ser pequeños y enfocados (máximo 400 líneas de cambio), salvo que la naturaleza del cambio justifique un tamaño superior.. |
 | **R3** | Los PRs deben incluir referencia al Issue correspondiente.                                                                               |
+| **R4** | La rama y el PR deben cubrir un cambio coherente, no limitarse a un archivo ni agrupar objetivos independientes. El responsable del cambio confirma el alcance antes de abrir el PR. |
+| **R5** | El responsable humano crea el Pull Request, salvo que el repositorio y la tarea autoricen explícitamente otra responsabilidad. El asistente puede preparar cambios documentales autorizados, pero no debe crear el PR en nombre del usuario ni modificar código fuente cuando su autorización se limita a documentación. |
+| **R6** | La descripción del PR debe distinguir cambios realizados, validaciones ejecutadas y validaciones pendientes; no se declaran gates como aprobados sin evidencia. |
 
 ### 08.2. Template de Pull Request
 
@@ -1604,6 +1616,7 @@ Una excepción de workflow modifica temporalmente la forma de ejecución del wor
 | **v1.3.0** | 2026-09-17 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets      | Integración de Changesets en Release Workflow, especificación de Vitest/Playwright en Quality Gates y precisión SSOT.              | Congelado     |
 | **v1.3.1** | 2026-09-29 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación Formatting con EE-DOC-010                  | Gate Formatting = Prettier **check** (no write); puntero SSOT a EE-DOC-010                                                         | Congelado     |
 | **v1.4.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — auditoría 001–004                          | Meta DOC-005/Fundacional/deps; First; Tipo B; gates PENDING; release; refs                                                         | **Congelado** |
+| **v1.5.0** | 2026-10-22 | Equipo de Arquitectura | Pendiente — RFC-003 | Enmienda propuesta de workflow colaborativo | §06.3 cambio coherente por rama; §08 responsabilidades del PR, trazabilidad de validaciones y separación documentación/código. Propuesta en revisión; no equivale a aprobación normativa. | **Propuesto (RFC-003)** |
 
 ---
 
