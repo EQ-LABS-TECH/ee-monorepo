@@ -9,22 +9,26 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | Campo                               | Valor                                                                                          |
 | ----------------------------------- | ---------------------------------------------------------------------------------------------- |
 | **ID**                              | EE-RFC-003                                                                                     |
-| **Title**                           | Documentation Standards Sync and Collaborative Workflow Governance (audit vehicle Tipo D)     |
+| **Documento**                       | Documentation Standards Sync                                                                   |
 | **Código corto**                    | RFC-003                                                                                        |
 | **Tipo**                            | Request for Comments (Cambio gobernado)                                                        |
-| **Clasificación**                   | **D — Cambio Significativo / Transversal**                                                     |
+| **Clasificación**                   | D — Cambio Significativo / Transversal                                                         |
+| **Nivel**                           | Estratégico                                                                                    |
+| **Normativo**                       | Sí                                                                                             |
+| **Versión**                         | v0.6.0                                                                                         |
 | **Estado**                          | Propuesto (vehículo abierto — auditoría documental)                                            |
-| **Versión**                         | v0.5.0                                                                                         |
 | **Propietario**                     | Equipo de Arquitectura                                                                         |
+| **Documento padre**                 | EE-DOC-005                                                                                     |
+| **Dependencias**                    | padre=EE-DOC-005; contenido=EE-DOC-001, EE-DOC-002, EE-DOC-005, EE-DOC-007                    |
 | **Solicitante**                     | Auditoría documental EE-DOC-002 / EE-DOC-001                                                   |
 | **Documentos normativos afectados** | EE-DOC-001, EE-DOC-002 (principal); corpus y forma en 004…015, ADR/RFC/IMP/TEC según hallazgos |
 | **Documento de dominio**            | EE-DOC-002 — Document Design Template                                                          |
 | **ADR asociado**                    | No requerido (cambio de estándar documental y catálogo de metadatos, no decisión de runtime)   |
+| **Aprobado por**                    | Pendiente — RFC Propuesto                                                                      |
+| **Audiencia**                       | Arquitectura, Desarrollo, IA, QA                                                               |
 | **Fecha de creación**               | 2026-10-11                                                                                     |
 | **Última revisión**                 | 2026-10-22                                                                                     |
-| **Audiencia**                       | Arquitectura, Desarrollo, IA, QA                                                               |
-| **Responsable de decisión**         | Equipo de Arquitectura                                                                         |
-
+| **Próxima revisión**                | Pendiente de cierre de la oleada de auditoría                                                   |
 > **Régimen:** este RFC permanece en estado **Propuesto** de forma deliberada mientras dure la **auditoría documental** del monorepo. Está indexado en **EE-DOC-001 §09.2**. Acumula y ratifica cambios Tipo D de estándares (plantillas, catálogo, metadatos, VAL/WAIVE, reglas AR volcadas a 002, etc.). **No** se interpreta como Aprobado ni como alcance cerrado hasta el cierre formal de la oleada de auditoría.
 
 ---
@@ -245,6 +249,7 @@ La necesidad surge de hacer explícitos los límites de responsabilidad y el cic
 | **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | —            | Conformidad §18.5          | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado | Propuesto |
 | **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | — | Ampliación propuesta de workflow | Incorpora alcance propuesto para colaboración, ramas/PR, responsabilidades, validación y potencial impacto en DOC-005/DOC-007; mantiene RFC abierto y sin declarar aprobación | Propuesto |
 | **v0.5.0** | 2026-10-22 | Equipo de Arquitectura | — | Materialización en rama de la enmienda colaborativa | Prepara DOC-005 v1.5.0 y DOC-007 v1.2.0 en revisión; mantiene RFC abierto y sin declarar cambios aprobados en main | Propuesto |
+| **v0.6.0** | 2026-10-22 | Equipo de Arquitectura | — | Conformidad de metadatos y preservación de documentos congelados | Alinea metadatos RFC con EE-DOC-002 §05/§18.5; mantiene las propuestas de workflow dentro del RFC sin alterar el cuerpo ni el estado congelado de DOC-001, DOC-005 y DOC-007 | Propuesto |
 
 ---
 
