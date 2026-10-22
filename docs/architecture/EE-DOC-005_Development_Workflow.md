@@ -15,16 +15,16 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**     | Fundacional                                                                |
 | **Nivel**             | Estratégico                                                                |
 | **Normativo**         | Sí                                                                         |
-| **Versión**           | v1.4.0                                                                     |
-| **Estado**            | Congelado                                                                  |
+| **Versión**           | v1.5.0                                                                     |
+| **Estado**            | En Revisión Arquitectónica                                                                  |
 | **Propietario**       | Equipo de Arquitectura                                                     |
 | **Documento padre**   | EE-DOC-004                                                                 |
 | **Dependencias**      | padre=EE-DOC-004; contenido=EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004 |
 | **Aprobado por**      | Equipo de Arquitectura                                                     |
 | **Audiencia**         | Arquitectura, Desarrollo, IA, DevOps                                       |
 | **Fecha de creación** | 2026-08-02                                                                 |
-| **Última revisión**   | 2026-10-14                                                                 |
-| **Próxima revisión**  | No aplica — Documento Congelado                                            |
+| **Última revisión**   | 2026-10-22                                                                 |
+| **Próxima revisión**  | Tras revisión y aprobación de la enmienda gobernada                                            |
 
 ---
 
@@ -1111,6 +1111,19 @@ El Engineering Ecosystem soporta dos modelos de branching, dependiendo de la com
 
 ---
 
+### 06.5. Rama por cambio coherente
+
+Cada rama de trabajo deberá representar **un cambio coherente**, delimitado por un objetivo y un alcance revisables, no una unidad por archivo. Un mismo cambio puede abarcar varios archivos de código y documentación cuando estos contribuyan al mismo resultado; cambios independientes deberán mantenerse en ramas separadas.
+
+Las ramas deberán:
+- tener un objetivo identificable y un alcance acotado;
+- agrupar los cambios necesarios para completar ese objetivo, evitando cambios ajenos;
+- usar commits pequeños y semánticos, sin exigir un commit por archivo;
+- conservar trazabilidad hacia el Issue, RFC, ADR o tarea que origine el trabajo;
+- permanecer separadas hasta que la revisión y los quality gates aplicables permitan su integración.
+
+La división entre ramas se decide por **coherencia del cambio**, dependencias y riesgo de revisión. No se crearán ramas distintas únicamente porque el trabajo afecte archivos diferentes.
+
 ## 07. Commit Convention
 
 ### 07.1. Formato
@@ -1604,6 +1617,7 @@ Una excepción de workflow modifica temporalmente la forma de ejecución del wor
 | **v1.3.0** | 2026-09-17 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets      | Integración de Changesets en Release Workflow, especificación de Vitest/Playwright en Quality Gates y precisión SSOT.              | Congelado     |
 | **v1.3.1** | 2026-09-29 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación Formatting con EE-DOC-010                  | Gate Formatting = Prettier **check** (no write); puntero SSOT a EE-DOC-010                                                         | Congelado     |
 | **v1.4.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — auditoría 001–004                          | Meta DOC-005/Fundacional/deps; First; Tipo B; gates PENDING; release; refs                                                         | **Congelado** |
+| **v1.5.0** | 2026-10-22 | Equipo de Arquitectura | — | EE-RFC-003 — workflow colaborativo | Rama por cambio coherente; commits acotados; trazabilidad y separación de cambios independientes | En Revisión Arquitectónica |
 
 ---
 
