@@ -1,5 +1,8 @@
 # EE-IMP-010-P05 — Validation and Closure
 
+> **Nota de vigencia (2026-10-22):** las tablas y resultados originales son el snapshot histórico de cierre de 2026-09-30. La revalidación posterior y sus límites están registrados en el addendum §11; no sustituye el estado normativo de documentos congelados.
+
+
 Este documento registra la evidencia técnica de implementación de la fase **P05** de **EE-DOC-010 — Quality Gates**, conforme a **EE-DOC-002 §18.3** y **EE-DOC-005**.
 
 ---
