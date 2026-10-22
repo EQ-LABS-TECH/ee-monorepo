@@ -64,7 +64,7 @@ Este RFC **regulariza y aprueba** un paquete ya redactado: **no** reabre el fond
 
 ### 02.6. Ampliación propuesta — flujo de trabajo colaborativo
 
-Se propone incorporar a este RFC, que permanece abierto durante la oleada de auditoría, la formalización del flujo de colaboración entre responsable humano y asistente de ingeniería. La ampliación se registra como **propuesta pendiente de decisión**, no como norma aprobada ni como autorización para alterar documentos congelados al margen del proceso gobernado.
+Se incorpora a este RFC, que permanece abierto durante la oleada de auditoría, la formalización propuesta del flujo de colaboración entre responsable humano y asistente de ingeniería. Se autorizó preparar las enmiendas documentales en esta rama dedicada; esa autorización de preparación **no equivale por sí sola a la aprobación normativa final** ni autoriza cambios directos en `main`. Las versiones de DOC-005, DOC-007 y DOC-001 permanecen en revisión hasta completar el proceso gobernado.
 
 La necesidad surge de hacer explícitos los límites de responsabilidad y el ciclo de integración documental/técnica: una rama por cambio coherente, separación de responsabilidades entre código y documentación, revisión mediante PR y evidencia de validación. La ampliación no modifica por sí sola la configuración de GitHub ni afirma que sus controles actuales ya soporten todo el flujo propuesto.
 
