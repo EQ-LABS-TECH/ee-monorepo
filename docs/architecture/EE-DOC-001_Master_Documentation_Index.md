@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**     | Fundacional                             |
 | **Nivel**             | Estratégico                             |
 | **Normativo**         | Sí                                      |
-| **Versión**           | v2.30.0                                 |
+| **Versión**           | v2.31.0                                 |
 | **Estado**            | Congelado                               |
 | **Propietario**       | Equipo de Arquitectura                  |
 | **Documento padre**   | No aplica                               |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**      | Equipo de Arquitectura                  |
 | **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección |
 | **Fecha de creación** | 2026-08-02                              |
-| **Última revisión**   | 2026-10-19                              |
+| **Última revisión**   | 2026-10-22                              |
 | **Próxima revisión**  | No aplica — Documento Congelado         |
 
 ---
@@ -249,7 +249,7 @@ Ampliar esta tabla requiere cambio gobernado sobre **EE-DOC-001**.
 | -------------- | ----------------------------- | --------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **EE-RFC-001** | Infra Top Level Directory     | Aprobado / Implementado (documentación) | EE-DOC-006 / EE-DOC-009 | Introduce `infra/` (`containers/`, `orchestration/`) en sustitución de `docker/` y `k8s/`.                                                                                                                                          |
 | **EE-RFC-002** | Templates Top Level Directory | Aprobado                                | EE-DOC-006 / EE-DOC-012 | Introduce `templates/` como top-level autorizado y sincroniza EE-DOC-006.                                                                                                                                                           |
-| **EE-RFC-003** | Documentation Standards Sync  | **Propuesto**                           | EE-DOC-001 / EE-DOC-002 | Vehículo Tipo D **abierto durante la auditoría documental** para sync de estándares (plantillas, catálogo, VAL/WAIVE, AR). No cerrado: acumula decisiones de auditoría hasta cierre formal (Aprobado → Implementado documentación). |
+| **EE-RFC-003** | Documentation Standards Sync  | **Propuesto**                           | EE-DOC-001 / EE-DOC-002 | Vehículo Tipo D **abierto durante la auditoría documental** para sync de estándares (plantillas, catálogo, VAL/WAIVE, AR) y enmienda propuesta del flujo colaborativo en DOC-005 v1.5.0 / DOC-007 v1.2.0. No cerrado: acumula decisiones de auditoría hasta cierre formal. |
 
 > **Nota EE-RFC-003:** permanece **Propuesto** a propósito mientras dure la auditoría del corpus; no interpretar como RFC aprobado ni como alcance cerrado.
 
@@ -451,6 +451,7 @@ flowchart TD
 | **v2.29.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — auditoría 001                | C-01 .devcontainer; §02 alcance; ADR padre; §08.1 Aprobado evidencia; RFC-001; Predecesor; §14 006; AR-018                                                               | **Congelado** |
 | **v2.29.1** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — PC-008                       | Marca EQ-LABS (no EQ-Labs) en §02                                                                                                                                        | **Congelado** |
 | **v2.30.0** | 2026-10-19 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — registro ADR-006             | §09.1/§14: EE-ADR-006 Aprobado (v1.0.0); sync con 004/006/013.                                                                                                           | Congelado     |
+| **v2.31.0** | 2026-10-22 | Equipo de Arquitectura | Pendiente — RFC-003 | Enmienda propuesta de flujo colaborativo | §09.2 aclara alcance de EE-RFC-003; §14 sincroniza la referencia al RFC; este historial registra la propuesta de DOC-005 v1.5.0 y DOC-007 v1.2.0 en revisión. | **Propuesto (RFC-003)** |
 
 ---
 
