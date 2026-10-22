@@ -31,12 +31,12 @@
     "@eq-labs/config-prettier": "workspace:*",
     "@changesets/cli": "3.0.2",
     "ajv": "8.20.0",
-    "plop": "4.0.0",
-    "prettier": "3.6.2",
-    "rimraf": "5.0.0",
+    "plop": "4.0.5",
+    "prettier": "3.9.10",
+    "rimraf": "6.1.3",
     "semver": "7.8.5",
-    "turbo": "2.11.7",
-    "yaml": "2.9.0"
+    "turbo": "2.11.9",
+    "yaml": "2.9.1"
   },
   "pnpm": {
     "overrides": {
