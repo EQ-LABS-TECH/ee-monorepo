@@ -4,6 +4,9 @@ import { spawnSync } from 'node:child_process';
 
 const args = ['exec', 'turbo', 'run', 'test:e2e', '--filter=@eq-labs/dashboard'];
 
+console.log('🧪 EE-LABS E2E validation');
+console.log('Target: @eq-labs/dashboard#test:e2e');
+
 const result = spawnSync('pnpm', args, {
   stdio: 'inherit',
   shell: process.platform === 'win32',
@@ -14,4 +17,9 @@ if (result.error) {
   process.exit(1);
 }
 
-process.exit(result.status ?? 1);
+if (result.status !== 0) {
+  console.error(`❌ QG-TEST-E2E: FAIL — Turbo exited with status ${result.status ?? 1}.`);
+  process.exit(result.status ?? 1);
+}
+
+console.log('✅ QG-TEST-E2E: PASS');
