@@ -15,16 +15,16 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**     | Fundacional                             |
 | **Nivel**             | Estratégico                             |
 | **Normativo**         | Sí                                      |
-| **Versión**           | v2.30.0                                 |
-| **Estado**            | Congelado                               |
+| **Versión**           | v2.31.0                                 |
+| **Estado**            | En Revisión Arquitectónica                               |
 | **Propietario**       | Equipo de Arquitectura                  |
 | **Documento padre**   | No aplica                               |
 | **Dependencias**      | Ninguna                                 |
 | **Aprobado por**      | Equipo de Arquitectura                  |
 | **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección |
 | **Fecha de creación** | 2026-08-02                              |
-| **Última revisión**   | 2026-10-19                              |
-| **Próxima revisión**  | No aplica — Documento Congelado         |
+| **Última revisión**   | 2026-10-22                              |
+| **Próxima revisión**  | Tras revisión y aprobación de la sincronización gobernada         |
 
 ---
 
@@ -203,9 +203,9 @@ Ampliar esta tabla requiere cambio gobernado sobre **EE-DOC-001**.
 | **EE-DOC-002** | Document Design Template           | Fundacional   | N/A                      | Congelado         | N/A      | Sí        |
 | **EE-DOC-003** | Engineering Ecosystem Constitution | Fundacional   | N/A                      | Congelado         | N/A      | Sí        |
 | **EE-DOC-004** | Engineering Architecture           | Fundacional   | N/A                      | Congelado         | N/A      | Sí        |
-| **EE-DOC-005** | Development Workflow               | Fundacional   | N/A                      | Congelado         | N/A      | Sí        |
+| **EE-DOC-005** | Development Workflow               | Fundacional   | N/A                      | En Revisión Arquitectónica | N/A | No       |
 | **EE-DOC-006** | Repository Structure               | Implementable | Sí                       | Congelado         | Sí       | Sí        |
-| **EE-DOC-007** | GitHub Governance                  | Implementable | Sí                       | Congelado         | Sí       | Sí        |
+| **EE-DOC-007** | GitHub Governance                  | Implementable | Sí                       | En Revisión Arquitectónica | Pendiente de revalidación | No |
 | **EE-DOC-008** | Development Environment            | Implementable | Sí                       | Congelado         | Sí       | Sí        |
 | **EE-DOC-009** | Infrastructure                     | Implementable | Sí                       | Congelado         | Sí       | Sí        |
 | **EE-DOC-010** | Quality Gates                      | Implementable | Sí                       | Congelado         | Sí       | Sí        |
@@ -451,6 +451,7 @@ flowchart TD
 | **v2.29.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — auditoría 001                | C-01 .devcontainer; §02 alcance; ADR padre; §08.1 Aprobado evidencia; RFC-001; Predecesor; §14 006; AR-018                                                               | **Congelado** |
 | **v2.29.1** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — PC-008                       | Marca EQ-LABS (no EQ-Labs) en §02                                                                                                                                        | **Congelado** |
 | **v2.30.0** | 2026-10-19 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — registro ADR-006             | §09.1/§14: EE-ADR-006 Aprobado (v1.0.0); sync con 004/006/013.                                                                                                           | Congelado     |
+| **v2.31.0** | 2026-10-22 | Equipo de Arquitectura | — | EE-RFC-003 — enmienda de workflow | §09 refleja DOC-005 v1.5.0 y DOC-007 v1.2.0 en revisión; RFC-003 sigue Propuesto | En Revisión Arquitectónica |
 
 ---
 
