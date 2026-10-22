@@ -260,3 +260,34 @@ Debe alinearse a EE-DOC-015 §05.5–§05.8, EE-DOC-011 (comandos root) y EE-DOC
 ---
 
 ## FIN DEL DOCUMENTO
+
+
+---
+
+## 09. Addendum — Estado actualizado de E2E (2026-10-22)
+
+Este addendum actualiza el estado as-built de V-E2E; las secciones anteriores
+conservan la evidencia histórica del 2026-10-07 y no describen el estado actual.
+
+- El comando raíz `pnpm run e2e` existe y apunta a la tarea Turbo
+  `test:e2e` de `@eq-labs/dashboard`.
+- `pnpm run validate` incorpora E2E como gate crítico; CI ejecuta
+  `pnpm run validate`.
+- La ejecución local reportada el 2026-10-22 obtuvo `QG-TEST-E2E: PASS`
+  con 1 test del dashboard.
+- **V-E2E: PASS para el alcance actual del dashboard; multi-package: PENDING.**
+  No se debe inferir cobertura E2E de otros workspaces ni declarar completa
+  la orquestación multi-package.
+- Evidencia de validación: `docs/validation/evidence/validate-20261022.md`.
+
+La advertencia Node `DEP0190` sobre `shell: true` permanece como observación
+técnica pendiente; esta actualización documental no modifica código ni
+declara resuelta dicha advertencia.
+
+## 10. Addendum — Estado de seguridad (2026-10-22)
+
+La validación local pasó QG-SEC-001 mediante waivers temporales activos, no
+porque los advisories se hayan corregido. El hallazgo high de `braces`
+está cubierto por el waiver que vence el 2026-10-23. El finding moderate de
+`sprintf-js` también tiene waiver con la misma fecha de expiración. Revisar
+ambos antes de esa fecha y registrar decisión de cierre o renovación.
