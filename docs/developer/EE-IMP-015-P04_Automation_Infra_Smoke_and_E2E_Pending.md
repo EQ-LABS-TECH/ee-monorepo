@@ -1,5 +1,8 @@
 # EE-IMP-015-P04 — Automation, Infra, Smoke and E2E Pending
 
+> **Nota de vigencia (2026-10-22):** las secciones originales documentan el estado histórico del 2026-10-07. El estado as-built actual está registrado en los addenda §09–§10; el alcance multi-package E2E continúa pendiente.
+
+
 Este documento registra la evidencia técnica de la implementación física y validación correspondiente a la **Unidad P04** de **EE-DOC-015 — Engineering Ecosystem Validation**, conforme al estándar **EE-DOC-005**.
 
 ---
