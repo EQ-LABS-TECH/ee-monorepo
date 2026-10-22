@@ -15,16 +15,16 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Gobernanza                                                             |
 | **Nivel**             | Especializado                                                          |
 | **Normativo**         | Sí                                                                     |
-| **Versión**           | v1.1.0                                                                 |
-| **Estado**            | Congelado                                                              |
+| **Versión**           | v1.2.0                                                                 |
+| **Estado**            | En Revisión Arquitectónica                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-006                                                             |
 | **Dependencias**      | EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-DOC-005, EE-DOC-006 |
 | **Aprobado por**      | Equipo de Arquitectura                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                   |
 | **Fecha de creación** | 2026-09-21                                                             |
-| **Última revisión**   | 2026-09-23                                                             |
-| **Próxima revisión**  | No aplica — Documento Congelado (cambio solo vía RFC)                  |
+| **Última revisión**   | 2026-10-22                                                             |
+| **Próxima revisión**  | Tras revisión y aprobación de la enmienda gobernada                  |
 
 ---
 
@@ -1089,6 +1089,19 @@ La definición de excepciones específicas deberá evaluarse durante la implemen
 | Quality Gates concretos                                 | **EE-DOC-010**                  |
 
 ---
+
+### 07.19. Aplicación del flujo colaborativo
+
+Esta sección materializa en GitHub las reglas de workflow definidas por **EE-DOC-005**; no crea un workflow paralelo ni reemplaza sus criterios.
+
+- Cada Pull Request deberá corresponder a una rama asociada a un cambio coherente y revisable. Un cambio puede abarcar varios archivos si pertenecen al mismo objetivo.
+- El PR deberá describir el objetivo, el alcance, la evidencia de validación ejecutada y las limitaciones conocidas. No se declararán checks aprobados si no existe resultado verificable.
+- La persona responsable del cambio abre el PR y atiende las observaciones. La revisión y el merge deben respetar los permisos, approvals, protecciones y checks efectivamente configurados para el repositorio.
+- Los cambios normativos sobre documentos congelados deberán conservar la referencia al RFC/ADR aplicable y reflejar su estado real de aprobación. Una rama o un PR no constituyen por sí mismos aprobación normativa.
+- Los cambios exclusivamente documentales y los cambios de configuración de GitHub deben mantenerse diferenciados cuando tengan objetivos o validaciones independientes. Si se modifica la configuración, la evidencia técnica correspondiente deberá actualizarse solo después de verificar el estado real.
+- La documentación no deberá afirmar que existe una protección, required check, permiso o automatización que no haya sido verificado en la configuración de GitHub.
+
+La asignación de roles descrita aquí no altera por sí misma la configuración física del repositorio ni concede permisos adicionales a ningún actor.
 
 ## 08. CODEOWNERS
 
@@ -5918,6 +5931,7 @@ La implementación concreta de herramientas, automatizaciones o políticas que e
 | **v0.1.8** | 2026-09-22 | AI Engineering Assistant                          | —                      | Clarificaciones revisión     | §06.8 nota RACI≠roles GitHub; §12.3 autoridad tracking alternativo; §14 dependencias P01–P08 y ADR branching en P03; §15.11 autoridad clasificación CODEOWNERS                                                             | **En Elaboración** |
 | **v1.0.0** | 2026-09-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Aprobación normativa         | Revisión arquitectónica cerrada; documento aprobado. Próximo hito: Implementación EE-IMP-007-P01…P08                                                                                                                       | **Aprobado**       |
 | **v1.1.0** | 2026-09-23 | Equipo de Arquitectura                            | Equipo de Arquitectura | Cierre Documental            | P01–P08 completados; Validación Final conforme; EE-TEC-002; estado **Congelado**                                                                                                                                           | **Congelado**      |
+| **v1.2.0** | 2026-10-22 | Equipo de Arquitectura | — | EE-RFC-003 — workflow colaborativo | Aclara aplicación del workflow por PR, evidencia real y separación de cambios de configuración | En Revisión Arquitectónica |
 
 ---
 
