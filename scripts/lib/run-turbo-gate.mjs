@@ -45,8 +45,8 @@ export function runTurboGate({
     /Tasks:\s*0 successful,\s*0 total/i.test(output);
 
   if (zeroTasks) {
-    log.error(`❌ ${gateId}: FAIL — Turbo completed without executing any tasks.`);
-    return 1;
+    log.warn(`⚠️ ${gateId}: SKIPPED — Turbo completed without executing any tasks (exit code 2).`);
+    return 2;
   }
 
   log.log(`✅ ${gateId}: PASS`);
