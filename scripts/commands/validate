@@ -234,14 +234,14 @@ console.log('');
 
 const validations = [
   {
-    cmd: 'turbo',
-    args: ['run', 'typecheck'],
+    cmd: 'node',
+    args: ['scripts/commands/typecheck'],
     label: 'Type checking',
     critical: true,
   },
   {
-    cmd: 'turbo',
-    args: ['run', 'lint'],
+    cmd: 'node',
+    args: ['scripts/commands/lint'],
     label: 'Linting',
     critical: true,
   },
@@ -264,8 +264,8 @@ const validations = [
     critical: true,
   },
   {
-    cmd: 'turbo',
-    args: ['run', 'build'],
+    cmd: 'node',
+    args: ['scripts/commands/build'],
     label: 'Build',
     critical: true,
   },
