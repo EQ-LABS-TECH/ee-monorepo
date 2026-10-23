@@ -268,7 +268,7 @@ pnpm exec turbo run test:e2e --filter=@eq-labs/dashboard
 
 Turbo declares `test:e2e` with `cache: false` and a dependency on upstream workspace builds. The task runs `apps/dashboard`'s `test:e2e` script. The repository-level `validate` command invokes this wrapper, but its scope is limited to Dashboard; it does not establish that the pending multipackage E2E gate is implemented. Quality-gate availability remains governed by EE-DOC-010 and CI composition by EE-DOC-007.
 
-The typecheck, lint, test, build, and Dashboard E2E wrappers treat a successful Turbo exit with zero executed tasks as a gate failure. This prevents an empty task graph from being reported as PASS. The script-test runner also fails when `scripts/tests/` contains no `*.test.mjs` files.
+The typecheck, lint, test, build, and Dashboard E2E wrappers classify a successful Turbo exit with zero executed tasks as `SKIPPED` (exit code `2`), never `PASS`. The root `validate` aggregator treats that non-zero result as a failed critical gate. The script-test runner fails when `scripts/tests/` contains no `*.test.mjs` files.
 
 ## Windows: Vitest and %TEMP%
 
