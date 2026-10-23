@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Gobernanza                                                             |
 | **Nivel**             | Especializado                                                          |
 | **Normativo**         | Sí                                                                     |
-| **Versión**           | v1.1.0                                                                 |
+| **Versión**           | v1.2.0                                                                 |
 | **Estado**            | Congelado                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-006                                                             |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                   |
 | **Fecha de creación** | 2026-09-21                                                             |
-| **Última revisión**   | 2026-09-23                                                             |
+| **Última revisión**   | 2026-10-22                                                             |
 | **Próxima revisión**  | No aplica — Documento Congelado (cambio solo vía RFC)                  |
 
 ---
@@ -3595,6 +3595,21 @@ La integración con el Development Workflow será conforme cuando:
 
 ---
 
+### 12.9. Responsabilidad de la Colaboración y Cambios Documentales
+
+EE-DOC-007 materializa en GitHub el flujo de colaboración definido por EE-DOC-005, sin sustituirlo ni crear un proceso paralelo.
+
+- La rama remota debe corresponder a un cambio coherente acordado y tener un objetivo revisable; el número de archivos no determina por sí solo el número de ramas.
+- El responsable humano crea el Pull Request, revisa el diff y decide cuándo solicitar revisión o autorizar la integración, conforme a los permisos y controles vigentes.
+- El asistente de ingeniería puede preparar cambios documentales expresamente autorizados. Esta regla no concede permiso para modificar código fuente ni para realizar merges o crear PRs en nombre del usuario.
+- El PR debe separar los cambios documentales de los cambios de configuración de GitHub cuando estos últimos requieran permisos, validaciones o evidencias operativas diferentes.
+- La descripción y las evidencias del PR deben distinguir los controles realmente ejecutados de los pendientes. La documentación no constituye evidencia de que un ruleset, branch protection, required check o workflow esté configurado; esos hechos deben verificarse en la plataforma.
+- No se debe integrar directamente en `main` al margen del flujo autorizado de PR, revisión y controles requeridos.
+
+Esta sección define responsabilidades documentales y de proceso; no afirma que la configuración actual de GitHub haya sido modificada ni que soporte automáticamente todos los controles descritos.
+
+---
+
 ## 13. Integración con Quality Gates
 
 GitHub Governance deberá proporcionar los mecanismos de plataforma necesarios para ejecutar, reportar y exigir los **Quality Gates** definidos por:
@@ -5905,19 +5920,20 @@ La implementación concreta de herramientas, automatizaciones o políticas que e
 
 ## 18. Historial de Cambios
 
-| Versión    | Fecha      | Autor                                             | Aprobado por           | Motivo                       | Cambios                                                                                                                                                                                                                    | Estado             |
-| :--------- | :--------- | :------------------------------------------------ | :--------------------- | :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------- |
-| **v0.1.0** | 2026-09-21 | IA Asistente                                      | —                      | Creación inicial             | Definición inicial de propósito, alcance, límites normativos y estructura de GitHub Governance                                                                                                                             | **En Elaboración** |
-| **v0.1.1** | 2026-09-21 | Equipo de Arquitectura / AI Engineering Assistant | —                      | Revisión secciones 08–12     | Aclaraciones: frontera EE-DOC-011, `pull_request_target`, límites §09, QG de seguridad → EE-DOC-010, ownership docs, templates opcionales §10, matriz §12, referencias 008/009/011                                         | **En Elaboración** |
-| **v0.1.2** | 2026-09-21 | AI Engineering Assistant                          | —                      | Sección 18 Cumplimiento      | Incorporación de §18 Cumplimiento conforme a EE-DOC-002 §18.1; consolidación formal del modelo de §14                                                                                                                      | **En Elaboración** |
-| **v0.1.3** | 2026-09-21 | AI Engineering Assistant                          | —                      | Cierre documental formal     | Actualización de §19 Referencias; §20 Historial; incorporación de §21 Cierre Documental (pendiente de validación final)                                                                                                    | **En Elaboración** |
-| **v0.1.4** | 2026-09-21 | AI Engineering Assistant                          | —                      | Correcciones de cumplimiento | §10.4.1 idioma en-US para plantillas y mensajes de automatización; relación EE-IMP-006 vs EE-IMP-007 en Plan de Implementación                                                                                             | **En Elaboración** |
-| **v0.1.5** | 2026-09-21 | AI Engineering Assistant                          | —                      | SSOT idioma                  | §10.4.1 apunta a EE-DOC-002 §16.1 como norma; EE-DOC-006 §07.1 como especialización de nomenclatura                                                                                                                        | **En Elaboración** |
-| **v0.1.6** | 2026-09-22 | AI Engineering Assistant                          | —                      | Revisión arquitectónica      | Resolución de observaciones: claridad SSOT §17↔§15 y §18↔§14; organización/equipos vinculados a P01/P02; refuerzo de pendientes de implementación en §05 y §16                                                           | **En Elaboración** |
-| **v0.1.7** | 2026-09-22 | AI Engineering Assistant                          | —                      | Unificación estructural      | Unificación §14/§15/§16/§17/§18: cola alineada con EE-DOC-002 y EE-DOC-006 — §14 Plan, §15 Evolución (ex-§15), §16 Cumplimiento (ex-§14), §17 Referencias, §18 Historial, §19 Cierre; eliminadas secciones duales formales | **En Elaboración** |
-| **v0.1.8** | 2026-09-22 | AI Engineering Assistant                          | —                      | Clarificaciones revisión     | §06.8 nota RACI≠roles GitHub; §12.3 autoridad tracking alternativo; §14 dependencias P01–P08 y ADR branching en P03; §15.11 autoridad clasificación CODEOWNERS                                                             | **En Elaboración** |
-| **v1.0.0** | 2026-09-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Aprobación normativa         | Revisión arquitectónica cerrada; documento aprobado. Próximo hito: Implementación EE-IMP-007-P01…P08                                                                                                                       | **Aprobado**       |
-| **v1.1.0** | 2026-09-23 | Equipo de Arquitectura                            | Equipo de Arquitectura | Cierre Documental            | P01–P08 completados; Validación Final conforme; EE-TEC-002; estado **Congelado**                                                                                                                                           | **Congelado**      |
+| Versión    | Fecha      | Autor                                             | Aprobado por           | Motivo                                      | Cambios                                                                                                                                                                                                                     | Estado             |
+| :--------- | :--------- | :------------------------------------------------ | :--------------------- | :------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------- |
+| **v0.1.0** | 2026-09-21 | IA Asistente                                      | —                      | Creación inicial                            | Definición inicial de propósito, alcance, límites normativos y estructura de GitHub Governance                                                                                                                              | **En Elaboración** |
+| **v0.1.1** | 2026-09-21 | Equipo de Arquitectura / AI Engineering Assistant | —                      | Revisión secciones 08–12                    | Aclaraciones: frontera EE-DOC-011, `pull_request_target`, límites §09, QG de seguridad → EE-DOC-010, ownership docs, templates opcionales §10, matriz §12, referencias 008/009/011                                          | **En Elaboración** |
+| **v0.1.2** | 2026-09-21 | AI Engineering Assistant                          | —                      | Sección 18 Cumplimiento                     | Incorporación de §18 Cumplimiento conforme a EE-DOC-002 §18.1; consolidación formal del modelo de §14                                                                                                                       | **En Elaboración** |
+| **v0.1.3** | 2026-09-21 | AI Engineering Assistant                          | —                      | Cierre documental formal                    | Actualización de §19 Referencias; §20 Historial; incorporación de §21 Cierre Documental (pendiente de validación final)                                                                                                     | **En Elaboración** |
+| **v0.1.4** | 2026-09-21 | AI Engineering Assistant                          | —                      | Correcciones de cumplimiento                | §10.4.1 idioma en-US para plantillas y mensajes de automatización; relación EE-IMP-006 vs EE-IMP-007 en Plan de Implementación                                                                                              | **En Elaboración** |
+| **v0.1.5** | 2026-09-21 | AI Engineering Assistant                          | —                      | SSOT idioma                                 | §10.4.1 apunta a EE-DOC-002 §16.1 como norma; EE-DOC-006 §07.1 como especialización de nomenclatura                                                                                                                         | **En Elaboración** |
+| **v0.1.6** | 2026-09-22 | AI Engineering Assistant                          | —                      | Revisión arquitectónica                     | Resolución de observaciones: claridad SSOT §17↔§15 y §18↔§14; organización/equipos vinculados a P01/P02; refuerzo de pendientes de implementación en §05 y §16                                                            | **En Elaboración** |
+| **v0.1.7** | 2026-09-22 | AI Engineering Assistant                          | —                      | Unificación estructural                     | Unificación §14/§15/§16/§17/§18: cola alineada con EE-DOC-002 y EE-DOC-006 — §14 Plan, §15 Evolución (ex-§15), §16 Cumplimiento (ex-§14), §17 Referencias, §18 Historial, §19 Cierre; eliminadas secciones duales formales  | **En Elaboración** |
+| **v0.1.8** | 2026-09-22 | AI Engineering Assistant                          | —                      | Clarificaciones revisión                    | §06.8 nota RACI≠roles GitHub; §12.3 autoridad tracking alternativo; §14 dependencias P01–P08 y ADR branching en P03; §15.11 autoridad clasificación CODEOWNERS                                                              | **En Elaboración** |
+| **v1.0.0** | 2026-09-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Aprobación normativa                        | Revisión arquitectónica cerrada; documento aprobado. Próximo hito: Implementación EE-IMP-007-P01…P08                                                                                                                        | **Aprobado**       |
+| **v1.1.0** | 2026-09-23 | Equipo de Arquitectura                            | Equipo de Arquitectura | Cierre Documental                           | P01–P08 completados; Validación Final conforme; EE-TEC-002; estado **Congelado**                                                                                                                                            | **Congelado**      |
+| **v1.2.0** | 2026-10-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Enmienda propuesta de workflow colaborativo | Aclara aplicación en GitHub de rama por cambio coherente, PR creado por el usuario, revisión/merge autorizado, separación entre documentación y configuración; propuesta en revisión, sin afirmar controles no verificados. | **Congelado**      |
 
 ---
 

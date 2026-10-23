@@ -9,21 +9,26 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | Campo                               | Valor                                                                                          |
 | ----------------------------------- | ---------------------------------------------------------------------------------------------- |
 | **ID**                              | EE-RFC-003                                                                                     |
-| **Title**                           | Documentation Standards Sync (audit vehicle Tipo D)                                            |
+| **Documento**                       | Documentation Standards Sync                                                                   |
 | **Código corto**                    | RFC-003                                                                                        |
 | **Tipo**                            | Request for Comments (Cambio gobernado)                                                        |
-| **Clasificación**                   | **D — Cambio Significativo / Transversal**                                                     |
+| **Clasificación**                   | D — Cambio Significativo / Transversal                                                         |
+| **Nivel**                           | Estratégico                                                                                    |
+| **Normativo**                       | Sí                                                                                             |
+| **Versión**                         | v0.4.0                                                                                         |
 | **Estado**                          | Propuesto (vehículo abierto — auditoría documental)                                            |
-| **Versión**                         | v0.3.0                                                                                         |
 | **Propietario**                     | Equipo de Arquitectura                                                                         |
+| **Documento padre**                 | EE-DOC-005                                                                                     |
+| **Dependencias**                    | padre=EE-DOC-005; contenido=EE-DOC-001, EE-DOC-002, EE-DOC-005, EE-DOC-007                     |
 | **Solicitante**                     | Auditoría documental EE-DOC-002 / EE-DOC-001                                                   |
 | **Documentos normativos afectados** | EE-DOC-001, EE-DOC-002 (principal); corpus y forma en 004…015, ADR/RFC/IMP/TEC según hallazgos |
 | **Documento de dominio**            | EE-DOC-002 — Document Design Template                                                          |
 | **ADR asociado**                    | No requerido (cambio de estándar documental y catálogo de metadatos, no decisión de runtime)   |
-| **Fecha de creación**               | 2026-10-11                                                                                     |
-| **Última revisión**                 | 2026-10-13                                                                                     |
+| **Aprobado por**                    | Pendiente — RFC Propuesto                                                                      |
 | **Audiencia**                       | Arquitectura, Desarrollo, IA, QA                                                               |
-| **Responsable de decisión**         | Equipo de Arquitectura                                                                         |
+| **Fecha de creación**               | 2026-10-11                                                                                     |
+| **Última revisión**                 | 2026-10-22                                                                                     |
+| **Próxima revisión**                | Pendiente de cierre de la oleada de auditoría                                                  |
 
 > **Régimen:** este RFC permanece en estado **Propuesto** de forma deliberada mientras dure la **auditoría documental** del monorepo. Está indexado en **EE-DOC-001 §09.2**. Acumula y ratifica cambios Tipo D de estándares (plantillas, catálogo, metadatos, VAL/WAIVE, reglas AR volcadas a 002, etc.). **No** se interpreta como Aprobado ni como alcance cerrado hasta el cierre formal de la oleada de auditoría.
 
@@ -62,13 +67,20 @@ Este RFC **regulariza y aprueba** un paquete ya redactado: **no** reabre el fond
 | **EE-DOC-001** | Registra EE-RFC-003 en §09.2, §14 y §15 (§03.2)                              |
 | **EE-DOC-005** | Vehículo del cambio: **Tipo D** (§04.2)                                      |
 
-### 02.5. Delimitación frente a alternativas de ubicación o alcance
+### 02.6. Ampliación propuesta — flujo de trabajo colaborativo
 
-| Elemento                               | Rol                   | Relación con la propuesta                                                 |
-| -------------------------------------- | --------------------- | ------------------------------------------------------------------------- |
-| **EE-DOC-001 §08.1 / §09.4 / R7**      | Ya materializados     | Este RFC los **ratifica**; no los reproduce                               |
-| Hallazgos **Tipo A/B** de la auditoría | No requieren vehículo | Se aplican en EE-DOC-001 + su Historial de Cambios; **no** se listan aquí |
-| Árbol físico de **EE-DOC-006**         | Otro documento        | Fuera de alcance (`PN-009`/`PN-010`)                                      |
+Se incorpora a este RFC, que permanece abierto durante la oleada de auditoría, la formalización propuesta del flujo de colaboración entre responsable humano y asistente de ingeniería. Se autorizó preparar las enmiendas documentales en esta rama dedicada; esa autorización de preparación **no equivale por sí sola a la aprobación normativa final** ni autoriza cambios directos en `main`. Las versiones de DOC-005, DOC-007 y DOC-001 permanecen en revisión hasta completar el proceso gobernado.
+
+La necesidad surge de hacer explícitos los límites de responsabilidad y el ciclo de integración documental/técnica: una rama por cambio coherente, separación de responsabilidades entre código y documentación, revisión mediante PR y evidencia de validación. La ampliación no modifica por sí sola la configuración de GitHub ni afirma que sus controles actuales ya soporten todo el flujo propuesto.
+
+### 02.7. Delimitación frente a alternativas de ubicación o alcance
+
+| Elemento                               | Rol                   | Relación con la propuesta                                                               |
+| -------------------------------------- | --------------------- | --------------------------------------------------------------------------------------- |
+| **EE-DOC-001 §08.1 / §09.4 / R7**      | Ya materializados     | Este RFC los **ratifica**; no los reproduce                                             |
+| Hallazgos **Tipo A/B** de la auditoría | No requieren vehículo | Se aplican en EE-DOC-001 + su Historial de Cambios; **no** se listan aquí               |
+| Árbol físico de **EE-DOC-006**         | Otro documento        | Fuera de alcance (`PN-009`/`PN-010`), salvo referencia de límites arquitectónicos       |
+| Configuración real de GitHub           | Evidencia operativa   | No cambia por este RFC; cambios de configuración requieren tarea y validación separadas |
 
 ---
 
@@ -96,7 +108,21 @@ Este RFC **regulariza y aprueba** un paquete ya redactado: **no** reabre el fond
 | R7                | Dependencias de contenido vs orden de implementación                                                                                   |
 | §09.2 / §14 / §15 | Alta de **EE-RFC-003** en la matriz de RFCs (`Propuesto` → `Implementado (documentación)` al cierre), en Referencias y en el historial |
 
-### 03.3. Fuera de este RFC (explícito) **no** cambia
+### 03.3. Superficie C — EE-DOC-005 y EE-DOC-007 (enmienda preparada en rama; RFC general abierto)
+
+| Documento                                   | Cambio propuesto                                                                                                                                                                                                                                                                               | Límite                                                                                                                                                     |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **EE-DOC-005 — Development Workflow**       | Formalizar una rama por cambio coherente (no por archivo); commits acotados; revisión y validación antes de integrar; responsabilidades explícitas: el usuario implementa código y el asistente puede preparar documentación; documentación alineada con la implementación y la evidencia real | En esta rama se prepara v1.5.0 en revisión; la versión normativa vigente en main no cambia hasta aprobación y merge autorizados                            |
+| **EE-DOC-007 — GitHub Governance**          | Aclarar la aplicación del flujo mediante GitHub: rama de trabajo acordada, PR creado por el usuario, revisión y merge autorizado; separar cambios documentales de cambios de configuración                                                                                                     | En esta rama se prepara v1.2.0 en revisión; no duplicar el workflow de 005 ni afirmar controles no verificados                                             |
+| **EE-DOC-001 — Master Documentation Index** | Tras la decisión, sincronizar el registro del RFC, referencias y el historial/estado que corresponda                                                                                                                                                                                           | La sincronización del índice registra las versiones propuestas y su estado de revisión; el RFC general sigue Propuesto hasta el cierre formal de la oleada |
+
+### 03.4. Trazabilidad de reglas emergentes de colaboración
+
+El detalle de las reglas de colaboración detectadas durante la auditoría se mantiene en **EE-AUDIT-Rules_Emerging.md**, conforme a su función de inventario no normativo y backlog de hallazgos. La propuesta de formalización se conserva como pendiente **PN-035** hasta que se evalúe y se promueva mediante el mecanismo gobernado aplicable.
+
+Este RFC no convierte por sí solo esas reglas en normativa aprobada. Las superficies normativas candidatas y sus límites permanecen descritos en §03.3; la decisión de incorporación se toma al resolver el pendiente y revisar los documentos afectados.
+
+### 03.5. Fuera de este RFC (explícito) **no** cambia
 
 | Ítem                                                        | Tratamiento                                                                          |
 | ----------------------------------------------------------- | ------------------------------------------------------------------------------------ |
@@ -120,12 +146,12 @@ Este RFC **regulariza y aprueba** un paquete ya redactado: **no** reabre el fond
 
 ## 05. Impacto
 
-| Ámbito                    | Impacto                                                                                                     |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| **Documentos normativos** | Ratifica **EE-DOC-002 v1.10.0** y el sync de **EE-DOC-001 v2.29.x**; registra **EE-RFC-003** en §09.2 y §14 |
-| **Monorepo físico**       | Ninguno (cambio documental; sin top-levels ni artefactos)                                                   |
-| **CI / Quality Gates**    | Ninguno inmediato (el gate de conformidad documental sigue diferido: `PA-001`)                              |
-| **Otros**                 | Auditoría documental: mantiene abierto el vehículo; las correcciones Tipo A/B se aplican fuera de este RFC  |
+| Ámbito                    | Impacto                                                                                                          |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Documentos normativos** | Ratifica **EE-DOC-002 v1.10.0** y el sync de **EE-DOC-001 v2.29.x**; registra **EE-RFC-003** en §09.2 y §14      |
+| **Monorepo físico**       | Ningún cambio estructural ni de código fuente; la propuesta afecta documentación normativa y flujo de trabajo    |
+| **CI / Quality Gates**    | Ningún cambio de configuración implícito; la propuesta exige registrar solo validaciones realmente ejecutadas    |
+| **Otros**                 | El RFC permanece Propuesto; la ampliación de workflow requiere decisión y no altera por sí sola controles GitHub |
 
 ---
 
@@ -140,25 +166,31 @@ Este RFC **regulariza y aprueba** un paquete ya redactado: **no** reabre el fond
 
 ## 07. Criterios de aceptación
 
-| #   | Criterio                                                                                                                              |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | EE-DOC-001 §09.2 lista este RFC en **Propuesto** (vehículo abierto) hasta cierre de oleada                                            |
-| 2   | EE-DOC-002 historial referencia **EE-RFC-003** / Tipo D donde aplique el paquete                                                      |
-| 3   | AR registradas de plantilla/metadatos volcadas a **002** (v1.10.0+) o justificadas                                                    |
-| 4   | Sin discrepancia SSOT 002 §18.6 ↔ 001 §09.4 (VAL/WAIVE)                                                                              |
-| 5   | Al **cerrar** la oleada: estado **Aprobado** → **Implementado (documentación)** y dejar de acumular alcance sin nueva versión del RFC |
+| #   | Criterio                                                                                                                                                                  |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | EE-DOC-001 §09.2 lista este RFC en **Propuesto** (vehículo abierto) hasta cierre de oleada                                                                                |
+| 2   | EE-DOC-002 historial referencia **EE-RFC-003** / Tipo D donde aplique el paquete                                                                                          |
+| 3   | AR registradas de plantilla/metadatos volcadas a **002** (v1.10.0+) o justificadas                                                                                        |
+| 4   | Sin discrepancia SSOT 002 §18.6 ↔ 001 §09.4 (VAL/WAIVE)                                                                                                                  |
+| 5   | Al **cerrar** la oleada: estado **Aprobado** → **Implementado (documentación)** y dejar de acumular alcance sin nueva versión del RFC                                     |
+| 6   | La decisión de continuar con la enmienda colaborativa queda registrada; las versiones propuestas de 005/007/001 permanecen en revisión hasta aprobación normativa y merge |
+| 7   | No se declara modificada la configuración GitHub sin cambio y evidencia verificables                                                                                      |
+| 8   | No se modifica código fuente como parte de este RFC                                                                                                                       |
 
 ---
 
 ## 08. Plan de aplicación (post-aprobación)
 
-| Orden | Acción                                                                                                  | Responsable      |
-| :---: | ------------------------------------------------------------------------------------------------------- | ---------------- |
-|   1   | Mantener el RFC **Propuesto** y abierto durante la oleada de auditoría (DOC-004…015, ADR, IMP, TEC)     | Arquitectura     |
-|   2   | Parche normativo de los documentos afectados (registro del RFC en **EE-DOC-001 §09.2/§14**)             | Arquitectura     |
-|   3   | Sincronización de **EE-DOC-001 §15** (historial) — última del paquete                                   | Arquitectura     |
-|   4   | Migraciones de corpus (`PC-*` / `PN-*`) por documento auditado                                          | Equipo auditoría |
-|   5   | Al cierre de oleada: **Aprobado** → **Implementado (documentación)**; enmiendas = nueva versión del RFC | Arquitectura     |
+| Orden | Acción                                                                                                                        | Responsable                                 |
+| :---: | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+|   1   | Mantener el RFC **Propuesto** y abierto durante la oleada de auditoría (DOC-004…015, ADR, IMP, TEC)                           | Arquitectura                                |
+|   2   | Parche normativo de los documentos afectados (registro del RFC en **EE-DOC-001 §09.2/§14**)                                   | Arquitectura                                |
+|   3   | Sincronización de **EE-DOC-001 §15** (historial) — última del paquete                                                         | Arquitectura                                |
+|   4   | Migraciones de corpus (`PC-*` / `PN-*`) por documento auditado                                                                | Equipo auditoría                            |
+|   5   | Al cierre de oleada: **Aprobado** → **Implementado (documentación)**; enmiendas = nueva versión del RFC                       | Arquitectura                                |
+|   6   | Preparar las enmiendas de 005 y 007 en rama dedicada; registrar en 001 el estado de revisión sin afirmar aprobación normativa | Equipo de Arquitectura                      |
+|   7   | Revisar el paquete de 005/007/001; mantenerlo fuera de main hasta revisión, aprobación normativa y merge autorizados          | Arquitectura                                |
+|   8   | Verificar configuración GitHub por separado; modificar TEC/IMP solo si cambia la configuración real o su evidencia            | Arquitectura / responsable de configuración |
 
 ---
 
@@ -174,14 +206,18 @@ Este RFC **regulariza y aprueba** un paquete ya redactado: **no** reabre el fond
 
 ## 10. Referencias
 
-| Código                      | Rol                                |
-| --------------------------- | ---------------------------------- |
-| **EE-DOC-001**              | R2, R7, §08.1, §09.4               |
-| **EE-DOC-002**              | Estándar de forma; v1.7.0–v1.10.0+ |
-| **EE-DOC-005**              | Tipo D §04.2                       |
-| **EE-AUDIT-Rules_Emerging** | Inventario AR / backlog PC-PN-PA   |
-| **EE-DOC-010**              | WAIVED §04.6.1                     |
-| **EE-DOC-015**              | Validación; padre VAL              |
+| Código                      | Rol                                                                                      |
+| --------------------------- | ---------------------------------------------------------------------------------------- |
+| **EE-DOC-001**              | R2, R7, §08.1, §09.4                                                                     |
+| **EE-DOC-002**              | Estándar de forma; v1.7.0–v1.10.0+                                                       |
+| **EE-DOC-005**              | Tipo D §04.2                                                                             |
+| **EE-AUDIT-Rules_Emerging** | Inventario AR / backlog PC-PN-PA                                                         |
+| **EE-DOC-010**              | WAIVED §04.6.1                                                                           |
+| **EE-DOC-015**              | Validación; padre VAL                                                                    |
+| **EE-DOC-005**              | Workflow normativo; clasificación Tipo D y ciclo de cambios gobernados                   |
+| **EE-DOC-007**              | Gobernanza de GitHub; controles operativos que implementan el workflow                   |
+| **EE-TEC-002**              | Evidencia consolidada de configuración GitHub; solo se modifica si cambia el estado real |
+| **EE-IMP-010-P03**          | Evidencia de gates/seguridad/arquitectura, si el cambio operativo afecta su alcance      |
 
 ---
 
@@ -200,11 +236,12 @@ Este RFC **regulariza y aprueba** un paquete ya redactado: **no** reabre el fond
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                     | Cambios                                                                                                                                                   | Estado    |
-| ---------- | ---------- | ---------------------- | ------------ | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura | —            | C-01 auditoría 002         | Creación RFC Tipo D retroactivo                                                                                                                           | Propuesto |
-| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | —            | Vehículo abierto auditoría | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                   | Propuesto |
-| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | —            | Conformidad §18.5          | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado | Propuesto |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                                          | Cambios                                                                                                                                                                                                                | Estado    |
+| ---------- | ---------- | ---------------------- | ------------ | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura | —            | C-01 auditoría 002                              | Creación RFC Tipo D retroactivo                                                                                                                                                                                        | Propuesto |
+| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | —            | Vehículo abierto auditoría                      | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                                                                                | Propuesto |
+| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | —            | Conformidad §18.5                               | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado                                                              | Propuesto |
+| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | —            | Consolidación del paquete de trabajo pre-`main` | Consolida en una única versión de trabajo el alcance de workflow colaborativo, la conformidad de metadatos y las enmiendas propuestas de DOC-001/DOC-005/DOC-007; sigue Propuesto, pendiente de revisión y aprobación. | Propuesto |
 
 ---
 

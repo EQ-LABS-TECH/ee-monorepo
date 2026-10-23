@@ -260,31 +260,30 @@ Missing registry ⇒ exit code ≠ 0 (No False Pass). Do not commit sample trees
 
 ## E2E orchestration
 
-El comando raíz `pnpm run e2e` ejecuta el task `test:e2e` de
-`@eq-labs/dashboard`. El comando `pnpm run validate` incorpora E2E
-como gate crítico y CI invoca `validate`.
+The root command `pnpm run e2e` runs the `test:e2e` task for
+`@eq-labs/dashboard`. The root command `pnpm run validate` includes E2E
+as a critical gate, and CI invokes `validate`.
 
-La ejecución local reportada el 2026-10-22 obtuvo `QG-TEST-E2E: PASS`
-con 1 test del dashboard. La integración del gate está implementada,
-pero la orquestación multi-package y su cobertura siguen pendientes
-de implementación y evidencia.
+The reported local validation passed `QG-TEST-E2E` with one Dashboard test.
+The gate is integrated, but multi-package E2E orchestration and coverage
+remain pending implementation and evidence.
 
-El comando Turbo equivalente para inspección directa es:
+Use the following Turbo command to inspect the Dashboard suite directly:
 
 ```bash
 pnpm exec turbo run test:e2e --filter=@eq-labs/dashboard
 ```
 
-La tarea `test:e2e` mantiene `cache: false` y depende de los builds
-upstream declarados en Turbo. Esta evidencia no acredita cobertura E2E
-de otros workspaces. La disponibilidad normativa del gate se rige por
-EE-DOC-010; la composición CI, por EE-DOC-007.
+The `test:e2e` task sets `cache: false` and depends on the upstream builds
+declared in Turbo. This evidence does not establish E2E coverage for other
+workspaces. Gate availability is governed by EE-DOC-010; CI composition is
+governed by EE-DOC-007.
 
-Los wrappers de typecheck, lint, test, build y Dashboard E2E clasifican una
-salida exitosa de Turbo con cero tareas ejecutadas como `SKIPPED`, nunca
-como `PASS`, y devuelven un estado distinto de cero para que el agregador
-raíz `validate` falle el gate crítico. El runner de pruebas de scripts falla
-si `scripts/tests/` no contiene archivos `*.test.mjs`.
+The typecheck, lint, test, build, and Dashboard E2E wrappers classify a
+successful Turbo exit with zero executed tasks as `SKIPPED`, not `PASS`, and
+return a non-zero status so the root `validate` aggregator fails the critical
+gate. The script-test runner fails if `scripts/tests/` contains no
+`*.test.mjs` files.
 
 ## Windows: Vitest and %TEMP%
 
@@ -309,9 +308,25 @@ or restricted permissions (`EPERM`).
 
 ## Known issues
 
-### sprintf-js (moderate, no upstream fix)
+### braces (high, temporary waiver)
 
-`GHSA-hp3w-g68c-fv3c` — sprintf-js <=1.1.3 has no patched release.
-Transitive via `jest > @jest/transform > babel-plugin-istanbul > @istanbuljs/load-nyc-config > js-yaml > argparse > sprintf-js`.
-Does not block QG-SEC-001 (script filters by high/critical).
-Tracked for review when upstream ships a fix.
+`GHSA-vfj7-8cjw-p6xm` — `braces@3.0.3` is reported vulnerable to
+stack exhaustion through the root development-tooling chain
+`plop > liftoff > findup-sync > micromatch > braces`. The local
+`pnpm run validate` result dated 2026-10-22 passed QG-SEC-001 only
+because the active waiver
+`docs/validation/waivers/EE-WAIVE-QG-SEC-001-braces-20261016.md`
+covers this high finding. The waiver expires **2026-10-23**; it is not
+a remediation. Re-evaluate or renew/close it before expiry under the
+governance policy.
+
+### sprintf-js (moderate, temporary waiver)
+
+`GHSA-hp3w-g68c-fv3c` — `sprintf-js` is reported as a moderate
+transitive finding in the legacy Jest configuration dependency chain.
+The active waiver
+`docs/validation/waivers/EE-WAIVE-QG-SEC-001-sprintf-js-20261016.md`
+expires **2026-10-23**. The current security audit threshold is high;
+the moderate finding does not independently cross that threshold.
+Re-audit and close or renew the waiver before expiry. Neither waiver
+means that the underlying advisory is fixed.
