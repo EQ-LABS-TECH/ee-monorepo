@@ -16,6 +16,7 @@ function harness(result) {
     log: {
       log: (message) => output.logs.push(message),
       error: (message) => output.errors.push(message),
+      warn: (message) => output.logs.push(message),
     },
   });
   return { status, output };
@@ -39,9 +40,9 @@ test('fails when Turbo exits zero without executing tasks', () => {
     stdout: 'No tasks were executed as part of this run',
     stderr: '',
   });
-  assert.equal(status, 1);
-  assert.deepEqual(output.logs, []);
-  assert.match(output.errors[0], /without executing any tasks/);
+  assert.equal(status, 2);
+  assert.match(output.logs[0], /SKIPPED/);
+  assert.deepEqual(output.errors, []);
 });
 
 test('fails when Turbo reports zero total tasks', () => {
@@ -50,8 +51,9 @@ test('fails when Turbo reports zero total tasks', () => {
     stdout: 'Tasks: 0 successful, 0 total',
     stderr: '',
   });
-  assert.equal(status, 1);
-  assert.match(output.errors[0], /without executing any tasks/);
+  assert.equal(status, 2);
+  assert.match(output.logs[0], /SKIPPED/);
+  assert.deepEqual(output.errors, []);
 });
 
 test('preserves Turbo failure status', () => {
