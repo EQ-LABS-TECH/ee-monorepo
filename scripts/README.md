@@ -260,7 +260,16 @@ Missing registry ⇒ exit code ≠ 0 (No False Pass). Do not commit sample trees
 
 ## E2E orchestration
 
-The dashboard E2E suite is invoked through its existing workspace script and the matching Turbo task:
+El comando raíz `pnpm run e2e` ejecuta el task `test:e2e` de
+`@eq-labs/dashboard`. El comando `pnpm run validate` incorpora E2E
+como gate crítico y CI invoca `validate`.
+
+La ejecución local reportada el 2026-10-22 obtuvo `QG-TEST-E2E: PASS`
+con 1 test del dashboard. La integración del gate está implementada,
+pero la orquestación multi-package y su cobertura siguen pendientes
+de implementación y evidencia.
+
+El comando Turbo equivalente para inspección directa es:
 
 ```bash
 pnpm exec turbo run test:e2e --filter=@eq-labs/dashboard
