@@ -25,6 +25,7 @@ function waiver({
   from = '2026-10-16',
   expires = '2026-10-23',
   omit = '',
+  extraFields = {},
 } = {}) {
   const fields = {
     gate_id: 'QG-SEC-001',
@@ -36,34 +37,113 @@ function waiver({
     effective_from: from,
     expires_at: expires,
     normalization_plan: 'Re-evaluate upstream fix',
+    ...extraFields,
   };
-  return `# waiver\n\n| Campo | Valor |\n| --- | --- |\n${Object.entries(fields)
-    .filter(([key]) => key !== omit)
-    .map(([key, value]) => `| **${key}** | ${value} |`)
-    .join('\n')}\n`;
+
+  return `# waiver
+
+| Campo | Valor |
+| --- | --- |
+${Object.entries(fields)
+  .filter(([key]) => key !== omit)
+  .map(([key, value]) => `| **${key}** | ${value} |`)
+  .join('\n')}
+`;
+}
+
+function auditResult(vulnerabilities, status = 1) {
+  return {
+    status,
+    stdout: JSON.stringify({ vulnerabilities }),
+    stderr: '',
+  };
+}
+
+function quietLog() {
+  return { log() {}, error() {} };
 }
 
 test('waiver future-dated is not active', (t) => {
   const f = fixture();
   t.after(f.cleanup);
+
   writeFileSync(join(f.dir, 'EE-WAIVE-future.md'), waiver({ from: '2026-10-18' }));
+
   assert.deepEqual(listActiveSecWaivers(f.root, TODAY).waivers, []);
 });
 
 test('expired waiver is not active', (t) => {
   const f = fixture();
   t.after(f.cleanup);
+
   writeFileSync(
     join(f.dir, 'EE-WAIVE-expired.md'),
     waiver({ from: '2026-10-07', expires: '2026-10-14' }),
   );
+
   assert.deepEqual(listActiveSecWaivers(f.root, TODAY).waivers, []);
+});
+
+test('waiver is active on its effective_from UTC date', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  writeFileSync(join(f.dir, 'EE-WAIVE-boundary.md'), waiver({ from: '2026-10-17' }));
+
+  const result = listActiveSecWaivers(f.root, new Date('2026-10-17T00:00:00.000Z'));
+
+  assert.equal(result.waivers.length, 1);
+  assert.deepEqual(result.errors, []);
+});
+
+test('waiver remains active throughout expires_at UTC date', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  writeFileSync(
+    join(f.dir, 'EE-WAIVE-boundary.md'),
+    waiver({ from: '2026-10-16', expires: '2026-10-17' }),
+  );
+
+  const result = listActiveSecWaivers(f.root, new Date('2026-10-17T23:59:59.999Z'));
+
+  assert.equal(result.waivers.length, 1);
+  assert.deepEqual(result.errors, []);
+});
+
+test('waiver expires on the UTC calendar day after expires_at', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  writeFileSync(
+    join(f.dir, 'EE-WAIVE-boundary.md'),
+    waiver({ from: '2026-10-16', expires: '2026-10-17' }),
+  );
+
+  const result = listActiveSecWaivers(f.root, new Date('2026-10-18T00:00:00.000Z'));
+
+  assert.deepEqual(result.waivers, []);
+  assert.deepEqual(result.errors, []);
+});
+
+test('UTC date is used when instant falls on different local calendar date', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  writeFileSync(
+    join(f.dir, 'EE-WAIVE-utc.md'),
+    waiver({ from: '2026-10-17', expires: '2026-10-17' }),
+  );
+
+  // This instant is October 17 in UTC, even though it is October 16 in UTC-12.
+  const result = listActiveSecWaivers(f.root, new Date('2026-10-17T00:30:00.000Z'));
+
+  assert.equal(result.waivers.length, 1);
+  assert.deepEqual(result.errors, []);
 });
 
 test('incomplete waiver is reported as invalid', (t) => {
   const f = fixture();
   t.after(f.cleanup);
+
   writeFileSync(join(f.dir, 'EE-WAIVE-incomplete.md'), waiver({ omit: 'normalization_plan' }));
+
   const result = listActiveSecWaivers(f.root, TODAY);
   assert.equal(result.waivers.length, 0);
   assert.match(result.errors[0], /missing normalization_plan/);
@@ -72,119 +152,322 @@ test('incomplete waiver is reported as invalid', (t) => {
 test('waiver longer than seven calendar days is rejected', (t) => {
   const f = fixture();
   t.after(f.cleanup);
+
   writeFileSync(
     join(f.dir, 'EE-WAIVE-too-long.md'),
     waiver({ from: '2026-10-16', expires: '2026-10-24' }),
   );
+
   assert.match(listActiveSecWaivers(f.root, TODAY).errors[0], /exceeds the 7-day maximum/);
 });
 
-test('textual fallback only fires when structured extraction yields nothing', () => {
-  // Estructurado con high → se captura; fallback NO corre; GHSA_B (solo en texto) se descarta.
-  const withHigh = extractAdvisories(
-    JSON.stringify({ vulnerabilities: [{ github_advisory_id: GHSA_A, severity: 'high' }] }),
-    `extra ${GHSA_B}`,
-  );
-  assert.deepEqual([...withHigh], [GHSA_A.toLowerCase()]);
-
-  // Estructurado vacío → fallback corre y captura ambos GHSA del texto.
-  const emptyStructured = extractAdvisories('{}', `${GHSA_A} and ${GHSA_B}`);
-  assert.deepEqual(
-    [...emptyStructured].sort(),
-    [GHSA_A.toLowerCase(), GHSA_B.toLowerCase()].sort(),
-  );
-});
-
-test('all advisories must be covered; duplicate waivers only report relevant advisory', (t) => {
+test('resolved waiver is retained as history but is not active', (t) => {
   const f = fixture();
   t.after(f.cleanup);
-  writeFileSync(join(f.dir, 'EE-WAIVE-a.md'), waiver());
-  writeFileSync(join(f.dir, 'EE-WAIVE-a-duplicate.md'), waiver());
-  const calls = [];
-  const spawnSyncImpl = (_command, args) => {
-    calls.push(args);
-    if (!args.includes('--json')) return { status: 1 };
-    return {
-      status: 1,
-      stdout: JSON.stringify({
-        vulnerabilities: [
-          { github_advisory_id: GHSA_A, severity: 'high' },
-          { github_advisory_id: GHSA_B, severity: 'high' },
-        ],
-      }),
-      stderr: '',
-    };
-  };
-  const messages = [];
+
+  writeFileSync(
+    join(f.dir, 'EE-WAIVE-resolved.md'),
+    waiver({
+      advisory: GHSA_B,
+      extraFields: {
+        status: 'RESOLVED',
+        resolved_at: '2026-10-22',
+        resolution_reason: 'GitHub Advisory Database withdrew the advisory.',
+        evidence: 'pnpm audit --json no longer reports GHSA-hp3w-g68c-fv3c.',
+      },
+    }),
+  );
+
+  const result = listActiveSecWaivers(f.root, TODAY);
+
+  assert.deepEqual(result.waivers, []);
+  assert.deepEqual(result.errors, []);
+});
+
+test('resolved waiver with missing resolution metadata is invalid', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  writeFileSync(
+    join(f.dir, 'EE-WAIVE-resolved-incomplete.md'),
+    waiver({
+      extraFields: {
+        status: 'RESOLVED',
+        resolved_at: '2026-10-22',
+        resolution_reason: 'Advisory withdrawn.',
+      },
+    }),
+  );
+
+  const result = listActiveSecWaivers(f.root, TODAY);
+
+  assert.deepEqual(result.waivers, []);
+  assert.ok(result.errors.length > 0);
+  assert.match(result.errors.join('\n'), /evidence/);
+});
+
+test('resolved waiver with invalid resolution date is invalid', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  writeFileSync(
+    join(f.dir, 'EE-WAIVE-resolved-invalid-date.md'),
+    waiver({
+      extraFields: {
+        status: 'RESOLVED',
+        resolved_at: 'not-a-date',
+        resolution_reason: 'Advisory withdrawn.',
+        evidence: 'pnpm audit --json no longer reports the advisory.',
+      },
+    }),
+  );
+
+  const result = listActiveSecWaivers(f.root, TODAY);
+
+  assert.deepEqual(result.waivers, []);
+  assert.ok(result.errors.length > 0);
+  assert.match(result.errors.join('\n'), /resolved_at/);
+});
+
+test('resolved date before effective date is invalid', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  writeFileSync(
+    join(f.dir, 'EE-WAIVE-resolved-before-effective.md'),
+    waiver({
+      from: '2026-10-16',
+      extraFields: {
+        status: 'RESOLVED',
+        resolved_at: '2026-10-15',
+        resolution_reason: 'Advisory withdrawn.',
+        evidence: 'pnpm audit --json no longer reports the advisory.',
+      },
+    }),
+  );
+
+  const result = listActiveSecWaivers(f.root, TODAY);
+
+  assert.deepEqual(result.waivers, []);
+  assert.ok(result.errors.length > 0);
+  assert.match(result.errors.join('\n'), /resolved_at/);
+});
+
+test('unsupported waiver status is invalid', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  writeFileSync(
+    join(f.dir, 'EE-WAIVE-unknown-status.md'),
+    waiver({ extraFields: { status: 'CLOSED' } }),
+  );
+
+  const result = listActiveSecWaivers(f.root, TODAY);
+
+  assert.deepEqual(result.waivers, []);
+  assert.ok(result.errors.length > 0);
+  assert.match(result.errors.join('\n'), /status/);
+});
+
+test('extractAdvisories collects all severities', () => {
+  const result = extractAdvisories(
+    JSON.stringify({
+      vulnerabilities: [
+        { github_advisory_id: 'GHSA-aaaa-bbbb-cccc', severity: 'moderate' },
+        { github_advisory_id: 'GHSA-dddd-eeee-ffff', severity: 'high' },
+        { github_advisory_id: 'GHSA-gggg-hhhh-iiii', severity: 'critical' },
+        { github_advisory_id: 'GHSA-jjjj-kkkk-llll', severity: 'low' },
+      ],
+    }),
+  );
+
+  assert.equal(result.get('ghsa-aaaa-bbbb-cccc'), 'moderate');
+  assert.equal(result.get('ghsa-dddd-eeee-ffff'), 'high');
+  assert.equal(result.get('ghsa-gggg-hhhh-iiii'), 'critical');
+  assert.equal(result.get('ghsa-jjjj-kkkk-llll'), 'low');
+});
+
+test('extractAdvisories keeps the highest severity for duplicate advisories', () => {
+  const result = extractAdvisories(
+    JSON.stringify({
+      vulnerabilities: [
+        { github_advisory_id: GHSA_A, severity: 'moderate' },
+        { github_advisory_id: GHSA_A, severity: 'critical' },
+        { github_advisory_id: GHSA_A, severity: 'high' },
+      ],
+    }),
+  );
+
+  assert.equal(result.get(GHSA_A.toLowerCase()), 'critical');
+  assert.equal(result.size, 1);
+});
+
+test('extractAdvisories rejects invalid JSON instead of guessing from text', () => {
+  assert.throws(() => extractAdvisories(`invalid output containing ${GHSA_A}`));
+});
+
+test('low and moderate findings do not block the gate', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  const spawnSyncImpl = () =>
+    auditResult([
+      { github_advisory_id: GHSA_A, severity: 'low' },
+      { github_advisory_id: GHSA_B, severity: 'moderate' },
+    ]);
+
   const result = runSecurityAuditWithWaivers({
     root: f.root,
     spawnSyncImpl,
     today: TODAY,
-    log: { log: (m) => messages.push(m), error: (m) => messages.push(m) },
+    log: quietLog(),
   });
+
+  assert.equal(result.ok, true);
+});
+
+test('an uncovered high finding blocks the gate', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  const spawnSyncImpl = () => auditResult([{ github_advisory_id: GHSA_B, severity: 'high' }]);
+
+  const result = runSecurityAuditWithWaivers({
+    root: f.root,
+    spawnSyncImpl,
+    today: TODAY,
+    log: quietLog(),
+  });
+
+  assert.equal(result.ok, false);
+});
+
+test('an active waiver covers its matching high finding and logs a warning', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  writeFileSync(join(f.dir, 'EE-WAIVE-a.md'), waiver());
+
+  const messages = [];
+  const spawnSyncImpl = () => auditResult([{ github_advisory_id: GHSA_A, severity: 'high' }]);
+
+  const result = runSecurityAuditWithWaivers({
+    root: f.root,
+    spawnSyncImpl,
+    today: TODAY,
+    log: {
+      log: (message) => messages.push(message),
+      error: (message) => messages.push(message),
+    },
+  });
+
+  assert.deepEqual(result, { ok: true, waived: true });
+  assert.ok(
+    messages.some((message) => message.includes('PASS WITH WARNINGS')),
+    'should report that the gate passed with warnings',
+  );
+  assert.ok(
+    messages.some((message) => message.includes(GHSA_A.toLowerCase())),
+    'should identify the waived advisory',
+  );
+  assert.ok(
+    messages.some((message) => message.includes('EE-WAIVE-a.md')),
+    'should identify the waiver file',
+  );
+});
+
+test('an expired waiver does not cover its matching high finding', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  writeFileSync(
+    join(f.dir, 'EE-WAIVE-expired.md'),
+    waiver({ from: '2026-10-07', expires: '2026-10-14' }),
+  );
+
+  const messages = [];
+  const spawnSyncImpl = () => auditResult([{ github_advisory_id: GHSA_A, severity: 'high' }]);
+
+  const result = runSecurityAuditWithWaivers({
+    root: f.root,
+    spawnSyncImpl,
+    today: TODAY,
+    log: {
+      log: (message) => messages.push(message),
+      error: (message) => messages.push(message),
+    },
+  });
+
+  assert.deepEqual(result, { ok: false });
+  assert.ok(
+    messages.some((message) => message.toLowerCase().includes(GHSA_A.toLowerCase())),
+    'should report the uncovered advisory',
+  );
+});
+
+test('every blocking finding must be covered by an active waiver', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  writeFileSync(join(f.dir, 'EE-WAIVE-a.md'), waiver());
+
+  const messages = [];
+  const spawnSyncImpl = () =>
+    auditResult([
+      { github_advisory_id: GHSA_A, severity: 'high' },
+      { github_advisory_id: GHSA_B, severity: 'critical' },
+    ]);
+
+  const result = runSecurityAuditWithWaivers({
+    root: f.root,
+    spawnSyncImpl,
+    today: TODAY,
+    log: {
+      log: (message) => messages.push(message),
+      error: (message) => messages.push(message),
+    },
+  });
+
   assert.equal(result.ok, false);
   assert.ok(messages.some((message) => message.includes(GHSA_B.toLowerCase())));
-  assert.equal(calls[0][1], '--audit-level');
 });
 
-test('all covered findings pass only with valid active waivers', (t) => {
+test('audit failure with invalid JSON fails closed', (t) => {
   const f = fixture();
   t.after(f.cleanup);
-  writeFileSync(join(f.dir, 'EE-WAIVE-a.md'), waiver());
-  const spawnSyncImpl = (_command, args) =>
-    args.includes('--json')
-      ? {
-          status: 1,
-          stdout: JSON.stringify({
-            vulnerabilities: [{ github_advisory_id: GHSA_A, severity: 'high' }],
-          }),
-          stderr: '',
-        }
-      : { status: 1 };
+
+  const spawnSyncImpl = () => ({
+    status: 1,
+    stdout: '{invalid',
+    stderr: 'audit failed',
+  });
+
   const result = runSecurityAuditWithWaivers({
     root: f.root,
     spawnSyncImpl,
     today: TODAY,
-    log: { log() {}, error() {} },
+    log: quietLog(),
   });
-  assert.deepEqual(result, { ok: true, waived: true });
-});
 
-test('audit failure without extractable advisory never passes', (t) => {
-  const f = fixture();
-  t.after(f.cleanup);
-  const spawnSyncImpl = (_command, args) =>
-    args.includes('--json')
-      ? { status: 1, stdout: '{invalid', stderr: 'audit failed' }
-      : { status: 1 };
-  const result = runSecurityAuditWithWaivers({
-    root: f.root,
-    spawnSyncImpl,
-    today: TODAY,
-    log: { log() {}, error() {} },
-  });
   assert.deepEqual(result, { ok: false });
 });
 
-test('extractAdvisories filters out moderate/low findings', () => {
-  const stdout = JSON.stringify({
-    advisories: {
-      1: { github_advisory_id: 'GHSA-aaaa-bbbb-cccc', severity: 'moderate' },
-      2: { github_advisory_id: 'GHSA-dddd-eeee-ffff', severity: 'high' },
-      3: { github_advisory_id: 'GHSA-gggg-hhhh-iiii', severity: 'critical' },
-      4: { github_advisory_id: 'GHSA-jjjj-kkkk-llll', severity: 'low' },
-    },
-  });
-  const result = extractAdvisories(stdout, '');
-  assert.ok(result.has('ghsa-dddd-eeee-ffff'), 'high debe capturarse');
-  assert.ok(result.has('ghsa-gggg-hhhh-iiii'), 'critical debe capturarse');
-  assert.ok(!result.has('ghsa-aaaa-bbbb-cccc'), 'moderate no debe capturarse');
-  assert.ok(!result.has('ghsa-jjjj-kkkk-llll'), 'low no debe capturarse');
-});
+test('audit failure without extractable advisories fails closed', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
 
-test('extractAdvisories falls back to text when structured extraction yields nothing', () => {
-  const stdout = JSON.stringify({ vulnerabilities: [] });
-  const stderr = 'found GHSA-xxxx-yyyy-zzzz severity=high';
-  const result = extractAdvisories(stdout, stderr);
-  assert.ok(result.has('ghsa-xxxx-yyyy-zzzz'));
+  const spawnSyncImpl = () => ({
+    status: 1,
+    stdout: '{}',
+    stderr: 'audit failed',
+  });
+
+  const result = runSecurityAuditWithWaivers({
+    root: f.root,
+    spawnSyncImpl,
+    today: TODAY,
+    log: quietLog(),
+  });
+
+  assert.deepEqual(result, { ok: false });
 });

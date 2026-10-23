@@ -244,6 +244,12 @@ console.log('');
 
 const validations = [
   {
+    cmd: 'pnpm',
+    args: ['run', 'format'],
+    label: 'Format',
+    critical: true,
+  },
+  {
     cmd: 'node',
     args: ['scripts/commands/typecheck'],
     label: 'Type checking',
@@ -270,7 +276,7 @@ const validations = [
   {
     cmd: 'node',
     args: ['scripts/lib/run-script-tests.mjs'],
-    label: 'Script tests (scripts/tests/)',
+    label: 'Script tests',
     critical: true,
   },
   {

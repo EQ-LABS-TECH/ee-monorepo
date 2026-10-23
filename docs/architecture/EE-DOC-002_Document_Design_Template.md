@@ -15,7 +15,7 @@ Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (
 | **Clasificación**     | Fundacional                            |
 | **Nivel**             | Estratégico                            |
 | **Normativo**         | Sí                                     |
-| **Versión**           | v1.11.0                                |
+| **Versión**           | v1.12.0                                |
 | **Estado**            | Congelado                              |
 | **Propietario**       | Equipo de Arquitectura                 |
 | **Documento padre**   | EE-DOC-001                             |
@@ -23,7 +23,7 @@ Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (
 | **Aprobado por**      | Equipo de Arquitectura                 |
 | **Audiencia**         | Arquitectura, Desarrollo, IA           |
 | **Fecha de creación** | 2026-08-02                             |
-| **Última revisión**   | 2026-10-14                             |
+| **Última revisión**   | 2026-10-23                             |
 | **Próxima revisión**  | No aplica — Documento Congelado        |
 
 ---
@@ -1356,12 +1356,15 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 **Aplicabilidad.**
 
-| Ámbito                        | ¿Aplica? | Regla                                                                                             |
-| ----------------------------- | :------: | ------------------------------------------------------------------------------------------------- |
-| EE-VAL-\*                     |    Sí    | Reportes/evidencias de validación (p. ej. cadena EE-DOC-015)                                      |
-| EE-WAIVE-\*                   |    Sí    | Waivers de gate; campos WAIVED según EE-DOC-010                                                   |
-| Precedencia                   |    Sí    | No anulan EE-DOC normativos; solo documentan excepción aceptada                                   |
-| Detalle operativo gate/waiver |    Sí    | gate_id, result, authority, reason, scope, vigencia, plan de normalización → cuerpo, no METADATOS |
+| Ámbito                        | ¿Aplica? | Regla                                                                                                                                                                    |
+| ----------------------------- | :------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| EE-VAL-\*                     |    Sí    | Reportes y evidencias de validación; la sección 03 registra la evidencia, resultados y limitaciones pertinentes.                                                         |
+| EE-WAIVE-\*                   |    Sí    | Waivers de gate; campos WAIVED según EE-DOC-010 §04.6.1. La sección 04 registra la resolución del waiver.                                                                |
+| Resolución del waiver         |    Sí    | La sección 04 aplica solo a EE-WAIVE-\* y se completa cuando el waiver alcanza RESOLVED. Si sigue activo o pendiente, los campos de resolución permanecen sin completar. |
+| Evidencia de resolución       |    Sí    | El cierre debe respaldarse con evidencia verificable. La retirada de un advisory no demuestra por sí sola que el paquete haya sido corregido.                            |
+| Estados                       |    Sí    | METADATOS.Estado representa el estado documental según EE-DOC-001 §08.1; el campo status de la sección 04 representa la resolución del waiver.                           |
+| Precedencia                   |    Sí    | No anulan EE-DOC normativos; solo documentan una excepción aceptada.                                                                                                     |
+| Detalle operativo gate/waiver |    Sí    | gate_id, result, authority, reason, scope, vigencia y plan de normalización → cuerpo, no METADATOS.                                                                      |
 
 ```markdown
 # EE-VAL-XXX — {Nombre} # o EE-WAIVE-XXX — {Nombre}
@@ -1406,25 +1409,41 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## 03. Evidencia / Condiciones del waiver
 
-Campos obligatorios si Result = **WAIVED** (**EE-DOC-010 §04.6.1**):
+[ Campos obligatorios si Result = **WAIVED** (**EE-DOC-010 §04.6.1**) ]
 
-| Campo                         | Valor                                  |
-| ----------------------------- | -------------------------------------- |
-| **gate_id**                   |                                        |
-| **package**                   | Nombre del paquete afectado            |
-| **advisory**                  | ID GHSA de la vulnerabilidad           |
-| **result**                    | WAIVED                                 |
-| **authority**                 | Arquitectura / según EE-DOC-005        |
-| **reason**                    |                                        |
-| **scope**                     |                                        |
-| **effective_from**            | YYYY-MM-DD                             |
-| **expires_at**                | YYYY-MM-DD (máx. 7 días salvo ADR/RFC) |
-| **normalization_plan**        |                                        |
-| **Justificación / evidencia** |                                        |
+| Campo                         | Valor                                   |
+| ----------------------------- | --------------------------------------- |
+| **Gate id**                   | Identificador del quality gate afectado |
+| **Package**                   | Nombre del paquete afectado             |
+| **Advisory**                  | ID GHSA de la vulnerabilidad            |
+| **Result**                    | WAIVED                                  |
+| **Authority**                 | Arquitectura (según EE-DOC-005)         |
+| **Reason**                    | Motivo verificable del waiver           |
+| **Scope**                     | Alcance autorizado de la excepción      |
+| **Effective from**            | YYYY-MM-DD                              |
+| **Expires at**                | YYYY-MM-DD (máx. 7 días salvo ADR/RFC)  |
+| **Normalization Plan**        | Plan para eliminar la excepción         |
+| **Justificación / Evidencia** | Evidencia que respalda la solicitud     |
 
 ---
 
-## 04. Referencias
+## 04. Resolución
+
+[ Esta sección aplica únicamente a documentos `EE-WAIVE-*`. ]
+
+| Campo                 | Valor                                |
+| :-------------------- | :----------------------------------- |
+| **status**            | RESOLVED                             |
+| **resolved at**       | YYYY-MM-DD                           |
+| **resolution reason** | Motivo verificable de la resolución  |
+| **evidence**          | Evidencia que justifica el cierre    |
+| **validation scope**  | Gate o ámbito de validación afectado |
+
+---
+
+## 05. Referencias
+
+[ Registrar los documentos normativos, ADR/RFC, quality gates y otras fuentes que fundamenten el contenido, cuando correspondan. ]
 
 | Código | Documento | Relación |
 | ------ | --------- | -------- |
@@ -1432,7 +1451,9 @@ Campos obligatorios si Result = **WAIVED** (**EE-DOC-010 §04.6.1**):
 
 ---
 
-## 05. Historial de Cambios
+## 06. Historial de Cambios
+
+[ Registrar los cambios del documento conforme a las reglas de versionado y al formato de historial establecido en EE-DOC-002 §11. ]
 
 | Versión    | Fecha      | Autor | Aprobado por | Motivo | Cambios | Estado |
 | ---------- | ---------- | ----- | ------------ | ------ | ------- | ------ |
@@ -1590,6 +1611,7 @@ Todo documento nuevo deberá cumplir este estándar.
 | **v1.9.1**  | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — aclaración metadatos                             | §05: Código corto sin EE es regla general (no excepción ADR); Title RFC siempre en-US; campos adicionales por tipo                                                        | **Congelado** |
 | **v1.10.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — volcar AR auditoría                            | AR-001 ya en §06; AR-003/004/005 §18; AR-006/018 §11; AR-007 §05; AR-017 §15; AR-019 §16; AR-020 §05 Dependencias                                                         | **Congelado** |
 | **v1.11.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — §18 meta + AR-017/022                            | Meta §18.1–18.6; nota §05 RFC=18.5; plantilla→corpus; pre-main                                                                                                            | **Congelado** |
+| v1.12.0     | 2026-10-23 | Equipo de Arquitectura | Equipo de Arquitectura | Ampliación de aplicabilidad VAL/WAIVE                     | Incorpora la resolución del waiver, exige evidencia de cierre, distingue el estado documental de la resolución y renumera las secciones posteriores.                      | **Congelado** |
 
 ---
 
