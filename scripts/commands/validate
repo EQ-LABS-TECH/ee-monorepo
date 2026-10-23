@@ -29,7 +29,7 @@ function execCommand(cmd, args, label) {
   }
 
   const combined = `${stdout}\n${stderr}`;
-  const skipped = /QG-[\\w-]+: SKIPPED/i.test(combined);
+  const skipped = combined.includes('SKIPPED');
   return result.status === 0 && !skipped;
 }
 
