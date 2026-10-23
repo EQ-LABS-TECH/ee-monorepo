@@ -1,25 +1,12 @@
 #!/usr/bin/env node
-
-import { spawnSync } from 'node:child_process';
-
-const args = ['exec', 'turbo', 'run', 'test:e2e', '--filter=@eq-labs/dashboard'];
+import { runTurboGate } from '../lib/run-turbo-gate.mjs';
 
 console.log('🧪 EE-LABS E2E validation');
 console.log('Target: @eq-labs/dashboard#test:e2e');
 
-const result = spawnSync('pnpm', args, {
-  stdio: 'inherit',
-  shell: process.platform === 'win32',
+const status = runTurboGate({
+  task: 'test:e2e',
+  args: ['--filter=@eq-labs/dashboard'],
+  gateId: 'QG-TEST-E2E',
 });
-
-if (result.error) {
-  console.error(`❌ Unable to start the E2E task: ${result.error.message}`);
-  process.exit(1);
-}
-
-if (result.status !== 0) {
-  console.error(`❌ QG-TEST-E2E: FAIL — Turbo exited with status ${result.status ?? 1}.`);
-  process.exit(result.status ?? 1);
-}
-
-console.log('✅ QG-TEST-E2E: PASS');
+process.exit(status);
