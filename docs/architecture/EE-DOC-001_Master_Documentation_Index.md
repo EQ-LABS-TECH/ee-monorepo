@@ -451,7 +451,7 @@ flowchart TD
 | **v2.29.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — auditoría 001                   | C-01 .devcontainer; §02 alcance; ADR padre; §08.1 Aprobado evidencia; RFC-001; Predecesor; §14 006; AR-018                                                               | **Congelado**           |
 | **v2.29.1** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — PC-008                          | Marca EQ-LABS (no EQ-Labs) en §02                                                                                                                                        | **Congelado**           |
 | **v2.30.0** | 2026-10-19 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — registro ADR-006                | §09.1/§14: EE-ADR-006 Aprobado (v1.0.0); sync con 004/006/013.                                                                                                           | Congelado               |
-| **v2.31.0** | 2026-10-22 | Equipo de Arquitectura | Pendiente — RFC-003    | Enmienda propuesta de flujo colaborativo | §09.2 aclara alcance de EE-RFC-003; §14 sincroniza la referencia al RFC; este historial registra la propuesta de DOC-005 v1.5.0 y DOC-007 v1.2.0 en revisión.            | **Propuesto (RFC-003)** |
+| **v2.31.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura    | Enmienda propuesta de flujo colaborativo | §09.2 aclara alcance de EE-RFC-003; §14 sincroniza la referencia al RFC; este historial registra la propuesta de DOC-005 v1.5.0 y DOC-007 v1.2.0 en revisión.            | **Congelado** |
 
 ---
 
