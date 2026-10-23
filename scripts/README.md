@@ -38,7 +38,7 @@ Turbo is responsible for:
 - task caching;
 - incremental execution.
 
-The architectural decision is defined by **ADR-001 — Estrategia de Orquestación de Tareas del Workspace**.
+The architectural decision is defined by **ADR-001 — Workspace Task Orchestration Strategy**.
 
 ## Repository-level Commands
 
