@@ -38,7 +38,7 @@ Turbo is responsible for:
 - task caching;
 - incremental execution.
 
-The architectural decision is defined by **ADR-001 — Estrategia de Orquestación de Tareas del Workspace**.
+The architectural decision is defined by **ADR-001 — Workspace Task Orchestration Strategy**.
 
 ## Repository-level Commands
 
@@ -260,25 +260,30 @@ Missing registry ⇒ exit code ≠ 0 (No False Pass). Do not commit sample trees
 
 ## E2E orchestration
 
-El comando raíz `pnpm run e2e` ejecuta el task `test:e2e` de
-`@eq-labs/dashboard`. El comando `pnpm run validate` incorpora E2E
-como gate crítico y CI invoca `validate`.
+The root command `pnpm run e2e` runs the `test:e2e` task for
+`@eq-labs/dashboard`. The root command `pnpm run validate` includes E2E
+as a critical gate, and CI invokes `validate`.
 
-La ejecución local reportada el 2026-10-22 obtuvo `QG-TEST-E2E: PASS`
-con 1 test del dashboard. La integración del gate está implementada,
-pero la orquestación multi-package y su cobertura siguen pendientes
-de implementación y evidencia.
+The reported local validation passed `QG-TEST-E2E` with one Dashboard test.
+The gate is integrated, but multi-package E2E orchestration and coverage
+remain pending implementation and evidence.
 
-El comando Turbo equivalente para inspección directa es:
+Use the following Turbo command to inspect the Dashboard suite directly:
 
 ```bash
 pnpm exec turbo run test:e2e --filter=@eq-labs/dashboard
 ```
 
-La tarea `test:e2e` mantiene `cache: false` y depende de los builds
-upstream declarados en Turbo. Esta evidencia no acredita cobertura E2E
-de otros workspaces. La disponibilidad normativa del gate se rige por
-EE-DOC-010; la composición CI, por EE-DOC-007.
+The `test:e2e` task sets `cache: false` and depends on the upstream builds
+declared in Turbo. This evidence does not establish E2E coverage for other
+workspaces. Gate availability is governed by EE-DOC-010; CI composition is
+governed by EE-DOC-007.
+
+The typecheck, lint, test, build, and Dashboard E2E wrappers classify a
+successful Turbo exit with zero executed tasks as `SKIPPED`, not `PASS`, and
+return a non-zero status so the root `validate` aggregator fails the critical
+gate. The script-test runner fails if `scripts/tests/` contains no
+`*.test.mjs` files.
 
 ## Windows: Vitest and %TEMP%
 

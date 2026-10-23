@@ -13,10 +13,20 @@ function execCommand(cmd, args, label) {
   console.log(`  ${label}...`);
 
   const result = spawnSync(cmd, args, {
-    stdio: 'inherit',
+    encoding: 'utf-8',
     shell: process.platform === 'win32',
     cwd: ROOT,
   });
+
+  const stdout = result.stdout ?? '';
+  const stderr = result.stderr ?? '';
+  if (stdout) process.stdout.write(stdout);
+  if (stderr) process.stderr.write(stderr);
+
+  if (result.error) {
+    console.error(`  ❌ ${label} could not start: ${result.error.message}`);
+    return false;
+  }
 
   return result.status === 0;
 }
@@ -234,14 +244,14 @@ console.log('');
 
 const validations = [
   {
-    cmd: 'turbo',
-    args: ['run', 'typecheck'],
+    cmd: 'node',
+    args: ['scripts/commands/typecheck'],
     label: 'Type checking',
     critical: true,
   },
   {
-    cmd: 'turbo',
-    args: ['run', 'lint'],
+    cmd: 'node',
+    args: ['scripts/commands/lint'],
     label: 'Linting',
     critical: true,
   },
@@ -264,8 +274,8 @@ const validations = [
     critical: true,
   },
   {
-    cmd: 'turbo',
-    args: ['run', 'build'],
+    cmd: 'node',
+    args: ['scripts/commands/build'],
     label: 'Build',
     critical: true,
   },
