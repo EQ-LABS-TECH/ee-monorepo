@@ -2,7 +2,6 @@
 
 > **Nota de vigencia (2026-10-22):** las tablas y resultados originales son el snapshot histórico de cierre de 2026-09-30. La revalidación posterior y sus límites están registrados en el addendum §11; no sustituye el estado normativo de documentos congelados.
 
-
 Este documento registra la evidencia técnica de implementación de la fase **P05** de **EE-DOC-010 — Quality Gates**, conforme a **EE-DOC-002 §18.3** y **EE-DOC-005**.
 
 ---
@@ -226,7 +225,6 @@ Orden: correcciones de código → pruebas negativas → 010 v1.4.0 → EE-TEC-0
 
 ## FIN DEL DOCUMENTO
 
-
 ---
 
 ## 11. Addendum — Revalidación del baseline (2026-10-22)
@@ -235,16 +233,16 @@ Este addendum conserva como histórico el snapshot de cierre P05 de 2026-09-30.
 La salida local más reciente de `pnpm run validate` aportada para el commit
 `b64ff0ea40178250168d2a8dc8e5b8763bbe2ffd` reporta los siguientes resultados:
 
-| Área | Resultado reportado | Alcance / observación |
-| :--- | :--- | :--- |
-| Typecheck | PASS — 26/26 | Todos los tasks configurados para el gate |
-| Lint | PASS — 25/25 | Todos los tasks configurados para el gate |
-| Unit/integration tests | PASS | Turbo reportó 9/9 tasks; knowledge, 7 tests aprobados |
-| E2E | PASS — 1 test | Solo `@eq-labs/dashboard`; multi-package continúa PENDING |
-| Scripts tests | 28 PASS, 0 FAIL, 1 SKIPPED | El skip corresponde a simulación POSIX de chmod |
-| Build | PASS — 25/25 | Todos los tasks configurados para el gate |
-| Format | PASS | Prettier sin diferencias |
-| QG-SEC-001 | PASS con WAIVE | 1 finding high y 1 moderate; no es un audit limpio |
+| Área                   | Resultado reportado        | Alcance / observación                                     |
+| :--------------------- | :------------------------- | :-------------------------------------------------------- |
+| Typecheck              | PASS — 26/26               | Todos los tasks configurados para el gate                 |
+| Lint                   | PASS — 25/25               | Todos los tasks configurados para el gate                 |
+| Unit/integration tests | PASS                       | Turbo reportó 9/9 tasks; knowledge, 7 tests aprobados     |
+| E2E                    | PASS — 1 test              | Solo `@eq-labs/dashboard`; multi-package continúa PENDING |
+| Scripts tests          | 28 PASS, 0 FAIL, 1 SKIPPED | El skip corresponde a simulación POSIX de chmod           |
+| Build                  | PASS — 25/25               | Todos los tasks configurados para el gate                 |
+| Format                 | PASS                       | Prettier sin diferencias                                  |
+| QG-SEC-001             | PASS con WAIVE             | 1 finding high y 1 moderate; no es un audit limpio        |
 
 La ejecución reportó también la advertencia Node `DEP0190` asociada a
 `shell: true`. La validación fue reportada por el usuario; no se ejecutó
