@@ -1,20 +1,11 @@
 #!/usr/bin/env node
-import { spawnSync } from 'node:child_process';
+import { runTurboGate } from '../lib/run-turbo-gate.mjs';
 
 console.log('🔍 Running linter (QG-LINT-001)...');
 console.log('');
 
-const result = spawnSync('pnpm', ['exec', 'turbo', 'run', 'lint'], {
-  stdio: 'inherit',
-  shell: process.platform === 'win32',
-  cwd: process.cwd(),
+const status = runTurboGate({
+  task: 'lint',
+  gateId: 'QG-LINT-001',
 });
-
-if (result.status !== 0) {
-  console.error('');
-  console.error('❌ QG-LINT-001: FAIL');
-  process.exit(result.status ?? 1);
-}
-
-console.log('');
-console.log('✅ QG-LINT-001: PASS');
+process.exit(status);
