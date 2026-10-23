@@ -13,12 +13,24 @@ function execCommand(cmd, args, label) {
   console.log(`  ${label}...`);
 
   const result = spawnSync(cmd, args, {
-    stdio: 'inherit',
+    encoding: 'utf-8',
     shell: process.platform === 'win32',
     cwd: ROOT,
   });
 
-  return result.status === 0;
+  const stdout = result.stdout ?? '';
+  const stderr = result.stderr ?? '';
+  if (stdout) process.stdout.write(stdout);
+  if (stderr) process.stderr.write(stderr);
+
+  if (result.error) {
+    console.error(`  ❌ ${label} could not start: ${result.error.message}`);
+    return false;
+  }
+
+  const combined = `${stdout}\n${stderr}`;
+  const skipped = /QG-[\\w-]+: SKIPPED/i.test(combined);
+  return result.status === 0 && !skipped;
 }
 
 function validateStructure() {
