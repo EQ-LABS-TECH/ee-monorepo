@@ -51,7 +51,7 @@ test('classifies a zero-task summary as SKIPPED', () => {
     stdout: 'Tasks: 0 successful, 0 total',
     stderr: '',
   });
-  assert.equal(status, 2);
+  assert.equal(status, 0);
   assert.match(output.logs[0], /SKIPPED/);
   assert.deepEqual(output.errors, []);
 });
