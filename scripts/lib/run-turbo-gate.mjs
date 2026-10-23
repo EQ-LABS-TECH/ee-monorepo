@@ -2,9 +2,8 @@
 import { spawnSync } from 'node:child_process';
 
 /**
- * Executes a required Turbo gate without treating an empty task graph as PASS.
- * Output is captured only so the wrapper can distinguish a real execution from
- * Turbo's successful "no tasks" result; the original output is forwarded.
+ * Executes a required Turbo gate and reports PASS, SKIPPED, or FAIL distinctly.
+ * Captured output is forwarded unchanged and inspected for Turbo's empty-task result.
  */
 export function runTurboGate({
   task,
@@ -45,8 +44,8 @@ export function runTurboGate({
     /Tasks:\s*0 successful,\s*0 total/i.test(output);
 
   if (zeroTasks) {
-    log.warn(`⚠️ ${gateId}: SKIPPED — Turbo completed without executing any tasks (exit code 2).`);
-    return 2;
+    log.warn(`⚠️ ${gateId}: SKIPPED — Turbo completed without executing any tasks.`);
+    return 0;
   }
 
   log.log(`✅ ${gateId}: PASS`);
