@@ -34,7 +34,7 @@ test('passes only when Turbo reports executed tasks', () => {
   assert.deepEqual(output.args, ['exec', 'turbo', 'run', 'typecheck']);
 });
 
-test('fails when Turbo exits zero without executing tasks', () => {
+test('classifies Turbo success with no executed tasks as SKIPPED', () => {
   const { status, output } = harness({
     status: 0,
     stdout: 'No tasks were executed as part of this run',
@@ -45,7 +45,7 @@ test('fails when Turbo exits zero without executing tasks', () => {
   assert.deepEqual(output.errors, []);
 });
 
-test('fails when Turbo reports zero total tasks', () => {
+test('classifies a zero-task summary as SKIPPED', () => {
   const { status, output } = harness({
     status: 0,
     stdout: 'Tasks: 0 successful, 0 total',
