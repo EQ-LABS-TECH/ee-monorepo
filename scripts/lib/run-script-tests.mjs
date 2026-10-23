@@ -35,8 +35,8 @@ function main() {
   const files = discover();
 
   if (files.length === 0) {
-    console.warn('⚠️ test:scripts — no *.test.mjs found under scripts/tests/');
-    process.exit(0);
+    console.error('❌ test:scripts — no *.test.mjs found under scripts/tests/');
+    process.exit(1);
   }
 
   console.log(`▶ test:scripts — ${files.length} file(s)`);
