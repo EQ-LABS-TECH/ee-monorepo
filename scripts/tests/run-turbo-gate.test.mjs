@@ -40,7 +40,7 @@ test('classifies Turbo success with no executed tasks as SKIPPED', () => {
     stdout: 'No tasks were executed as part of this run',
     stderr: '',
   });
-  assert.equal(status, 2);
+  assert.equal(status, 0);
   assert.match(output.logs[0], /SKIPPED/);
   assert.deepEqual(output.errors, []);
 });
