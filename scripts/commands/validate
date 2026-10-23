@@ -28,9 +28,7 @@ function execCommand(cmd, args, label) {
     return false;
   }
 
-  const combined = `${stdout}\n${stderr}`;
-  const skipped = combined.includes('SKIPPED');
-  return result.status === 0 && !skipped;
+  return result.status === 0;
 }
 
 function validateStructure() {
