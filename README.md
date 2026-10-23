@@ -122,7 +122,11 @@ pnpm clean
 
 Also: `pnpm changeset`, `pnpm version-packages` (Changesets CLI).
 
-> **E2E:** `pnpm e2e` is the root entrypoint. Ecosystem-level E2E **gate** enforcement may remain PENDING until EE-DOC-010 / 015 / multi-package orchestration (ADR-002) are fully ACTIVE.
+> **E2E:** `pnpm e2e` es el punto de entrada raíz y se ejecuta como gate
+> crítico dentro de `pnpm run validate`, utilizado también por CI.
+> La validación local reportada el 2026-10-22 obtuvo `QG-TEST-E2E: PASS`
+> para `@eq-labs/dashboard` (1 test). La cobertura E2E sigue limitada al
+> dashboard; esto no acredita una orquestación E2E multi-package.
 
 ---
 

@@ -260,13 +260,25 @@ Missing registry ⇒ exit code ≠ 0 (No False Pass). Do not commit sample trees
 
 ## E2E orchestration
 
-The dashboard E2E suite is invoked through its existing workspace script and the matching Turbo task:
+El comando raíz `pnpm run e2e` ejecuta el task `test:e2e` de
+`@eq-labs/dashboard`. El comando `pnpm run validate` incorpora E2E
+como gate crítico y CI invoca `validate`.
+
+La ejecución local reportada el 2026-10-22 obtuvo `QG-TEST-E2E: PASS`
+con 1 test del dashboard. La integración del gate está implementada,
+pero la orquestación multi-package y su cobertura siguen pendientes
+de implementación y evidencia.
+
+El comando Turbo equivalente para inspección directa es:
 
 ```bash
 pnpm exec turbo run test:e2e --filter=@eq-labs/dashboard
 ```
 
-Turbo declares `test:e2e` with `cache: false` and a dependency on upstream workspace builds. The task runs `apps/dashboard`'s `test:e2e` script; it does not imply that the E2E gate is wired into the root `validate` command or CI. Quality-gate availability remains governed by EE-DOC-010 and CI composition by EE-DOC-007.
+La tarea `test:e2e` mantiene `cache: false` y depende de los builds
+upstream declarados en Turbo. Esta evidencia no acredita cobertura E2E
+de otros workspaces. La disponibilidad normativa del gate se rige por
+EE-DOC-010; la composición CI, por EE-DOC-007.
 
 ## Windows: Vitest and %TEMP%
 
@@ -291,9 +303,25 @@ or restricted permissions (`EPERM`).
 
 ## Known issues
 
-### sprintf-js (moderate, no upstream fix)
+### braces (high, temporary waiver)
 
-`GHSA-hp3w-g68c-fv3c` — sprintf-js <=1.1.3 has no patched release.
-Transitive via `jest > @jest/transform > babel-plugin-istanbul > @istanbuljs/load-nyc-config > js-yaml > argparse > sprintf-js`.
-Does not block QG-SEC-001 (script filters by high/critical).
-Tracked for review when upstream ships a fix.
+`GHSA-vfj7-8cjw-p6xm` — `braces@3.0.3` is reported vulnerable to
+stack exhaustion through the root development-tooling chain
+`plop > liftoff > findup-sync > micromatch > braces`. The local
+`pnpm run validate` result dated 2026-10-22 passed QG-SEC-001 only
+because the active waiver
+`docs/validation/waivers/EE-WAIVE-QG-SEC-001-braces-20261016.md`
+covers this high finding. The waiver expires **2026-10-23**; it is not
+a remediation. Re-evaluate or renew/close it before expiry under the
+governance policy.
+
+### sprintf-js (moderate, temporary waiver)
+
+`GHSA-hp3w-g68c-fv3c` — `sprintf-js` is reported as a moderate
+transitive finding in the legacy Jest configuration dependency chain.
+The active waiver
+`docs/validation/waivers/EE-WAIVE-QG-SEC-001-sprintf-js-20261016.md`
+expires **2026-10-23**. The current security audit threshold is high;
+the moderate finding does not independently cross that threshold.
+Re-audit and close or renew the waiver before expiry. Neither waiver
+means that the underlying advisory is fixed.
