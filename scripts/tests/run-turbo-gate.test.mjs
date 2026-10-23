@@ -11,8 +11,12 @@ function harness(result) {
       output.args = args;
       return result;
     },
-    writeOut: (value) => { output.stdout += value; },
-    writeErr: (value) => { output.stderr += value; },
+    writeOut: (value) => {
+      output.stdout += value;
+    },
+    writeErr: (value) => {
+      output.stderr += value;
+    },
     log: {
       log: (message) => output.logs.push(message),
       error: (message) => output.errors.push(message),
@@ -57,7 +61,11 @@ test('classifies a zero-task summary as SKIPPED', () => {
 });
 
 test('preserves Turbo failure status', () => {
-  const { status, output } = harness({ status: 2, stdout: '', stderr: 'task failed' });
+  const { status, output } = harness({
+    status: 2,
+    stdout: '',
+    stderr: 'task failed',
+  });
   assert.equal(status, 2);
   assert.equal(output.stderr, 'task failed');
   assert.match(output.errors[0], /status 2/);
