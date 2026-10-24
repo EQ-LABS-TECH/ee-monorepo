@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Especializado                                                                                                                                  |
 | **Nivel**             | Especializado                                                                                                                                  |
 | **Normativo**         | Sí                                                                                                                                             |
-| **Versión**           | v1.5.2                                                                                                                                         |
+| **Versión**           | v1.5.3                                                                                                                                         |
 | **Estado**            | Congelado                                                                                                                                      |
 | **Propietario**       | Equipo de Arquitectura                                                                                                                         |
 | **Documento padre**   | EE-DOC-006 — Repository Structure                                                                                                              |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                                                                                         |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                       |
 | **Fecha de creación** | 2026-09-26                                                                                                                                     |
-| **Última revisión**   | 2026-10-18                                                                                                                                     |
+| **Última revisión**   | 2026-10-23                                                                                                                                     |
 | **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                |
 
 ---
@@ -416,7 +416,40 @@ Orden de preferencia:
 3. API contractual del runner.
 4. Parsing de texto (último recurso; prohibido como única base de PASS frágil).
 
-### 06.4. Herramientas del workspace
+### 06.4. Contrato de ejecución y agregación por gate
+
+Cada gate ejecutable debe producir un resultado explícito e independiente de su salida textual. El resultado no puede inferirse únicamente de que el proceso padre haya terminado con código cero.
+
+| Resultado        | Contrato mínimo                                                                                                     |
+| :--------------- | :------------------------------------------------------------------------------------------------------------------ |
+| `PASS`           | La ejecución requerida está acreditada, el resultado es determinable y el criterio contractual se cumple.           |
+| `FAIL`           | La ejecución o evaluación determina incumplimiento del criterio del gate.                                           |
+| `SKIPPED`        | El gate aplica, pero la tarea requerida no se ejecutó. Debe conservarse la justificación y la evidencia disponible. |
+| `NOT_APPLICABLE` | El gate no aplica al cambio evaluado. Requiere justificación y evidencia.                                           |
+| `ERROR`          | No puede determinarse de forma fiable el resultado, incluida la ausencia o invalidez de evidencia necesaria.        |
+| `WAIVED`         | Existe una excepción autorizada, vigente y trazable conforme a §04.6.1.                                             |
+
+#### Evidencia de ejecución
+
+1. El código de salida contractual determina el éxito o fallo del proceso ejecutado; no demuestra por sí solo que se hayan ejecutado tareas.
+2. La existencia y el resultado de las tareas deben acreditarse mediante evidencia estructurada o una señal contractual estable de la herramienta.
+3. La salida textual de Turbo puede conservarse como diagnóstico, pero no será la única fuente para determinar `PASS` o `SKIPPED`.
+4. Si la evidencia de ejecución no existe, es ambigua o no puede asociarse inequívocamente a la invocación evaluada, el resultado será `ERROR`; nunca `PASS` por defecto.
+5. Una ejecución con cero tareas debe producir `SKIPPED` cuando el gate aplique y no se hayan ejecutado las tareas requeridas. Solo podrá tratarse como una excepción no bloqueante cuando exista una justificación admitida por la regla específica del gate y el régimen aplicable. `SKIPPED` no se convertirá automáticamente en `NOT_APPLICABLE`.
+
+#### Agregación global
+
+El agregador debe conservar el resultado individual de cada gate y aplicar §04.8 sin reinterpretar sus estados:
+
+- Un gate `FAIL` o `ERROR` bloqueante no puede convertirse en `PASS` por el resultado de otros gates.
+- Un `SKIPPED` requerido no puede convertirse en `PASS` por el código de salida cero de `validate`.
+- Una ejecución sin resultados de gates ACTIVE evaluados no puede producir `ACCEPT`.
+- La ausencia de tareas, resultados o evidencia no equivale a una evaluación satisfactoria.
+- El resumen global debe permitir identificar cada gate evaluado, su resultado, la evidencia asociada y la razón de cualquier estado no satisfactorio.
+
+La implementación técnica y las pruebas de regresión deben verificar, como mínimo, cero tareas, errores de ejecución, evidencia indeterminada y agregación de resultados mixtos. La incorporación de E2E como gate bloqueante en `validate` o CI queda fuera de este contrato hasta resolver expresamente su estado transitorio en EE-DOC-005 §10.4.
+
+### 06.5. Herramientas del workspace
 
 Preferir `pnpm` / `pnpm exec` / Turbo del workspace. La ausencia de un binario global no constituye FAIL si la herramienta está disponible en el workspace del monorepo.
 
@@ -596,6 +629,7 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 | **v1.5.0**        | 2026-10-06    | Equipo de Arquitectura | Equipo de Arquitectura | Sync frontera 015 (B1)                        | Quita «no vinculante» 011/015; §02.6 frontera 010↔015; 011/015 fuera del catálogo de merge                                                                                                                                                                                          | **Congelado**              |
 | **v1.5.1**        | 2026-10-06    | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A frontera 015                           | §02.6: solo WAIVED vigentes → DEGRADED en 015; high sin WAIVE no DEGRADED                                                                                                                                                                                                            | **Congelado**              |
 | **v1.5.2**        | 2026-10-18    | Equipo de Arquitectura | Equipo de Arquitectura | Fix aclaración E2E                            | §05.4 aclara que el comando root e2e existe pero el gate sigue PENDING                                                                                                                                                                                                               | Congelado                  |
+| **v1.5.3**        | 2026-10-23    | Equipo de Arquitectura | Equipo de Arquitectura | Integridad de quality gates (Fase 2)          | Contratos explícitos de resultados; evidencia de ejecución; prevención de falsos PASS; agregación de gates; regresiones para cero tareas, evidencia no disponible y fallos de ejecución.                                                                                             | **Congelado**              |
 
 ---
 
@@ -620,7 +654,7 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 | Campo                 | Valor                                                                                                 |
 | :-------------------- | :---------------------------------------------------------------------------------------------------- |
 | **Estado documental** | **Congelado**                                                                                         |
-| **Versión**           | v1.5.2                                                                                                |
+| **Versión**           | v1.5.3                                                                                                |
 | **Congelación**       | **2026-09-30** (norma); sync frontera **2026-10-06**                                                  |
 | **Próximo hito**      | Evolución PENDING vía IMP; frontera **EE-DOC-015** vigente (§02.6); cambio de catálogo solo gobernado |
 

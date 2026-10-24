@@ -20,15 +20,31 @@ function execCommand(cmd, args, label) {
 
   const stdout = result.stdout ?? '';
   const stderr = result.stderr ?? '';
+
   if (stdout) process.stdout.write(stdout);
   if (stderr) process.stderr.write(stderr);
 
   if (result.error) {
     console.error(`  ❌ ${label} could not start: ${result.error.message}`);
-    return false;
+    return {
+      status: 'ERROR',
+      exitCode: 1,
+      detail: result.error.message,
+    };
   }
 
-  return result.status === 0;
+  if (result.status === 0) {
+    return { status: 'PASS', exitCode: 0 };
+  }
+
+  if (result.status === 2 && /^(Type checking|Linting|Tests|E2E Tests|Build)$/.test(label)) {
+    return { status: 'SKIPPED', exitCode: 2 };
+  }
+
+  return {
+    status: 'FAIL',
+    exitCode: result.status ?? 1,
+  };
 }
 
 function validateStructure() {
@@ -293,17 +309,24 @@ const validations = [
   },
 ];
 
+const gateResults = [];
 let hasErrors = false;
 const warnings = [];
 
 for (const validation of validations) {
-  const passed = execCommand(validation.cmd, validation.args, validation.label);
+  const result = execCommand(validation.cmd, validation.args, validation.label);
 
-  if (!passed) {
+  gateResults.push({
+    gate: validation.label,
+    status: result.status,
+    exitCode: result.exitCode,
+  });
+
+  if (result.status !== 'PASS') {
     if (validation.critical) {
       hasErrors = true;
     } else {
-      warnings.push(`⚠️ ${validation.label} failed (non-critical)`);
+      warnings.push(`⚠️ ${validation.label}: ${result.status}`);
     }
   }
 
@@ -371,6 +394,15 @@ for (const warning of templateWarnings) {
 console.log('');
 
 console.log('📊 Validation Summary:');
+
+console.log('Gate results:');
+
+for (const result of gateResults) {
+  const icon = result.status === 'PASS' ? '✅' : '❌';
+  console.log(`  ${icon} ${result.gate}: ${result.status} (exit ${result.exitCode})`);
+}
+
+console.log('');
 
 console.log('=====================');
 
