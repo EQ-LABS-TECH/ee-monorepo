@@ -9,7 +9,7 @@ import { validateTemplates } from '../lib/validate-templates.mjs';
 
 const ROOT = process.cwd();
 
-function execCommand(cmd, args, label) {
+function execCommand(cmd, args, label, { requireGateContract = false } = {}) {
   console.log(`  ${label}...`);
 
   const result = spawnSync(cmd, args, {
@@ -33,12 +33,57 @@ function execCommand(cmd, args, label) {
     };
   }
 
-  if (result.status === 0) {
-    return { status: 'PASS', exitCode: 0 };
+  if (requireGateContract) {
+    const markers = [...stdout.matchAll(/^QG_RESULT (.+)$/gm)];
+
+    if (markers.length !== 1) {
+      return {
+        status: 'ERROR',
+        exitCode: result.status ?? 1,
+        detail: `expected exactly one QG_RESULT marker; found ${markers.length}`,
+      };
+    }
+
+    let contract;
+
+    try {
+      contract = JSON.parse(markers[0][1]);
+    } catch {
+      return {
+        status: 'ERROR',
+        exitCode: result.status ?? 1,
+        detail: 'invalid QG_RESULT JSON',
+      };
+    }
+
+    const validStatuses = new Set(['PASS', 'FAIL', 'SKIPPED', 'ERROR']);
+    const expectedExitCode = {
+      PASS: 0,
+      FAIL: 1,
+      ERROR: 1,
+      SKIPPED: 2,
+    }[contract.status];
+
+    if (
+      !validStatuses.has(contract.status) ||
+      contract.exitCode !== expectedExitCode ||
+      result.status !== expectedExitCode
+    ) {
+      return {
+        status: 'ERROR',
+        exitCode: result.status ?? 1,
+        detail: 'QG_RESULT contract does not match the process exit code',
+      };
+    }
+
+    return {
+      status: contract.status,
+      exitCode: result.status,
+    };
   }
 
-  if (result.status === 2 && /^(Type checking|Linting|Tests|E2E Tests|Build)$/.test(label)) {
-    return { status: 'SKIPPED', exitCode: 2 };
+  if (result.status === 0) {
+    return { status: 'PASS', exitCode: 0 };
   }
 
   return {
@@ -270,24 +315,28 @@ const validations = [
     args: ['scripts/commands/typecheck'],
     label: 'Type checking',
     critical: true,
+    requireGateContract: true,
   },
   {
     cmd: 'node',
     args: ['scripts/commands/lint'],
     label: 'Linting',
     critical: true,
+    requireGateContract: true,
   },
   {
     cmd: 'node',
     args: ['scripts/commands/test'],
     label: 'Tests',
     critical: true,
+    requireGateContract: true,
   },
   {
     cmd: 'node',
     args: ['scripts/commands/e2e'],
     label: 'E2E Tests',
     critical: true,
+    requireGateContract: true,
   },
   {
     cmd: 'node',
@@ -300,6 +349,7 @@ const validations = [
     args: ['scripts/commands/build'],
     label: 'Build',
     critical: true,
+    requireGateContract: true,
   },
   {
     cmd: 'pnpm',
@@ -314,7 +364,9 @@ let hasErrors = false;
 const warnings = [];
 
 for (const validation of validations) {
-  const result = execCommand(validation.cmd, validation.args, validation.label);
+  const result = execCommand(validation.cmd, validation.args, validation.label, {
+    requireGateContract: validation.requireGateContract ?? false,
+  });
 
   gateResults.push({
     gate: validation.label,
