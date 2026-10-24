@@ -6,10 +6,11 @@ import { join } from 'node:path';
 import { parse } from 'yaml';
 import { runSecurityAuditWithWaivers } from '../lib/security-audit.mjs';
 import { validateTemplates } from '../lib/validate-templates.mjs';
+import { validateGateId } from '../lib/validate-gate-id.mjs';
 
 const ROOT = process.cwd();
 
-function execCommand(cmd, args, label, { requireGateContract = false } = {}) {
+function execCommand(cmd, args, label, { requireGateContract = false, expectedGateId } = {}) {
   console.log(`  ${label}...`);
 
   const result = spawnSync(cmd, args, {
@@ -53,6 +54,16 @@ function execCommand(cmd, args, label, { requireGateContract = false } = {}) {
         status: 'ERROR',
         exitCode: result.status ?? 1,
         detail: 'invalid QG_RESULT JSON',
+      };
+    }
+
+    const gateIdError = validateGateId(contract, expectedGateId);
+
+    if (gateIdError) {
+      return {
+        status: 'ERROR',
+        exitCode: result.status ?? 1,
+        detail: gateIdError,
       };
     }
 
@@ -316,6 +327,7 @@ const validations = [
     label: 'Type checking',
     critical: true,
     requireGateContract: true,
+    expectedGateId: 'QG-TYPE-001',
   },
   {
     cmd: 'node',
@@ -323,6 +335,7 @@ const validations = [
     label: 'Linting',
     critical: true,
     requireGateContract: true,
+    expectedGateId: 'QG-LINT-001',
   },
   {
     cmd: 'node',
@@ -330,6 +343,7 @@ const validations = [
     label: 'Tests',
     critical: true,
     requireGateContract: true,
+    expectedGateId: 'QG-TEST-001',
   },
   {
     cmd: 'node',
@@ -337,6 +351,7 @@ const validations = [
     label: 'E2E Tests',
     critical: true,
     requireGateContract: true,
+    expectedGateId: 'QG-TEST-E2E',
   },
   {
     cmd: 'node',
@@ -350,6 +365,7 @@ const validations = [
     label: 'Build',
     critical: true,
     requireGateContract: true,
+    expectedGateId: 'QG-BUILD-001',
   },
   {
     cmd: 'pnpm',
@@ -366,6 +382,7 @@ const warnings = [];
 for (const validation of validations) {
   const result = execCommand(validation.cmd, validation.args, validation.label, {
     requireGateContract: validation.requireGateContract ?? false,
+    expectedGateId: validation.expectedGateId,
   });
 
   gateResults.push({
