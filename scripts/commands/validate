@@ -7,6 +7,7 @@ import { parse } from 'yaml';
 import { runSecurityAuditWithWaivers } from '../lib/security-audit.mjs';
 import { validateTemplates } from '../lib/validate-templates.mjs';
 import { validateGateId } from '../lib/validate-gate-id.mjs';
+import { aggregateGateResults } from '../lib/aggregate-gate-results.mjs';
 
 const ROOT = process.cwd();
 
@@ -62,7 +63,7 @@ function execCommand(cmd, args, label, { requireGateContract = false, expectedGa
     if (gateIdError) {
       return {
         status: 'ERROR',
-        exitCode: result.status ?? 1,
+        exitCode: 1,
         detail: gateIdError,
       };
     }
@@ -376,8 +377,6 @@ const validations = [
 ];
 
 const gateResults = [];
-let hasErrors = false;
-const warnings = [];
 
 for (const validation of validations) {
   const result = execCommand(validation.cmd, validation.args, validation.label, {
@@ -391,16 +390,11 @@ for (const validation of validations) {
     exitCode: result.exitCode,
   });
 
-  if (result.status !== 'PASS') {
-    if (validation.critical) {
-      hasErrors = true;
-    } else {
-      warnings.push(`⚠️ ${validation.label}: ${result.status}`);
-    }
-  }
-
   console.log('');
 }
+
+const { hasErrors: gateErrors, warnings } = aggregateGateResults(validations, gateResults);
+let hasErrors = gateErrors;
 
 // Security audit con soporte para waivers
 const securityResult = runSecurityAuditWithWaivers({ root: ROOT, spawnSyncImpl: spawnSync });
