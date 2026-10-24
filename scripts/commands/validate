@@ -6,10 +6,12 @@ import { join } from 'node:path';
 import { parse } from 'yaml';
 import { runSecurityAuditWithWaivers } from '../lib/security-audit.mjs';
 import { validateTemplates } from '../lib/validate-templates.mjs';
+import { validateGateId } from '../lib/validate-gate-id.mjs';
+import { aggregateGateResults } from '../lib/aggregate-gate-results.mjs';
 
 const ROOT = process.cwd();
 
-function execCommand(cmd, args, label) {
+function execCommand(cmd, args, label, { requireGateContract = false, expectedGateId } = {}) {
   console.log(`  ${label}...`);
 
   const result = spawnSync(cmd, args, {
@@ -20,15 +22,86 @@ function execCommand(cmd, args, label) {
 
   const stdout = result.stdout ?? '';
   const stderr = result.stderr ?? '';
+
   if (stdout) process.stdout.write(stdout);
   if (stderr) process.stderr.write(stderr);
 
   if (result.error) {
     console.error(`  ❌ ${label} could not start: ${result.error.message}`);
-    return false;
+    return {
+      status: 'ERROR',
+      exitCode: 1,
+      detail: result.error.message,
+    };
   }
 
-  return result.status === 0;
+  if (requireGateContract) {
+    const markers = [...stdout.matchAll(/^QG_RESULT (.+)$/gm)];
+
+    if (markers.length !== 1) {
+      return {
+        status: 'ERROR',
+        exitCode: result.status ?? 1,
+        detail: `expected exactly one QG_RESULT marker; found ${markers.length}`,
+      };
+    }
+
+    let contract;
+
+    try {
+      contract = JSON.parse(markers[0][1]);
+    } catch {
+      return {
+        status: 'ERROR',
+        exitCode: result.status ?? 1,
+        detail: 'invalid QG_RESULT JSON',
+      };
+    }
+
+    const gateIdError = validateGateId(contract, expectedGateId);
+
+    if (gateIdError) {
+      return {
+        status: 'ERROR',
+        exitCode: 1,
+        detail: gateIdError,
+      };
+    }
+
+    const validStatuses = new Set(['PASS', 'FAIL', 'SKIPPED', 'ERROR']);
+    const expectedExitCode = {
+      PASS: 0,
+      FAIL: 1,
+      ERROR: 1,
+      SKIPPED: 2,
+    }[contract.status];
+
+    if (
+      !validStatuses.has(contract.status) ||
+      contract.exitCode !== expectedExitCode ||
+      result.status !== expectedExitCode
+    ) {
+      return {
+        status: 'ERROR',
+        exitCode: result.status ?? 1,
+        detail: 'QG_RESULT contract does not match the process exit code',
+      };
+    }
+
+    return {
+      status: contract.status,
+      exitCode: result.status,
+    };
+  }
+
+  if (result.status === 0) {
+    return { status: 'PASS', exitCode: 0 };
+  }
+
+  return {
+    status: 'FAIL',
+    exitCode: result.status ?? 1,
+  };
 }
 
 function validateStructure() {
@@ -254,24 +327,32 @@ const validations = [
     args: ['scripts/commands/typecheck'],
     label: 'Type checking',
     critical: true,
+    requireGateContract: true,
+    expectedGateId: 'QG-TYPE-001',
   },
   {
     cmd: 'node',
     args: ['scripts/commands/lint'],
     label: 'Linting',
     critical: true,
+    requireGateContract: true,
+    expectedGateId: 'QG-LINT-001',
   },
   {
     cmd: 'node',
     args: ['scripts/commands/test'],
     label: 'Tests',
     critical: true,
+    requireGateContract: true,
+    expectedGateId: 'QG-TEST-001',
   },
   {
     cmd: 'node',
     args: ['scripts/commands/e2e'],
     label: 'E2E Tests',
     critical: true,
+    requireGateContract: true,
+    expectedGateId: 'QG-TEST-E2E',
   },
   {
     cmd: 'node',
@@ -284,6 +365,8 @@ const validations = [
     args: ['scripts/commands/build'],
     label: 'Build',
     critical: true,
+    requireGateContract: true,
+    expectedGateId: 'QG-BUILD-001',
   },
   {
     cmd: 'pnpm',
@@ -293,22 +376,25 @@ const validations = [
   },
 ];
 
-let hasErrors = false;
-const warnings = [];
+const gateResults = [];
 
 for (const validation of validations) {
-  const passed = execCommand(validation.cmd, validation.args, validation.label);
+  const result = execCommand(validation.cmd, validation.args, validation.label, {
+    requireGateContract: validation.requireGateContract ?? false,
+    expectedGateId: validation.expectedGateId,
+  });
 
-  if (!passed) {
-    if (validation.critical) {
-      hasErrors = true;
-    } else {
-      warnings.push(`⚠️ ${validation.label} failed (non-critical)`);
-    }
-  }
+  gateResults.push({
+    gate: validation.label,
+    status: result.status,
+    exitCode: result.exitCode,
+  });
 
   console.log('');
 }
+
+const { hasErrors: gateErrors, warnings } = aggregateGateResults(validations, gateResults);
+let hasErrors = gateErrors;
 
 // Security audit con soporte para waivers
 const securityResult = runSecurityAuditWithWaivers({ root: ROOT, spawnSyncImpl: spawnSync });
@@ -371,6 +457,15 @@ for (const warning of templateWarnings) {
 console.log('');
 
 console.log('📊 Validation Summary:');
+
+console.log('Gate results:');
+
+for (const result of gateResults) {
+  const icon = result.status === 'PASS' ? '✅' : '❌';
+  console.log(`  ${icon} ${result.gate}: ${result.status} (exit ${result.exitCode})`);
+}
+
+console.log('');
 
 console.log('=====================');
 
