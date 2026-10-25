@@ -2,10 +2,17 @@
 
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import { inc } from 'semver';
+import {
+  listChangesetFiles,
+  publishThenTag,
+  readWorkspacePackages,
+} from '../lib/release-integrity.mjs';
+import { isAbsolute, join, relative } from 'node:path';
 
 const ROOT = process.cwd();
+const DEFAULT_BRANCHES = new Set(['main', 'master']);
 
 function execCommand(cmd, args, label) {
   console.log(`  ${label}...`);
@@ -16,11 +23,9 @@ function execCommand(cmd, args, label) {
     cwd: ROOT,
   });
 
-  if (result.status !== 0) {
-    throw new Error(`Command failed: ${cmd} ${args.join(' ')}`);
+  if (result.error || result.status !== 0) {
+    throw new Error(`${label} failed: ${result.error?.message ?? `${cmd} ${args.join(' ')}`}`);
   }
-
-  return result;
 }
 
 function captureCommand(cmd, args, label) {
@@ -30,8 +35,10 @@ function captureCommand(cmd, args, label) {
     cwd: ROOT,
   });
 
-  if (result.status !== 0) {
-    throw new Error(`${label} failed: ${cmd} ${args.join(' ')}`);
+  if (result.error || result.status !== 0) {
+    throw new Error(
+      `${label} failed: ${result.error?.message ?? result.stderr?.trim() ?? `${cmd} ${args.join(' ')}`}`,
+    );
   }
 
   return result.stdout.trim();
@@ -46,26 +53,50 @@ function writeRootPackage(pkg) {
 }
 
 function getRootVersion() {
-  const pkg = readRootPackage();
+  const version = readRootPackage().version;
 
-  if (typeof pkg.version !== 'string' || !/^\d+\.\d+\.\d+$/.test(pkg.version)) {
-    throw new Error(`Invalid root package version: ${pkg.version}`);
+  if (typeof version !== 'string' || !/^\d+\.\d+\.\d+$/.test(version)) {
+    throw new Error(`Invalid root package version: ${version}`);
   }
 
-  return pkg.version;
+  return version;
 }
 
-function checkChangesets() {
-  const changesetDir = join(ROOT, '.changeset');
+function assertCleanWorkingTree() {
+  const status = captureCommand('git', ['status', '--porcelain'], 'Checking Git working tree');
 
-  if (!existsSync(changesetDir)) {
-    return { exists: false, count: 0, files: [] };
+  if (status) {
+    throw new Error(`Working tree must be clean before release:\n${status}`);
   }
+}
 
-  const files = readdirSync(changesetDir);
-  const changesetFiles = files.filter((file) => file.endsWith('.md') && file !== 'README.md');
+function getCurrentBranch() {
+  return captureCommand('git', ['branch', '--show-current'], 'Reading current branch');
+}
 
-  return { exists: true, count: changesetFiles.length, files: changesetFiles };
+function assertNoTagConflict(tag) {
+  const result = spawnSync('git', ['rev-parse', '--verify', '--quiet', `refs/tags/${tag}`], {
+    stdio: 'ignore',
+    shell: process.platform === 'win32',
+    cwd: ROOT,
+  });
+
+  if (result.error) throw result.error;
+
+  if (result.status === 0) {
+    const tagCommit = captureCommand(
+      'git',
+      ['rev-parse', `${tag}^{}`],
+      `Resolving existing tag ${tag}`,
+    );
+    const head = captureCommand('git', ['rev-parse', 'HEAD'], 'Resolving HEAD');
+
+    if (tagCommit !== head) {
+      throw new Error(`Release tag ${tag} already exists on a different commit`);
+    }
+
+    console.log(`  Tag ${tag} already points to HEAD; retry can be idempotent.`);
+  }
 }
 
 function getChangesetReleaseType() {
@@ -88,16 +119,18 @@ function getChangesetReleaseType() {
       throw new Error('Invalid Changesets release status');
     }
 
-    const releaseTypes = status.releases
+    const types = status.releases
       .map((release) => release.type)
-      .filter((type) => type === 'major' || type === 'minor' || type === 'patch');
+      .filter((type) => ['major', 'minor', 'patch'].includes(type));
 
-    if (releaseTypes.length === 0) {
-      throw new Error('Changesets release plan contains no versioned releases');
+    if (types.length === 0) {
+      throw new Error(
+        'Changesets has no versioned releases. Check that the changesets target packages eligible for versioning.',
+      );
     }
 
-    if (releaseTypes.includes('major')) return 'major';
-    if (releaseTypes.includes('minor')) return 'minor';
+    if (types.includes('major')) return 'major';
+    if (types.includes('minor')) return 'minor';
     return 'patch';
   } finally {
     if (existsSync(outputPath)) rmSync(outputPath, { force: true });
@@ -106,11 +139,11 @@ function getChangesetReleaseType() {
 
 function calculateNextRootVersion(currentVersion, releaseType) {
   const nextVersion = inc(currentVersion, releaseType);
+
   if (!nextVersion) {
-    throw new Error(
-      `Unable to calculate next root version from ${currentVersion} using ${releaseType}`,
-    );
+    throw new Error(`Unable to calculate next root version from ${currentVersion}`);
   }
+
   return nextVersion;
 }
 
@@ -119,26 +152,19 @@ function synchronizeRootVersion(previousVersion, expectedVersion) {
   rootPackage.version = expectedVersion;
   writeRootPackage(rootPackage);
 
-  const updatedVersion = getRootVersion();
-  if (updatedVersion !== expectedVersion) {
+  const actualVersion = getRootVersion();
+
+  if (actualVersion !== expectedVersion || actualVersion === previousVersion) {
     throw new Error(
-      `Root package version mismatch. Expected ${expectedVersion}, found ${updatedVersion}`,
+      `Root version synchronization failed: expected ${expectedVersion}, found ${actualVersion}`,
     );
   }
-  if (updatedVersion === previousVersion) {
-    throw new Error(`Root package version was not updated. Current version: ${updatedVersion}`);
-  }
 
-  console.log(`  Root EE version synchronized: ${previousVersion} → ${updatedVersion}`);
-}
-
-function assertCleanWorkingTree() {
-  const status = captureCommand('git', ['status', '--porcelain'], 'Checking Git working tree');
-  if (status !== '') throw new Error('Working directory is not clean');
+  console.log(`  Root version: ${previousVersion} → ${actualVersion}`);
 }
 
 function stageReleaseChanges() {
-  // Stage modifications/deletions of tracked files, never arbitrary untracked build output.
+  // Stage tracked version/changelog changes only; never stage everything blindly.
   execCommand('git', ['add', '-u'], 'Staging tracked release changes');
 
   const untracked = captureCommand(
@@ -146,18 +172,20 @@ function stageReleaseChanges() {
     ['ls-files', '--others', '--exclude-standard'],
     'Checking untracked files',
   );
+
   const allowedUntracked = untracked
     ? untracked
         .split(/\r?\n/)
         .filter((file) => file === 'CHANGELOG.md' || file.endsWith('/CHANGELOG.md'))
     : [];
-  const unexpectedUntracked = untracked
+
+  const unexpected = untracked
     ? untracked.split(/\r?\n/).filter((file) => !allowedUntracked.includes(file))
     : [];
 
-  if (unexpectedUntracked.length > 0) {
+  if (unexpected.length > 0) {
     throw new Error(
-      `Unexpected untracked files after versioning/build; refusing to stage them:\n${unexpectedUntracked.join('\n')}`,
+      `Unexpected untracked files after versioning; refusing to stage them:\n${unexpected.join('\n')}`,
     );
   }
 
@@ -172,98 +200,245 @@ function stageReleaseChanges() {
     ['status', '--porcelain'],
     'Verifying staged release changes',
   );
-  const unstagedOrUntracked = status
+
+  const unstaged = status
     .split(/\r?\n/)
     .filter(Boolean)
     .filter((line) => line.startsWith('??') || line[1] !== ' ');
 
-  if (unstagedOrUntracked.length > 0) {
+  if (unstaged.length > 0) {
+    throw new Error(`Release tree has unstaged or untracked changes:\n${unstaged.join('\n')}`);
+  }
+
+  if (!status) {
+    throw new Error('Versioning produced no Git changes to commit');
+  }
+}
+
+function prepareRelease() {
+  const branch = getCurrentBranch();
+
+  if (!DEFAULT_BRANCHES.has(branch)) {
+    throw new Error(`Run prepare from main/master; current branch is "${branch}"`);
+  }
+
+  assertCleanWorkingTree();
+
+  const changesets = listChangesetFiles(ROOT);
+
+  if (changesets.length === 0) {
     throw new Error(
-      `Release tree contains unstaged or untracked changes:\n${unstagedOrUntracked.join('\n')}`,
+      'No Changesets found. Create one with `pnpm changeset` and merge it to main first.',
     );
   }
 
-  if (!status) throw new Error('Versioning produced no Git changes to commit');
-}
+  const previousVersion = getRootVersion();
+  const releaseType = getChangesetReleaseType();
+  const nextVersion = calculateNextRootVersion(previousVersion, releaseType);
+  const tag = `v${nextVersion}`;
+  const releaseBranch = `release/${tag}`;
 
-async function main() {
-  console.log('📦 EE-LABS Release Process');
-  console.log('===========================\n');
+  assertNoTagConflict(tag);
 
-  try {
-    console.log('✓ Checking branch...');
-    const currentBranch = captureCommand(
-      'git',
-      ['branch', '--show-current'],
-      'Reading current branch',
-    );
-    if (currentBranch !== 'main' && currentBranch !== 'master') {
-      throw new Error(`Releases must be done from main/master branch (current: ${currentBranch})`);
-    }
-    console.log(`  Branch: ${currentBranch}\n`);
-
-    console.log('✓ Checking working directory...');
-    assertCleanWorkingTree();
-    console.log('  Clean: ✅\n');
-
-    console.log('✓ Checking changesets...');
-    const changesetInfo = checkChangesets();
-    if (!changesetInfo.exists || changesetInfo.count === 0) {
-      throw new Error('No changesets found. Run `pnpm changeset` first');
-    }
-    console.log(`  Changesets: ${changesetInfo.count}\n`);
-
-    console.log('✓ Checking npm authentication...');
-    const npmUser = captureCommand('npm', ['whoami'], 'Checking npm authentication');
-    console.log(`  Logged in as: ${npmUser}\n`);
-
-    const previousRootVersion = getRootVersion();
-    console.log(`✓ Current EE version: ${previousRootVersion}\n`);
-
-    console.log('🔎 Determining EE version from Changesets...');
-    const releaseType = getChangesetReleaseType();
-    const expectedRootVersion = calculateNextRootVersion(previousRootVersion, releaseType);
-    console.log(`  Release type: ${releaseType}`);
-    console.log(`  Expected EE version: ${expectedRootVersion}\n`);
-
-    console.log('📝 Versioning packages...');
-    execCommand('pnpm', ['version-packages'], 'Versioning');
-    synchronizeRootVersion(previousRootVersion, expectedRootVersion);
-
-    console.log('\n🔍 Running validations...');
-    execCommand('pnpm', ['validate'], 'Validation');
-    execCommand('pnpm', ['run', 'build'], 'Building packages');
-
-    const rootVersion = getRootVersion();
-    const tag = `v${rootVersion}`;
-    const existingTag = spawnSync('git', ['rev-parse', '--verify', '--quiet', `refs/tags/${tag}`], {
+  const branchCheck = spawnSync(
+    'git',
+    ['show-ref', '--verify', '--quiet', `refs/heads/${releaseBranch}`],
+    {
       stdio: 'ignore',
       shell: process.platform === 'win32',
       cwd: ROOT,
-    });
-    if (existingTag.status === 0) throw new Error(`Release tag already exists: ${tag}`);
+    },
+  );
 
-    console.log('\n📌 Preparing release commit and tag before publication...');
-    stageReleaseChanges();
-    execCommand('git', ['commit', '-m', `chore(release): ${tag}`], 'Creating release commit');
-    execCommand('git', ['tag', '-a', tag, '-m', `Release ${tag}`], 'Creating release tag');
+  if (branchCheck.status === 0) {
+    throw new Error(`Local branch ${releaseBranch} already exists; inspect it before retrying`);
+  }
 
-    console.log('\n📤 Publishing public packages to npm...');
-    console.log('  Packages marked private: true are excluded from publication.');
-    execCommand('pnpm', ['-r', 'publish', '--access', 'public'], 'Publishing');
+  console.log(`\nPreparing ${tag} on ${releaseBranch}`);
+  console.log(`  Changesets: ${changesets.length}`);
+  console.log(`  Release type: ${releaseType}`);
 
-    console.log('\n🚀 Pushing release commit and tag...');
-    execCommand('git', ['push', '--follow-tags'], 'Pushing release');
+  execCommand('git', ['switch', '-c', releaseBranch], 'Creating release branch');
+  execCommand('pnpm', ['version-packages'], 'Applying Changesets versions');
+  synchronizeRootVersion(previousVersion, nextVersion);
 
-    console.log(`\n✅ Release ${tag} completed successfully!`);
-    console.log('📚 Changelog available in CHANGELOG.md');
-  } catch (error) {
-    console.error('❌ Release failed:', error instanceof Error ? error.message : String(error));
-    console.error(
-      'If publication failed after the local release commit/tag was created, do not rerun versioning blindly. Inspect `git status`, `git log -1`, and `git tag`; resume publication/push deliberately.',
+  execCommand('pnpm', ['validate'], 'Running validation');
+  execCommand('pnpm', ['run', 'build'], 'Building workspaces');
+
+  stageReleaseChanges();
+  execCommand(
+    'git',
+    ['commit', '-m', `chore(release): ${tag}`],
+    'Creating release preparation commit',
+  );
+
+  console.log('\nRelease preparation completed.');
+  console.log(`  Branch: ${releaseBranch}`);
+  console.log(`  Next step: push the branch and open a PR to main.`);
+  console.log('  Publication and tag creation happen only after that PR is merged.');
+}
+
+function readWorkspacePackageList() {
+  const output = captureCommand(
+    'pnpm',
+    ['list', '--recursive', '--depth', '-1', '--json'],
+    'Discovering workspace packages',
+  );
+
+  const entries = JSON.parse(output);
+
+  if (!Array.isArray(entries) || entries.length === 0) {
+    throw new Error('pnpm returned an empty or invalid workspace package list');
+  }
+
+  return entries.map((entry) => {
+    if (typeof entry.path !== 'string' || !entry.path) {
+      throw new Error(`Workspace entry has no valid path: ${JSON.stringify(entry)}`);
+    }
+
+    const workspacePath = isAbsolute(entry.path) ? relative(ROOT, entry.path) : entry.path;
+
+    if (
+      workspacePath === '..' ||
+      workspacePath.startsWith(`..${process.platform === 'win32' ? '\\' : '/'}`)
+    ) {
+      throw new Error(`Workspace path escapes the repository root: ${entry.path}`);
+    }
+
+    return { ...entry, path: workspacePath };
+  });
+}
+
+function registryHasVersion(name, version) {
+  const validPackageName = /^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/;
+
+  if (!validPackageName.test(name) || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
+    throw new Error(`Invalid package coordinate: ${name}@${version}`);
+  }
+
+  const result = spawnSync('npm', ['view', `${name}@${version}`, 'version', '--json'], {
+    encoding: 'utf-8',
+    shell: process.platform === 'win32',
+    cwd: ROOT,
+  });
+
+  if (result.error) throw result.error;
+  if (result.status === 0) return true;
+
+  const output = `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
+
+  // Only a definitive registry 404 means the version is absent.
+  // Authentication, network, and registry errors must stop the release.
+  if (/\bE404\b|404 Not Found|is not in this registry/i.test(output)) {
+    return false;
+  }
+
+  throw new Error(`Unable to check npm registry for ${name}@${version}:\n${output.trim()}`);
+}
+
+function createTag(tag) {
+  const existing = spawnSync('git', ['rev-parse', '--verify', '--quiet', `refs/tags/${tag}`], {
+    stdio: 'ignore',
+    shell: process.platform === 'win32',
+    cwd: ROOT,
+  });
+
+  if (existing.error) throw existing.error;
+
+  if (existing.status === 0) {
+    const taggedCommit = captureCommand('git', ['rev-parse', `${tag}^{}`], 'Checking existing tag');
+    const head = captureCommand('git', ['rev-parse', 'HEAD'], 'Checking current commit');
+
+    if (taggedCommit !== head) {
+      throw new Error(`Refusing to reuse ${tag}: it points to a different commit`);
+    }
+
+    console.log(`  Tag ${tag} already exists on HEAD; skipping tag creation.`);
+    return;
+  }
+
+  execCommand('git', ['tag', '-a', tag, '-m', `Release ${tag}`], `Creating tag ${tag}`);
+}
+
+async function publishRelease() {
+  const branch = getCurrentBranch();
+
+  if (!DEFAULT_BRANCHES.has(branch)) {
+    throw new Error(`Publication must run on main/master; current branch is "${branch}"`);
+  }
+
+  assertCleanWorkingTree();
+
+  const version = getRootVersion();
+  const tag = `v${version}`;
+
+  // Detect a conflicting tag before any registry publication.
+  assertNoTagConflict(tag);
+
+  const workspaceList = readWorkspacePackageList();
+  const packages = readWorkspacePackages(ROOT, workspaceList);
+
+  const published = await publishThenTag({
+    validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
+    build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
+    packages,
+    registryHasVersion,
+    publish: async (pkg) => {
+      if (!process.env.NODE_AUTH_TOKEN && !process.env.NPM_TOKEN) {
+        throw new Error(
+          `Cannot publish ${pkg.name}@${pkg.version}: configure npm trusted publishing or NODE_AUTH_TOKEN/NPM_TOKEN.`,
+        );
+      }
+
+      console.log(`\nPublishing ${pkg.name}@${pkg.version}`);
+      execCommand(
+        'pnpm',
+        ['--filter', pkg.name, 'publish', '--access', 'public', '--no-git-checks'],
+        `Publishing ${pkg.name}@${pkg.version}`,
+      );
+    },
+    createTag: () => createTag(tag),
+  });
+
+  console.log('\nRelease publication completed.');
+  console.log(`  Version: ${version}`);
+  console.log(`  Tag: ${tag}`);
+  console.log(`  Newly published packages: ${published.published.length}`);
+
+  if (published.published.length === 0) {
+    console.log('  No eligible package versions were missing from the registry.');
+  }
+
+  console.log(`\nPush the tag only after this command succeeds:\n  git push origin ${tag}`);
+}
+
+async function main() {
+  const mode = process.argv[2];
+
+  try {
+    console.log('EE-LABS Release');
+    console.log('===============\n');
+
+    if (mode === 'prepare') {
+      prepareRelease();
+      return;
+    }
+
+    if (mode === 'publish') {
+      await publishRelease();
+      return;
+    }
+
+    throw new Error(
+      'Specify a mode: `pnpm run release -- prepare` (local release PR) or `pnpm run release -- publish` (post-merge publication).',
     );
-    process.exit(1);
+  } catch (error) {
+    console.error('\nRelease failed:', error instanceof Error ? error.message : String(error));
+    console.error(
+      'Do not rerun versioning blindly. Inspect the branch, working tree, registry versions, and tag before recovery.',
+    );
+    process.exitCode = 1;
   }
 }
 
-main();
+await main();
