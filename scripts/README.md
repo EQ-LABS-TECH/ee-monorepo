@@ -63,6 +63,21 @@ documentation derived from that contract — not an independent source of truth.
 | `changeset`        | `@changesets/cli`            | A-REL    | Declare SemVer changes (no file under `scripts/`)    |
 | `version-packages` | `changeset version`          | A-REL    | Apply package versions (no file under `scripts/`)    |
 
+### Release workflow
+
+The canonical release command supports two explicit modes:
+
+- `pnpm run release -- prepare`: run locally from a clean `main`/`master` checkout with merged Changesets. It creates a `release/vX.Y.Z` branch, applies Changesets versioning, synchronizes the root version, runs validation and build, and commits only identified release changes. The operator pushes the branch and opens a PR using the normal GitHub review process.
+- `pnpm run release -- publish`: post-merge operation. It must run on `main`/`master`, verifies the working tree is clean, runs validation and build, checks workspace package privacy and exact-version registry state, publishes missing eligible versions, and creates the annotated release tag last.
+
+The `.github/workflows/release.yml` workflow invokes `publish` after a push to `main` when the root package version changes. It pushes the tag only after the command succeeds.
+
+Publication eligibility is based on effective package metadata and registry state, not on the presence of Changeset files: a package must not be private, and its exact `name@version` must not already exist in the npm registry. Registry errors other than a definitive missing-version response stop the release.
+
+Retries must be idempotent: already published package versions are skipped; a tag already pointing to the current commit is reused; a tag pointing to another commit is a hard error. Do not rerun versioning blindly after a failed release.
+
+The release workflow requires the GitHub tag-push permission declared in its workflow. npm credentials are needed only when at least one eligible package must be published. Configure npm Trusted Publishing with OIDC if supported by the chosen publishing mechanism; otherwise configure `NPM_TOKEN` as a repository secret before publishing public packages.
+
 ### Format write vs check
 
 - `pnpm run format` rewrites files (local convenience).

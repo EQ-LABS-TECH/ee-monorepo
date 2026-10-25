@@ -1,0 +1,81 @@
+# EE-LABS release publication — governed by EE-DOC-007 and EE-DOC-011
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Detect root version change
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if ! git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          previous_version="$(
+            git show HEAD^:package.json |
+              node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>process.stdout.write(JSON.parse(s).version))"
+          )"
+          current_version="$(node -p "require('./package.json').version")"
+
+          if [[ "$previous_version" != "$current_version" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Root version changed: $previous_version -> $current_version"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Root version unchanged; skipping release publication."
+          fi
+
+      - name: Setup pnpm
+        if: steps.release.outputs.changed == 'true'
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+
+      - name: Setup Node.js
+        if: steps.release.outputs.changed == 'true'
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        if: steps.release.outputs.changed == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Publish eligible package versions and create tag
+        if: steps.release.outputs.changed == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm run release -- publish
+
+      - name: Push release tag
+        if: steps.release.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          git push origin "v${version}"
