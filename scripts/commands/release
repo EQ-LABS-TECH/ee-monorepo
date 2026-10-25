@@ -2,9 +2,10 @@
 
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { join, relative } from 'node:path';
 import { inc } from 'semver';
 import {
+  assertRemoteTagAbsent,
+  classifyRegistryVersionLookup,
   listChangesetFiles,
   publishThenTag,
   readWorkspacePackages,
@@ -60,6 +61,35 @@ function getRootVersion() {
   }
 
   return version;
+}
+
+function getRemoteTagRefs(tag) {
+  const result = spawnSync(
+    'git',
+    ['ls-remote', '--tags', 'origin', `refs/tags/${tag}`, `refs/tags/${tag}^{}`],
+    {
+      encoding: 'utf-8',
+      shell: false,
+      cwd: ROOT,
+    },
+  );
+
+  if (result.error || result.status !== 0) {
+    throw new Error(
+      `Unable to check remote tag ${tag}: ${
+        result.error?.message ?? result.stderr?.trim() ?? 'git ls-remote failed'
+      }`,
+    );
+  }
+
+  return result.stdout.trim();
+}
+
+function assertRemoteTagDoesNotExist(tag) {
+  assertRemoteTagAbsent({
+    tag,
+    remoteTagRefs: getRemoteTagRefs,
+  });
 }
 
 function assertCleanWorkingTree() {
@@ -322,18 +352,15 @@ function registryHasVersion(name, version) {
     cwd: ROOT,
   });
 
-  if (result.error) throw result.error;
-  if (result.status === 0) return true;
-
-  const output = `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
-
-  // Only a definitive registry 404 means the version is absent.
-  // Authentication, network, and registry errors must stop the release.
-  if (/\bE404\b|404 Not Found|is not in this registry/i.test(output)) {
-    return false;
+  if (result.error) {
+    throw result.error;
   }
 
-  throw new Error(`Unable to check npm registry for ${name}@${version}:\n${output.trim()}`);
+  return classifyRegistryVersionLookup({
+    status: result.status,
+    stdout: result.stdout ?? '',
+    stderr: result.stderr ?? '',
+  });
 }
 
 function createTag(tag) {
@@ -360,6 +387,29 @@ function createTag(tag) {
   execCommand('git', ['tag', '-a', tag, '-m', `Release ${tag}`], `Creating tag ${tag}`);
 }
 
+async function verifyPublishedVersion(pkg) {
+  const maxAttempts = 6;
+  const retryDelayMs = 5000;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    if (registryHasVersion(pkg.name, pkg.version)) {
+      console.log(`  Verified ${pkg.name}@${pkg.version} in npm registry.`);
+      return;
+    }
+
+    if (attempt < maxAttempts) {
+      console.log(
+        `  ${pkg.name}@${pkg.version} not visible in registry yet; retrying (${attempt}/${maxAttempts}).`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+    }
+  }
+
+  throw new Error(
+    `Published version ${pkg.name}@${pkg.version} was not found in the npm registry after ${maxAttempts} attempts. Refusing to create the release tag.`,
+  );
+}
+
 async function publishRelease() {
   const branch = getCurrentBranch();
 
@@ -372,7 +422,7 @@ async function publishRelease() {
   const version = getRootVersion();
   const tag = `v${version}`;
 
-  // Detect a conflicting tag before any registry publication.
+  // Check local and remote tag conflicts before any registry publication.
   assertNoTagConflict(tag);
 
   const workspaceList = readWorkspacePackageList();
@@ -383,6 +433,7 @@ async function publishRelease() {
     build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
     packages,
     registryHasVersion,
+    preflight: () => assertRemoteTagDoesNotExist(tag),
     publish: async (pkg) => {
       if (!process.env.NODE_AUTH_TOKEN && !process.env.NPM_TOKEN) {
         throw new Error(
@@ -397,6 +448,7 @@ async function publishRelease() {
         `Publishing ${pkg.name}@${pkg.version}`,
       );
     },
+    verifyPublished: verifyPublishedVersion,
     createTag: () => createTag(tag),
   });
 
