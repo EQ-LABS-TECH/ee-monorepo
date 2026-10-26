@@ -28,6 +28,77 @@ export function assertRemoteTagAbsent({ tag, remoteTagRefs }) {
   }
 }
 
+/**
+ * Classify a remote release tag without mutating the repository.
+ *
+ * remoteTagRefs must return the raw output of:
+ *   git ls-remote --tags origin refs/tags/vX.Y.Z refs/tags/vX.Y.Z^{}
+ *
+ * For annotated tags, the peeled ref (^{}) identifies the target commit.
+ * For lightweight tags, the direct ref is the target commit.
+ */
+export function inspectRemoteReleaseTag({ tag, remoteTagRefs, expectedCommit }) {
+  if (typeof tag !== 'string' || !/^v\d+\.\d+\.\d+$/.test(tag)) {
+    throw new Error(`Invalid release tag: ${tag}`);
+  }
+
+  if (typeof remoteTagRefs !== 'function') {
+    throw new TypeError('remoteTagRefs must be a function');
+  }
+
+  if (typeof expectedCommit !== 'string' || !/^[0-9a-f]{40}$/.test(expectedCommit)) {
+    throw new Error('expectedCommit must be a full Git commit SHA');
+  }
+
+  const output = remoteTagRefs(tag);
+
+  if (typeof output !== 'string') {
+    throw new TypeError('remoteTagRefs must return a string');
+  }
+
+  const refs = new Map();
+
+  for (const line of output.split(/\r?\n/).filter(Boolean)) {
+    const match = line.match(/^([0-9a-f]{40})\s+(refs\/tags\/.+)$/);
+
+    if (!match) {
+      throw new Error(`Unable to parse remote tag reference: ${line}`);
+    }
+
+    refs.set(match[2], match[1]);
+  }
+
+  const directRef = `refs/tags/${tag}`;
+  const peeledRef = `${directRef}^{}`;
+  const direct = refs.get(directRef);
+  const peeled = refs.get(peeledRef);
+
+  if (!direct) {
+    if (peeled) {
+      throw new Error(`Remote tag ${tag} has a peeled ref but no direct ref`);
+    }
+
+    return { state: 'absent' };
+  }
+
+  // For an annotated tag, use the peeled commit. For a lightweight tag,
+  // the direct ref is already the commit SHA.
+  const targetCommit = peeled ?? direct;
+
+  if (targetCommit !== expectedCommit) {
+    return {
+      state: 'conflict',
+      targetCommit,
+      expectedCommit,
+    };
+  }
+
+  return {
+    state: 'matches',
+    targetCommit,
+  };
+}
+
 /** Read workspace manifests from pnpm's workspace package list. */
 export function readWorkspacePackages(root, workspaceList) {
   if (!Array.isArray(workspaceList)) throw new TypeError('workspaceList must be an array');

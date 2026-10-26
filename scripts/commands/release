@@ -6,6 +6,7 @@ import { inc } from 'semver';
 import {
   assertRemoteTagAbsent,
   classifyRegistryVersionLookup,
+  inspectRemoteReleaseTag,
   listChangesetFiles,
   publishThenTag,
   readWorkspacePackages,
@@ -421,19 +422,72 @@ async function publishRelease() {
 
   const version = getRootVersion();
   const tag = `v${version}`;
+  const head = captureCommand('git', ['rev-parse', 'HEAD'], 'Resolving release commit');
 
-  // Check local and remote tag conflicts before any registry publication.
   assertNoTagConflict(tag);
 
   const workspaceList = readWorkspacePackageList();
   const packages = readWorkspacePackages(ROOT, workspaceList);
 
+  const inspectTag = () =>
+    inspectRemoteReleaseTag({
+      tag,
+      expectedCommit: head,
+      remoteTagRefs: getRemoteTagRefs,
+    });
+
+  // Recovery path: a remote tag is only considered complete if it points
+  // to this exact commit and every non-private package version is in npm.
+  const remoteState = inspectTag();
+
+  if (remoteState.state === 'conflict') {
+    throw new Error(
+      `Remote release tag ${tag} points to ${remoteState.targetCommit}, not HEAD ${head}. Refusing to publish or move the tag.`,
+    );
+  }
+
+  if (remoteState.state === 'matches') {
+    await execCommand('pnpm', ['validate'], 'Running validation');
+    await execCommand('pnpm', ['run', 'build'], 'Building workspaces');
+
+    const publicPackages = packages.filter((pkg) => pkg.private !== true);
+    const missingVersions = [];
+
+    for (const pkg of publicPackages) {
+      if (!registryHasVersion(pkg.name, pkg.version)) {
+        missingVersions.push(`${pkg.name}@${pkg.version}`);
+      }
+    }
+
+    if (missingVersions.length > 0) {
+      throw new Error(
+        `Remote tag ${tag} already points to HEAD, but these package versions are missing from npm: ${missingVersions.join(', ')}. Refusing to move the tag or silently republish.`,
+      );
+    }
+
+    console.log('\nRelease already completed; verified existing remote tag and package versions.');
+    console.log(`  Version: ${version}`);
+    console.log(`  Tag: ${tag}`);
+    console.log(`  Verified public package versions: ${publicPackages.length}`);
+    return;
+  }
+
+  // Re-check immediately before publication to reduce the chance of racing
+  // another release process. An unexpected remote state fails closed.
   const published = await publishThenTag({
     validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
     build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
     packages,
     registryHasVersion,
-    preflight: () => assertRemoteTagDoesNotExist(tag),
+    preflight: () => {
+      const state = inspectTag();
+
+      if (state.state !== 'absent') {
+        throw new Error(
+          `Remote tag ${tag} changed during release preflight (state: ${state.state}). Inspect remote release state before retrying.`,
+        );
+      }
+    },
     publish: async (pkg) => {
       if (!process.env.NODE_AUTH_TOKEN && !process.env.NPM_TOKEN) {
         throw new Error(

@@ -4,6 +4,7 @@ import {
   assertRemoteTagAbsent,
   classifyRegistryVersionLookup,
   getEligiblePackages,
+  inspectRemoteReleaseTag,
   publishThenTag,
 } from '../lib/release-integrity.mjs';
 
@@ -364,5 +365,81 @@ test('registry lookup fails closed on unknown errors', () => {
         stderr: 'unexpected registry response',
       }),
     /Unable to check npm registry/,
+  );
+});
+
+const expectedReleaseCommit = '0123456789abcdef0123456789abcdef01234567';
+const otherReleaseCommit = 'abcdef0123456789abcdef0123456789abcdef01';
+
+test('remote release tag is absent when ls-remote returns no refs', () => {
+  assert.deepEqual(
+    inspectRemoteReleaseTag({
+      tag: 'v1.2.3',
+      remoteTagRefs: () => '',
+      expectedCommit: expectedReleaseCommit,
+    }),
+    { state: 'absent' },
+  );
+});
+
+test('remote lightweight tag matches when it points to the expected commit', () => {
+  assert.deepEqual(
+    inspectRemoteReleaseTag({
+      tag: 'v1.2.3',
+      remoteTagRefs: () => `${expectedReleaseCommit}\trefs/tags/v1.2.3`,
+      expectedCommit: expectedReleaseCommit,
+    }),
+    {
+      state: 'matches',
+      targetCommit: expectedReleaseCommit,
+    },
+  );
+});
+
+test('remote annotated tag matches by its peeled commit', () => {
+  const tagObject = 'abcdef0123456789abcdef0123456789abcdef01';
+
+  assert.deepEqual(
+    inspectRemoteReleaseTag({
+      tag: 'v1.2.3',
+      remoteTagRefs: () =>
+        [`${tagObject}\trefs/tags/v1.2.3`, `${expectedReleaseCommit}\trefs/tags/v1.2.3^{}`].join(
+          '\n',
+        ),
+      expectedCommit: expectedReleaseCommit,
+    }),
+    {
+      state: 'matches',
+      targetCommit: expectedReleaseCommit,
+    },
+  );
+});
+
+test('remote tag on another commit is classified as a conflict', () => {
+  assert.deepEqual(
+    inspectRemoteReleaseTag({
+      tag: 'v1.2.3',
+      remoteTagRefs: () => `${otherReleaseCommit}\trefs/tags/v1.2.3`,
+      expectedCommit: expectedReleaseCommit,
+    }),
+    {
+      state: 'conflict',
+      targetCommit: otherReleaseCommit,
+      expectedCommit: expectedReleaseCommit,
+    },
+  );
+});
+
+test('remote tag inspection fails closed on remote errors', () => {
+  assert.throws(
+    () =>
+      inspectRemoteReleaseTag({
+        tag: 'v1.2.3',
+        remoteTagRefs: () => {
+          throw new Error('remote authentication failed');
+        },
+        expectedCommit: expectedReleaseCommit,
+      }),
+    /remote authentication failed/,
   );
 });

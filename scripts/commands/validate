@@ -359,6 +359,8 @@ const validations = [
     args: ['scripts/lib/run-script-tests.mjs'],
     label: 'Script tests',
     critical: true,
+    requireGateContract: true,
+    expectedGateId: 'QG-SCRIPTS-001',
   },
   {
     cmd: 'node',
