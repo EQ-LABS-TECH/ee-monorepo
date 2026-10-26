@@ -6,10 +6,13 @@ import { inc } from 'semver';
 import {
   assertRemoteTagAbsent,
   classifyRegistryVersionLookup,
+  createReleaseManifest,
   inspectRemoteReleaseTag,
   listChangesetFiles,
+  parseChangesetReleaseStatus,
   publishThenTag,
   readWorkspacePackages,
+  validateReleaseManifest,
   verifyCompletedRelease,
 } from '../lib/release-integrity.mjs';
 import { isAbsolute, join, relative } from 'node:path';
@@ -145,25 +148,7 @@ function getChangesetReleaseType() {
       throw new Error('Changesets did not generate the release status file');
     }
 
-    const status = JSON.parse(readFileSync(outputPath, 'utf-8'));
-
-    if (!status || !Array.isArray(status.releases)) {
-      throw new Error('Invalid Changesets release status');
-    }
-
-    const types = status.releases
-      .map((release) => release.type)
-      .filter((type) => ['major', 'minor', 'patch'].includes(type));
-
-    if (types.length === 0) {
-      throw new Error(
-        'Changesets has no versioned releases. Check that the changesets target packages eligible for versioning.',
-      );
-    }
-
-    if (types.includes('major')) return 'major';
-    if (types.includes('minor')) return 'minor';
-    return 'patch';
+    return parseChangesetReleaseStatus(JSON.parse(readFileSync(outputPath, 'utf-8')));
   } finally {
     if (existsSync(outputPath)) rmSync(outputPath, { force: true });
   }
@@ -208,7 +193,12 @@ function stageReleaseChanges() {
   const allowedUntracked = untracked
     ? untracked
         .split(/\r?\n/)
-        .filter((file) => file === 'CHANGELOG.md' || file.endsWith('/CHANGELOG.md'))
+        .filter(
+          (file) =>
+            file === 'CHANGELOG.md' ||
+            file.endsWith('/CHANGELOG.md') ||
+            file === 'scripts/release-manifest.json',
+        )
     : [];
 
   const unexpected = untracked
@@ -265,8 +255,9 @@ function prepareRelease() {
   }
 
   const previousVersion = getRootVersion();
-  const releaseType = getChangesetReleaseType();
-  const nextVersion = calculateNextRootVersion(previousVersion, releaseType);
+  const baseCommit = captureCommand('git', ['rev-parse', 'HEAD'], 'Capturing release base commit');
+  const releasePlan = getChangesetReleaseType();
+  const nextVersion = calculateNextRootVersion(previousVersion, releasePlan.releaseType);
   const tag = `v${nextVersion}`;
   const releaseBranch = `release/${tag}`;
 
@@ -288,11 +279,31 @@ function prepareRelease() {
 
   console.log(`\nPreparing ${tag} on ${releaseBranch}`);
   console.log(`  Changesets: ${changesets.length}`);
-  console.log(`  Release type: ${releaseType}`);
+  console.log(`  Release type: ${releasePlan.releaseType}`);
 
   execCommand('git', ['switch', '-c', releaseBranch], 'Creating release branch');
   execCommand('pnpm', ['version-packages'], 'Applying Changesets versions');
   synchronizeRootVersion(previousVersion, nextVersion);
+
+  const workspacePackages = readWorkspacePackages(ROOT, readWorkspacePackageList());
+  const manifest = createReleaseManifest({
+    baseVersion: previousVersion,
+    targetVersion: nextVersion,
+    baseCommit,
+    changesetIds: releasePlan.changesetIds,
+    packages: workspacePackages,
+  });
+
+  writeFileSync(
+    join(ROOT, 'scripts/release-manifest.json'),
+    `${JSON.stringify(manifest, null, 2)}\n`,
+    'utf-8',
+  );
+
+  validateReleaseManifest(manifest, {
+    expectedVersion: getRootVersion(),
+    workspacePackages,
+  });
 
   execCommand('pnpm', ['validate'], 'Running validation');
   execCommand('pnpm', ['run', 'build'], 'Building workspaces');
@@ -429,6 +440,25 @@ async function publishRelease() {
 
   const workspaceList = readWorkspacePackageList();
   const packages = readWorkspacePackages(ROOT, workspaceList);
+
+  const manifestPath = join(ROOT, 'scripts/release-manifest.json');
+
+  if (!existsSync(manifestPath)) {
+    throw new Error('Release manifest is missing; refusing to publish or create a tag.');
+  }
+
+  let manifest;
+
+  try {
+    manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+  } catch {
+    throw new Error('Release manifest is not valid JSON; refusing to publish or create a tag.');
+  }
+
+  validateReleaseManifest(manifest, {
+    expectedVersion: version,
+    workspacePackages: packages,
+  });
 
   const inspectTag = () =>
     inspectRemoteReleaseTag({

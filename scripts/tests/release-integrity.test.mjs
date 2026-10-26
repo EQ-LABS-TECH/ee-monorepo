@@ -1,13 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  assertPublicPackagesConfigured,
   assertRemoteTagAbsent,
   classifyRegistryVersionLookup,
+  createReleaseManifest,
   getEligiblePackages,
+  getPublicPackages,
   inspectRemoteReleaseTag,
   publishThenTag,
+  validateReleaseManifest,
   verifyCompletedRelease,
+  parseChangesetReleaseStatus,
 } from '../lib/release-integrity.mjs';
 
 const packages = [
@@ -16,9 +19,9 @@ const packages = [
   { name: '@eq-labs/private', version: '1.0.0', private: true },
 ];
 
-test('public package guard accepts public packages and excludes private packages', () => {
+test('public package selection excludes private packages', () => {
   assert.deepEqual(
-    assertPublicPackagesConfigured([
+    getPublicPackages([
       { name: '@eq-labs/public', version: '1.2.0', private: false },
       { name: '@eq-labs/private', version: '1.0.0', private: true },
     ]),
@@ -26,39 +29,48 @@ test('public package guard accepts public packages and excludes private packages
   );
 });
 
-test('public package guard rejects an all-private workspace', () => {
-  assert.throws(
-    () =>
-      assertPublicPackagesConfigured([
-        { name: '@eq-labs/private', version: '1.0.0', private: true },
-      ]),
-    /No public packages are configured/,
+test('public package selection accepts an all-private workspace', () => {
+  assert.deepEqual(
+    getPublicPackages([
+      { name: '@eq-labs/private-a', version: '1.0.0', private: true },
+      { name: '@eq-labs/private-b', version: '1.0.0', private: true },
+    ]),
+    [],
   );
 });
 
-test('public package guard rejects an empty workspace list', () => {
-  assert.throws(() => assertPublicPackagesConfigured([]), /No public packages are configured/);
+test('public package selection accepts an empty workspace list', () => {
+  assert.deepEqual(getPublicPackages([]), []);
 });
 
-test('completed release recovery rejects all-private workspaces before external operations', async () => {
+test('public package selection rejects a non-array workspace list', () => {
+  assert.throws(() => getPublicPackages(null), /packages must be an array/);
+});
+
+test('completed release recovery accepts all-private workspaces without registry lookups', async () => {
   const events = [];
 
-  await assert.rejects(
-    verifyCompletedRelease({
-      tag: 'v1.2.3',
-      version: '1.2.3',
-      packages: [{ name: '@eq-labs/private', version: '1.2.3', private: true }],
-      validate: async () => events.push('validate'),
-      build: async () => events.push('build'),
-      registryHasVersion: () => {
-        events.push('registry');
-        return true;
-      },
-    }),
-    /No public packages are configured/,
-  );
+  const result = await verifyCompletedRelease({
+    tag: 'v1.2.3',
+    version: '1.2.3',
+    packages: [
+      { name: '@eq-labs/private-a', version: '1.2.3', private: true },
+      { name: '@eq-labs/private-b', version: '1.2.3', private: true },
+    ],
+    validate: async () => events.push('validate'),
+    build: async () => events.push('build'),
+    registryHasVersion: () => {
+      events.push('registry');
+      return true;
+    },
+  });
 
-  assert.deepEqual(events, []);
+  assert.deepEqual(events, ['validate', 'build']);
+  assert.deepEqual(result, {
+    tag: 'v1.2.3',
+    version: '1.2.3',
+    publicPackages: [],
+  });
 });
 
 test('completed release recovery validates and verifies every public package', async () => {
@@ -219,23 +231,29 @@ test('retry skips an already published package after a partial release failure',
   assert.equal(registryHasVersion('@eq-labs/package-b', '1.2.0'), true);
 });
 
-test('release fails without creating a tag when every package is private', async () => {
+test('release completes without registry lookups or publication when every package is private', async () => {
   const events = [];
 
-  await assert.rejects(
-    publishThenTag({
-      validate: async () => events.push('validate'),
-      build: async () => events.push('build'),
-      packages: [packages[2]],
-      registryHasVersion: () => false,
-      publish: async () => events.push('publish'),
-      verifyPublished: async (pkg) => events.push(`verify:${pkg.name}`),
-      createTag: async () => events.push('tag'),
-    }),
-    /No public packages are configured/,
-  );
+  const result = await publishThenTag({
+    validate: async () => events.push('validate'),
+    build: async () => events.push('build'),
+    packages: [
+      { name: '@eq-labs/private-a', version: '1.2.3', private: true },
+      { name: '@eq-labs/private-b', version: '1.2.3', private: true },
+    ],
+    registryHasVersion: () => {
+      events.push('registry');
+      return false;
+    },
+    preflight: async () => events.push('preflight'),
+    publish: async (pkg) => events.push(`publish:${pkg.name}`),
+    verifyPublished: async (pkg) => events.push(`verify:${pkg.name}`),
+    createTag: async () => events.push('tag'),
+  });
 
-  assert.deepEqual(events, ['validate', 'build']);
+  assert.deepEqual(events, ['validate', 'build', 'preflight', 'tag']);
+
+  assert.deepEqual(result, { published: [] });
 });
 
 test('remote preflight failure prevents tag creation when no packages are eligible', async () => {
@@ -351,6 +369,32 @@ test('remote preflight failure prevents publication and tag creation', async () 
       },
       publish: async () => events.push('publish'),
       verifyPublished: async (pkg) => events.push(`verify:${pkg.name}`),
+      createTag: async () => events.push('tag'),
+    }),
+    /remote authentication failed/,
+  );
+
+  assert.deepEqual(events, ['validate', 'build', 'preflight']);
+});
+
+test('preflight failure prevents registry lookup, publication, and tag creation', async () => {
+  const events = [];
+
+  await assert.rejects(
+    publishThenTag({
+      validate: async () => events.push('validate'),
+      build: async () => events.push('build'),
+      packages: [{ name: '@eq-labs/public', version: '1.2.3', private: false }],
+      registryHasVersion: () => {
+        events.push('registry');
+        return false;
+      },
+      preflight: async () => {
+        events.push('preflight');
+        throw new Error('remote authentication failed');
+      },
+      publish: async () => events.push('publish'),
+      verifyPublished: async () => events.push('verify'),
       createTag: async () => events.push('tag'),
     }),
     /remote authentication failed/,
@@ -534,5 +578,187 @@ test('remote tag inspection fails closed on remote errors', () => {
         expectedCommit: expectedReleaseCommit,
       }),
     /remote authentication failed/,
+  );
+});
+
+test('Changesets status parses the actual changesets[].releases schema', () => {
+  assert.deepEqual(
+    parseChangesetReleaseStatus({
+      changesets: [
+        {
+          id: 'calm-exports-glow',
+          releases: [
+            { name: '@eq-labs/config-vitest', type: 'minor' },
+            { name: '@eq-labs/config-jest', type: 'minor' },
+          ],
+        },
+      ],
+      releases: [],
+    }),
+    {
+      releaseType: 'minor',
+      releases: [
+        { name: '@eq-labs/config-jest', type: 'minor' },
+        { name: '@eq-labs/config-vitest', type: 'minor' },
+      ],
+      changesetIds: ['calm-exports-glow'],
+    },
+  );
+});
+
+test('Changesets status selects the highest release type for duplicate packages', () => {
+  const result = parseChangesetReleaseStatus({
+    changesets: [
+      {
+        id: 'first-change',
+        releases: [{ name: '@eq-labs/example', type: 'patch' }],
+      },
+      {
+        id: 'second-change',
+        releases: [{ name: '@eq-labs/example', type: 'major' }],
+      },
+    ],
+  });
+
+  assert.deepEqual(result, {
+    releaseType: 'major',
+    releases: [{ name: '@eq-labs/example', type: 'major' }],
+    changesetIds: ['first-change', 'second-change'],
+  });
+});
+
+test('Changesets status rejects an empty release plan', () => {
+  assert.throws(
+    () => parseChangesetReleaseStatus({ changesets: [], releases: [] }),
+    /no package releases/,
+  );
+});
+
+test('Changesets status rejects invalid release types', () => {
+  assert.throws(
+    () =>
+      parseChangesetReleaseStatus({
+        changesets: [
+          {
+            id: 'invalid-release-type',
+            releases: [{ name: '@eq-labs/example', type: 'invalid' }],
+          },
+        ],
+      }),
+    /invalid package release entry/,
+  );
+});
+
+const manifestFixture = () =>
+  createReleaseManifest({
+    baseVersion: '1.0.0',
+    targetVersion: '1.1.0',
+    baseCommit: 'a'.repeat(40),
+    changesetIds: ['calm-exports-glow'],
+    packages: [
+      {
+        name: '@eq-labs/config-vitest',
+        version: '0.2.0',
+        private: true,
+      },
+      {
+        name: '@eq-labs/config-jest',
+        version: '0.2.0',
+        private: true,
+      },
+    ],
+  });
+
+test('release manifest is normalized and includes the real workspace inventory', () => {
+  const manifest = manifestFixture();
+
+  assert.equal(manifest.schemaVersion, 1);
+  assert.equal(manifest.releaseId, 'ee-v1.1.0');
+  assert.deepEqual(manifest.changesets, ['calm-exports-glow']);
+  assert.deepEqual(
+    manifest.packages.map(({ name }) => name),
+    ['@eq-labs/config-jest', '@eq-labs/config-vitest'],
+  );
+
+  assert.equal(
+    validateReleaseManifest(manifest, {
+      expectedVersion: '1.1.0',
+      workspacePackages: manifest.packages,
+    }),
+    manifest,
+  );
+});
+
+test('release manifest rejects a target version mismatch', () => {
+  assert.throws(
+    () =>
+      validateReleaseManifest(manifestFixture(), {
+        expectedVersion: '1.2.0',
+        workspacePackages: manifestFixture().packages,
+      }),
+    /does not match root version/,
+  );
+});
+
+test('release manifest rejects a workspace inventory mismatch', () => {
+  const manifest = manifestFixture();
+
+  assert.throws(
+    () =>
+      validateReleaseManifest(manifest, {
+        expectedVersion: '1.1.0',
+        workspacePackages: [
+          ...manifest.packages,
+          {
+            name: '@eq-labs/unexpected-package',
+            version: '1.0.0',
+            private: true,
+          },
+        ],
+      }),
+    /inventory does not match/,
+  );
+});
+
+test('release manifest rejects duplicate package entries', () => {
+  assert.throws(
+    () =>
+      createReleaseManifest({
+        baseVersion: '1.0.0',
+        targetVersion: '1.1.0',
+        baseCommit: 'a'.repeat(40),
+        changesetIds: ['calm-exports-glow'],
+        packages: [
+          { name: '@eq-labs/example', version: '1.1.0', private: true },
+          { name: '@eq-labs/example', version: '1.1.0', private: true },
+        ],
+      }),
+    /Duplicate package/,
+  );
+});
+
+test('release manifest rejects invalid base commit and empty Changesets', () => {
+  assert.throws(
+    () =>
+      createReleaseManifest({
+        baseVersion: '1.0.0',
+        targetVersion: '1.1.0',
+        baseCommit: 'not-a-sha',
+        changesetIds: ['calm-exports-glow'],
+        packages: [{ name: '@eq-labs/example', version: '1.1.0', private: true }],
+      }),
+    /base commit/,
+  );
+
+  assert.throws(
+    () =>
+      createReleaseManifest({
+        baseVersion: '1.0.0',
+        targetVersion: '1.1.0',
+        baseCommit: 'a'.repeat(40),
+        changesetIds: [],
+        packages: [{ name: '@eq-labs/example', version: '1.1.0', private: true }],
+      }),
+    /Changeset IDs/,
   );
 });

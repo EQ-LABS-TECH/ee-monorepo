@@ -1,6 +1,188 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+const VALID_RELEASE_TYPES = new Set(['patch', 'minor', 'major']);
+const RELEASE_TYPE_RANK = { patch: 0, minor: 1, major: 2 };
+
+export function parseChangesetReleaseStatus(status) {
+  if (!status || !Array.isArray(status.changesets)) {
+    throw new Error('Invalid Changesets release status');
+  }
+
+  const releaseTypes = new Map();
+  const changesetIds = [];
+
+  for (const changeset of status.changesets) {
+    if (
+      !changeset ||
+      typeof changeset.id !== 'string' ||
+      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(changeset.id) ||
+      !Array.isArray(changeset.releases)
+    ) {
+      throw new Error('Changesets returned an invalid changeset entry.');
+    }
+
+    changesetIds.push(changeset.id);
+
+    for (const release of changeset.releases) {
+      if (
+        !release ||
+        typeof release.name !== 'string' ||
+        !release.name.trim() ||
+        !VALID_RELEASE_TYPES.has(release.type)
+      ) {
+        throw new Error('Changesets returned an invalid package release entry.');
+      }
+
+      const currentType = releaseTypes.get(release.name);
+
+      if (!currentType || RELEASE_TYPE_RANK[release.type] > RELEASE_TYPE_RANK[currentType]) {
+        releaseTypes.set(release.name, release.type);
+      }
+    }
+  }
+
+  if (releaseTypes.size === 0) {
+    throw new Error('Changesets returned no package releases to prepare.');
+  }
+
+  const releases = [...releaseTypes.entries()]
+    .sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
+    .map(([name, type]) => ({ name, type }));
+
+  const types = releases.map(({ type }) => type);
+  const releaseType = types.includes('major')
+    ? 'major'
+    : types.includes('minor')
+      ? 'minor'
+      : 'patch';
+
+  return {
+    releaseType,
+    releases,
+    changesetIds: [...new Set(changesetIds)].sort(),
+  };
+}
+
+const RELEASE_VERSION_PATTERN = /^\d+\.\d+\.\d+$/;
+const RELEASE_COMMIT_PATTERN = /^[0-9a-f]{40}$/;
+const CHANGESET_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+export function createReleaseManifest({
+  baseVersion,
+  targetVersion,
+  baseCommit,
+  changesetIds,
+  packages,
+}) {
+  if (
+    !RELEASE_VERSION_PATTERN.test(baseVersion) ||
+    !RELEASE_VERSION_PATTERN.test(targetVersion) ||
+    baseVersion === targetVersion
+  ) {
+    throw new Error('Invalid release manifest version transition.');
+  }
+
+  if (!RELEASE_COMMIT_PATTERN.test(baseCommit)) {
+    throw new Error('Invalid release manifest base commit.');
+  }
+
+  if (
+    !Array.isArray(changesetIds) ||
+    changesetIds.length === 0 ||
+    changesetIds.some((id) => typeof id !== 'string' || !CHANGESET_ID_PATTERN.test(id))
+  ) {
+    throw new Error('Invalid release manifest Changeset IDs.');
+  }
+
+  if (!Array.isArray(packages) || packages.length === 0) {
+    throw new Error('Release manifest must include workspace packages.');
+  }
+
+  const seenNames = new Set();
+
+  const normalizedPackages = packages
+    .map(({ name, version, private: isPrivate }) => {
+      if (
+        typeof name !== 'string' ||
+        !name.trim() ||
+        !RELEASE_VERSION_PATTERN.test(version) ||
+        typeof isPrivate !== 'boolean'
+      ) {
+        throw new Error('Invalid package entry in release manifest.');
+      }
+
+      if (seenNames.has(name)) {
+        throw new Error(`Duplicate package in release manifest: ${name}`);
+      }
+
+      seenNames.add(name);
+
+      return { name, version, private: isPrivate };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  return {
+    schemaVersion: 1,
+    releaseId: `ee-v${targetVersion}`,
+    baseVersion,
+    targetVersion,
+    baseCommit,
+    changesets: [...new Set(changesetIds)].sort(),
+    packages: normalizedPackages,
+  };
+}
+
+export function validateReleaseManifest(manifest, { expectedVersion, workspacePackages }) {
+  if (
+    !manifest ||
+    manifest.schemaVersion !== 1 ||
+    manifest.releaseId !== `ee-v${manifest.targetVersion}` ||
+    !RELEASE_VERSION_PATTERN.test(manifest.baseVersion) ||
+    !RELEASE_VERSION_PATTERN.test(manifest.targetVersion) ||
+    manifest.baseVersion === manifest.targetVersion ||
+    !RELEASE_COMMIT_PATTERN.test(manifest.baseCommit) ||
+    !Array.isArray(manifest.changesets) ||
+    manifest.changesets.length === 0 ||
+    !Array.isArray(manifest.packages) ||
+    manifest.packages.length === 0
+  ) {
+    throw new Error('Invalid release manifest.');
+  }
+
+  if (manifest.targetVersion !== expectedVersion) {
+    throw new Error(
+      `Release manifest target ${manifest.targetVersion} does not match root version ${expectedVersion}.`,
+    );
+  }
+
+  const expected = createReleaseManifest({
+    baseVersion: manifest.baseVersion,
+    targetVersion: manifest.targetVersion,
+    baseCommit: manifest.baseCommit,
+    changesetIds: manifest.changesets,
+    packages: manifest.packages,
+  });
+
+  if (JSON.stringify(expected) !== JSON.stringify(manifest)) {
+    throw new Error('Release manifest is not normalized or contains duplicate entries.');
+  }
+
+  const actualPackages = createReleaseManifest({
+    baseVersion: manifest.baseVersion,
+    targetVersion: manifest.targetVersion,
+    baseCommit: manifest.baseCommit,
+    changesetIds: manifest.changesets,
+    packages: workspacePackages,
+  }).packages;
+
+  if (JSON.stringify(actualPackages) !== JSON.stringify(manifest.packages)) {
+    throw new Error('Release manifest workspace inventory does not match the current workspace.');
+  }
+
+  return manifest;
+}
+
 /**
  * Check whether a release tag exists in the remote repository.
  * Fail closed: a Git/network/authentication error must never be
@@ -134,20 +316,12 @@ export function getEligiblePackages(packages, registryHasVersion) {
   });
 }
 
-export function assertPublicPackagesConfigured(packages) {
+export function getPublicPackages(packages) {
   if (!Array.isArray(packages)) {
     throw new TypeError('packages must be an array');
   }
 
-  const publicPackages = packages.filter((pkg) => pkg.private !== true);
-
-  if (publicPackages.length === 0) {
-    throw new Error(
-      'No public packages are configured for this release. Refusing to complete the release.',
-    );
-  }
-
-  return publicPackages;
+  return packages.filter((pkg) => pkg.private !== true);
 }
 
 export async function verifyCompletedRelease({
@@ -158,7 +332,7 @@ export async function verifyCompletedRelease({
   build,
   registryHasVersion,
 }) {
-  const publicPackages = assertPublicPackagesConfigured(packages);
+  const publicPackages = getPublicPackages(packages);
 
   for (const [name, fn] of Object.entries({
     validate,
@@ -239,11 +413,10 @@ export async function publishThenTag({
   await validate();
   await build();
 
-  const eligible = getEligiblePackages(packages, registryHasVersion);
-  const publicPackages = assertPublicPackagesConfigured(packages);
-
-  // Check remote state after quality gates and immediately before publishing.
+  // Check remote state after quality gates and before registry operations.
   await preflight();
+
+  const eligible = getEligiblePackages(packages, registryHasVersion);
 
   for (const pkg of eligible) {
     await publish(pkg);
