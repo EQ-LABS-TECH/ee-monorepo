@@ -130,19 +130,23 @@ test('retry skips an already published package after a partial release failure',
   assert.equal(registryHasVersion('@eq-labs/package-b', '1.2.0'), true);
 });
 
-test('tag is created when there are no eligible packages', async () => {
+test('release fails without creating a tag when every package is private', async () => {
   const events = [];
-  const result = await publishThenTag({
-    validate: async () => events.push('validate'),
-    build: async () => events.push('build'),
-    packages: [packages[2]],
-    registryHasVersion: () => false,
-    publish: async () => events.push('publish'),
-    verifyPublished: async (pkg) => events.push(`verify:${pkg.name}`),
-    createTag: async () => events.push('tag'),
-  });
-  assert.deepEqual(events, ['validate', 'build', 'tag']);
-  assert.deepEqual(result.published, []);
+
+  await assert.rejects(
+    publishThenTag({
+      validate: async () => events.push('validate'),
+      build: async () => events.push('build'),
+      packages: [packages[2]],
+      registryHasVersion: () => false,
+      publish: async () => events.push('publish'),
+      verifyPublished: async (pkg) => events.push(`verify:${pkg.name}`),
+      createTag: async () => events.push('tag'),
+    }),
+    /No public packages are configured/,
+  );
+
+  assert.deepEqual(events, ['validate', 'build']);
 });
 
 test('remote preflight failure prevents tag creation when no packages are eligible', async () => {
@@ -152,8 +156,8 @@ test('remote preflight failure prevents tag creation when no packages are eligib
     publishThenTag({
       validate: async () => events.push('validate'),
       build: async () => events.push('build'),
-      packages: [{ name: '@eq-labs/private-package', version: '1.2.0', private: true }],
-      registryHasVersion: () => false,
+      packages: [{ name: '@eq-labs/public-package', version: '1.2.0', private: false }],
+      registryHasVersion: () => true,
       preflight: async () => {
         events.push('preflight');
         throw new Error('remote authentication failed');

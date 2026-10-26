@@ -180,6 +180,13 @@ export async function publishThenTag({
   await build();
 
   const eligible = getEligiblePackages(packages, registryHasVersion);
+  const publicPackages = packages.filter((pkg) => pkg.private !== true);
+
+  if (publicPackages.length === 0) {
+    throw new Error(
+      'No public packages are configured for this release. Refusing to create a release tag.',
+    );
+  }
 
   // Check remote state after quality gates and immediately before publishing.
   await preflight();

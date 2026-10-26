@@ -90,19 +90,40 @@ function main() {
     maxBuffer: 16 * 1024 * 1024,
   });
 
-  if (result.status !== 0 && result.stdout) {
-    process.stdout.write(result.stdout);
-  }
-
-  if (result.stderr) {
-    process.stderr.write(result.stderr);
-  }
-
   const output = result.stdout ?? '';
   const durationMs = Math.round(performance.now() - startedAt);
 
   const status =
     result.error || result.status === null ? 'ERROR' : result.status === 0 ? 'PASS' : 'FAIL';
+
+  if (status !== 'PASS') {
+    console.error('\n❌ Failed script tests:');
+
+    const diagnostic = spawnSync(process.execPath, ['--test', '--test-reporter=spec', ...files], {
+      encoding: 'utf8',
+      cwd: ROOT,
+      maxBuffer: 16 * 1024 * 1024,
+    });
+
+    if (diagnostic.stdout) {
+      const lines = diagnostic.stdout.split(/\r?\n/);
+      const failureIndex = lines.findIndex((line) => line.startsWith('✖ failing tests:'));
+
+      if (failureIndex !== -1) {
+        process.stdout.write(`${lines.slice(failureIndex).join('\n')}\n`);
+      } else {
+        process.stdout.write(`${diagnostic.stdout}\n`);
+      }
+    }
+
+    if (diagnostic.stderr) {
+      process.stderr.write(diagnostic.stderr);
+    }
+  }
+
+  if (result.stderr) {
+    process.stderr.write(result.stderr);
+  }
 
   finish({
     status,
