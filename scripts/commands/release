@@ -2,12 +2,18 @@
 
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { join, relative } from 'node:path';
 import { inc } from 'semver';
 import {
+  assertRemoteTagAbsent,
+  classifyRegistryVersionLookup,
+  createReleaseManifest,
+  inspectRemoteReleaseTag,
   listChangesetFiles,
+  parseChangesetReleaseStatus,
   publishThenTag,
   readWorkspacePackages,
+  validateReleaseManifest,
+  verifyCompletedRelease,
 } from '../lib/release-integrity.mjs';
 import { isAbsolute, join, relative } from 'node:path';
 
@@ -62,6 +68,35 @@ function getRootVersion() {
   return version;
 }
 
+function getRemoteTagRefs(tag) {
+  const result = spawnSync(
+    'git',
+    ['ls-remote', '--tags', 'origin', `refs/tags/${tag}`, `refs/tags/${tag}^{}`],
+    {
+      encoding: 'utf-8',
+      shell: false,
+      cwd: ROOT,
+    },
+  );
+
+  if (result.error || result.status !== 0) {
+    throw new Error(
+      `Unable to check remote tag ${tag}: ${
+        result.error?.message ?? result.stderr?.trim() ?? 'git ls-remote failed'
+      }`,
+    );
+  }
+
+  return result.stdout.trim();
+}
+
+function assertRemoteTagDoesNotExist(tag) {
+  assertRemoteTagAbsent({
+    tag,
+    remoteTagRefs: getRemoteTagRefs,
+  });
+}
+
 function assertCleanWorkingTree() {
   const status = captureCommand('git', ['status', '--porcelain'], 'Checking Git working tree');
 
@@ -113,25 +148,7 @@ function getChangesetReleaseType() {
       throw new Error('Changesets did not generate the release status file');
     }
 
-    const status = JSON.parse(readFileSync(outputPath, 'utf-8'));
-
-    if (!status || !Array.isArray(status.releases)) {
-      throw new Error('Invalid Changesets release status');
-    }
-
-    const types = status.releases
-      .map((release) => release.type)
-      .filter((type) => ['major', 'minor', 'patch'].includes(type));
-
-    if (types.length === 0) {
-      throw new Error(
-        'Changesets has no versioned releases. Check that the changesets target packages eligible for versioning.',
-      );
-    }
-
-    if (types.includes('major')) return 'major';
-    if (types.includes('minor')) return 'minor';
-    return 'patch';
+    return parseChangesetReleaseStatus(JSON.parse(readFileSync(outputPath, 'utf-8')));
   } finally {
     if (existsSync(outputPath)) rmSync(outputPath, { force: true });
   }
@@ -176,7 +193,12 @@ function stageReleaseChanges() {
   const allowedUntracked = untracked
     ? untracked
         .split(/\r?\n/)
-        .filter((file) => file === 'CHANGELOG.md' || file.endsWith('/CHANGELOG.md'))
+        .filter(
+          (file) =>
+            file === 'CHANGELOG.md' ||
+            file.endsWith('/CHANGELOG.md') ||
+            file === 'scripts/release-manifest.json',
+        )
     : [];
 
   const unexpected = untracked
@@ -233,8 +255,9 @@ function prepareRelease() {
   }
 
   const previousVersion = getRootVersion();
-  const releaseType = getChangesetReleaseType();
-  const nextVersion = calculateNextRootVersion(previousVersion, releaseType);
+  const baseCommit = captureCommand('git', ['rev-parse', 'HEAD'], 'Capturing release base commit');
+  const releasePlan = getChangesetReleaseType();
+  const nextVersion = calculateNextRootVersion(previousVersion, releasePlan.releaseType);
   const tag = `v${nextVersion}`;
   const releaseBranch = `release/${tag}`;
 
@@ -256,11 +279,31 @@ function prepareRelease() {
 
   console.log(`\nPreparing ${tag} on ${releaseBranch}`);
   console.log(`  Changesets: ${changesets.length}`);
-  console.log(`  Release type: ${releaseType}`);
+  console.log(`  Release type: ${releasePlan.releaseType}`);
 
   execCommand('git', ['switch', '-c', releaseBranch], 'Creating release branch');
   execCommand('pnpm', ['version-packages'], 'Applying Changesets versions');
   synchronizeRootVersion(previousVersion, nextVersion);
+
+  const workspacePackages = readWorkspacePackages(ROOT, readWorkspacePackageList());
+  const manifest = createReleaseManifest({
+    baseVersion: previousVersion,
+    targetVersion: nextVersion,
+    baseCommit,
+    changesetIds: releasePlan.changesetIds,
+    packages: workspacePackages,
+  });
+
+  writeFileSync(
+    join(ROOT, 'scripts/release-manifest.json'),
+    `${JSON.stringify(manifest, null, 2)}\n`,
+    'utf-8',
+  );
+
+  validateReleaseManifest(manifest, {
+    expectedVersion: getRootVersion(),
+    workspacePackages,
+  });
 
   execCommand('pnpm', ['validate'], 'Running validation');
   execCommand('pnpm', ['run', 'build'], 'Building workspaces');
@@ -322,18 +365,15 @@ function registryHasVersion(name, version) {
     cwd: ROOT,
   });
 
-  if (result.error) throw result.error;
-  if (result.status === 0) return true;
-
-  const output = `${result.stdout ?? ''}\n${result.stderr ?? ''}`;
-
-  // Only a definitive registry 404 means the version is absent.
-  // Authentication, network, and registry errors must stop the release.
-  if (/\bE404\b|404 Not Found|is not in this registry/i.test(output)) {
-    return false;
+  if (result.error) {
+    throw result.error;
   }
 
-  throw new Error(`Unable to check npm registry for ${name}@${version}:\n${output.trim()}`);
+  return classifyRegistryVersionLookup({
+    status: result.status,
+    stdout: result.stdout ?? '',
+    stderr: result.stderr ?? '',
+  });
 }
 
 function createTag(tag) {
@@ -360,6 +400,29 @@ function createTag(tag) {
   execCommand('git', ['tag', '-a', tag, '-m', `Release ${tag}`], `Creating tag ${tag}`);
 }
 
+async function verifyPublishedVersion(pkg) {
+  const maxAttempts = 6;
+  const retryDelayMs = 5000;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    if (registryHasVersion(pkg.name, pkg.version)) {
+      console.log(`  Verified ${pkg.name}@${pkg.version} in npm registry.`);
+      return;
+    }
+
+    if (attempt < maxAttempts) {
+      console.log(
+        `  ${pkg.name}@${pkg.version} not visible in registry yet; retrying (${attempt}/${maxAttempts}).`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+    }
+  }
+
+  throw new Error(
+    `Published version ${pkg.name}@${pkg.version} was not found in the npm registry after ${maxAttempts} attempts. Refusing to create the release tag.`,
+  );
+}
+
 async function publishRelease() {
   const branch = getCurrentBranch();
 
@@ -371,18 +434,82 @@ async function publishRelease() {
 
   const version = getRootVersion();
   const tag = `v${version}`;
+  const head = captureCommand('git', ['rev-parse', 'HEAD'], 'Resolving release commit');
 
-  // Detect a conflicting tag before any registry publication.
   assertNoTagConflict(tag);
 
   const workspaceList = readWorkspacePackageList();
   const packages = readWorkspacePackages(ROOT, workspaceList);
 
+  const manifestPath = join(ROOT, 'scripts/release-manifest.json');
+
+  if (!existsSync(manifestPath)) {
+    throw new Error('Release manifest is missing; refusing to publish or create a tag.');
+  }
+
+  let manifest;
+
+  try {
+    manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+  } catch {
+    throw new Error('Release manifest is not valid JSON; refusing to publish or create a tag.');
+  }
+
+  validateReleaseManifest(manifest, {
+    expectedVersion: version,
+    workspacePackages: packages,
+  });
+
+  const inspectTag = () =>
+    inspectRemoteReleaseTag({
+      tag,
+      expectedCommit: head,
+      remoteTagRefs: getRemoteTagRefs,
+    });
+
+  // Recovery path: a remote tag is only considered complete if it points
+  // to this exact commit and every non-private package version is in npm.
+  const remoteState = inspectTag();
+
+  if (remoteState.state === 'conflict') {
+    throw new Error(
+      `Remote release tag ${tag} points to ${remoteState.targetCommit}, not HEAD ${head}. Refusing to publish or move the tag.`,
+    );
+  }
+
+  if (remoteState.state === 'matches') {
+    const { publicPackages } = await verifyCompletedRelease({
+      tag,
+      version,
+      packages,
+      validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
+      build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
+      registryHasVersion,
+    });
+
+    console.log('\nRelease already completed; verified existing remote tag and package versions.');
+    console.log(`  Version: ${version}`);
+    console.log(`  Tag: ${tag}`);
+    console.log(`  Verified public package versions: ${publicPackages.length}`);
+    return;
+  }
+
+  // Re-check immediately before publication to reduce the chance of racing
+  // another release process. An unexpected remote state fails closed.
   const published = await publishThenTag({
     validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
     build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
     packages,
     registryHasVersion,
+    preflight: () => {
+      const state = inspectTag();
+
+      if (state.state !== 'absent') {
+        throw new Error(
+          `Remote tag ${tag} changed during release preflight (state: ${state.state}). Inspect remote release state before retrying.`,
+        );
+      }
+    },
     publish: async (pkg) => {
       if (!process.env.NODE_AUTH_TOKEN && !process.env.NPM_TOKEN) {
         throw new Error(
@@ -397,6 +524,7 @@ async function publishRelease() {
         `Publishing ${pkg.name}@${pkg.version}`,
       );
     },
+    verifyPublished: verifyPublishedVersion,
     createTag: () => createTag(tag),
   });
 
