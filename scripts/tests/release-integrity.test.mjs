@@ -1,11 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  assertPublicPackagesConfigured,
   assertRemoteTagAbsent,
   classifyRegistryVersionLookup,
   getEligiblePackages,
   inspectRemoteReleaseTag,
   publishThenTag,
+  verifyCompletedRelease,
 } from '../lib/release-integrity.mjs';
 
 const packages = [
@@ -13,6 +15,93 @@ const packages = [
   { name: '@eq-labs/public-existing', version: '2.0.0', private: false },
   { name: '@eq-labs/private', version: '1.0.0', private: true },
 ];
+
+test('public package guard accepts public packages and excludes private packages', () => {
+  assert.deepEqual(
+    assertPublicPackagesConfigured([
+      { name: '@eq-labs/public', version: '1.2.0', private: false },
+      { name: '@eq-labs/private', version: '1.0.0', private: true },
+    ]),
+    [{ name: '@eq-labs/public', version: '1.2.0', private: false }],
+  );
+});
+
+test('public package guard rejects an all-private workspace', () => {
+  assert.throws(
+    () =>
+      assertPublicPackagesConfigured([
+        { name: '@eq-labs/private', version: '1.0.0', private: true },
+      ]),
+    /No public packages are configured/,
+  );
+});
+
+test('public package guard rejects an empty workspace list', () => {
+  assert.throws(() => assertPublicPackagesConfigured([]), /No public packages are configured/);
+});
+
+test('completed release recovery rejects all-private workspaces before external operations', async () => {
+  const events = [];
+
+  await assert.rejects(
+    verifyCompletedRelease({
+      tag: 'v1.2.3',
+      version: '1.2.3',
+      packages: [{ name: '@eq-labs/private', version: '1.2.3', private: true }],
+      validate: async () => events.push('validate'),
+      build: async () => events.push('build'),
+      registryHasVersion: () => {
+        events.push('registry');
+        return true;
+      },
+    }),
+    /No public packages are configured/,
+  );
+
+  assert.deepEqual(events, []);
+});
+
+test('completed release recovery validates and verifies every public package', async () => {
+  const events = [];
+  const publicPackage = {
+    name: '@eq-labs/public',
+    version: '1.2.3',
+    private: false,
+  };
+
+  const result = await verifyCompletedRelease({
+    tag: 'v1.2.3',
+    version: '1.2.3',
+    packages: [publicPackage, { name: '@eq-labs/private', version: '1.2.3', private: true }],
+    validate: async () => events.push('validate'),
+    build: async () => events.push('build'),
+    registryHasVersion: (name, version) => {
+      events.push(`registry:${name}@${version}`);
+      return true;
+    },
+  });
+
+  assert.deepEqual(events, ['validate', 'build', 'registry:@eq-labs/public@1.2.3']);
+  assert.deepEqual(result, {
+    tag: 'v1.2.3',
+    version: '1.2.3',
+    publicPackages: [publicPackage],
+  });
+});
+
+test('completed release recovery refuses completion when a public version is missing', async () => {
+  await assert.rejects(
+    verifyCompletedRelease({
+      tag: 'v1.2.3',
+      version: '1.2.3',
+      packages: [{ name: '@eq-labs/public', version: '1.2.3', private: false }],
+      validate: async () => {},
+      build: async () => {},
+      registryHasVersion: () => false,
+    }),
+    /Remote tag v1\.2\.3 already points to HEAD.*missing from npm/,
+  );
+});
 
 test('eligibility excludes private packages and versions already in the registry', () => {
   const eligible = getEligiblePackages(

@@ -134,6 +134,66 @@ export function getEligiblePackages(packages, registryHasVersion) {
   });
 }
 
+export function assertPublicPackagesConfigured(packages) {
+  if (!Array.isArray(packages)) {
+    throw new TypeError('packages must be an array');
+  }
+
+  const publicPackages = packages.filter((pkg) => pkg.private !== true);
+
+  if (publicPackages.length === 0) {
+    throw new Error(
+      'No public packages are configured for this release. Refusing to complete the release.',
+    );
+  }
+
+  return publicPackages;
+}
+
+export async function verifyCompletedRelease({
+  tag,
+  version,
+  packages,
+  validate,
+  build,
+  registryHasVersion,
+}) {
+  const publicPackages = assertPublicPackagesConfigured(packages);
+
+  for (const [name, fn] of Object.entries({
+    validate,
+    build,
+    registryHasVersion,
+  })) {
+    if (typeof fn !== 'function') {
+      throw new TypeError(`${name} must be a function`);
+    }
+  }
+
+  await validate();
+  await build();
+
+  const missingVersions = [];
+
+  for (const pkg of publicPackages) {
+    if (!registryHasVersion(pkg.name, pkg.version)) {
+      missingVersions.push(`${pkg.name}@${pkg.version}`);
+    }
+  }
+
+  if (missingVersions.length > 0) {
+    throw new Error(
+      `Remote tag ${tag} already points to HEAD, but these package versions are missing from npm: ${missingVersions.join(', ')}. Refusing to move the tag or silently republish.`,
+    );
+  }
+
+  return {
+    tag,
+    version,
+    publicPackages,
+  };
+}
+
 export function classifyRegistryVersionLookup({ status, stdout = '', stderr = '' }) {
   if (status === 0) {
     return true;
@@ -180,13 +240,7 @@ export async function publishThenTag({
   await build();
 
   const eligible = getEligiblePackages(packages, registryHasVersion);
-  const publicPackages = packages.filter((pkg) => pkg.private !== true);
-
-  if (publicPackages.length === 0) {
-    throw new Error(
-      'No public packages are configured for this release. Refusing to create a release tag.',
-    );
-  }
+  const publicPackages = assertPublicPackagesConfigured(packages);
 
   // Check remote state after quality gates and immediately before publishing.
   await preflight();

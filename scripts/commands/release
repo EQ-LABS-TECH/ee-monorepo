@@ -10,6 +10,7 @@ import {
   listChangesetFiles,
   publishThenTag,
   readWorkspacePackages,
+  verifyCompletedRelease,
 } from '../lib/release-integrity.mjs';
 import { isAbsolute, join, relative } from 'node:path';
 
@@ -447,23 +448,14 @@ async function publishRelease() {
   }
 
   if (remoteState.state === 'matches') {
-    await execCommand('pnpm', ['validate'], 'Running validation');
-    await execCommand('pnpm', ['run', 'build'], 'Building workspaces');
-
-    const publicPackages = packages.filter((pkg) => pkg.private !== true);
-    const missingVersions = [];
-
-    for (const pkg of publicPackages) {
-      if (!registryHasVersion(pkg.name, pkg.version)) {
-        missingVersions.push(`${pkg.name}@${pkg.version}`);
-      }
-    }
-
-    if (missingVersions.length > 0) {
-      throw new Error(
-        `Remote tag ${tag} already points to HEAD, but these package versions are missing from npm: ${missingVersions.join(', ')}. Refusing to move the tag or silently republish.`,
-      );
-    }
+    const { publicPackages } = await verifyCompletedRelease({
+      tag,
+      version,
+      packages,
+      validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
+      build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
+      registryHasVersion,
+    });
 
     console.log('\nRelease already completed; verified existing remote tag and package versions.');
     console.log(`  Version: ${version}`);
