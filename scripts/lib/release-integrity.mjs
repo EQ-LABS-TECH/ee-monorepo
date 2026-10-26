@@ -9,21 +9,24 @@ export function parseChangesetReleaseStatus(status) {
     throw new Error('Invalid Changesets release status');
   }
 
+  const changesets = status.changesets;
+
+  if (
+    changesets.some(
+      (changeset) =>
+        !changeset ||
+        typeof changeset.id !== 'string' ||
+        !CHANGESET_ID_PATTERN.test(changeset.id) ||
+        !Array.isArray(changeset.releases),
+    )
+  ) {
+    throw new Error('Changesets returned invalid Changeset IDs.');
+  }
+
+  const changesetIds = changesets.map(({ id }) => id);
   const releaseTypes = new Map();
-  const changesetIds = [];
 
-  for (const changeset of status.changesets) {
-    if (
-      !changeset ||
-      typeof changeset.id !== 'string' ||
-      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(changeset.id) ||
-      !Array.isArray(changeset.releases)
-    ) {
-      throw new Error('Changesets returned an invalid changeset entry.');
-    }
-
-    changesetIds.push(changeset.id);
-
+  for (const changeset of changesets) {
     for (const release of changeset.releases) {
       if (
         !release ||

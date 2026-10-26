@@ -93,31 +93,53 @@ function main() {
   const output = result.stdout ?? '';
   const durationMs = Math.round(performance.now() - startedAt);
 
+  const tests = parseTapCount(output, 'tests');
+  const passed = parseTapCount(output, 'pass');
+  const failed = parseTapCount(output, 'fail');
+  const skipped = parseTapCount(output, 'skipped');
+
+  const hasValidSummary = tests !== null && passed !== null && failed !== null && skipped !== null;
+
   const status =
-    result.error || result.status === null ? 'ERROR' : result.status === 0 ? 'PASS' : 'FAIL';
+    result.error || result.status === null
+      ? 'ERROR'
+      : result.status !== 0
+        ? 'FAIL'
+        : !hasValidSummary
+          ? 'ERROR'
+          : failed > 0
+            ? 'FAIL'
+            : 'PASS';
 
   if (status !== 'PASS') {
-    console.error('\n❌ Failed script tests:');
+    console.error(`\n❌ ${GATE_ID}: script tests ${status}`);
 
-    const diagnostic = spawnSync(process.execPath, ['--test', '--test-reporter=spec', ...files], {
-      encoding: 'utf8',
-      cwd: ROOT,
-      maxBuffer: 16 * 1024 * 1024,
-    });
+    if (result.error) {
+      console.error(`Test runner error: ${result.error.message}`);
+    }
 
-    if (diagnostic.stdout) {
-      const lines = diagnostic.stdout.split(/\r?\n/);
-      const failureIndex = lines.findIndex((line) => line.startsWith('✖ failing tests:'));
+    const lines = output.split(/\r?\n/);
+    const failureIndexes = [];
 
-      if (failureIndex !== -1) {
-        process.stdout.write(`${lines.slice(failureIndex).join('\n')}\n`);
-      } else {
-        process.stdout.write(`${diagnostic.stdout}\n`);
+    for (let i = 0; i < lines.length; i += 1) {
+      if (/^not ok \d+ - /.test(lines[i])) {
+        failureIndexes.push(i);
       }
     }
 
-    if (diagnostic.stderr) {
-      process.stderr.write(diagnostic.stderr);
+    for (const index of failureIndexes) {
+      let end = index + 1;
+
+      while (end < lines.length && !/^not ok \d+ - |^ok \d+ - /.test(lines[end])) {
+        end += 1;
+      }
+
+      process.stdout.write(`${lines.slice(index, end).join('\n')}\n`);
+    }
+
+    if (failureIndexes.length === 0 && output) {
+      console.error('No se pudo identificar un subtest fallido en la salida TAP.');
+      process.stdout.write(`${output.split(/\r?\n/).slice(-12).join('\n')}\n`);
     }
   }
 
@@ -129,10 +151,10 @@ function main() {
     status,
     exitCode: status === 'PASS' ? 0 : 1,
     files: files.length,
-    tests: parseTapCount(output, 'tests'),
-    passed: parseTapCount(output, 'pass'),
-    failed: parseTapCount(output, 'fail'),
-    skipped: parseTapCount(output, 'skipped'),
+    tests,
+    passed,
+    failed,
+    skipped,
     durationMs,
   });
 }
