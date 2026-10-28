@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { inc } from 'semver';
+import { spawnSync } from 'node:child_process';
+import { isAbsolute, join, relative } from 'node:path';
+import { existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import {
   assertRemoteTagAbsent,
   classifyRegistryVersionLookup,
@@ -14,8 +15,19 @@ import {
   readWorkspacePackages,
   validateReleaseManifest,
   verifyCompletedRelease,
+  getPlannedPublicPackages,
+  runReleasePreparation,
+  validateReleaseChangesetFiles,
+  validateReleaseBaseVersion,
+  validateReleaseChangesetContent,
+  parseEffectiveChangesetsPlan,
+  validateEffectiveReleaseVersions,
 } from '../lib/release-integrity.mjs';
-import { isAbsolute, join, relative } from 'node:path';
+
+import {
+  executeVerifiedRelease,
+  verifyReconstructedReleasePlan,
+} from '../lib/reconstruct-release-plan.mjs';
 
 const ROOT = process.cwd();
 const DEFAULT_BRANCHES = new Set(['main', 'master']);
@@ -148,7 +160,11 @@ function getChangesetReleaseType() {
       throw new Error('Changesets did not generate the release status file');
     }
 
-    return parseChangesetReleaseStatus(JSON.parse(readFileSync(outputPath, 'utf-8')));
+    const status = JSON.parse(readFileSync(outputPath, 'utf-8'));
+    return {
+      ...parseChangesetReleaseStatus(status),
+      effectiveReleases: parseEffectiveChangesetsPlan(status),
+    };
   } finally {
     if (existsSync(outputPath)) rmSync(outputPath, { force: true });
   }
@@ -237,7 +253,7 @@ function stageReleaseChanges() {
   }
 }
 
-function prepareRelease() {
+async function prepareRelease() {
   const branch = getCurrentBranch();
 
   if (!DEFAULT_BRANCHES.has(branch)) {
@@ -257,11 +273,32 @@ function prepareRelease() {
   const previousVersion = getRootVersion();
   const baseCommit = captureCommand('git', ['rev-parse', 'HEAD'], 'Capturing release base commit');
   const releasePlan = getChangesetReleaseType();
+  const currentPackages = readWorkspacePackages(ROOT, readWorkspacePackageList());
+  const currentPackageMap = new Map(currentPackages.map((pkg) => [pkg.name, pkg]));
+
+  const publicPlannedReleases = releasePlan.releases.filter((release) => {
+    const pkg = currentPackageMap.get(release.name);
+
+    if (!pkg) {
+      throw new Error(`Changesets references unknown package: ${release.name}`);
+    }
+
+    return pkg.private === false;
+  });
+
+  if (publicPlannedReleases.length === 0) {
+    throw new Error(
+      'Changesets contains no public package releases. ' +
+        'Release preparation stopped without Git mutations.',
+    );
+  }
+
   const nextVersion = calculateNextRootVersion(previousVersion, releasePlan.releaseType);
   const tag = `v${nextVersion}`;
   const releaseBranch = `release/${tag}`;
 
   assertNoTagConflict(tag);
+  assertRemoteTagDoesNotExist(tag);
 
   const branchCheck = spawnSync(
     'git',
@@ -281,39 +318,58 @@ function prepareRelease() {
   console.log(`  Changesets: ${changesets.length}`);
   console.log(`  Release type: ${releasePlan.releaseType}`);
 
-  execCommand('git', ['switch', '-c', releaseBranch], 'Creating release branch');
-  execCommand('pnpm', ['version-packages'], 'Applying Changesets versions');
-  synchronizeRootVersion(previousVersion, nextVersion);
+  await runReleasePreparation({
+    createBranch: () =>
+      execCommand('git', ['switch', '-c', releaseBranch], 'Creating release branch'),
 
-  const workspacePackages = readWorkspacePackages(ROOT, readWorkspacePackageList());
-  const manifest = createReleaseManifest({
-    baseVersion: previousVersion,
-    targetVersion: nextVersion,
-    baseCommit,
-    changesetIds: releasePlan.changesetIds,
-    packages: workspacePackages,
+    versionPackages: () =>
+      execCommand('pnpm', ['version-packages'], 'Applying Changesets versions'),
+
+    synchronizeVersion: () => synchronizeRootVersion(previousVersion, nextVersion),
+
+    prepareManifest: () => {
+      const workspacePackages = readWorkspacePackages(ROOT, readWorkspacePackageList());
+
+      const plannedReleases = validateEffectiveReleaseVersions({
+        effectiveReleases: releasePlan.effectiveReleases,
+        workspacePackages,
+      });
+
+      const manifest = createReleaseManifest({
+        baseVersion: previousVersion,
+        targetVersion: nextVersion,
+        baseCommit,
+        changesetIds: releasePlan.changesetIds,
+        releases: plannedReleases,
+        packages: workspacePackages,
+      });
+
+      // Validate before writing the manifest to disk.
+      validateReleaseManifest(manifest, {
+        expectedVersion: getRootVersion(),
+        workspacePackages,
+      });
+
+      writeFileSync(
+        join(ROOT, 'scripts/release-manifest.json'),
+        `${JSON.stringify(manifest, null, 2)}\n`,
+        'utf-8',
+      );
+    },
+
+    validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
+
+    build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
+
+    stage: () => stageReleaseChanges(),
+
+    commit: () =>
+      execCommand(
+        'git',
+        ['commit', '-m', `chore(release): ${tag}`],
+        'Creating release preparation commit',
+      ),
   });
-
-  writeFileSync(
-    join(ROOT, 'scripts/release-manifest.json'),
-    `${JSON.stringify(manifest, null, 2)}\n`,
-    'utf-8',
-  );
-
-  validateReleaseManifest(manifest, {
-    expectedVersion: getRootVersion(),
-    workspacePackages,
-  });
-
-  execCommand('pnpm', ['validate'], 'Running validation');
-  execCommand('pnpm', ['run', 'build'], 'Building workspaces');
-
-  stageReleaseChanges();
-  execCommand(
-    'git',
-    ['commit', '-m', `chore(release): ${tag}`],
-    'Creating release preparation commit',
-  );
 
   console.log('\nRelease preparation completed.');
   console.log(`  Branch: ${releaseBranch}`);
@@ -460,84 +516,210 @@ async function publishRelease() {
     workspacePackages: packages,
   });
 
-  const inspectTag = () =>
-    inspectRemoteReleaseTag({
-      tag,
-      expectedCommit: head,
-      remoteTagRefs: getRemoteTagRefs,
-    });
+  const plannedPackages = getPlannedPublicPackages(manifest);
 
-  // Recovery path: a remote tag is only considered complete if it points
-  // to this exact commit and every non-private package version is in npm.
-  const remoteState = inspectTag();
+  const baseCommitCheck = spawnSync(
+    'git',
+    ['merge-base', '--is-ancestor', manifest.baseCommit, head],
+    {
+      cwd: ROOT,
+      shell: false,
+      encoding: 'utf-8',
+    },
+  );
 
-  if (remoteState.state === 'conflict') {
+  if (baseCommitCheck.error || baseCommitCheck.status !== 0) {
+    throw new Error('Release manifest baseCommit is not an ancestor of HEAD.');
+  }
+
+  const basePackageContent = captureCommand(
+    'git',
+    ['show', `${manifest.baseCommit}:package.json`],
+    'Reading release base package.json',
+  );
+
+  let basePackage;
+
+  try {
+    basePackage = JSON.parse(basePackageContent);
+  } catch {
+    throw new Error('Invalid release base package.json.');
+  }
+
+  if (basePackage.version !== manifest.baseVersion) {
+    throw new Error('Release manifest baseVersion does not match its base commit.');
+  }
+
+  for (const changesetId of manifest.changesets) {
+    const source = captureCommand(
+      'git',
+      ['show', `${manifest.baseCommit}:.changeset/${changesetId}.md`],
+      `Verifying Changeset ${changesetId}`,
+    );
+
+    if (!source.trim()) {
+      throw new Error(`Empty source Changeset: ${changesetId}`);
+    }
+  }
+
+  // Confirm that the recorded base commit belongs to this release history.
+  const ancestry = spawnSync('git', ['merge-base', '--is-ancestor', manifest.baseCommit, head], {
+    cwd: ROOT,
+    shell: false,
+    encoding: 'utf-8',
+  });
+
+  if (ancestry.error || ancestry.status !== 0) {
     throw new Error(
-      `Remote release tag ${tag} points to ${remoteState.targetCommit}, not HEAD ${head}. Refusing to publish or move the tag.`,
+      `Release base commit ${manifest.baseCommit} is not a verified ancestor of HEAD. ` +
+        'Refusing publication.',
     );
   }
 
-  if (remoteState.state === 'matches') {
-    const { publicPackages } = await verifyCompletedRelease({
-      tag,
-      version,
-      packages,
-      validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
-      build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
-      registryHasVersion,
-    });
+  const basePackageJson = captureCommand(
+    'git',
+    ['show', `${manifest.baseCommit}:package.json`],
+    'Reading root package.json from release base commit',
+  );
 
-    console.log('\nRelease already completed; verified existing remote tag and package versions.');
-    console.log(`  Version: ${version}`);
-    console.log(`  Tag: ${tag}`);
-    console.log(`  Verified public package versions: ${publicPackages.length}`);
-    return;
-  }
-
-  // Re-check immediately before publication to reduce the chance of racing
-  // another release process. An unexpected remote state fails closed.
-  const published = await publishThenTag({
-    validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
-    build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
-    packages,
-    registryHasVersion,
-    preflight: () => {
-      const state = inspectTag();
-
-      if (state.state !== 'absent') {
-        throw new Error(
-          `Remote tag ${tag} changed during release preflight (state: ${state.state}). Inspect remote release state before retrying.`,
-        );
-      }
-    },
-    publish: async (pkg) => {
-      if (!process.env.NODE_AUTH_TOKEN && !process.env.NPM_TOKEN) {
-        throw new Error(
-          `Cannot publish ${pkg.name}@${pkg.version}: configure npm trusted publishing or NODE_AUTH_TOKEN/NPM_TOKEN.`,
-        );
-      }
-
-      console.log(`\nPublishing ${pkg.name}@${pkg.version}`);
-      execCommand(
-        'pnpm',
-        ['--filter', pkg.name, 'publish', '--access', 'public', '--no-git-checks'],
-        `Publishing ${pkg.name}@${pkg.version}`,
-      );
-    },
-    verifyPublished: verifyPublishedVersion,
-    createTag: () => createTag(tag),
+  validateReleaseBaseVersion({
+    manifest,
+    basePackageJson,
   });
 
-  console.log('\nRelease publication completed.');
-  console.log(`  Version: ${version}`);
-  console.log(`  Tag: ${tag}`);
-  console.log(`  Newly published packages: ${published.published.length}`);
+  const sourceFiles = captureCommand(
+    'git',
+    ['ls-tree', '-r', '--name-only', manifest.baseCommit, '--', '.changeset'],
+    'Reading Changesets from release base commit',
+  )
+    .split(/\r?\n/)
+    .filter(Boolean);
 
-  if (published.published.length === 0) {
-    console.log('  No eligible package versions were missing from the registry.');
-  }
+  const verifiedChangesetIds = validateReleaseChangesetFiles({
+    manifest,
+    baseFiles: sourceFiles,
+  });
 
-  console.log(`\nPush the tag only after this command succeeds:\n  git push origin ${tag}`);
+  console.log(
+    `  Verified ${verifiedChangesetIds.length} Changeset source file(s) ` +
+      `in base commit ${manifest.baseCommit}.`,
+  );
+
+  const changesetContent = Object.fromEntries(
+    verifiedChangesetIds.map((id) => [
+      id,
+      captureCommand(
+        'git',
+        ['show', `${manifest.baseCommit}:.changeset/${id}.md`],
+        `Reading original Changeset ${id}`,
+      ),
+    ]),
+  );
+
+  const verifiedSource = validateReleaseChangesetContent({
+    manifest,
+    sourceFiles: changesetContent,
+  });
+
+  console.log(
+    `  Verified ${verifiedSource.declaredReleases.length} ` +
+      'explicit package release(s) against Git source.',
+  );
+
+  console.log('  Reconstructing independent Changesets release plan...');
+
+  return executeVerifiedRelease({
+    root: ROOT,
+    manifest,
+    verify: verifyReconstructedReleasePlan,
+    onVerified: async (verifiedSourcePlan) => {
+      console.log(
+        `  Verified ${verifiedSourcePlan.releases.length} effective release(s) ` +
+          `from ${verifiedSourcePlan.changesetIds.length} Changeset(s).`,
+      );
+
+      const inspectTag = () =>
+        inspectRemoteReleaseTag({
+          tag,
+          expectedCommit: head,
+          remoteTagRefs: getRemoteTagRefs,
+        });
+
+      // Recovery path: a remote tag is only considered complete if it points
+      // to this exact commit and every non-private package version is in npm.
+      const remoteState = inspectTag();
+
+      if (remoteState.state === 'conflict') {
+        throw new Error(
+          `Remote release tag ${tag} points to ${remoteState.targetCommit}, not HEAD ${head}. Refusing to publish or move the tag.`,
+        );
+      }
+
+      if (remoteState.state === 'matches') {
+        const { publicPackages } = await verifyCompletedRelease({
+          tag,
+          version,
+          packages: plannedPackages,
+          validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
+          build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
+          registryHasVersion,
+        });
+
+        console.log(
+          '\nRelease already completed; verified existing remote tag and package versions.',
+        );
+        console.log(`  Version: ${version}`);
+        console.log(`  Tag: ${tag}`);
+        console.log(`  Verified public package versions: ${publicPackages.length}`);
+        return;
+      }
+
+      // Re-check immediately before publication to reduce the chance of racing
+      // another release process. An unexpected remote state fails closed.
+      const published = await publishThenTag({
+        validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
+        build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
+        manifest,
+        registryHasVersion,
+        preflight: () => {
+          const state = inspectTag();
+
+          if (state.state !== 'absent') {
+            throw new Error(
+              `Remote tag ${tag} changed during release preflight (state: ${state.state}). Inspect remote release state before retrying.`,
+            );
+          }
+        },
+        publish: async (pkg) => {
+          if (!process.env.NODE_AUTH_TOKEN && !process.env.NPM_TOKEN) {
+            throw new Error(
+              `Cannot publish ${pkg.name}@${pkg.version}: configure npm trusted publishing or NODE_AUTH_TOKEN/NPM_TOKEN.`,
+            );
+          }
+
+          console.log(`\nPublishing ${pkg.name}@${pkg.version}`);
+          execCommand(
+            'pnpm',
+            ['--filter', pkg.name, 'publish', '--access', 'public', '--no-git-checks'],
+            `Publishing ${pkg.name}@${pkg.version}`,
+          );
+        },
+        verifyPublished: verifyPublishedVersion,
+        createTag: () => createTag(tag),
+      });
+
+      console.log('\nRelease publication completed.');
+      console.log(`  Version: ${version}`);
+      console.log(`  Tag: ${tag}`);
+      console.log(`  Newly published packages: ${published.published.length}`);
+
+      if (published.published.length === 0) {
+        console.log('  No eligible package versions were missing from the registry.');
+      }
+
+      console.log(`\nPush the tag only after this command succeeds:\n  git push origin ${tag}`);
+    },
+  });
 }
 
 async function main() {
@@ -548,7 +730,7 @@ async function main() {
     console.log('===============\n');
 
     if (mode === 'prepare') {
-      prepareRelease();
+      await prepareRelease();
       return;
     }
 

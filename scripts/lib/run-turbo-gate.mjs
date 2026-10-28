@@ -103,12 +103,16 @@ export function runTurboGate({
   writeErr = (value) => process.stderr.write(value),
   log = console,
 }) {
-  const result = spawnSyncImpl('pnpm', ['exec', 'turbo', 'run', task, ...args, '--summarize'], {
-    encoding: 'utf-8',
-    shell: process.platform === 'win32',
-    cwd,
-    env,
-  });
+  const result = spawnSyncImpl(
+    'pnpm',
+    ['exec', 'turbo', 'run', task, ...args, '--summarize', '--output-logs=new-only'],
+    {
+      encoding: 'utf-8',
+      shell: process.platform === 'win32',
+      cwd,
+      env,
+    },
+  );
 
   const stdout = result.stdout ?? '';
   const stderr = result.stderr ?? '';

@@ -1,0 +1,147 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+
+import YAML from 'yaml';
+
+const WORKFLOW_URL = new URL('../../.github/workflows/release.yml', import.meta.url);
+
+function loadWorkflow() {
+  const source = readFileSync(WORKFLOW_URL, 'utf8');
+  const document = YAML.parseDocument(source, { uniqueKeys: true });
+
+  assert.deepEqual(
+    document.errors.map((error) => error.message),
+    [],
+    'Release workflow must contain valid YAML without duplicate keys',
+  );
+
+  return document.toJS();
+}
+
+function getSteps() {
+  const workflow = loadWorkflow();
+
+  assert.deepEqual(workflow.on?.push?.branches, ['main']);
+
+  const job = workflow.jobs?.publish;
+  assert.ok(job, 'Release workflow must define the publish job');
+  assert.equal(job['runs-on'], 'ubuntu-latest');
+  assert.ok(Array.isArray(job.steps), 'Publish job must contain steps');
+
+  return {
+    job,
+    steps: job.steps,
+  };
+}
+
+function getStep(steps, name) {
+  const matches = steps.filter((step) => step.name === name);
+
+  assert.equal(matches.length, 1, `Expected exactly one workflow step: ${name}`);
+
+  return matches[0];
+}
+
+test('release workflow YAML and trigger are valid', () => {
+  const { job } = getSteps();
+
+  assert.equal(job.permissions?.contents, 'write');
+});
+
+test('release steps preserve the required order', () => {
+  const { steps } = getSteps();
+
+  const required = [
+    'Detect root version change',
+    'Setup pnpm',
+    'Setup Node.js',
+    'Install dependencies',
+    'Verify release manifest contract',
+    'Prepare historical release dependencies',
+    'Publish eligible package versions and create tag',
+    'Push release tag',
+    'Verify remote release tag',
+  ];
+
+  const names = steps.map((step) => step.name);
+
+  const positions = required.map((name) => {
+    getStep(steps, name);
+    return names.indexOf(name);
+  });
+
+  assert.ok(
+    positions.every((position, index) => index === 0 || position > positions[index - 1]),
+    'Required release steps must execute in the expected order',
+  );
+});
+
+test('release preparation reuses the verified historical plan', () => {
+  const { steps } = getSteps();
+
+  const prepare = getStep(steps, 'Prepare historical release dependencies');
+
+  assert.equal(prepare.if, "steps.release.outputs.changed == 'true'");
+
+  assert.equal(prepare.shell, 'bash');
+
+  assert.match(prepare.run, /prepareHistoricalReleaseDependencies/);
+
+  assert.match(prepare.run, /scripts\/lib\/reconstruct-release-plan\.mjs/);
+
+  assert.doesNotMatch(
+    prepare.run,
+    /git\s+worktree\s+(?:add|remove)|pnpm\s+fetch/,
+    'Workflow must reuse the shared worktree implementation',
+  );
+});
+
+test('preparation has no publication credentials or effects', () => {
+  const { job, steps } = getSteps();
+
+  const prepare = getStep(steps, 'Prepare historical release dependencies');
+  const publish = getStep(steps, 'Publish eligible package versions and create tag');
+
+  assert.equal(
+    job.env?.NODE_AUTH_TOKEN,
+    undefined,
+    'Publication token must not be configured at job level',
+  );
+
+  assert.equal(prepare.env?.NODE_AUTH_TOKEN, undefined);
+
+  assert.doesNotMatch(prepare.run, /NODE_AUTH_TOKEN|NPM_TOKEN|npm\s+publish|git\s+push/);
+
+  assert.equal(publish.env?.NODE_AUTH_TOKEN, '${{ secrets.NPM_TOKEN }}');
+
+  assert.match(publish.run, /pnpm run release -- publish/);
+});
+
+test('publication and remote tag verification remain gated', () => {
+  const { steps } = getSteps();
+
+  const required = [
+    'Verify release manifest contract',
+    'Prepare historical release dependencies',
+    'Publish eligible package versions and create tag',
+    'Push release tag',
+    'Verify remote release tag',
+  ];
+
+  for (const name of required) {
+    const step = getStep(steps, name);
+
+    assert.equal(
+      step.if,
+      "steps.release.outputs.changed == 'true'",
+      `${name} must require an approved root version change`,
+    );
+  }
+
+  const manifest = getStep(steps, 'Verify release manifest contract');
+  const verifyTag = getStep(steps, 'Verify remote release tag');
+
+  assert.match(manifest.run, /validateReleaseTrigger/);
+  assert.match(verifyTag.run, /inspectRemoteReleaseTag/);
+});

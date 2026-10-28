@@ -92,6 +92,95 @@ jobs:
         if: steps.release.outputs.changed == 'true'
         run: pnpm install --frozen-lockfile
 
+      - name: Verify release manifest contract
+        if: steps.release.outputs.changed == 'true'
+        shell: bash
+        env:
+          RELEASE_BEFORE: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          if [[ ! "$RELEASE_BEFORE" =~ ^[0-9a-f]{40}$ ||
+                "$RELEASE_BEFORE" =~ ^0{40}$ ]]; then
+            echo "Invalid release base for manifest verification." >&2
+            exit 1
+          fi
+
+          previous_version="$(
+            git show "${RELEASE_BEFORE}:package.json" |
+              node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>process.stdout.write(JSON.parse(s).version))"
+          )"
+
+          current_version="$(node -p "require('./package.json').version")"
+
+          set +e
+          git diff --quiet "$RELEASE_BEFORE" HEAD -- scripts/release-manifest.json
+          diff_status=$?
+          set -e
+
+          if [[ "$diff_status" -eq 0 ]]; then
+            echo "Root version changed without a manifest change." >&2
+            exit 1
+          fi
+
+          if [[ "$diff_status" -ne 1 ]]; then
+            echo "Unable to inspect release manifest diff." >&2
+            exit 1
+          fi
+
+          PREVIOUS_VERSION="$previous_version" \
+          CURRENT_VERSION="$current_version" \
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          import {
+            validateReleaseTrigger,
+          } from './scripts/lib/release-integrity.mjs';
+
+          const manifest = JSON.parse(
+            readFileSync('scripts/release-manifest.json', 'utf8'),
+          );
+
+          const result = validateReleaseTrigger({
+            previousVersion: process.env.PREVIOUS_VERSION,
+            currentVersion: process.env.CURRENT_VERSION,
+            manifestChanged: true,
+            manifest,
+          });
+
+          console.log(
+            `Verified release transition: ${result.previousVersion} -> ${result.currentVersion}`,
+          );
+          console.log(
+            `Planned public packages: ${result.publicPackages.length}`,
+          );
+          NODE
+
+      - name: Prepare historical release dependencies
+        if: steps.release.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          import {
+            prepareHistoricalReleaseDependencies,
+          } from './scripts/lib/reconstruct-release-plan.mjs';
+
+          const manifest = JSON.parse(
+            readFileSync('scripts/release-manifest.json', 'utf8'),
+          );
+
+          const result = prepareHistoricalReleaseDependencies({
+            root: process.cwd(),
+            manifest,
+          });
+
+          console.log('Historical release dependencies prepared and verified.');
+          console.log(`Changesets: ${result.changesetIds.length}`);
+          console.log(`Planned releases: ${result.releases.length}`);
+          NODE
+
       - name: Publish eligible package versions and create tag
         if: steps.release.outputs.changed == 'true'
         env:
@@ -105,3 +194,47 @@ jobs:
           set -euo pipefail
           version="$(node -p "require('./package.json').version")"
           git push origin "v${version}"
+
+      - name: Verify remote release tag
+        if: steps.release.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version="$(node -p "require('./package.json').version")"
+          tag="v${version}"
+
+          remote_refs="$(
+            git ls-remote --tags origin \
+              "refs/tags/${tag}" \
+              "refs/tags/${tag}^{}"
+          )"
+
+          REMOTE_REFS="$remote_refs" \
+          RELEASE_TAG="$tag" \
+          EXPECTED_COMMIT="$GITHUB_SHA" \
+          node --input-type=module <<'NODE'
+          import {
+            inspectRemoteReleaseTag,
+          } from './scripts/lib/release-integrity.mjs';
+
+          const tag = process.env.RELEASE_TAG;
+          const expectedCommit = process.env.EXPECTED_COMMIT;
+          const refs = process.env.REMOTE_REFS;
+
+          const result = inspectRemoteReleaseTag({
+            tag,
+            expectedCommit,
+            remoteTagRefs: () => refs,
+          });
+
+          if (result.state !== 'matches') {
+            throw new Error(
+              `Remote tag verification failed: ${result.state}`,
+            );
+          }
+
+          console.log(
+            `Verified ${tag} -> ${result.targetCommit}`,
+          );
+          NODE

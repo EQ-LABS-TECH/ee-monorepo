@@ -1,38 +1,93 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
+import { performance } from 'node:perf_hooks';
 
-console.log('💅 Formatting code...');
-console.log('');
+function runPrettier(args) {
+  const options = {
+    encoding: 'utf8',
+    shell: false,
+    maxBuffer: 32 * 1024 * 1024,
+  };
 
-const prettierCheck = spawnSync('pnpm', ['exec', 'prettier', '--version'], {
-  stdio: 'pipe',
-  shell: true,
-  encoding: 'utf8',
-});
+  if (process.platform === 'win32') {
+    const command = ['pnpm', 'exec', 'prettier', ...args].join(' ');
+    return spawnSync('cmd.exe', ['/d', '/s', '/c', command], options);
+  }
 
-if (prettierCheck.status !== 0) {
+  return spawnSync('pnpm', ['exec', 'prettier', ...args], options);
+}
+
+console.log('💅 Formatting code...\n');
+
+const versionResult = runPrettier(['--version']);
+
+if (versionResult.error || versionResult.status !== 0) {
+  if (versionResult.stderr) process.stderr.write(versionResult.stderr);
   console.error('❌ Prettier is not available. Please run: pnpm install');
   process.exit(1);
 }
 
-console.log(`  Prettier: ${prettierCheck.stdout.trim()}`);
-console.log('');
+console.log(`  Prettier: ${versionResult.stdout.trim()}\n`);
 
-const result = spawnSync(
-  'pnpm',
-  ['exec', 'prettier', '--write', '.', '--ignore-path', '.prettierignore'],
-  {
-    stdio: 'inherit',
-    shell: true,
-  },
-);
+const startedAt = performance.now();
 
-if (result.status !== 0) {
-  console.error('');
-  console.error('❌ Formatting failed');
-  process.exit(result.status ?? 1);
+const result = runPrettier(['--write', '.', '--ignore-path', '.prettierignore']);
+
+const elapsedMs = Math.round(performance.now() - startedAt);
+
+const output = result.stdout ?? '';
+const lines = output.split(/\r?\n/).filter(Boolean);
+
+const unchangedFiles = [];
+const modifiedFiles = [];
+const otherLines = [];
+
+for (const line of lines) {
+  if (/\(unchanged\)\s*$/.test(line)) {
+    unchangedFiles.push(line);
+  } else if (/\s\d+(?:\.\d+)?ms\s*$/.test(line)) {
+    modifiedFiles.push(line);
+  } else {
+    otherLines.push(line);
+  }
 }
 
-console.log('');
-console.log('✅ Formatting completed!');
+if (modifiedFiles.length > 0) {
+  console.log('📝 Modified files:');
+  for (const file of modifiedFiles) {
+    console.log(`  ${file}`);
+  }
+  console.log('');
+} else {
+  console.log('  No formatting changes needed.\n');
+}
+
+// Preserve any unexpected output instead of silently discarding it.
+for (const line of otherLines) {
+  console.log(line);
+}
+
+if (result.stderr) {
+  process.stderr.write(result.stderr);
+}
+
+const processed = unchangedFiles.length + modifiedFiles.length;
+
+console.log('📊 Formatting Summary:');
+console.log(`  Files processed:  ${processed}`);
+console.log(`  Files modified:   ${modifiedFiles.length}`);
+console.log(`  Files unchanged:  ${unchangedFiles.length}`);
+console.log(`  Duration:         ${(elapsedMs / 1000).toFixed(2)}s`);
+
+if (result.error || result.status !== 0) {
+  console.error('\n❌ Formatting failed');
+
+  if (result.error) {
+    console.error(`  ${result.error.message}`);
+  }
+
+  process.exit(result.status || 1);
+}
+
+console.log('\n✅ Formatting completed!');

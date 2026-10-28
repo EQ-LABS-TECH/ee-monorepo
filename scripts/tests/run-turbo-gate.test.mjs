@@ -67,7 +67,14 @@ test('passes when execution evidence contains successful tasks', () => {
   assert.equal(contract.status, 'PASS');
   assert.equal(contract.gateId, 'QG-TYPE-001');
   assert.deepEqual(output.errors, []);
-  assert.deepEqual(output.args, ['exec', 'turbo', 'run', 'typecheck', '--summarize']);
+  assert.deepEqual(output.args, [
+    'exec',
+    'turbo',
+    'run',
+    'typecheck',
+    '--summarize',
+    '--output-logs=new-only',
+  ]);
 });
 
 test('returns SKIPPED only when the execution summary has zero tasks', () => {
