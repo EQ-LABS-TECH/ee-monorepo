@@ -57,3 +57,26 @@ test('independent verification precedes registry operations', () => {
     'publishRelease() must have exactly one verified release boundary.',
   );
 });
+
+test('publication preflight checks Git cleanliness after validation and build', () => {
+  const source = readPublishSource();
+
+  const publishCall = requirePosition(source, 'publishThenTag({');
+  const publishSource = source.slice(publishCall);
+
+  const validate = requirePosition(
+    publishSource,
+    "validate: () => execCommand('pnpm', ['validate']",
+  );
+  const build = requirePosition(publishSource, "build: () => execCommand('pnpm', ['run', 'build']");
+  const preflight = requirePosition(publishSource, 'preflight: () => {');
+  const cleanCheck = requirePosition(publishSource, 'assertCleanWorkingTree();');
+  const remoteCheck = requirePosition(publishSource, 'const state = inspectTag();');
+  const publish = requirePosition(publishSource, 'publish: async (pkg) => {');
+
+  assert.ok(validate < build);
+  assert.ok(build < preflight);
+  assert.ok(preflight < cleanCheck);
+  assert.ok(cleanCheck < remoteCheck);
+  assert.ok(remoteCheck < publish);
+});

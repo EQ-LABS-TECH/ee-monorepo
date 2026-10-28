@@ -682,6 +682,10 @@ async function publishRelease() {
         manifest,
         registryHasVersion,
         preflight: () => {
+          // validate runs Prettier in write mode. Never publish a working
+          // tree that was modified by validation or build.
+          assertCleanWorkingTree();
+
           const state = inspectTag();
 
           if (state.state !== 'absent') {

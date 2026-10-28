@@ -1114,7 +1114,7 @@ function createPreparationOperations(events, failAt = null) {
   );
 }
 
-test('T12: version-packages failure stops preparation before commit', async () => {
+test('version-packages failure stops preparation before commit', async () => {
   const events = [];
 
   await assert.rejects(
@@ -1128,7 +1128,7 @@ test('T12: version-packages failure stops preparation before commit', async () =
   assert.equal(events.includes('stage'), false);
 });
 
-test('T12: validation failure does not repeat versioning or commit', async () => {
+test('validation failure does not repeat versioning or commit', async () => {
   const events = [];
 
   await assert.rejects(
@@ -1150,7 +1150,7 @@ test('T12: validation failure does not repeat versioning or commit', async () =>
   assert.equal(events.includes('stage'), false);
 });
 
-test('T12: build failure prevents staging and commit', async () => {
+test('build failure prevents staging and commit', async () => {
   const events = [];
 
   await assert.rejects(
@@ -1171,7 +1171,7 @@ test('T12: build failure prevents staging and commit', async () => {
   assert.equal(events.includes('commit'), false);
 });
 
-test('T12: successful preparation runs all steps in order', async () => {
+test('successful preparation runs all steps in order', async () => {
   const events = [];
 
   await runReleasePreparation(createPreparationOperations(events));
@@ -1188,7 +1188,7 @@ test('T12: successful preparation runs all steps in order', async () => {
   ]);
 });
 
-test('T12: an invalid operation fails before creating a branch', async () => {
+test('an invalid operation fails before creating a branch', async () => {
   const events = [];
   const operations = createPreparationOperations(events);
 
@@ -1199,7 +1199,7 @@ test('T12: an invalid operation fails before creating a branch', async () => {
   assert.deepEqual(events, []);
 });
 
-test('T13: root version change without manifest change is rejected', () => {
+test('root version change without manifest change is rejected', () => {
   assert.throws(
     () =>
       validateReleaseTrigger({
@@ -1212,7 +1212,7 @@ test('T13: root version change without manifest change is rejected', () => {
   );
 });
 
-test('T13: release manifest with an incorrect base version is rejected', () => {
+test('release manifest with an incorrect base version is rejected', () => {
   const manifest = createPublicManifestFixture();
 
   assert.throws(
@@ -1227,7 +1227,7 @@ test('T13: release manifest with an incorrect base version is rejected', () => {
   );
 });
 
-test('T13: release manifest with an incorrect target version is rejected', () => {
+test('release manifest with an incorrect target version is rejected', () => {
   const manifest = createPublicManifestFixture();
 
   assert.throws(
@@ -1242,7 +1242,7 @@ test('T13: release manifest with an incorrect target version is rejected', () =>
   );
 });
 
-test('T14: valid prepared release transition is accepted', () => {
+test('valid prepared release transition is accepted', () => {
   const manifest = createPublicManifestFixture();
 
   const result = validateReleaseTrigger({
@@ -1261,7 +1261,7 @@ test('T14: valid prepared release transition is accepted', () => {
   );
 });
 
-test('T14: valid release plan excludes unrelated public packages', () => {
+test('valid release plan excludes unrelated public packages', () => {
   const manifest = createPublicManifestFixture();
 
   const result = validateReleaseTrigger({
@@ -1279,7 +1279,7 @@ test('T14: valid release plan excludes unrelated public packages', () => {
   assert.equal(result.publicPackages.length, 1);
 });
 
-test('F3-02: release source plan matching the manifest is accepted', () => {
+test('release source plan matching the manifest is accepted', () => {
   const manifest = createPublicManifestFixture();
 
   const result = validateReleaseSourcePlan({
@@ -1299,7 +1299,7 @@ test('F3-02: release source plan matching the manifest is accepted', () => {
   assert.equal(result.publicPackages.length, 1);
 });
 
-test('F3-02: missing independent source plan is rejected', () => {
+test('missing independent source plan is rejected', () => {
   assert.throws(
     () =>
       validateReleaseSourcePlan({
@@ -1309,7 +1309,7 @@ test('F3-02: missing independent source plan is rejected', () => {
   );
 });
 
-test('F3-02: unknown Changeset ID is rejected', () => {
+test('unknown Changeset ID is rejected', () => {
   assert.throws(
     () =>
       validateReleaseSourcePlan({
@@ -1328,7 +1328,7 @@ test('F3-02: unknown Changeset ID is rejected', () => {
   );
 });
 
-test('F3-02: unapproved package is rejected', () => {
+test('unapproved package is rejected', () => {
   assert.throws(
     () =>
       validateReleaseSourcePlan({
@@ -1347,7 +1347,7 @@ test('F3-02: unapproved package is rejected', () => {
   );
 });
 
-test('F3-02: release type mismatch is rejected', () => {
+test('release type mismatch is rejected', () => {
   assert.throws(
     () =>
       validateReleaseSourcePlan({
@@ -1366,7 +1366,7 @@ test('F3-02: release type mismatch is rejected', () => {
   );
 });
 
-test('F3-02: Git base Changeset inventory matches manifest', () => {
+test('Git base Changeset inventory matches manifest', () => {
   const manifest = createPublicManifestFixture();
 
   const result = validateReleaseChangesetFiles({
@@ -1377,7 +1377,7 @@ test('F3-02: Git base Changeset inventory matches manifest', () => {
   assert.deepEqual(result, ['test-release']);
 });
 
-test('F3-02: missing Changeset in Git base is rejected', () => {
+test('missing Changeset in Git base is rejected', () => {
   assert.throws(
     () =>
       validateReleaseChangesetFiles({
@@ -1388,7 +1388,7 @@ test('F3-02: missing Changeset in Git base is rejected', () => {
   );
 });
 
-test('F3-02: extra Changeset in Git base is rejected', () => {
+test('extra Changeset in Git base is rejected', () => {
   assert.throws(
     () =>
       validateReleaseChangesetFiles({
@@ -1399,7 +1399,7 @@ test('F3-02: extra Changeset in Git base is rejected', () => {
   );
 });
 
-test('F3-02: unexpected nested Changeset file is rejected', () => {
+test('unexpected nested Changeset file is rejected', () => {
   assert.throws(
     () =>
       validateReleaseChangesetFiles({
@@ -1410,7 +1410,7 @@ test('F3-02: unexpected nested Changeset file is rejected', () => {
   );
 });
 
-test('F3-02: invalid Git source inventory is rejected', () => {
+test('invalid Git source inventory is rejected', () => {
   assert.throws(
     () =>
       validateReleaseChangesetFiles({
@@ -1421,7 +1421,7 @@ test('F3-02: invalid Git source inventory is rejected', () => {
   );
 });
 
-test('F3-02: Git base root version matches manifest', () => {
+test('Git base root version matches manifest', () => {
   const manifest = createPublicManifestFixture();
 
   const result = validateReleaseBaseVersion({
@@ -1435,7 +1435,7 @@ test('F3-02: Git base root version matches manifest', () => {
   assert.equal(result, '1.0.0');
 });
 
-test('F3-02: altered manifest base version is rejected', () => {
+test('altered manifest base version is rejected', () => {
   const manifest = createPublicManifestFixture();
 
   assert.throws(
@@ -1451,7 +1451,7 @@ test('F3-02: altered manifest base version is rejected', () => {
   );
 });
 
-test('F3-02: invalid Git base package JSON is rejected', () => {
+test('invalid Git base package JSON is rejected', () => {
   assert.throws(
     () =>
       validateReleaseBaseVersion({
@@ -1462,7 +1462,7 @@ test('F3-02: invalid Git base package JSON is rejected', () => {
   );
 });
 
-test('F3-02: missing Git base package version is rejected', () => {
+test('missing Git base package version is rejected', () => {
   assert.throws(
     () =>
       validateReleaseBaseVersion({
@@ -1475,7 +1475,7 @@ test('F3-02: missing Git base package version is rejected', () => {
   );
 });
 
-test('F3-02: original Changeset package and type match manifest', () => {
+test('original Changeset package and type match manifest', () => {
   const result = validateReleaseChangesetContent({
     manifest: createPublicManifestFixture(),
     sourceFiles: {
@@ -1492,7 +1492,7 @@ test('F3-02: original Changeset package and type match manifest', () => {
   assert.deepEqual(result.declaredReleases, [{ name: '@eq-labs/public-new', type: 'minor' }]);
 });
 
-test('F3-02: missing original Changeset content is rejected', () => {
+test('missing original Changeset content is rejected', () => {
   assert.throws(
     () =>
       validateReleaseChangesetContent({
@@ -1503,7 +1503,7 @@ test('F3-02: missing original Changeset content is rejected', () => {
   );
 });
 
-test('F3-02: unapproved package in original Changeset is rejected', () => {
+test('unapproved package in original Changeset is rejected', () => {
   assert.throws(
     () =>
       validateReleaseChangesetContent({
@@ -1522,7 +1522,7 @@ test('F3-02: unapproved package in original Changeset is rejected', () => {
   );
 });
 
-test('F3-02: original major release cannot be downgraded', () => {
+test('original major release cannot be downgraded', () => {
   assert.throws(
     () =>
       validateReleaseChangesetContent({
@@ -1541,7 +1541,7 @@ test('F3-02: original major release cannot be downgraded', () => {
   );
 });
 
-test('F3-02: malformed Changeset frontmatter is rejected', () => {
+test('malformed Changeset frontmatter is rejected', () => {
   assert.throws(
     () =>
       validateReleaseChangesetContent({
@@ -1554,7 +1554,7 @@ test('F3-02: malformed Changeset frontmatter is rejected', () => {
   );
 });
 
-test('F3-02: duplicate package keys in Changeset are rejected', () => {
+test('duplicate package keys in Changeset are rejected', () => {
   assert.throws(
     () =>
       validateReleaseChangesetContent({
@@ -1574,7 +1574,7 @@ test('F3-02: duplicate package keys in Changeset are rejected', () => {
   );
 });
 
-test('F3-02: effective Changesets releases are normalized', () => {
+test('effective Changesets releases are normalized', () => {
   const result = parseEffectiveChangesetsPlan({
     releases: [
       {
@@ -1606,7 +1606,7 @@ test('F3-02: effective Changesets releases are normalized', () => {
   ]);
 });
 
-test('F3-02: effective releases include dependency-derived packages', () => {
+test('effective releases include dependency-derived packages', () => {
   const result = parseEffectiveChangesetsPlan({
     changesets: [
       {
@@ -1634,21 +1634,21 @@ test('F3-02: effective releases include dependency-derived packages', () => {
   );
 });
 
-test('F3-02: missing effective release plan is rejected', () => {
+test('missing effective release plan is rejected', () => {
   assert.throws(
     () => parseEffectiveChangesetsPlan({ changesets: [] }),
     /Missing effective Changesets release plan/,
   );
 });
 
-test('F3-02: empty effective release plan is rejected', () => {
+test('empty effective release plan is rejected', () => {
   assert.throws(
     () => parseEffectiveChangesetsPlan({ releases: [] }),
     /Effective Changesets release plan is empty/,
   );
 });
 
-test('F3-02: duplicate effective package releases are rejected', () => {
+test('duplicate effective package releases are rejected', () => {
   assert.throws(
     () =>
       parseEffectiveChangesetsPlan({
@@ -1669,7 +1669,7 @@ test('F3-02: duplicate effective package releases are rejected', () => {
   );
 });
 
-test('F3-02: malformed effective version is rejected', () => {
+test('malformed effective version is rejected', () => {
   assert.throws(
     () =>
       parseEffectiveChangesetsPlan({
@@ -1685,7 +1685,7 @@ test('F3-02: malformed effective version is rejected', () => {
   );
 });
 
-test('F3-02: effective versions match the versioned workspace', () => {
+test('effective versions match the versioned workspace', () => {
   const releases = [
     { name: '@eq-labs/package-a', version: '1.1.0', type: 'minor' },
     { name: '@eq-labs/dependent', version: '2.0.1', type: 'patch' },
@@ -1702,7 +1702,7 @@ test('F3-02: effective versions match the versioned workspace', () => {
   assert.deepEqual(result, releases);
 });
 
-test('F3-02: altered versioned package is rejected', () => {
+test('altered versioned package is rejected', () => {
   assert.throws(
     () =>
       validateEffectiveReleaseVersions({
@@ -1713,7 +1713,7 @@ test('F3-02: altered versioned package is rejected', () => {
   );
 });
 
-test('F3-02: missing dependency-derived package is rejected', () => {
+test('missing dependency-derived package is rejected', () => {
   assert.throws(
     () =>
       validateEffectiveReleaseVersions({
@@ -1724,7 +1724,7 @@ test('F3-02: missing dependency-derived package is rejected', () => {
   );
 });
 
-test('F3-02: duplicate effective release is rejected', () => {
+test('duplicate effective release is rejected', () => {
   assert.throws(
     () =>
       validateEffectiveReleaseVersions({
@@ -1738,7 +1738,7 @@ test('F3-02: duplicate effective release is rejected', () => {
   );
 });
 
-test('F3-02: empty effective plan is rejected before manifest creation', () => {
+test('empty effective plan is rejected before manifest creation', () => {
   assert.throws(
     () =>
       validateEffectiveReleaseVersions({
@@ -1749,7 +1749,7 @@ test('F3-02: empty effective plan is rejected before manifest creation', () => {
   );
 });
 
-test('F3-02: independent effective plan matches manifest exactly', () => {
+test('independent effective plan matches manifest exactly', () => {
   const manifest = createPublicManifestFixture();
 
   const result = validateEffectiveSourcePlan({
@@ -1767,7 +1767,7 @@ test('F3-02: independent effective plan matches manifest exactly', () => {
   assert.deepEqual(result.releases, manifest.releases);
 });
 
-test('F3-02: effective source version mismatch is rejected', () => {
+test('effective source version mismatch is rejected', () => {
   assert.throws(
     () =>
       validateEffectiveSourcePlan({
@@ -1785,7 +1785,7 @@ test('F3-02: effective source version mismatch is rejected', () => {
   );
 });
 
-test('F3-02: unplanned derived release is rejected', () => {
+test('unplanned derived release is rejected', () => {
   assert.throws(
     () =>
       validateEffectiveSourcePlan({
@@ -1808,7 +1808,7 @@ test('F3-02: unplanned derived release is rejected', () => {
   );
 });
 
-test('F3-02: missing effective source release is rejected', () => {
+test('missing effective source release is rejected', () => {
   assert.throws(
     () =>
       validateEffectiveSourcePlan({
@@ -1820,7 +1820,7 @@ test('F3-02: missing effective source release is rejected', () => {
   );
 });
 
-test('F3-02: duplicate effective source release is rejected', () => {
+test('duplicate effective source release is rejected', () => {
   assert.throws(
     () =>
       validateEffectiveSourcePlan({

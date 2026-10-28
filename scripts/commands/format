@@ -2,6 +2,7 @@
 
 import { spawnSync } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
+import { parsePrettierOutput } from '../lib/parse-prettier-output.mjs';
 
 function runPrettier(args) {
   const options = {
@@ -36,22 +37,9 @@ const result = runPrettier(['--write', '.', '--ignore-path', '.prettierignore'])
 
 const elapsedMs = Math.round(performance.now() - startedAt);
 
-const output = result.stdout ?? '';
-const lines = output.split(/\r?\n/).filter(Boolean);
-
-const unchangedFiles = [];
-const modifiedFiles = [];
-const otherLines = [];
-
-for (const line of lines) {
-  if (/\(unchanged\)\s*$/.test(line)) {
-    unchangedFiles.push(line);
-  } else if (/\s\d+(?:\.\d+)?ms\s*$/.test(line)) {
-    modifiedFiles.push(line);
-  } else {
-    otherLines.push(line);
-  }
-}
+const { modifiedFiles, unchangedFiles, otherLines, processed } = parsePrettierOutput(
+  result.stdout ?? '',
+);
 
 if (modifiedFiles.length > 0) {
   console.log('📝 Modified files:');
@@ -71,8 +59,6 @@ for (const line of otherLines) {
 if (result.stderr) {
   process.stderr.write(result.stderr);
 }
-
-const processed = unchangedFiles.length + modifiedFiles.length;
 
 console.log('📊 Formatting Summary:');
 console.log(`  Files processed:  ${processed}`);
