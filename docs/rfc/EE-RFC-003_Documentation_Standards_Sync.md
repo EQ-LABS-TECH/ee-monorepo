@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**                   | D — Cambio Significativo / Transversal                                                                              |
 | **Nivel**                           | Estratégico                                                                                                         |
 | **Normativo**                       | Sí                                                                                                                  |
-| **Versión**                         | v0.5.0                                                                                                              |
+| **Versión**                         | v0.6.0                                                                                                              |
 | **Estado**                          | Propuesto (vehículo abierto — auditoría)                                                                            |
 | **Propietario**                     | Equipo de Arquitectura                                                                                              |
 | **Documento padre**                 | EE-DOC-005                                                                                                          |
@@ -27,7 +27,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**                    | Pendiente — RFC Propuesto                                                                                           |
 | **Audiencia**                       | Arquitectura, Desarrollo, IA, QA                                                                                    |
 | **Fecha de creación**               | 2026-10-11                                                                                                          |
-| **Última revisión**                 | 2026-10-24                                                                                                          |
+| **Última revisión**                 | 2026-10-28                                                                                                          |
 | **Próxima revisión**                | Pendiente de cierre de la oleada de auditoría                                                                       |
 
 > **Régimen:** este RFC permanece en estado **Propuesto** de forma deliberada mientras dure la **auditoría documental** del monorepo. Está indexado en **EE-DOC-001 §09.2**. Acumula y ratifica cambios Tipo D de estándares (plantillas, catálogo, metadatos, VAL/WAIVE, reglas AR volcadas a 002, etc.). **No** se interpreta como Aprobado ni como alcance cerrado hasta el cierre formal de la oleada de auditoría.
@@ -103,9 +103,53 @@ La integridad del release requiere garantizar que el plan autorizado corresponde
 
 Permanece pendiente de decisión si un release del Engineering Ecosystem puede finalizar sin paquetes npm públicos planificados. Debe distinguirse entre versionar el ecosistema y distribuir paquetes. Esta decisión condiciona la elegibilidad y creación del tag y debe resolverse antes de declarar conforme el contrato de release.
 
-Los hallazgos vinculados son **PN-021** (política de publicación npm y orden commit/tag) y **PN-030** (alineación entre CODEOWNERS, ruleset, CI y script de release). Ambos permanecen abiertos hasta que el contrato normativo, la implementación y la evidencia estén alineados.
+Los hallazgos vinculados son **PN-021** (política de publicación npm y orden commit/tag), **PN-017** (aprobaciones reforzadas para cambios críticos), **PN-019** (regularización del régimen transitorio de bypass) y **PN-030** (alineación entre CODEOWNERS, rulesets, CI, permisos y automatización de release). Permanecen abiertos hasta disponer de decisiones aprobadas, configuración efectiva y evidencia verificable.
 
-Esta ampliación se gestiona en RFC-003 como parte de la oleada de auditoría. La inclusión aquí no aprueba automáticamente los cambios, no modifica documentos congelados ni configura GitHub. Cada materialización debe seguir el proceso gobernado aplicable; el RFC puede permanecer abierto mientras se aprueban e implementan paquetes de trabajo parciales.
+#### Gobernanza escalable de revisión y aprobación
+
+Se propone materializar el modelo de aprobación establecido por EE-DOC-005 y EE-DOC-007, distinguiendo cambios ordinarios y críticos.
+
+Los cambios ordinarios requieren al menos una aprobación calificada e independiente del autor y los Quality Gates aplicables. Los cambios críticos requieren al menos dos aprobaciones calificadas e independientes del autor, conforme al contrato normativo vigente.
+
+La clasificación de criticidad deberá basarse en los criterios definidos en EE-DOC-005, sin depender exclusivamente de etiquetas o declaraciones que el autor pueda modificar unilateralmente.
+
+CODEOWNERS mantiene la responsabilidad técnica sobre las áreas del monorepo. Su integración con los mecanismos de revisión deberá garantizar la participación de propietarios elegibles, sin introducir ownership ficticio ni conceder permisos administrativos innecesarios.
+
+#### Régimen transitorio de adopción
+
+Mientras la composición del equipo no permita satisfacer todas las aprobaciones independientes exigidas para cambios críticos, cualquier excepción deberá estar formalmente autorizada, documentada, justificada y sujeta a revisión y cierre.
+
+El régimen transitorio no constituye cumplimiento del umbral definitivo ni permite declarar ejecutados controles omitidos.
+
+La incorporación de nuevos revisores deberá permitir completar el enforcement sin redefinir los criterios normativos, el ownership o los Quality Gates.
+
+#### Gobernanza de bypass
+
+Las autorizaciones de bypass deberán tener una finalidad excepcional, un alcance explícito, autoridad responsable, trazabilidad y condiciones de revisión y cierre.
+
+Las excepciones permanentes observadas en la configuración remota deberán evaluarse individualmente antes de su modificación. El bypass no podrá sustituir el proceso ordinario de Pull Request, revisión y validación.
+
+#### Gobernanza de tags y publicación
+
+La protección de tags de release deberá distinguir creación autorizada, actualización y eliminación, preservando la integridad de los identificadores de versión.
+
+La identidad de publicación deberá disponer únicamente de los permisos necesarios para ejecutar el proceso aprobado. La autenticación npm y las condiciones de finalización del release deberán verificarse antes de declarar conforme la operación.
+
+La política aplicable a releases sin paquetes públicos planificados continúa pendiente de decisión normativa bajo PN-021.
+
+#### Criterios de materialización
+
+La implementación deberá demostrar, mediante pruebas y evidencia operativa:
+
+1. Bloqueo de integración sin las aprobaciones y Quality Gates exigibles.
+2. Participación efectiva de CODEOWNERS conforme a las responsabilidades aprobadas.
+3. Aplicación del control reforzado de aprobación para cambios críticos.
+4. Excepciones transitorias y bypass autorizados, trazables y sujetos a cierre.
+5. Protección efectiva de los tags frente a operaciones no autorizadas.
+6. Compatibilidad entre la identidad de publicación, los permisos GitHub y la autenticación npm.
+7. Ausencia de regresiones en los procesos de CI y release existentes.
+
+Esta ampliación se gestiona en RFC-003 como parte de la oleada de auditoría. Su inclusión no equivale a aprobación normativa, no modifica documentos congelados y no autoriza cambios en GitHub. Cada materialización deberá seguir el proceso gobernado aplicable.
 
 ---
 
@@ -388,13 +432,14 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                            | Cambios                                                                                                                                                   | Estado       |
-| ---------- | ---------- | ---------------------- | ---------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura | —                      | C-01 auditoría 002                | Creación RFC Tipo D retroactivo                                                                                                                           | Propuesto    |
-| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Vehículo abierto auditoría        | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                   | **Aprobado** |
-| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Conformidad §18.5                 | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado | **Aprobado** |
-| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación pre-main            | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                           | **Aprobado** |
-| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría transversal de releases | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.       | **Aprobado** |
+| Versión    | Fecha      | Autor                    | Aprobado por             | Motivo                            | Cambios                                                                                                                                                                           | Estado       |
+| ---------- | ---------- | ------------------------ | ------------------------ | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura   | —                        | C-01 auditoría 002                | Creación RFC Tipo D retroactivo                                                                                                                                                   | Propuesto    |
+| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura   | Equipo de Arquitectura   | Vehículo abierto auditoría        | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                                           | **Aprobado** |
+| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura   | Equipo de Arquitectura   | Conformidad §18.5                 | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado                         | **Aprobado** |
+| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura   | Equipo de Arquitectura   | Consolidación pre-main            | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                                                   | **Aprobado** |
+| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura   | Equipo de Arquitectura   | Auditoría transversal de releases | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.                               | **Aprobado** |
+| **v0.6.0** | 2026-10-28 | Responsable del proyecto | Responsable del proyecto | Gobernanza escalable de GitHub    | Amplía §02.8 con PN-017/PN-019/PN-030: revisión independiente, CODEOWNERS, aprobaciones críticas, régimen transitorio, bypass, protección de tags y criterios de materialización. | **Aprobado** |
 
 ---
 
