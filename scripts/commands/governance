@@ -1,0 +1,18 @@
+import { inspectPrGovernance } from '../lib/pr-governance.inspect.mjs';
+
+const repository = process.env.GITHUB_REPOSITORY ?? '';
+const [owner, repo, ...rest] = repository.split('/');
+const number = Number(process.env.PR_NUMBER);
+const token = process.env.GITHUB_TOKEN;
+if (!owner || !repo || rest.length || !Number.isSafeInteger(number) || number < 1 || !token) {
+  console.error('PN-017 advisory evidence unavailable: invalid PR context');
+  process.exitCode = 1;
+} else {
+  try {
+    const report = await inspectPrGovernance({ owner, repo, number, token });
+    console.log(JSON.stringify(report, null, 2));
+  } catch (error) {
+    console.error(`PN-017 advisory evidence unavailable: ${error.message}`);
+    process.exitCode = 1;
+  }
+}
