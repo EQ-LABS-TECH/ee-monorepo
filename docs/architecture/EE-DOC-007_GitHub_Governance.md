@@ -149,8 +149,6 @@ La identificación concreta de la organización deberá registrarse en la config
 
 Este documento **no fija** el nombre de la organización ni los identificadores de equipos. Dichos valores son materia de implementación y no forman parte de la especificación normativa, conforme al principio de no incorporar nombres personales ni identificadores operativos en documentos de gobernanza.
 
----
-
 ### 05.2. Repositorio Principal
 
 El Engineering Ecosystem utiliza un modelo **Monorepo** como estrategia principal de organización del código fuente.
@@ -168,8 +166,6 @@ La estructura interna del repositorio se encuentra definida normativamente en:
 - **EE-DOC-006 — Repository Structure**
 
 La existencia de un único repositorio principal no impide que puedan existir repositorios adicionales en el futuro cuando exista una necesidad arquitectónica, organizacional o técnica formalmente justificada.
-
----
 
 ### 05.3. Modelo de Repositorios
 
@@ -197,8 +193,6 @@ La creación de repositorios adicionales deberá estar respaldada por una necesi
 
 Cuando la justificación de un repositorio adicional implique una decisión arquitectónica o un cambio transversal, deberá gestionarse conforme al mecanismo de cambio gobernado de **EE-DOC-005** (ADR o RFC, según corresponda).
 
----
-
 ### 05.4. Convenciones de Nombres de Repositorios
 
 Los repositorios administrados por el Engineering Ecosystem deberán utilizar la convención:
@@ -223,8 +217,6 @@ ee-monorepo
 
 Cualquier cambio posterior del nombre deberá gestionarse mediante el mecanismo de cambio gobernado correspondiente.
 
----
-
 ### 05.5. Administración y Responsabilidad
 
 La gobernanza normativa del Engineering Ecosystem corresponde al **Equipo de Arquitectura**.
@@ -241,8 +233,6 @@ La administración operativa de GitHub deberá separar:
 | Control de cambios                 | Pull Request + Code Review        |
 
 La asignación de usuarios individuales, equipos concretos y permisos específicos se definirá en las secciones correspondientes de este documento y no deberá establecerse mediante nombres personales dentro de la norma.
-
----
 
 ### 05.6. Principio de Separación de Responsabilidades
 
@@ -285,8 +275,6 @@ Quality Gates
 Merge
 ```
 
----
-
 ### 05.7. Estado de Definiciones Organizacionales
 
 | Definición                          | Estado                                    |
@@ -302,8 +290,6 @@ Merge
 | Protección de branches              | **Sección 07**                            |
 | CODEOWNERS                          | **Sección 08**                            |
 | GitHub Actions                      | **Sección 09**                            |
-
----
 
 ### 05.8. Límites Normativos
 
@@ -342,8 +328,6 @@ El modelo deberá cumplir los siguientes principios:
 | **No Personal Governance** | Las reglas normativas no deberán depender de una única cuenta personal.                                          |
 | **Automation Isolation**   | Las automatizaciones deberán utilizar identidades y permisos específicos para sus operaciones.                   |
 
----
-
 ### 06.2. Categorías de Acceso
 
 La gobernanza de GitHub deberá distinguir, como mínimo, las siguientes categorías:
@@ -369,8 +353,6 @@ Estas categorías representan **responsabilidades funcionales**, no necesariamen
 
 La creación de los equipos concretos y su configuración técnica se definirá durante la implementación de este documento.
 
----
-
 ### 06.3. Architecture Authority
 
 El **Equipo de Arquitectura** constituye la autoridad normativa del Engineering Ecosystem.
@@ -386,8 +368,6 @@ Sus responsabilidades incluyen:
 La autoridad arquitectónica **no implica automáticamente privilegios administrativos ilimitados sobre GitHub**.
 
 Los permisos técnicos deberán asignarse de acuerdo con la función operativa realmente requerida.
-
----
 
 ### 06.4. Repository Administration
 
@@ -405,8 +385,6 @@ Entre sus responsabilidades podrán incluirse:
 
 La identidad concreta de los administradores deberá definirse en la configuración de GitHub y no mediante nombres personales dentro de este documento.
 
----
-
 ### 06.5. Maintainers
 
 Los **Maintainers** representan el nivel operativo responsable de mantener la integridad técnica del repositorio.
@@ -422,8 +400,6 @@ Sus responsabilidades incluyen:
 Los Maintainers no deberán recibir automáticamente permisos administrativos de organización.
 
 Su nivel de acceso deberá corresponder a las responsabilidades técnicas asignadas.
-
----
 
 ### 06.6. Contributors
 
@@ -457,8 +433,6 @@ El acceso de un Contributor deberá permitir realizar el trabajo de desarrollo s
 
 EE-DOC-005 establece que el Pull Request constituye la solicitud de fusión hacia la rama principal y que Code Review y Quality Gates forman parte del control previo al Merge.
 
----
-
 ### 06.7. Automation
 
 Las automatizaciones deberán considerarse identidades operativas independientes.
@@ -480,8 +454,6 @@ flowchart TD
 Una automatización no deberá utilizar permisos administrativos generales cuando pueda ejecutar la misma operación mediante permisos restringidos.
 
 La definición detallada de los workflows, eventos, permisos de Actions y mecanismos de secretos corresponde a la **Sección 09 — GitHub Actions y Automatizaciones**.
-
----
 
 ### 06.8. Matriz Inicial de Responsabilidades
 
@@ -515,8 +487,6 @@ Esta matriz es conceptual y no constituye todavía una asignación de permisos t
 3. Architecture Authority es **Accountable** de la integridad normativa del review; Maintainers son **Responsible** de ejecutar la revisión técnica según ownership.
 4. **Accountable** y **Responsible** en esta matriz son roles de gobernanza conceptual. **No equivalen** a roles técnicos de GitHub (Owner, Admin, Maintain, Write, Triage, Read). Los permisos técnicos de la plataforma se asignan durante la implementación (`EE-IMP-007-P02`) conforme al principio de mínimo privilegio y no se derivan automáticamente de esta matriz.
 
----
-
 ### 06.9. Equipos de GitHub
 
 La gobernanza deberá favorecer la asignación de permisos mediante **equipos** en lugar de conceder permisos individualmente siempre que GitHub permita aplicar dicha política.
@@ -541,8 +511,6 @@ flowchart TD
 Los nombres definitivos de los equipos deberán establecerse durante la implementación de EE-DOC-007.
 
 No se deberán introducir nombres de usuarios individuales como parte de la especificación normativa.
-
----
 
 ### 06.10. Administración de Accesos
 
@@ -574,8 +542,6 @@ El acceso deberá revisarse cuando:
 - cambie la estructura organizacional;
 - cambien las políticas de seguridad o gobernanza.
 
----
-
 ### 06.11. Revocación de Accesos
 
 El acceso deberá revocarse cuando desaparezca la necesidad que justificó su otorgamiento.
@@ -587,8 +553,6 @@ La revocación deberá conservar trazabilidad suficiente para determinar:
 - fecha de modificación;
 - responsable de la modificación;
 - motivo cuando corresponda.
-
----
 
 ### 06.12. Límites del Modelo
 
@@ -607,8 +571,6 @@ Esta sección establece el **modelo conceptual de acceso**, pero no define todav
 
 Estos elementos se definirán en las secciones especializadas de **EE-DOC-007**.
 
----
-
 ### 06.13. Criterio de Evolución
 
 Cualquier modificación del modelo de permisos deberá evaluarse conforme al mecanismo de cambio gobernado definido por **EE-DOC-005**.
@@ -620,8 +582,6 @@ Una modificación que introduzca una nueva decisión arquitectónica deberá eva
 Una modificación significativa o transversal deberá evaluarse para determinar si requiere un **RFC**.
 
 EE-DOC-005 define precisamente ADR como el registro formal de una decisión arquitectónica y RFC como la propuesta formal para cambios significativos o transversales.
-
----
 
 ### 06.14. Estado de Definiciones
 
@@ -652,8 +612,6 @@ Las ramas protegidas constituyen el mecanismo de control de integridad del repos
 Esta sección establece las reglas que deberán materializarse mediante la configuración de protección de ramas de GitHub, manteniendo como fuente normativa del workflow las reglas definidas en **EE-DOC-005 — Development Workflow**.
 
 La protección deberá impedir modificaciones directas sobre las ramas principales y exigir el flujo controlado de Pull Request, Code Review y Quality Gates antes de permitir su integración.
-
----
 
 ### 07.2. Estrategias de Branching Soportadas
 
@@ -690,8 +648,6 @@ flowchart TD
 
 Esta regla deriva directamente de `EE-DOC-005`, que establece que el modelo de branching es una decisión del proyecto y que no debe cambiarse durante su ciclo de vida sin un ADR aprobado por el Equipo de Arquitectura.
 
----
-
 ### 07.3. Ramas Protegidas
 
 Las ramas permanentes que participen en el flujo principal de integración deberán estar protegidas.
@@ -712,8 +668,6 @@ La matriz normativa es:
 | `experiment/*` | Temporal    | Sin protección especial | Según destino                         |
 
 La clasificación y ciclo de vida de estas ramas provienen de `EE-DOC-005`.
-
----
 
 ### 07.4. Protección de `main`
 
@@ -749,8 +703,6 @@ flowchart TD
 
 `EE-DOC-005` establece que `main` es permanente, protegida y bloqueada para escritura directa.
 
----
-
 ### 07.5. Protección de `develop`
 
 Cuando un proyecto utilice la estrategia **Main + Develop**, la rama `develop` deberá recibir protección equivalente a la rama `main` en cuanto a control de integración.
@@ -780,8 +732,6 @@ flowchart LR
 
 La existencia condicional de `develop` y su función como rama de integración están definidas por `EE-DOC-005`.
 
----
-
 ### 07.6. Escritura Directa
 
 No se permitirá escritura directa sobre:
@@ -802,8 +752,6 @@ La configuración de GitHub deberá impedir, como mínimo:
 
 La protección técnica deberá estar aplicada en GitHub y no depender únicamente de una convención humana.
 
----
-
 ### 07.7. Pull Request Obligatorio
 
 Todo cambio destinado a una rama protegida deberá ingresar mediante Pull Request.
@@ -818,8 +766,6 @@ El Pull Request deberá cumplir las reglas establecidas por `EE-DOC-005`, incluy
 - Evidencia adicional cuando aplique.
 
 `EE-DOC-005` establece además que los PR deberán ser pequeños y enfocados y que deben incluir la referencia al Issue correspondiente.
-
----
 
 ### 07.8. Code Review
 
@@ -847,8 +793,6 @@ La definición concreta de los patrones de ownership pertenece a la **Sección 0
 
 EE-DOC-007 no redefine qué constituye un cambio crítico; esa clasificación permanece bajo el workflow y la gobernanza del ecosistema.
 
----
-
 ### 07.9. Quality Gates Obligatorios
 
 Ningún cambio destinado a una rama protegida deberá integrarse mientras los Quality Gates obligatorios no hayan finalizado satisfactoriamente.
@@ -874,8 +818,6 @@ flowchart LR
 La definición detallada de los Quality Gates no pertenece a `EE-DOC-007`; será establecida por **EE-DOC-010 — Quality Gates**.
 
 Por tanto, EE-DOC-007 establece únicamente el requisito de integración con dichos controles.
-
----
 
 ### 07.10. Cambios Críticos
 
@@ -904,8 +846,6 @@ flowchart TD
     Critical --> Merge
 ```
 
----
-
 ### 07.11. Estrategia de Merge
 
 La estrategia de integración deberá respetar las reglas establecidas en `EE-DOC-005`.
@@ -919,8 +859,6 @@ Actualmente se define:
 | **Merge Commit**     | Prohibido                                       |
 
 Estas reglas son normativas del workflow y la configuración de GitHub deberá impedir las estrategias incompatibles cuando técnicamente sea posible.
-
----
 
 ### 07.12. Resolución de Conflictos
 
@@ -948,8 +886,6 @@ flowchart TD
 
 Esta regla se encuentra establecida en `EE-DOC-005`.
 
----
-
 ### 07.13. Protección de Ramas Temporales
 
 Las ramas temporales no requieren protección equivalente a `main` o `develop`.
@@ -964,8 +900,6 @@ Sin embargo, deberán cumplir:
 - Eliminación posterior al Merge.
 
 `EE-DOC-005` establece que las ramas deben tener una vida máxima de 7 días sin actividad y deben eliminarse después de ser fusionadas.
-
----
 
 ### 07.14. Hotfix
 
@@ -999,8 +933,6 @@ flowchart TD
 
 Esta regla deriva directamente del `Hotfix Workflow` definido en `EE-DOC-005`.
 
----
-
 ### 07.15. Reglas Técnicas de Protección
 
 La configuración de GitHub deberá materializar, como mínimo, los siguientes controles sobre las ramas protegidas:
@@ -1020,8 +952,6 @@ La configuración de GitHub deberá materializar, como mínimo, los siguientes c
 | Resolución de conflictos en branch protegida | **No** |  **No**   |
 
 La columna `develop` será aplicable únicamente cuando el proyecto haya adoptado la estrategia **Main + Develop**.
-
----
 
 ### 07.16. Relación con CODEOWNERS
 
@@ -1051,8 +981,6 @@ flowchart LR
 
 La especificación detallada de `CODEOWNERS` pertenece a la **Sección 08**.
 
----
-
 ### 07.17. Bypass de Protección
 
 Las protecciones de ramas no deberán ser evitables mediante permisos administrativos ordinarios.
@@ -1065,8 +993,6 @@ Cualquier mecanismo excepcional de bypass deberá:
 4. no convertirse en el flujo normal de integración.
 
 La definición de excepciones específicas deberá evaluarse durante la implementación técnica de GitHub.
-
----
 
 ### 07.18. Estado de Definiciones
 
@@ -1123,8 +1049,6 @@ flowchart LR
     Protection --> Merge
 ```
 
----
-
 ### 08.2. Ubicación
 
 El archivo normativo de ownership deberá ubicarse en:
@@ -1138,8 +1062,6 @@ ee-monorepo/
 Esta ubicación forma parte de la estructura normativa establecida por **EE-DOC-006 — Repository Structure**.
 
 El archivo deberá mantenerse versionado junto con el repositorio.
-
----
 
 ### 08.3. Principios de Ownership
 
@@ -1155,8 +1077,6 @@ El modelo de `CODEOWNERS` deberá cumplir los siguientes principios:
 | **Separation of Concerns**      | Ownership no implica automáticamente privilegios administrativos.                           |
 | **Architecture Governance**     | Las áreas arquitectónicamente sensibles deberán quedar bajo ownership apropiado.            |
 | **Documentation Driven**        | Los cambios relevantes de ownership deberán estar documentados.                             |
-
----
 
 ### 08.4. Relación con Pull Requests
 
@@ -1184,8 +1104,6 @@ flowchart TD
 
 `EE-DOC-005` establece expresamente que los reviewers deberán asignarse automáticamente basándose en `CODEOWNERS`.
 
----
-
 ### 08.5. Ownership por Áreas del Monorepo
 
 El ownership deberá organizarse principalmente por áreas funcionales y técnicas del repositorio.
@@ -1208,8 +1126,6 @@ ee-monorepo/
 
 El modelo de ownership deberá poder expresar responsabilidades sobre estas áreas sin asumir que todas pertenecen necesariamente al mismo equipo.
 
----
-
 ### 08.6. Áreas de Gobernanza
 
 La configuración de GitHub deberá mantener ownership explícito sobre:
@@ -1228,8 +1144,6 @@ Esta área incluye la configuración utilizada para la gobernanza del repositori
 ```
 
 El ownership de `.github/` deberá estar asociado a responsables con autoridad suficiente para revisar modificaciones que puedan afectar las políticas de GitHub Governance.
-
----
 
 ### 08.7. Documentación Normativa
 
@@ -1252,8 +1166,6 @@ Cuando la documentación normativa o los ADRs residan bajo rutas específicas (p
 
 La asignación concreta de equipos a cada categoría queda pendiente de la implementación de `EE-DOC-007`.
 
----
-
 ### 08.8. Código del Ecosistema
 
 Las áreas:
@@ -1272,8 +1184,6 @@ No se deberá asignar automáticamente un único owner global a todo el código 
 
 La estructura física de estas áreas está definida por `EE-DOC-006`; este documento únicamente establece el mecanismo de gobernanza de ownership sobre ellas.
 
----
-
 ### 08.9. Automatización y Scripts
 
 Las áreas:
@@ -1286,8 +1196,6 @@ scripts/
 deberán contar con ownership explícito debido a su capacidad para modificar procesos de validación, automatización o integración.
 
 Los cambios sobre estas áreas deberán ser revisados por los responsables correspondientes antes de su integración.
-
----
 
 ### 08.10. Datos, Ejemplos y Marketplace
 
@@ -1305,8 +1213,6 @@ La asignación concreta de owners deberá basarse en la responsabilidad efectiva
 
 No se deberá crear ownership ficticio únicamente para completar el archivo `CODEOWNERS`.
 
----
-
 ### 08.11. Arquitectura
 
 Los cambios que afecten directamente a documentación o artefactos de carácter arquitectónico deberán disponer de una ruta de revisión que permita la participación del **Equipo de Arquitectura** cuando corresponda.
@@ -1321,8 +1227,6 @@ docs/adr/
 El ownership de estas áreas representa una responsabilidad de revisión y **no debe interpretarse automáticamente como permiso administrativo de GitHub**.
 
 Esta separación es consistente con la distinción establecida en la Sección 06 entre autoridad arquitectónica y permisos técnicos.
-
----
 
 ### 08.12. Cambios Críticos
 
@@ -1358,8 +1262,6 @@ flowchart TD
 
 `CODEOWNERS` determina los reviewers aplicables; la Branch Protection determina la condición mínima de aprobación requerida antes del Merge.
 
----
-
 ### 08.13. CODEOWNERS y Branch Protection
 
 `CODEOWNERS` y Branch Protection deberán configurarse como mecanismos complementarios.
@@ -1391,8 +1293,6 @@ flowchart LR
 
 Ninguno de estos mecanismos deberá utilizarse como sustituto de los otros.
 
----
-
 ### 08.14. Cambios al Archivo CODEOWNERS
 
 Las modificaciones de `.github/CODEOWNERS` deberán realizarse mediante Pull Request.
@@ -1407,8 +1307,6 @@ Los cambios deberán quedar sujetos a:
 
 El archivo `CODEOWNERS` no deberá modificarse directamente sobre una rama protegida.
 
----
-
 ### 08.15. Ownership de CODEOWNERS
 
 El propio archivo:
@@ -1422,8 +1320,6 @@ deberá estar sujeto a ownership explícito.
 Esto evita que una modificación del sistema de ownership pueda realizarse sin revisión de los responsables de gobernanza correspondientes.
 
 La configuración concreta del owner deberá definirse durante la implementación.
-
----
 
 ### 08.16. Equipos vs. Usuarios
 
@@ -1443,8 +1339,6 @@ Los nombres definitivos deberán establecerse durante la implementación de `EE-
 
 No se deberán introducir usuarios personales directamente en la norma salvo que exista una necesidad explícita y documentada.
 
----
-
 ### 08.17. Reglas de Granularidad
 
 El ownership deberá ser suficientemente específico para garantizar revisión adecuada, pero no deberá fragmentarse innecesariamente.
@@ -1459,8 +1353,6 @@ Se evitarán:
 - owners utilizados únicamente para obtener permisos administrativos.
 
 La granularidad deberá seguir la responsabilidad técnica real de los componentes.
-
----
 
 ### 08.18. Reglas de Herencia
 
@@ -1477,8 +1369,6 @@ packages/
 
 La existencia de reglas específicas deberá estar justificada por una diferencia real de responsabilidad.
 
----
-
 ### 08.19. Validación de CODEOWNERS
 
 La implementación deberá validar que:
@@ -1491,8 +1381,6 @@ La implementación deberá validar que:
 - el archivo pueda ser interpretado correctamente por GitHub.
 
 La automatización concreta de estas validaciones pertenece a la implementación de GitHub Governance y a los Quality Gates correspondientes.
-
----
 
 ### 08.20. Estado de Definiciones
 
@@ -1538,8 +1426,6 @@ Su responsabilidad es establecer cómo deberán gobernarse, organizarse, ejecuta
 
 **Frontera con EE-DOC-011 — Automation:** EE-DOC-007 gobierna únicamente la automatización ejecutada mediante GitHub Actions en el repositorio. La automatización de producto del ecosistema (CLI, generadores, scripts de orquestación de negocio y procesos internos no basados en GitHub Actions) corresponde a **EE-DOC-011 — Automation** y no deberá definirse ni duplicarse en esta sección.
 
----
-
 ### 09.1. Principios de Automatización
 
 Las automatizaciones deberán cumplir como mínimo los siguientes principios:
@@ -1556,8 +1442,6 @@ Las automatizaciones deberán cumplir como mínimo los siguientes principios:
 | **Auditability**           | Las ejecuciones y resultados relevantes deberán conservar trazabilidad suficiente para su revisión.                              |
 | **Documentation Driven**   | Las automatizaciones normativas deberán estar respaldadas por documentación correspondiente.                                     |
 | **No Manual Bypass**       | Ningún control automatizado obligatorio deberá depender de una excepción manual no gobernada.                                    |
-
----
 
 ### 09.2. Workflows
 
@@ -1584,6 +1468,14 @@ Los workflows deberán:
 5. Separar las responsabilidades de validación, seguridad, documentación, publicación o automatización que tengan ciclos de ejecución diferentes.
 6. Exponer resultados suficientemente claros para permitir diagnóstico de fallos.
 7. Integrarse con los mecanismos de Branch Protection y Pull Request cuando su resultado constituya una condición de integración.
+
+**Gobernanza de automatizaciones de release.** Los workflows que finalizan releases deben operar exclusivamente sobre cambios integrados y autorizados, separar sus permisos de los controles ordinarios de validación y verificar las precondiciones obligatorias antes de efectuar operaciones de publicación o etiquetado.
+
+Los permisos de escritura y las credenciales de publicación deben limitarse a las operaciones que los requieren. La identidad empleada, las autorizaciones y los resultados relevantes deben permitir auditoría. Las reglas efectivas de protección de ramas y tags requieren configuración y verificación independientes; su definición documental no demuestra que estén activas.
+
+La automatización debe impedir publicaciones accidentales, sobrescritura de tags y repetición insegura de operaciones. Ante un estado remoto inconsistente o no verificable, debe detener las operaciones de escritura y requerir resolución controlada.
+
+EE-DOC-007 gobierna la identidad, los permisos, la protección y la ejecución en GitHub. Las condiciones funcionales de elegibilidad, procedencia y finalización del release pertenecen a EE-DOC-011.
 
 El modelo conceptual será:
 
@@ -1615,8 +1507,6 @@ flowchart TD
 
 La existencia de múltiples workflows no deberá utilizarse para fragmentar artificialmente una única responsabilidad.
 
----
-
 ### 09.3. Categorías de Automatización
 
 Las automatizaciones podrán organizarse conceptualmente en las siguientes categorías:
@@ -1644,8 +1534,6 @@ La decisión de consolidar o separar workflows deberá basarse en:
 - aislamiento de credenciales.
 
 La definición detallada de los controles que pertenezcan a **Quality Gates** corresponde a **EE-DOC-010**.
-
----
 
 ### 09.4. Eventos de Ejecución
 
@@ -1709,8 +1597,6 @@ GitHub Actions no sustituye el Code Review.
 
 Su función es proporcionar automatización y evidencia para los controles que correspondan.
 
----
-
 ### 09.5. Ejecución Manual
 
 Los workflows que requieran ejecución manual podrán utilizar mecanismos explícitos de disparo manual.
@@ -1724,8 +1610,6 @@ La ejecución manual deberá:
 - registrar el resultado de la ejecución.
 
 La ejecución manual no deberá utilizarse como mecanismo general para reemplazar validaciones automáticas obligatorias.
-
----
 
 ### 09.6. Permisos de Workflows
 
@@ -1760,8 +1644,6 @@ Como regla general:
 
 La configuración concreta de permisos de cada workflow pertenece a su implementación y deberá poder ser auditada.
 
----
-
 ### 09.7. Separación de Permisos entre Workflows
 
 Los workflows deberán mantener aislamiento cuando sus responsabilidades o niveles de privilegio sean diferentes.
@@ -1784,8 +1666,6 @@ El Workflow C no deberá heredar automáticamente los permisos del Workflow A o 
 Cada workflow deberá declarar sus propios requisitos.
 
 La reutilización de workflows no deberá provocar una elevación implícita de privilegios.
-
----
 
 ### 09.8. Secrets
 
@@ -1813,8 +1693,6 @@ Los secrets deberán cumplir:
 - ausencia de exposición innecesaria;
 - no reutilización indiscriminada entre workflows.
 
----
-
 ### 09.9. Variables de Configuración
 
 Las variables no sensibles podrán utilizar mecanismos de configuración apropiados de GitHub.
@@ -1829,8 +1707,6 @@ La configuración deberá distinguir claramente entre:
 | **Configuración específica de Environment** | Deberá asociarse al environment correspondiente.                                |
 
 No deberá utilizarse un secret para información que no sea sensible únicamente por conveniencia.
-
----
 
 ### 09.10. Environments
 
@@ -1849,8 +1725,6 @@ La existencia de un environment deberá responder a una necesidad real del proce
 No se deberán crear environments únicamente por simetría nominal.
 
 La definición de los entornos de infraestructura pertenece a **EE-DOC-009 — Infrastructure**; esta sección únicamente establece cómo GitHub Governance deberá controlar su utilización cuando corresponda.
-
----
 
 ### 09.11. Integración con Branch Protection
 
@@ -1879,8 +1753,6 @@ La Branch Protection continúa siendo responsabilidad de la Sección 07.
 GitHub Actions proporciona los resultados automatizados que podrán ser utilizados por dicha protección.
 
 La definición de **qué checks constituyen Quality Gates obligatorios** corresponde a **EE-DOC-010**.
-
----
 
 ### 09.12. Integración con CODEOWNERS
 
@@ -1918,8 +1790,6 @@ flowchart TD
 
 La asignación concreta de owners continúa gobernada por la **Sección 08 — CODEOWNERS**.
 
----
-
 ### 09.13. Integridad de los Workflows
 
 Los archivos de GitHub Actions forman parte de la superficie de gobernanza del repositorio.
@@ -1934,8 +1804,6 @@ Por tanto:
 - deberán conservar historial mediante Git.
 
 Una modificación de un workflow con capacidad de alterar permisos, seguridad, validaciones o integración deberá considerarse una modificación de alta sensibilidad dentro de la gobernanza del repositorio.
-
----
 
 ### 09.14. Dependencias y Actions Externas
 
@@ -1955,8 +1823,6 @@ Las dependencias externas no deberán incorporarse únicamente por conveniencia 
 
 La política detallada de seguridad de dependencias deberá alinearse con los Quality Gates definidos por **EE-DOC-010**.
 
----
-
 ### 09.15. Reutilización de Workflows
 
 Cuando exista lógica de automatización compartida entre varios workflows, podrá utilizarse un mecanismo de reutilización gobernado.
@@ -1970,8 +1836,6 @@ La reutilización deberá:
 5. Mantener interfaces de entrada y salida claramente definidas.
 
 La reutilización no deberá ocultar responsabilidades críticas ni dificultar la auditoría de los controles ejecutados.
-
----
 
 ### 09.16. Fallos de Automatización
 
@@ -2005,8 +1869,6 @@ Los fallos deberán conservar evidencia suficiente para facilitar diagnóstico y
 
 No deberá utilizarse un bypass manual como mecanismo ordinario para resolver fallos de automatización.
 
----
-
 ### 09.17. Auditoría y Trazabilidad
 
 Las ejecuciones de GitHub Actions deberán permitir determinar, cuando corresponda:
@@ -2023,8 +1885,6 @@ Las ejecuciones de GitHub Actions deberán permitir determinar, cuando correspon
 
 Los mecanismos de auditoría detallados pertenecen a la gobernanza general de GitHub y deberán mantenerse alineados con la Sección 16.
 
----
-
 ### 09.18. Nomenclatura de Workflows
 
 Los workflows deberán utilizar nombres descriptivos y consistentes con su responsabilidad.
@@ -2038,8 +1898,6 @@ La nomenclatura deberá evitar:
 - nombres que oculten operaciones privilegiadas.
 
 La convención concreta de nombres de los archivos de workflow podrá establecerse durante la implementación, manteniendo coherencia con las convenciones documentales y de repositorio vigentes.
-
----
 
 ### 09.19. Cambios en GitHub Actions
 
@@ -2065,8 +1923,6 @@ Cuando el cambio:
 
 deberá evaluarse conforme al mecanismo de cambio gobernado de **EE-DOC-005** para determinar si requiere **ADR** o **RFC**.
 
----
-
 ### 09.20. Límites de esta Sección
 
 Esta sección establece la gobernanza de GitHub Actions, pero no define:
@@ -2084,8 +1940,6 @@ Esta sección establece la gobernanza de GitHub Actions, pero no define:
 - la implementación detallada de herramientas externas.
 
 Estos elementos deberán definirse en sus respectivos documentos, fases de implementación o mecanismos de cambio gobernado.
-
----
 
 ### 09.21. Estado de Definiciones
 
@@ -2115,8 +1969,6 @@ Estos elementos deberán definirse en sus respectivos documentos, fases de imple
 | Environments concretos                          | **Pendiente de implementación** |
 | Required Checks concretos                       | **Pendiente / EE-DOC-010**      |
 | Quality Gates concretos                         | **EE-DOC-010**                  |
-
----
 
 ### 09.22. Conformidad Normativa
 
@@ -2148,8 +2000,6 @@ La estructura física de `.github/` constituye la representación técnica de la
 
 EE-DOC-006 establece `.github/` como el espacio destinado a GitHub Governance e identifica explícitamente `workflows/` y `CODEOWNERS` como elementos de dicha estructura.
 
----
-
 ### 10.1. Estructura Normativa Base
 
 La estructura mínima definida para `.github/` será:
@@ -2169,8 +2019,6 @@ Estos elementos tienen responsabilidades diferenciadas:
 | `.github/CODEOWNERS` | Definición de ownership y reviewers            | **Obligatorio** |
 
 La estructura mínima no deberá contener elementos adicionales únicamente por convención o simetría.
-
----
 
 ### 10.2. Directorio `workflows/`
 
@@ -2205,8 +2053,6 @@ La estructura interna será:
 
 Los nombres concretos y el número definitivo de workflows permanecen sujetos a la implementación de la Sección 09.
 
----
-
 ### 10.3. `CODEOWNERS`
 
 El archivo:
@@ -2229,8 +2075,6 @@ El archivo deberá:
 6. Evitar asignaciones de ownership que no correspondan a responsabilidades reales.
 
 La configuración concreta de los patrones y equipos permanece pendiente de implementación, conforme al estado definido en la Sección 08.
-
----
 
 ### 10.4. Elementos Adicionales
 
@@ -2279,8 +2123,6 @@ Aplicación a artefactos de GitHub Governance (derivada de la Regla de Oro de EE
 
 Esta sección **no define** una política de idioma propia. Cualquier ampliación del catálogo de artefactos (p. ej. incluir explícitamente plantillas CI en EE-DOC-002 §16.1) deberá realizarse mediante cambio gobernado sobre **EE-DOC-002**, no sobre EE-DOC-007.
 
----
-
 ### 10.5. Regla de No Expansión Arbitraria
 
 No deberá utilizarse `.github/` como directorio genérico para almacenar cualquier archivo relacionado indirectamente con el proyecto.
@@ -2298,8 +2140,6 @@ No deberán ubicarse en `.github/`:
 - configuraciones que pertenezcan a otro ámbito arquitectónico.
 
 La ubicación deberá seguir la separación de responsabilidades definida por EE-DOC-006.
-
----
 
 ### 10.6. Relación entre `.github/` y el Monorepo
 
@@ -2334,8 +2174,6 @@ flowchart TD
 
 Representa la **capa de gobernanza y automatización de plataforma del repositorio**.
 
----
-
 ### 10.7. Relación con GitHub Actions
 
 La estructura física deberá reflejar la separación entre configuración de plataforma y ejecución de automatizaciones:
@@ -2351,8 +2189,6 @@ La estructura física deberá reflejar la separación entre configuración de pl
 Cada workflow deberá mantener su responsabilidad independiente y deberá cumplir las reglas establecidas en la **Sección 09 — GitHub Actions y Automatizaciones**.
 
 La estructura física no deberá utilizarse para redefinir el comportamiento funcional de los workflows.
-
----
 
 ### 10.8. Relación con CODEOWNERS
 
@@ -2388,8 +2224,6 @@ Branch Protection utiliza los mecanismos correspondientes para condicionar la in
 
 Esta separación mantiene las responsabilidades establecidas en las Secciones 07, 08 y 09.
 
----
-
 ### 10.9. Integridad Física
 
 La estructura de `.github/` deberá mantenerse íntegra respecto de la especificación normativa.
@@ -2407,8 +2241,6 @@ Como mínimo deberá verificarse:
 | Estructura           | No contiene elementos sin responsabilidad definida |
 
 La validación automatizada de estos controles podrá ser implementada posteriormente mediante los mecanismos definidos por **EE-DOC-010 — Quality Gates**.
-
----
 
 ### 10.10. Evolución de la Estructura
 
@@ -2438,8 +2270,6 @@ La incorporación de una nueva estructura física no implica automáticamente un
 
 Deberá evaluarse ADR o RFC únicamente cuando el cambio introduzca una decisión arquitectónica, una modificación transversal de gobernanza o una nueva política que exceda la implementación técnica de esta estructura.
 
----
-
 ### 10.11. Límites de esta Sección
 
 Esta sección define la **estructura física normativa de `.github/`**, pero no define:
@@ -2456,8 +2286,6 @@ Esta sección define la **estructura física normativa de `.github/`**, pero no 
 - las reglas detalladas de Branch Protection.
 
 Estos elementos corresponden a las Secciones 07, 08 y 09, o a **EE-DOC-010 — Quality Gates**, según corresponda.
-
----
 
 ### 10.12. Estado de Definiciones
 
@@ -2476,8 +2304,6 @@ Estos elementos corresponden a las Secciones 07, 08 y 09, o a **EE-DOC-010 — Q
 | Patrones definitivos de CODEOWNERS        | **Pendiente de implementación**           |
 | Equipos GitHub definitivos                | **Pendiente de implementación**           |
 | Validación automatizada                   | **EE-DOC-010 / implementación posterior** |
-
----
 
 ### 10.13. Conformidad Normativa
 
@@ -2509,8 +2335,6 @@ Esta sección no sustituye las reglas específicas de permisos definidas en la *
 
 Los controles automatizados de seguridad que constituyan Quality Gates (por ejemplo, secret scanning, dependency review u otras validaciones de seguridad del pipeline) se **exigen** desde la gobernanza de GitHub como required checks cuando corresponda, pero su **definición normativa** pertenece a **EE-DOC-010 — Quality Gates** y no deberá duplicarse en este documento.
 
----
-
 ### 11.1. Principio de Mínimo Privilegio
 
 Los accesos administrativos, operativos y automatizados deberán limitarse estrictamente a las responsabilidades requeridas.
@@ -2527,8 +2351,6 @@ El modelo deberá cumplir:
 | **Revocability**                            | Los accesos deberán poder retirarse cuando dejen de ser necesarios.                          |
 
 La definición detallada de roles y categorías de acceso corresponde a la **Sección 06 — Modelo de Permisos y Acceso**.
-
----
 
 ### 11.2. Separación de Responsabilidades
 
@@ -2557,8 +2379,6 @@ Ningún mecanismo de automatización deberá utilizarse para eliminar las respon
 GitHub Governance materializa los controles de plataforma, pero no sustituye el criterio y autoridad del equipo humano de Arquitectura.
 
 La separación conceptual de roles ya se encuentra establecida en la Sección 06.
-
----
 
 ### 11.3. Protección de Credenciales
 
@@ -2595,8 +2415,6 @@ flowchart TD
 
 El workflow deberá recibir únicamente los secretos que necesite para ejecutar su responsabilidad.
 
----
-
 ### 11.4. Protección contra Exposición de Secrets
 
 Los workflows deberán evitar operaciones que puedan exponer información sensible en logs, artefactos o resultados públicos.
@@ -2612,8 +2430,6 @@ Deberá evitarse:
 - utilizar secretos como valores de configuración no sensibles.
 
 Los logs deberán considerarse información potencialmente auditable y no deberán utilizarse como mecanismo de almacenamiento de información sensible.
-
----
 
 ### 11.5. Tokens y Credenciales de Automatización
 
@@ -2637,8 +2453,6 @@ Cuando una operación requiera escritura, el permiso deberá limitarse al recurs
 
 Esta regla complementa la política de permisos de workflows definida en la **Sección 09.6 — Permisos de Workflows**.
 
----
-
 ### 11.6. Credenciales de Terceros
 
 Las integraciones con servicios externos deberán utilizar credenciales gestionadas de forma segura.
@@ -2655,8 +2469,6 @@ No deberá incorporarse una credencial de terceros directamente en:
 Los valores de ejemplo deberán ser claramente no funcionales y no deberán representar credenciales reales.
 
 Cuando una integración requiera una credencial real, su almacenamiento y alcance deberán quedar definidos durante la implementación correspondiente.
-
----
 
 ### 11.7. Seguridad de GitHub Actions
 
@@ -2676,8 +2488,6 @@ Toda Action utilizada deberá evaluarse considerando como mínimo:
 La utilización de una Action externa no deberá conceder automáticamente permisos adicionales al workflow.
 
 Esta regla complementa la gobernanza de dependencias externas definida en la **Sección 09.14 — Dependencias y Actions Externas**.
-
----
 
 ### 11.8. Integridad de Workflows
 
@@ -2720,8 +2530,6 @@ flowchart LR
 
 La integridad física de los workflows ya está establecida en las Secciones 09 y 10.
 
----
-
 ### 11.9. Protección de `CODEOWNERS`
 
 El archivo:
@@ -2745,8 +2553,6 @@ Por esta razón:
 
 La Sección 08 establece las reglas específicas de ownership y revisión.
 
----
-
 ### 11.10. Protección de Branches
 
 Las ramas protegidas deberán constituir una barrera contra cambios directos no controlados.
@@ -2761,8 +2567,6 @@ La seguridad de Branch Protection deberá garantizar, como mínimo:
 - trazabilidad del cambio.
 
 La configuración detallada corresponde a la **Sección 07 — Protección de Branches** y al Development Workflow definido por **EE-DOC-005**.
-
----
 
 ### 11.11. Protección de Cambios Críticos
 
@@ -2783,8 +2587,6 @@ Repository Administration
 Los cambios críticos deberán respetar las reglas de revisión establecidas por CODEOWNERS y Branch Protection.
 
 Cuando el cambio implique una decisión arquitectónica o una modificación transversal de gobernanza, deberá evaluarse el mecanismo ADR/RFC definido por **EE-DOC-005**.
-
----
 
 ### 11.12. Auditoría y Trazabilidad
 
@@ -2821,8 +2623,6 @@ flowchart TD
 
 La trazabilidad deberá conservarse mediante los mecanismos disponibles de GitHub y Git.
 
----
-
 ### 11.13. Trazabilidad de Cambios
 
 Los cambios normativos y técnicos sobre GitHub deberán poder relacionarse con su correspondiente Pull Request y commits.
@@ -2840,8 +2640,6 @@ La relación deberá evitar cambios administrativos o técnicos sin contexto doc
 
 Esto mantiene el principio **Documentation Driven** definido en la Sección 03.2.
 
----
-
 ### 11.14. Auditoría de Automatizaciones
 
 Las ejecuciones de GitHub Actions deberán conservar suficiente información para permitir investigar:
@@ -2858,8 +2656,6 @@ Las ejecuciones de GitHub Actions deberán conservar suficiente información par
 Los resultados deberán utilizarse como evidencia técnica de la ejecución de controles.
 
 La auditoría no deberá depender exclusivamente de información manual introducida por un desarrollador.
-
----
 
 ### 11.15. Detección de Incumplimientos
 
@@ -2885,8 +2681,6 @@ flowchart TD
 
 La corrección deberá priorizar la eliminación de la causa del incumplimiento y no únicamente su efecto inmediato.
 
----
-
 ### 11.16. Revocación de Accesos
 
 Cuando una identidad, equipo, integración o automatización deje de requerir acceso, dicho acceso deberá ser retirado.
@@ -2902,8 +2696,6 @@ La revocación deberá aplicar especialmente cuando:
 
 La administración concreta de accesos continúa definida por la **Sección 06 — Modelo de Permisos y Acceso**.
 
----
-
 ### 11.17. Gestión de Credenciales Comprometidas
 
 Cuando exista evidencia o sospecha razonable de compromiso de una credencial, deberá priorizarse:
@@ -2916,8 +2708,6 @@ Cuando exista evidencia o sospecha razonable de compromiso de una credencial, de
 6. Documentación del incidente.
 
 No deberá mantenerse una credencial potencialmente comprometida únicamente para evitar una interrupción operativa.
-
----
 
 ### 11.18. Seguridad y Quality Gates
 
@@ -2947,8 +2737,6 @@ flowchart LR
 
 Esto mantiene la separación normativa ya establecida en el alcance de EE-DOC-007.
 
----
-
 ### 11.19. Seguridad de la Configuración Organizacional
 
 La configuración de la organización GitHub deberá mantenerse alineada con los principios de gobernanza definidos en este documento.
@@ -2966,8 +2754,6 @@ Deberán protegerse especialmente:
 
 Los valores concretos de la organización GitHub permanecen pendientes de definición, conforme al estado actual de la Sección 05.
 
----
-
 ### 11.20. Prohibiciones Normativas
 
 Queda prohibido utilizar GitHub de forma que:
@@ -2982,8 +2768,6 @@ Queda prohibido utilizar GitHub de forma que:
 8. Se utilicen cuentas personales como sustituto de mecanismos institucionales de gobernanza.
 9. Se introduzcan cambios críticos sin la revisión correspondiente.
 10. Se utilicen mecanismos manuales de bypass como práctica ordinaria.
-
----
 
 ### 11.21. Responsabilidad de Seguridad
 
@@ -3006,8 +2790,6 @@ Validation
 Cada función deberá cumplir las responsabilidades que le correspondan sin absorber las responsabilidades de las demás.
 
 El **Equipo de Arquitectura** conserva la autoridad normativa sobre la gobernanza del Engineering Ecosystem, mientras que la administración operativa de GitHub deberá mantenerse separada de dicha autoridad normativa.
-
----
 
 ### 11.22. Estado de Definiciones
 
@@ -3033,8 +2815,6 @@ El **Equipo de Arquitectura** conserva la autoridad normativa sobre la gobernanz
 | Secrets concretos                              | **Pendiente de implementación** |
 | Configuración concreta de seguridad            | **Pendiente de implementación** |
 | Controles de seguridad automatizados concretos | **EE-DOC-010**                  |
-
----
 
 ### 11.23. Conformidad Normativa
 
@@ -3081,8 +2861,6 @@ Por tanto:
 
 Las subsecciones siguientes (12.4 en adelante) detallan la correspondencia etapa a etapa. La **matriz de integración (12.3)** es la referencia normativa condensada; el detalle por etapa no redefine EE-DOC-005 ni introduce un workflow paralelo.
 
----
-
 ### 12.1. Principio de Integración
 
 La integración deberá mantener una separación explícita entre:
@@ -3106,8 +2884,6 @@ GitHub Repository
 ```
 
 La gobernanza de GitHub no deberá introducir un workflow paralelo que contradiga o sustituya el definido por EE-DOC-005.
-
----
 
 ### 12.2. Flujo Normativo Integrado
 
@@ -3148,8 +2924,6 @@ El flujo SDLC continúa perteneciendo a EE-DOC-005.
 
 GitHub Governance actúa transversalmente proporcionando controles de plataforma.
 
----
-
 ### 12.3. Matriz de Integración
 
 | Etapa de EE-DOC-005        | Mecanismo GitHub                                 | Responsabilidad de EE-DOC-007                                       |
@@ -3172,8 +2946,6 @@ La matriz no redefine las fases ni responsabilidades del SDLC. Su función es es
 
 **Mecanismo de tracking autorizado:** el mecanismo por defecto es **GitHub Issues**. La adopción de un sistema de tracking alternativo o complementario deberá ser aprobada por el **Equipo de Arquitectura** mediante el mecanismo de cambio gobernado de **EE-DOC-005** (Tipo B — Especialización Técnica, o Tipo C — ADR, según el impacto arquitectónico o de integración).
 
----
-
 ### 12.4. Issue
 
 Cuando el workflow de EE-DOC-005 requiera un Issue, GitHub deberá proporcionar un mecanismo que permita identificar la unidad de trabajo.
@@ -3194,8 +2966,6 @@ Merge
 
 El Issue no deberá sustituir documentos normativos, ADRs o RFCs cuando éstos sean requeridos por EE-DOC-005.
 
----
-
 ### 12.5. Branch
 
 GitHub deberá materializar las reglas de branching establecidas por EE-DOC-005.
@@ -3211,8 +2981,6 @@ En particular, la plataforma deberá soportar:
 La selección entre **Main Only** y **Main + Develop** permanece gobernada por EE-DOC-005 y no será redefinida por esta sección.
 
 La Sección 07 de EE-DOC-007 materializa técnicamente estas reglas.
-
----
 
 ### 12.6. Development
 
@@ -3230,8 +2998,6 @@ GitHub Governance no deberá definir cómo se implementa funcionalmente el códi
 
 La arquitectura y el proceso de desarrollo permanecen gobernados por los documentos correspondientes del ecosistema.
 
----
-
 ### 12.7. Commit
 
 Los commits deberán permanecer registrados en Git y asociados a la rama correspondiente.
@@ -3246,8 +3012,6 @@ GitHub deberá conservar la trazabilidad necesaria para relacionar el commit con
 
 Las reglas de formato de commit permanecen definidas por EE-DOC-005.
 
----
-
 ### 12.8. Push
 
 El Push representa la publicación de cambios desde el repositorio local hacia GitHub.
@@ -3257,8 +3021,6 @@ GitHub Governance deberá controlar el acceso necesario para realizar esta opera
 En ramas protegidas, la plataforma deberá impedir que un Push directo permita eludir los controles definidos para integración.
 
 La regla específica de protección de `main` y `develop`, cuando corresponda, está definida en la Sección 07.
-
----
 
 ### 12.9. Pull Request
 
@@ -3276,8 +3038,6 @@ GitHub Governance deberá proporcionar:
 8. Control de Merge.
 
 EE-DOC-005 conserva la definición normativa del Pull Request y sus requisitos.
-
----
 
 ### 12.10. Code Review
 
@@ -3305,8 +3065,6 @@ flowchart TD
 La asignación automática de reviewers mediante `CODEOWNERS` ya está establecida en la Sección 08.
 
 El número de approvals requerido continúa derivándose de EE-DOC-005 y de la configuración de Branch Protection.
-
----
 
 ### 12.11. Quality Gates
 
@@ -3336,8 +3094,6 @@ La definición normativa de dichos controles corresponde a:
 
 Esta separación evita duplicación normativa.
 
----
-
 ### 12.12. Merge
 
 El Merge deberá producirse únicamente cuando se hayan cumplido las condiciones requeridas para la rama de destino.
@@ -3354,8 +3110,6 @@ Como mínimo, cuando sean aplicables:
 El comportamiento técnico de Merge deberá ser configurado mediante los mecanismos de protección de GitHub.
 
 EE-DOC-007 no redefine las estrategias de Merge establecidas por EE-DOC-005.
-
----
 
 ### 12.13. Relación entre CODEOWNERS, Actions y Branch Protection
 
@@ -3403,8 +3157,6 @@ Cada mecanismo mantiene una responsabilidad distinta:
 
 Ninguno de estos mecanismos deberá utilizarse como sustituto de otro.
 
----
-
 ### 12.14. Cambios en la Gobernanza durante el Workflow
 
 Un cambio descubierto durante Development, Code Review, Quality Gates o Validación podrá revelar la necesidad de modificar una regla del ecosistema.
@@ -3448,8 +3200,6 @@ flowchart TD
 
 Esta integración mantiene el principio de que el workflow de ingeniería puede producir descubrimientos que requieran actualización documental o decisiones gobernadas. EE-DOC-005 define explícitamente este mecanismo transversal.
 
----
-
 ### 12.15. Fallos de Validación
 
 Cuando una validación automatizada obligatoria falle, GitHub deberá impedir el Merge cuando dicha validación constituya un Required Check de la rama protegida.
@@ -3478,8 +3228,6 @@ flowchart TD
 El desarrollador deberá corregir el problema en la rama de origen.
 
 No deberá utilizarse GitHub Governance para ocultar o bypassar un fallo de Quality Gate.
-
----
 
 ### 12.16. Trazabilidad del Workflow
 
@@ -3512,8 +3260,6 @@ Esta trazabilidad constituye un requisito de gobernanza y auditoría.
 
 La Sección 11 establece las reglas generales de auditoría y trazabilidad.
 
----
-
 ### 12.17. Responsabilidades por Documento
 
 La distribución normativa será:
@@ -3534,8 +3280,6 @@ La distribución normativa será:
 
 Esta distribución constituye la **Single Source of Truth** para cada responsabilidad y evita duplicación normativa.
 
----
-
 ### 12.18. Límites de esta Integración
 
 Esta sección no redefine:
@@ -3552,8 +3296,6 @@ Esta sección no redefine:
 Estos elementos continúan siendo responsabilidad de los documentos normativos correspondientes.
 
 EE-DOC-007 únicamente establece la integración de dichas reglas con GitHub.
-
----
 
 ### 12.19. Estado de Definiciones
 
@@ -3575,8 +3317,6 @@ EE-DOC-007 únicamente establece la integración de dichas reglas con GitHub.
 | Integraciones concretas con Issue Tracking | **Pendiente de implementación**        |
 | Configuración concreta de GitHub           | **Pendiente de implementación**        |
 
----
-
 ### 12.20. Conformidad Normativa
 
 La integración con el Development Workflow será conforme cuando:
@@ -3593,9 +3333,7 @@ La integración con el Development Workflow será conforme cuando:
 10. Los descubrimientos que afecten las reglas del ecosistema sean procesados mediante el mecanismo de cambio gobernado de EE-DOC-005.
 11. Cada responsabilidad normativa permanezca en su documento correspondiente.
 
----
-
-### 12.9. Responsabilidad de la Colaboración y Cambios Documentales
+### 12.21. Responsabilidad de la Colaboración y Cambios Documentales
 
 EE-DOC-007 materializa en GitHub el flujo de colaboración definido por EE-DOC-005, sin sustituirlo ni crear un proceso paralelo.
 
@@ -3625,8 +3363,6 @@ Por tanto:
 > **EE-DOC-010 define qué debe validarse; EE-DOC-007 define cómo GitHub ejecuta, reporta y condiciona la integración mediante esos controles.**
 
 Esta separación mantiene el principio de **Single Source of Truth** y evita duplicar reglas de calidad dentro de la gobernanza de GitHub.
-
----
 
 ### 13.1. Principio de Integración
 
@@ -3664,8 +3400,6 @@ flowchart TD
 
 EE-DOC-007 no deberá redefinir los criterios funcionales de validación.
 
----
-
 ### 13.2. Responsabilidades por Documento
 
 La responsabilidad normativa deberá dividirse de la siguiente manera:
@@ -3685,8 +3419,6 @@ La responsabilidad normativa deberá dividirse de la siguiente manera:
 | Implementación concreta de cada workflow       | **EE-DOC-007 §09 / implementación** |
 
 Esta distribución deberá mantenerse como referencia normativa para evitar duplicación.
-
----
 
 ### 13.3. GitHub Actions como Ejecutor
 
@@ -3718,8 +3450,6 @@ GitHub Actions no define el criterio del Quality Gate.
 
 El workflow deberá ejecutar el control definido por EE-DOC-010 y publicar su resultado de forma que GitHub pueda utilizarlo como evidencia de validación.
 
----
-
 ### 13.4. Quality Gate como Required Check
 
 Cuando un Quality Gate sea obligatorio para la integración de una rama protegida, su resultado deberá poder representarse mediante un **Required Check** de GitHub.
@@ -3741,8 +3471,6 @@ Branch Protection
 Un Required Check deberá considerarse satisfecho únicamente cuando el control asociado haya finalizado con un resultado aceptable conforme a la definición normativa de EE-DOC-010.
 
 Los nombres concretos de los Required Checks no se definen en esta sección mientras EE-DOC-010 no establezca el catálogo correspondiente.
-
----
 
 ### 13.5. Quality Gates Obligatorios
 
@@ -3773,8 +3501,6 @@ flowchart TD
 La obligatoriedad del Quality Gate procede de EE-DOC-010 y de la configuración normativa aplicable.
 
 EE-DOC-007 proporciona el mecanismo técnico para hacer cumplir dicha obligatoriedad.
-
----
 
 ### 13.6. Relación con Pull Requests
 
@@ -3808,8 +3534,6 @@ La ejecución de Quality Gates no sustituye el Code Review.
 El Code Review tampoco sustituye los Quality Gates automatizados.
 
 Ambos mecanismos son complementarios.
-
----
 
 ### 13.7. Relación con CODEOWNERS
 
@@ -3860,8 +3584,6 @@ flowchart LR
 
 Esta relación es consistente con la integración ya definida entre CODEOWNERS, Pull Request, Quality Gates y Branch Protection.
 
----
-
 ### 13.8. Estado `Pass`
 
 Cuando un Quality Gate obligatorio finalice satisfactoriamente:
@@ -3874,8 +3596,6 @@ Cuando un Quality Gate obligatorio finalice satisfactoriamente:
 Un Quality Gate satisfecho **no autoriza por sí mismo el Merge**.
 
 La autorización final depende del conjunto de controles aplicables.
-
----
 
 ### 13.9. Estado `Fail`
 
@@ -3908,8 +3628,6 @@ flowchart TD
 
 No deberá utilizarse un bypass manual como mecanismo ordinario para superar un Quality Gate obligatorio.
 
----
-
 ### 13.10. Estado `Pending`
 
 Mientras un Quality Gate obligatorio no haya producido un resultado final, el estado deberá considerarse no satisfecho para efectos de integración cuando GitHub lo configure como Required Check.
@@ -3932,8 +3650,6 @@ Continue       Block
 
 La configuración concreta del comportamiento de cada check deberá realizarse durante la implementación de GitHub Governance.
 
----
-
 ### 13.11. Fallos de Infraestructura o Automatización
 
 Deberá distinguirse entre:
@@ -3947,8 +3663,6 @@ Deberá distinguirse entre:
 Esta distinción es relevante porque GitHub Governance debe evitar considerar automáticamente como satisfecho un Quality Gate cuyo resultado no pueda determinarse de forma válida.
 
 El tratamiento concreto de cada estado deberá alinearse con la implementación del workflow y con las reglas que establezca EE-DOC-010.
-
----
 
 ### 13.12. Required Checks y Branch Protection
 
@@ -3984,8 +3698,6 @@ Branch Protection deberá evaluar conjuntamente los requisitos aplicables.
 
 No deberá interpretarse que la existencia de un Required Check elimina la necesidad de los demás controles.
 
----
-
 ### 13.13. Quality Gates y Merge
 
 El Merge deberá estar condicionado por la combinación de:
@@ -4014,8 +3726,6 @@ Branch Protection
 
 Esta expresión es conceptual y no constituye una nueva regla independiente del Development Workflow.
 
----
-
 ### 13.14. Quality Gates de Seguridad
 
 Los Quality Gates relacionados con seguridad deberán seguir la misma arquitectura de integración.
@@ -4035,8 +3745,6 @@ EE-DOC-010 deberá definir:
 - qué controles son obligatorios.
 
 La Sección 11 ya establece explícitamente esta separación entre la gobernanza de GitHub y la definición normativa de los controles de seguridad.
-
----
 
 ### 13.15. Quality Gates de Documentación
 
@@ -4060,8 +3768,6 @@ Branch Protection
 
 No se define en esta sección qué validaciones documentales deberán ejecutarse.
 
----
-
 ### 13.16. Quality Gates de Estructura
 
 Los controles relacionados con la estructura física del repositorio podrán integrarse mediante GitHub Actions cuando EE-DOC-010 los determine como Quality Gates.
@@ -4074,8 +3780,6 @@ Esto podrá incluir, según la definición futura de EE-DOC-010:
 - validación de convenciones.
 
 La Sección 10 únicamente establece que estos controles podrán ser automatizados mediante los mecanismos de Quality Gates.
-
----
 
 ### 13.17. Quality Gates y cambios en `.github/`
 
@@ -4114,8 +3818,6 @@ flowchart LR
 
 Un cambio en la propia infraestructura de gobernanza no deberá quedar exento de los controles que esa infraestructura implementa.
 
----
-
 ### 13.18. Trazabilidad de Quality Gates
 
 Cada resultado de Quality Gate deberá poder relacionarse, cuando corresponda, con:
@@ -4150,8 +3852,6 @@ flowchart TD
 
 Esta trazabilidad complementa las reglas de auditoría establecidas en la Sección 11.
 
----
-
 ### 13.19. Reejecución de Quality Gates
 
 Cuando un cambio sea modificado después de una ejecución de Quality Gates, los controles aplicables deberán volver a ejecutarse sobre el estado actualizado del cambio.
@@ -4159,8 +3859,6 @@ Cuando un cambio sea modificado después de una ejecución de Quality Gates, los
 No deberá considerarse válido automáticamente un resultado producido sobre un commit diferente al que se pretende integrar cuando el control dependa del contenido modificado.
 
 La plataforma deberá utilizar mecanismos de GitHub Actions y Required Checks que permitan asociar los resultados al estado correspondiente del Pull Request.
-
----
 
 ### 13.20. Reutilización de Quality Gates
 
@@ -4176,8 +3874,6 @@ La reutilización deberá:
 - no permitir bypass de controles.
 
 La reutilización técnica no deberá producir múltiples definiciones normativas del mismo Quality Gate.
-
----
 
 ### 13.21. Cambios en Quality Gates
 
@@ -4218,8 +3914,6 @@ La clasificación deberá realizarse mediante el mecanismo de cambio gobernado d
 
 Un cambio en un Quality Gate no implica automáticamente un cambio arquitectónico.
 
----
-
 ### 13.22. Bypass de Quality Gates
 
 Los Quality Gates definidos como obligatorios no deberán poder omitirse mediante mecanismos ordinarios de desarrollo.
@@ -4233,8 +3927,6 @@ Cualquier capacidad de bypass administrativo deberá:
 5. quedar sujeta a las reglas de seguridad y auditoría.
 
 La configuración concreta de identidades autorizadas para bypass permanece pendiente de implementación y no se define en esta sección.
-
----
 
 ### 13.23. Límites de esta Sección
 
@@ -4253,8 +3945,6 @@ Esta sección **no define**:
 - política detallada de seguridad de cada herramienta.
 
 Estos elementos deberán definirse en **EE-DOC-010 — Quality Gates** o en la documentación de implementación correspondiente.
-
----
 
 ### 13.24. Estado de Definiciones
 
@@ -4278,8 +3968,6 @@ Estos elementos deberán definirse en **EE-DOC-010 — Quality Gates** o en la d
 | Required Checks concretos                                | **Pendiente / EE-DOC-010**      |
 | Configuración exacta de Branch Protection                | **Sección 07 / implementación** |
 | Identidades de bypass                                    | **Pendiente de implementación** |
-
----
 
 ### 13.25. Conformidad Normativa
 
@@ -4327,8 +4015,6 @@ La serie **EE-IMP-007-P01 … P08** materializa la **gobernanza de plataforma Gi
 
 La existencia de una estructura base de `.github/` heredada de EE-DOC-006 **no sustituye** ni completa la implementación de EE-DOC-007. Los scripts, workflows vacíos o plantillas creados en el bootstrap de 006 deberán alinearse, completarse o sustituirse según las reglas normativas de este documento durante las unidades P01–P08 correspondientes.
 
----
-
 ### 14.2. Flujo de Implementación
 
 ```mermaid
@@ -4352,8 +4038,6 @@ flowchart LR
 ```
 
 Cada unidad deberá poder trazarse hasta una responsabilidad normativa concreta de EE-DOC-007.
-
----
 
 ### 14.3. Catálogo Oficial de Unidades de Implementación
 
@@ -4400,8 +4084,6 @@ P01 (Bootstrap / Org base)
 
 P03 deberá configurar la protección de ramas conforme al **ADR de branching** del proyecto (Main Only o Main + Develop), definido según **EE-DOC-005**. No introducirá una estrategia de branching distinta de la aprobada.
 
----
-
 ### 14.4. Unidad P01 — GitHub Governance Bootstrap
 
 La primera unidad deberá establecer la base física mínima sobre la cual se materializará la gobernanza de GitHub.
@@ -4419,8 +4101,6 @@ La implementación no deberá introducir configuraciones que contradigan las reg
 **Documento técnico asociado:**
 
 `EE-IMP-007-P01 — GitHub Governance Bootstrap`
-
----
 
 ### 14.5. Unidad P02 — Access and Organization Governance
 
@@ -4448,8 +4128,6 @@ deberá registrarse en:
 
 Los nombres concretos de la organización, equipos y usuarios deberán permanecer fuera de la especificación normativa de EE-DOC-007. Su materialización controlada y trazable corresponde exclusivamente a esta unidad de implementación (y a P01 cuando aplique).
 
----
-
 ### 14.6. Unidad P03 — Branch Protection
 
 Esta unidad deberá materializar:
@@ -4463,8 +4141,6 @@ La implementación deberá respetar el branching model seleccionado mediante los
 **Documento técnico asociado:**
 
 `EE-IMP-007-P03 — Branch Protection`
-
----
 
 ### 14.7. Unidad P04 — CODEOWNERS and Ownership
 
@@ -4487,8 +4163,6 @@ La asignación de equipos concretos deberá quedar registrada en el documento t�
 **Documento técnico asociado:**
 
 `EE-IMP-007-P04 — CODEOWNERS and Ownership`
-
----
 
 ### 14.8. Unidad P05 — GitHub Actions
 
@@ -4518,8 +4192,6 @@ EE-DOC-007 gobierna la automatización de plataforma ejecutada mediante GitHub A
 
 `EE-IMP-007-P05 — GitHub Actions`
 
----
-
 ### 14.9. Unidad P06 — Quality Gates Integration
 
 Esta unidad deberá materializar:
@@ -4544,8 +4216,6 @@ La definición de los Quality Gates continúa siendo responsabilidad de:
 
 `EE-IMP-007-P06 — Quality Gates Integration`
 
----
-
 ### 14.10. Unidad P07 — Security and Audit Governance
 
 Esta unidad deberá materializar las reglas correspondientes a:
@@ -4567,8 +4237,6 @@ Los controles automatizados que constituyan Quality Gates deberán continuar baj
 **Documento técnico asociado:**
 
 `EE-IMP-007-P07 — Security and Audit Governance`
-
----
 
 ### 14.11. Unidad P08 — Governance Validation and Consolidation
 
@@ -4605,8 +4273,6 @@ Cierre Documental
 
 `EE-TEC-002 — Consolidated Technical Documentation of EE-DOC-007`
 
----
-
 ### 14.12. Trazabilidad de las Unidades
 
 Cada unidad de implementación deberá mantener una relación explícita con:
@@ -4620,8 +4286,6 @@ Cada unidad de implementación deberá mantener una relación explícita con:
 | Descubrimientos  | Registrar y clasificar conforme a EE-DOC-005         |
 | ADR              | Referenciarlo cuando corresponda                     |
 | RFC              | Referenciarlo cuando corresponda                     |
-
----
 
 ### 14.13. Descubrimientos durante la Implementación
 
@@ -4647,8 +4311,6 @@ flowchart TD
 
 Una unidad de implementación no podrá modificar directamente la especificación normativa vigente.
 
----
-
 ### 14.14. Condiciones de Finalización de una Unidad
 
 Una unidad podrá considerarse técnicamente completada cuando:
@@ -4662,8 +4324,6 @@ Una unidad podrá considerarse técnicamente completada cuando:
 7. La unidad no mantenga bloqueadores abiertos.
 
 La finalización de una unidad no implica la congelación de EE-DOC-007.
-
----
 
 ### 14.15. Validación Final de EE-DOC-007
 
@@ -4686,8 +4346,6 @@ La Validación Final deberá verificar:
 
 La Validación Final constituye un paso previo al **Cierre Documental** de EE-DOC-007.
 
----
-
 ### 14.16. Restricciones del Plan de Implementación
 
 El Plan de Implementación no autoriza:
@@ -4700,8 +4358,6 @@ El Plan de Implementación no autoriza:
 - modificar EE-DOC-006 desde una implementación GitHub sin actualizar primero el documento propietario;
 - utilizar bypasses para declarar una unidad conforme;
 - cerrar una unidad con desviaciones conocidas y no documentadas.
-
----
 
 ### 14.17. Estado del Plan
 
@@ -4737,8 +4393,6 @@ Los cambios deberán gestionarse mediante el mecanismo de cambio gobernado defin
 
 EE-DOC-007 no deberá establecer un proceso de cambio paralelo al definido por EE-DOC-005.
 
----
-
 ### 15.1. Principio de Evolución Controlada
 
 Toda modificación de la gobernanza de GitHub deberá responder a una necesidad identificable y deberá poder relacionarse con:
@@ -4757,8 +4411,6 @@ La evolución deberá mantener el principio:
 > **La configuración de GitHub evoluciona como consecuencia de una decisión gobernada y documentada, no como consecuencia de cambios administrativos aislados.**
 
 Este principio deriva directamente de **Governance First**, **Documentation Driven**, **Protected Change** y **Auditability** establecidos por EE-DOC-007.
-
----
 
 ### 15.2. Flujo de Evolución
 
@@ -4808,8 +4460,6 @@ flowchart TD
 
 El flujo anterior no sustituye el ciclo documental ni el workflow de desarrollo. Representa exclusivamente la relación entre una necesidad de evolución y su incorporación controlada a GitHub Governance.
 
----
-
 ### 15.3. Clasificación de Cambios
 
 Los cambios deberán clasificarse antes de su implementación.
@@ -4822,8 +4472,6 @@ Los cambios deberán clasificarse antes de su implementación.
 | **D — Cambio Significativo / Transversal** | Afecta múltiples áreas o modifica reglas de alcance transversal                | RFC                                       |
 
 La clasificación deberá realizarse con base en el impacto real del cambio y no únicamente por el archivo que se modifica.
-
----
 
 ### 15.4. Cambios de Tipo A — Aclaración
 
@@ -4838,8 +4486,6 @@ Un cambio será de Tipo A cuando:
 Estos cambios no requieren ADR ni RFC.
 
 La modificación deberá quedar registrada mediante el mecanismo documental correspondiente.
-
----
 
 ### 15.5. Cambios de Tipo B — Especialización Técnica
 
@@ -4856,8 +4502,6 @@ Ejemplos dentro del alcance de GitHub Governance:
 La especialización no deberá utilizarse para introducir silenciosamente una nueva política.
 
 Si durante la especialización se identifica una nueva decisión arquitectónica, el cambio deberá reclasificarse.
-
----
 
 ### 15.6. Cambios de Tipo C — Decisión Arquitectónica
 
@@ -4883,8 +4527,6 @@ El ADR deberá registrar como mínimo:
 
 EE-DOC-007 deberá actualizarse posteriormente para reflejar la decisión aprobada cuando ésta forme parte de su dominio normativo.
 
----
-
 ### 15.7. Cambios de Tipo D — Cambio Significativo o Transversal
 
 Un cambio deberá requerir un **RFC** cuando pueda afectar de manera significativa o transversal al Engineering Ecosystem.
@@ -4898,8 +4540,6 @@ Podrán constituir ejemplos:
 - modificaciones que requieran coordinación entre múltiples dominios del ecosistema.
 
 El RFC deberá permitir evaluar el impacto antes de convertir la propuesta en una modificación normativa.
-
----
 
 ### 15.8. Relación entre ADR, RFC y EE-DOC-007
 
@@ -4929,8 +4569,6 @@ Un ADR o RFC no sustituye a EE-DOC-007 cuando la decisión aprobada afecta las r
 
 Del mismo modo, EE-DOC-007 no deberá utilizarse para ocultar una decisión que requiera ADR o RFC.
 
----
-
 ### 15.9. Evolución Basada en Auditoría
 
 Los resultados de auditoría podrán generar necesidades de evolución.
@@ -4959,8 +4597,6 @@ Nueva Evidencia
 
 Esto mantiene la relación establecida en la Sección 16 entre cumplimiento, hallazgos, corrección y reverificación.
 
----
-
 ### 15.10. Evolución por Cambios de Seguridad
 
 Los cambios derivados de necesidades de seguridad deberán evaluarse de acuerdo con su impacto.
@@ -4975,8 +4611,6 @@ Un cambio podrá clasificarse como:
 La existencia de una motivación de seguridad no determina automáticamente la utilización de un ADR o RFC.
 
 La clasificación deberá depender del impacto y naturaleza real del cambio.
-
----
 
 ### 15.11. Evolución de `CODEOWNERS`
 
@@ -4998,8 +4632,6 @@ La implementación deberá preservar:
 
 La Sección 08 mantiene la responsabilidad normativa sobre `CODEOWNERS`.
 
----
-
 ### 15.12. Evolución de GitHub Actions
 
 La incorporación o modificación de workflows deberá respetar la separación de responsabilidades existente:
@@ -5012,23 +4644,15 @@ La implementación de un workflow concreto no deberá modificar silenciosamente 
 
 Cuando un workflow introduzca una nueva decisión arquitectónica o transversal, deberá aplicarse la clasificación definida en esta sección.
 
----
-
 ### 15.13. Evolución de Branch Protection
 
 Los cambios sobre protección de branches deberán mantenerse alineados con:
 
-**EE-DOC-005 — Development Workflow**0
-
-y:
-
-**EE-DOC-007 §07 — Protección de Branches**.
+**EE-DOC-005 — Development Workflow** y **EE-DOC-007 §07 — Protección de Branches**.
 
 La selección entre las estrategias de branching definidas por EE-DOC-005 no deberá ser modificada incidentalmente durante una implementación técnica.
 
 Cuando la evolución propuesta implique modificar la estrategia normativa, deberá evaluarse mediante el mecanismo de cambio gobernado correspondiente.
-
----
 
 ### 15.14. Evolución de Quality Gates
 
@@ -5058,8 +4682,6 @@ Por tanto:
 
 La Sección 13 ya establece esta separación normativa.
 
----
-
 ### 15.15. Evolución de la Estructura `.github/`
 
 La estructura física de `.github/` deberá permanecer alineada con **EE-DOC-006 — Repository Structure**.
@@ -5082,8 +4704,6 @@ No deberán incorporarse archivos o directorios únicamente por:
 - imitación de otros repositorios.
 
 Si la nueva estructura modifica una definición normativa de EE-DOC-006, deberá actualizarse primero la documentación correspondiente conforme a la jerarquía normativa.
-
----
 
 ### 15.16. Compatibilidad con la Jerarquía Normativa
 
@@ -5118,8 +4738,6 @@ Un cambio de nivel inferior no deberá contradecir una regla normativa de nivel 
 
 Cuando se detecte una contradicción, deberá resolverse primero mediante el mecanismo documental correspondiente.
 
----
-
 ### 15.17. Compatibilidad con el Ciclo de Vida Documental
 
 La evolución de la gobernanza deberá respetar el ciclo de vida documental establecido por **EE-DOC-005**.
@@ -5147,8 +4765,6 @@ Congelación
 ```
 
 Una modificación aprobada de EE-DOC-007 podrá requerir fases de implementación posteriores sin que ello implique que la implementación ya esté concluida.
-
----
 
 ### 15.18. Trazabilidad de la Evolución
 
@@ -5182,8 +4798,6 @@ Clasificación
 
 La trazabilidad deberá conservarse como parte de la gobernanza y auditoría establecida en la Sección 16.
 
----
-
 ### 15.19. Revisión de Cambios Implementados
 
 Después de implementar una evolución deberá verificarse:
@@ -5197,8 +4811,6 @@ Después de implementar una evolución deberá verificarse:
 7. Que cualquier ADR o RFC relacionado pueda localizarse desde el cambio correspondiente.
 
 La validación deberá preceder al cierre documental del cambio.
-
----
 
 ### 15.20. Prohibición de Deriva de Gobernanza
 
@@ -5218,8 +4830,6 @@ Cuando se detecte una diferencia deberá determinarse si:
 - existe una desviación temporal pendiente de corrección.
 
 No deberá resolverse la diferencia modificando unilateralmente la documentación para reflejar una configuración que nunca fue aprobada.
-
----
 
 ### 15.21. Evolución y Single Source of Truth
 
@@ -5242,8 +4852,6 @@ La evolución de EE-DOC-007 no deberá trasladar a este documento responsabilida
 
 Esta separación es consistente con el modelo de Single Source of Truth ya establecido.
 
----
-
 ### 15.22. Estado de Definiciones
 
 | Definición                                    | Estado                          |
@@ -5264,8 +4872,6 @@ Esta separación es consistente con el modelo de Single Source of Truth ya estab
 | Trazabilidad                                  | **Definido / Sección 16**       |
 | Herramientas concretas para gestionar cambios | **Pendiente de implementación** |
 | Automatización concreta del proceso de cambio | **Pendiente de implementación** |
-
----
 
 ### 15.23. Conformidad Normativa
 
@@ -5289,8 +4895,6 @@ La evolución de GitHub Governance será conforme cuando:
 16. La evolución de Quality Gates permanezca bajo la autoridad de EE-DOC-010.
 17. La evolución del Development Workflow permanezca bajo la autoridad de EE-DOC-005.
 18. La evolución de la estructura del repositorio permanezca bajo la autoridad de EE-DOC-006.
-
----
 
 ### 15.24. Decisión Arquitectónica
 
@@ -5320,8 +4924,6 @@ Esta sección establece el modelo de **cumplimiento, evidencia, auditoría, iden
 
 No redefine los Quality Gates, el Development Workflow, el modelo de branching ni las reglas de seguridad ya establecidas en otras secciones.
 
----
-
 ### 16.1. Principio de Cumplimiento
 
 La implementación de GitHub Governance deberá mantenerse conforme con:
@@ -5341,8 +4943,6 @@ Por tanto:
 
 > **Cada documento conserva la autoridad sobre su propio dominio y EE-DOC-007 verifica la conformidad de la implementación de GitHub respecto de las reglas que le corresponden.**
 
----
-
 ### 16.2. Alcance del Cumplimiento
 
 El cumplimiento de GitHub Governance deberá considerar, como mínimo:
@@ -5361,8 +4961,6 @@ El cumplimiento de GitHub Governance deberá considerar, como mínimo:
 | Auditoría      | §16                  | Evidencia, revisión y seguimiento     |
 
 La tabla constituye una matriz de responsabilidad y no crea controles adicionales a los definidos por las secciones correspondientes.
-
----
 
 ### 16.3. Modelo de Cumplimiento
 
@@ -5395,8 +4993,6 @@ flowchart TD
 
 La ausencia de evidencia suficiente deberá considerarse una condición que requiere revisión, incluso cuando no exista evidencia directa de una modificación incorrecta.
 
----
-
 ### 16.4. Evidencia de Cumplimiento
 
 La conformidad deberá sustentarse mediante evidencia verificable.
@@ -5423,8 +5019,6 @@ Podrá constituir evidencia, según corresponda:
 
 La evidencia deberá permitir relacionar el control con el recurso o cambio que se está verificando.
 
----
-
 ### 16.5. Requisitos de Evidencia
 
 Cuando una verificación requiera demostrar una operación o modificación de GitHub, la evidencia deberá permitir determinar, cuando corresponda:
@@ -5440,8 +5034,6 @@ Cuando una verificación requiera demostrar una operación o modificación de Gi
 | Contexto     | Relacionar la operación con PR, commit, issue o documento  |
 
 Este requisito es consistente con el modelo de auditoría ya establecido en la gobernanza de seguridad.
-
----
 
 ### 16.6. Trazabilidad de Cambios
 
@@ -5482,8 +5074,6 @@ Esta trazabilidad ya constituye un requisito explícito de gobernanza del workfl
 
 Cuando el cambio derive de una decisión formal, deberá conservarse además la referencia al documento, ADR o RFC correspondiente.
 
----
-
 ### 16.7. Auditoría de Gobernanza
 
 La auditoría deberá verificar que la configuración y operación de GitHub continúen siendo consistentes con las reglas normativas vigentes.
@@ -5507,8 +5097,6 @@ La auditoría no deberá modificar directamente la configuración como mecanismo
 
 Los hallazgos deberán gestionarse mediante el flujo de cambio correspondiente.
 
----
-
 ### 16.8. Auditoría de Accesos
 
 La gobernanza deberá permitir revisar periódicamente los accesos concedidos a GitHub.
@@ -5524,8 +5112,6 @@ La revisión deberá determinar, cuando corresponda:
 - necesidad de revocación o ajuste.
 
 La revocación de accesos deberá conservar trazabilidad suficiente, conforme al modelo establecido en la Sección 06.
-
----
 
 ### 16.9. Auditoría de Branch Protection
 
@@ -5545,8 +5131,6 @@ La configuración concreta de cada rama no deberá duplicarse en esta sección.
 
 La responsabilidad normativa continúa perteneciendo a la **Sección 07 — Protección de Branches** y a **EE-DOC-005 — Development Workflow**.
 
----
-
 ### 16.10. Auditoría de CODEOWNERS
 
 La auditoría de `CODEOWNERS` deberá verificar:
@@ -5563,8 +5147,6 @@ La auditoría de `CODEOWNERS` deberá verificar:
 La auditoría no deberá introducir nombres de equipos o usuarios que no hayan sido formalmente definidos.
 
 La implementación concreta de los equipos permanece pendiente cuando así lo indique el estado de EE-DOC-007.
-
----
 
 ### 16.11. Auditoría de GitHub Actions
 
@@ -5587,8 +5169,6 @@ Estos requisitos ya están establecidos para las ejecuciones de GitHub Actions.
 La auditoría no deberá convertir cada workflow en un Quality Gate independiente.
 
 La definición de qué controles constituyen Quality Gates continúa perteneciendo a **EE-DOC-010**.
-
----
 
 ### 16.12. Auditoría de `.github/`
 
@@ -5615,8 +5195,6 @@ La verificación deberá considerar:
 | Coherencia      | La estructura permanece alineada con EE-DOC-006 |
 
 Esta estructura ya está establecida normativamente en las secciones precedentes.
-
----
 
 ### 16.13. Auditoría de Quality Gates
 
@@ -5650,8 +5228,6 @@ flowchart LR
 
 Los nombres, herramientas, umbrales y criterios concretos de Quality Gates no deberán definirse aquí.
 
----
-
 ### 16.14. Clasificación de Hallazgos
 
 Los incumplimientos detectados deberán clasificarse según su naturaleza e impacto.
@@ -5664,8 +5240,6 @@ Los incumplimientos detectados deberán clasificarse según su naturaleza e impa
 | **Crítico**     | Incumplimiento que puede comprometer seguridad, integridad, trazabilidad o control de cambios |
 
 La clasificación deberá utilizarse para determinar la prioridad de corrección y no constituye un sustituto de la clasificación de cambios definida por **EE-DOC-005**.
-
----
 
 ### 16.15. Gestión de Incumplimientos
 
@@ -5699,8 +5273,6 @@ La corrección deberá realizarse mediante los mecanismos de cambio establecidos
 
 No deberá utilizarse una modificación administrativa directa para ocultar un incumplimiento.
 
----
-
 ### 16.16. Incumplimientos Críticos
 
 Los incumplimientos que afecten directamente:
@@ -5719,8 +5291,6 @@ deberán recibir tratamiento prioritario y deberán evaluarse de acuerdo con el 
 
 Cuando exista riesgo de compromiso de credenciales o acceso no autorizado, deberá aplicarse además el mecanismo correspondiente de gestión de credenciales comprometidas definido en la Sección 11.
 
----
-
 ### 16.17. Bypass y Excepciones
 
 No deberá utilizarse un bypass manual como mecanismo ordinario para resolver incumplimientos.
@@ -5735,8 +5305,6 @@ Una excepción deberá estar:
 6. Revisada para determinar si requiere una modificación permanente de la gobernanza.
 
 Una excepción que introduzca una decisión arquitectónica o un cambio significativo o transversal deberá evaluarse mediante el mecanismo ADR/RFC definido por **EE-DOC-005**.
-
----
 
 ### 16.18. Auditoría de Cambios Normativos
 
@@ -5762,8 +5330,6 @@ Esto garantiza que la configuración de GitHub no evolucione de manera independi
 
 El principio es consistente con **Documentation Driven** y con la trazabilidad documental ya definida por EE-DOC-007.
 
----
-
 ### 16.19. Frecuencia de Auditoría
 
 La frecuencia concreta de las auditorías operativas podrá establecerse durante la implementación de EE-DOC-007 y mediante los mecanismos de operación correspondientes.
@@ -5780,8 +5346,6 @@ Sin embargo, deberá realizarse una revisión cuando exista una modificación si
 - integración con Quality Gates.
 
 La periodicidad operativa no deberá convertirse en una nueva regla arquitectónica sin la evaluación correspondiente.
-
----
 
 ### 16.20. Responsabilidades
 
@@ -5801,8 +5365,6 @@ La responsabilidad se distribuirá de la siguiente manera:
 
 Esta distribución mantiene la **Single Source of Truth** y evita duplicar responsabilidades entre documentos.
 
----
-
 ### 16.21. Estado de Cumplimiento
 
 El estado de una verificación podrá representarse mediante:
@@ -5817,8 +5379,6 @@ El estado de una verificación podrá representarse mediante:
 | **Cerrado**                | El hallazgo fue corregido y verificado                     |
 
 Estos estados describen el resultado de una actividad de verificación y no sustituyen los estados documentales definidos por **EE-DOC-005** y **EE-DOC-002**.
-
----
 
 ### 16.22. Estado de Definiciones
 
@@ -5845,8 +5405,6 @@ Estos estados describen el resultado de una actividad de verificación y no sust
 | Evidencias concretas por control     | **Pendiente de implementación**               |
 | Automatización concreta de auditoría | **Pendiente / EE-DOC-010 cuando corresponda** |
 
----
-
 ### 16.23. Conformidad Normativa
 
 La gobernanza de GitHub será conforme a esta sección cuando:
@@ -5867,8 +5425,6 @@ La gobernanza de GitHub será conforme a esta sección cuando:
 14. Las excepciones relevantes mantengan justificación y trazabilidad.
 15. Los cambios arquitectónicos o transversales sean sometidos al mecanismo ADR/RFC correspondiente.
 16. La implementación permanezca alineada con los documentos normativos superiores.
-
----
 
 ### 16.24. Decisión Arquitectónica
 
@@ -5920,20 +5476,20 @@ La implementación concreta de herramientas, automatizaciones o políticas que e
 
 ## 18. Historial de Cambios
 
-| Versión    | Fecha      | Autor                                             | Aprobado por           | Motivo                                      | Cambios                                                                                                                                                                                                                     | Estado             |
-| :--------- | :--------- | :------------------------------------------------ | :--------------------- | :------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------- |
-| **v0.1.0** | 2026-09-21 | IA Asistente                                      | —                      | Creación inicial                            | Definición inicial de propósito, alcance, límites normativos y estructura de GitHub Governance                                                                                                                              | **En Elaboración** |
-| **v0.1.1** | 2026-09-21 | Equipo de Arquitectura / AI Engineering Assistant | —                      | Revisión secciones 08–12                    | Aclaraciones: frontera EE-DOC-011, `pull_request_target`, límites §09, QG de seguridad → EE-DOC-010, ownership docs, templates opcionales §10, matriz §12, referencias 008/009/011                                          | **En Elaboración** |
-| **v0.1.2** | 2026-09-21 | AI Engineering Assistant                          | —                      | Sección 18 Cumplimiento                     | Incorporación de §18 Cumplimiento conforme a EE-DOC-002 §18.1; consolidación formal del modelo de §14                                                                                                                       | **En Elaboración** |
-| **v0.1.3** | 2026-09-21 | AI Engineering Assistant                          | —                      | Cierre documental formal                    | Actualización de §19 Referencias; §20 Historial; incorporación de §21 Cierre Documental (pendiente de validación final)                                                                                                     | **En Elaboración** |
-| **v0.1.4** | 2026-09-21 | AI Engineering Assistant                          | —                      | Correcciones de cumplimiento                | §10.4.1 idioma en-US para plantillas y mensajes de automatización; relación EE-IMP-006 vs EE-IMP-007 en Plan de Implementación                                                                                              | **En Elaboración** |
-| **v0.1.5** | 2026-09-21 | AI Engineering Assistant                          | —                      | SSOT idioma                                 | §10.4.1 apunta a EE-DOC-002 §16.1 como norma; EE-DOC-006 §07.1 como especialización de nomenclatura                                                                                                                         | **En Elaboración** |
-| **v0.1.6** | 2026-09-22 | AI Engineering Assistant                          | —                      | Revisión arquitectónica                     | Resolución de observaciones: claridad SSOT §17↔§15 y §18↔§14; organización/equipos vinculados a P01/P02; refuerzo de pendientes de implementación en §05 y §16                                                            | **En Elaboración** |
-| **v0.1.7** | 2026-09-22 | AI Engineering Assistant                          | —                      | Unificación estructural                     | Unificación §14/§15/§16/§17/§18: cola alineada con EE-DOC-002 y EE-DOC-006 — §14 Plan, §15 Evolución (ex-§15), §16 Cumplimiento (ex-§14), §17 Referencias, §18 Historial, §19 Cierre; eliminadas secciones duales formales  | **En Elaboración** |
-| **v0.1.8** | 2026-09-22 | AI Engineering Assistant                          | —                      | Clarificaciones revisión                    | §06.8 nota RACI≠roles GitHub; §12.3 autoridad tracking alternativo; §14 dependencias P01–P08 y ADR branching en P03; §15.11 autoridad clasificación CODEOWNERS                                                              | **En Elaboración** |
-| **v1.0.0** | 2026-09-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Aprobación normativa                        | Revisión arquitectónica cerrada; documento aprobado. Próximo hito: Implementación EE-IMP-007-P01…P08                                                                                                                        | **Aprobado**       |
-| **v1.1.0** | 2026-09-23 | Equipo de Arquitectura                            | Equipo de Arquitectura | Cierre Documental                           | P01–P08 completados; Validación Final conforme; EE-TEC-002; estado **Congelado**                                                                                                                                            | **Congelado**      |
-| **v1.2.0** | 2026-10-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Enmienda propuesta de workflow colaborativo | Aclara aplicación en GitHub de rama por cambio coherente, PR creado por el usuario, revisión/merge autorizado, separación entre documentación y configuración; propuesta en revisión, sin afirmar controles no verificados. | **Congelado**      |
+| Versión    | Fecha      | Autor                                             | Aprobado por           | Motivo                               | Cambios                                                                                                                                                                                                                    | Estado             |
+| :--------- | :--------- | :------------------------------------------------ | :--------------------- | :----------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------- |
+| **v0.1.0** | 2026-09-21 | IA Asistente                                      | —                      | Creación inicial                     | Definición inicial de propósito, alcance, límites normativos y estructura de GitHub Governance                                                                                                                             | **En Elaboración** |
+| **v0.1.1** | 2026-09-21 | Equipo de Arquitectura / AI Engineering Assistant | —                      | Revisión secciones 08–12             | Aclaraciones: frontera EE-DOC-011, `pull_request_target`, límites §09, QG de seguridad → EE-DOC-010, ownership docs, templates opcionales §10, matriz §12, referencias 008/009/011                                         | **En Elaboración** |
+| **v0.1.2** | 2026-09-21 | AI Engineering Assistant                          | —                      | Sección 18 Cumplimiento              | Incorporación de §18 Cumplimiento conforme a EE-DOC-002 §18.1; consolidación formal del modelo de §14                                                                                                                      | **En Elaboración** |
+| **v0.1.3** | 2026-09-21 | AI Engineering Assistant                          | —                      | Cierre documental formal             | Actualización de §19 Referencias; §20 Historial; incorporación de §21 Cierre Documental (pendiente de validación final)                                                                                                    | **En Elaboración** |
+| **v0.1.4** | 2026-09-21 | AI Engineering Assistant                          | —                      | Correcciones de cumplimiento         | §10.4.1 idioma en-US para plantillas y mensajes de automatización; relación EE-IMP-006 vs EE-IMP-007 en Plan de Implementación                                                                                             | **En Elaboración** |
+| **v0.1.5** | 2026-09-21 | AI Engineering Assistant                          | —                      | SSOT idioma                          | §10.4.1 apunta a EE-DOC-002 §16.1 como norma; EE-DOC-006 §07.1 como especialización de nomenclatura                                                                                                                        | **En Elaboración** |
+| **v0.1.6** | 2026-09-22 | AI Engineering Assistant                          | —                      | Revisión arquitectónica              | Resolución de observaciones: claridad SSOT §17↔§15 y §18↔§14; organización/equipos vinculados a P01/P02; refuerzo de pendientes de implementación en §05 y §16                                                           | **En Elaboración** |
+| **v0.1.7** | 2026-09-22 | AI Engineering Assistant                          | —                      | Unificación estructural              | Unificación §14/§15/§16/§17/§18: cola alineada con EE-DOC-002 y EE-DOC-006 — §14 Plan, §15 Evolución (ex-§15), §16 Cumplimiento (ex-§14), §17 Referencias, §18 Historial, §19 Cierre; eliminadas secciones duales formales | **En Elaboración** |
+| **v0.1.8** | 2026-09-22 | AI Engineering Assistant                          | —                      | Clarificaciones revisión             | §06.8 nota RACI≠roles GitHub; §12.3 autoridad tracking alternativo; §14 dependencias P01–P08 y ADR branching en P03; §15.11 autoridad clasificación CODEOWNERS                                                             | **En Elaboración** |
+| **v1.0.0** | 2026-09-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Aprobación normativa                 | Revisión arquitectónica cerrada; documento aprobado. Próximo hito: Implementación EE-IMP-007-P01…P08                                                                                                                       | **Aprobado**       |
+| **v1.1.0** | 2026-09-23 | Equipo de Arquitectura                            | Equipo de Arquitectura | Cierre Documental                    | P01–P08 completados; Validación Final conforme; EE-TEC-002; estado **Congelado**                                                                                                                                           | **Congelado**      |
+| **v1.2.0** | 2026-10-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Alineación del workflow colaborativo | Aclara aplicación en GitHub de rama por cambio coherente, PR creado por el usuario, revisión/merge autorizado, separación entre documentación y configuración.                                                             | **Congelado**      |
 
 ---
 
@@ -5942,8 +5498,6 @@ La implementación concreta de herramientas, automatizaciones o políticas que e
 > **Aplicabilidad:** Obligatoria al completar la Validación Final de la implementación (documento implementable).
 
 Cierre ejecutado el **2026-09-23** tras completar **EE-IMP-007-P01 … P08**, **EE-TEC-002** y la Validación Final conforme a **§14.15**.
-
----
 
 ### 19.1. Validación Final
 
@@ -5954,8 +5508,6 @@ Cierre ejecutado el **2026-09-23** tras completar **EE-IMP-007-P01 … P08**, **
 | **Resultados de Quality Gates** | Controles de **plataforma** satisfechos (required check `Validate`). Catálogo normativo **EE-DOC-010** pendiente de elaboración (no bloquea cierre de EE-DOC-007) |
 | **Responsable de validación**   | Equipo de Arquitectura                                                                                                                                            |
 | **Dictamen P08**                | **CONFORME**                                                                                                                                                      |
-
----
 
 ### 19.2. Resultado de Quality Gates (plataforma GitHub)
 
@@ -5971,8 +5523,6 @@ Cierre ejecutado el **2026-09-23** tras completar **EE-IMP-007-P01 … P08**, **
 
 > Los Quality Gates de **producto/código** y sus umbrales detallados se definirán en **EE-DOC-010**. Esta tabla registra la Validación Final del **alcance de EE-DOC-007** (gobernanza de plataforma GitHub).
 
----
-
 ### 19.3. Dictamen de Cierre
 
 **CONFORME.**
@@ -5980,8 +5530,6 @@ Cierre ejecutado el **2026-09-23** tras completar **EE-IMP-007-P01 … P08**, **
 La implementación de GitHub Governance materializada en `EE-IMP-007-P01` … `P08` y consolidada en `EE-TEC-002` es conforme al alcance normativo de **EE-DOC-007**. Las excepciones de bootstrap (repo Public temporal, bypass single-operator, ausencia de catálogo EE-DOC-010) están documentadas y no constituyen desviaciones silenciosas.
 
 El Equipo de Arquitectura emite el dictamen de cierre y autoriza la **Congelación** del documento.
-
----
 
 ### 19.4. Estado Final
 
@@ -5991,8 +5539,6 @@ El Equipo de Arquitectura emite el dictamen de cierre y autoriza la **Congelaci�
 | **Versión normativa** | **v1.1.0**                                                              |
 | **Congelación**       | **Efectiva 2026-09-23**                                                 |
 | **Próximo hito**      | Cambios solo vía **RFC** (EE-DOC-005). Roadmap: EE-DOC-008+, EE-DOC-010 |
-
----
 
 ### 19.5. Condiciones para el Cierre
 
