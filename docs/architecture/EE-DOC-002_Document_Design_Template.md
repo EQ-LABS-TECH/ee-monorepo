@@ -395,6 +395,7 @@ El ciclo de **implementación por fases**, validación y documentación técnica
 | **Documentos** (título)          | Title Case                                                                                               | `Engineering Ecosystem Constitution`                                          |
 | **Código Corto**                 | Sin el prefijo `EE`                                                                                      | `DOC-001`, `ADR-001`, `IMP-006-P01`, `TEC-001`, `RFC-001`, `VAL-…`, `WAIVE-…` |
 | **Archivos de documentos EE-\*** | `{ID}_{Nombre}.md` (general); VAL/WAIVE: `{ID}_{Nombre}_{fecha}.md`                                      | `EE-DOC-001_Master_Documentation_Index.md`                                    |
+| **Archivos de pruebas**          | `<módulo>[.<responsabilidad>].test.<extensión>` o `<módulo>[.<responsabilidad>].spec.<extensión>`        | `pr-governance.approvals.test.mjs`                                            |
 | **Archivos genéricos (código)**  | kebab-case                                                                                               | `knowledge-engine.ts`                                                         |
 | **Roles**                        | Title Case                                                                                               | `Arquitecto`                                                                  |
 | **Herramientas**                 | Capitalizado                                                                                             | `VSCode`, `Windsurf`                                                          |
@@ -407,7 +408,14 @@ El ciclo de **implementación por fases**, validación y documentación técnica
 | **Enums**                        | PascalCase                                                                                               | `KnowledgeStatus`                                                             |
 | **Constantes**                   | UPPER_SNAKE_CASE                                                                                         | `MAX_RETRY_COUNT`                                                             |
 
-> **Prefijo `EE-` en archivos (AR-2026-019):** todo documento de **gobernanza y proceso** bajo `docs/` debe tener nombre de archivo con prefijo `EE-` (familias DOC, ADR, RFC, IMP, TEC, VAL, WAIVE, AUDIT). Formato `{ID}_{Nombre}.md` (VAL/WAIVE con fecha). **Excepciones:** (1) `README.md` de carpeta; (2) `docs/validation/evidence/**` (soporte operativo); (3) inventarios brutos (p. ej. `.txt`). Si un evidence se promueve a informe formal → `validation/reports/` como `EE-VAL-*`. Canónicos de auditoría: `EE-AUDIT-Log_Progress_Register.md`, `EE-AUDIT-Criteria_Audited_Definition.md`, `EE-AUDIT-Rules_Emerging.md`. Ante conflicto de árbol físico, **EE-DOC-006** manda sobre paths.
+> **Prefijo `EE-` en archivos (AR-2026-019):**\
+> Todo documento de **gobernanza y proceso** bajo `docs/` debe tener nombre de archivo con prefijo `EE-` (familias DOC, ADR, RFC, IMP, TEC, VAL, WAIVE, AUDIT). Formato `{ID}_{Nombre}.md` (VAL/WAIVE con fecha).
+> **Excepciones:** (1) `README.md` de carpeta; (2) `docs/validation/evidence/**` (soporte operativo); (3) inventarios brutos (p. ej. `.txt`).
+> Si un evidence se promueve a informe formal → `validation/reports/` como `EE-VAL-*`. Canónicos de auditoría: `EE-AUDIT-Log_Progress_Register.md`, `EE-AUDIT-Criteria_Audited_Definition.md`, `EE-AUDIT-Rules_Emerging.md`.
+> Ante conflicto de árbol físico, **EE-DOC-006** manda sobre paths.
+
+> **Regla complementaria:**\
+> Todo archivo de pruebas deberá comenzar con un identificador breve y estable del módulo evaluado. La responsabilidad específica será opcional y no deberá repetir conceptos ya presentes en el identificador del módulo. Los nombres utilizarán inglés y segmentos en `kebab-case`. La extensión y el sufijo deberán corresponder al framework y al tipo de prueba aplicables.
 
 ### 16.1. Política de Idioma por Tipo de Artefacto (Normativo)
 

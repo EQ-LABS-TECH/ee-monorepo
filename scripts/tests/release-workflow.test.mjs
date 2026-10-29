@@ -145,3 +145,47 @@ test('publication and remote tag verification remain gated', () => {
   assert.match(manifest.run, /validateReleaseTrigger/);
   assert.match(verifyTag.run, /inspectRemoteReleaseTag/);
 });
+
+test('release publication precedes tag push and remote verification', () => {
+  const { steps } = getSteps();
+
+  const names = steps.map((step) => step.name);
+
+  const publishIndex = names.indexOf('Publish eligible package versions and create tag');
+  const pushIndex = names.indexOf('Push release tag');
+  const verifyIndex = names.indexOf('Verify remote release tag');
+
+  assert.ok(publishIndex >= 0, 'Publication step must exist');
+  assert.ok(pushIndex > publishIndex, 'Tag push must follow publication');
+  assert.ok(verifyIndex > pushIndex, 'Remote verification must follow tag push');
+
+  const push = getStep(steps, 'Push release tag');
+  const verify = getStep(steps, 'Verify remote release tag');
+
+  assert.match(push.run, /git push origin/);
+  assert.match(verify.run, /git ls-remote --tags origin/);
+  assert.match(verify.run, /inspectRemoteReleaseTag/);
+});
+
+test('npm publication token is scoped to the publication step', () => {
+  const { job, steps } = getSteps();
+
+  const publish = getStep(steps, 'Publish eligible package versions and create tag');
+
+  assert.equal(job.env?.NODE_AUTH_TOKEN, undefined);
+  assert.equal(job.env?.NPM_TOKEN, undefined);
+
+  assert.equal(publish.env?.NODE_AUTH_TOKEN, '${{ secrets.NPM_TOKEN }}');
+
+  for (const step of steps) {
+    if (step.name === publish.name) continue;
+
+    assert.equal(
+      step.env?.NODE_AUTH_TOKEN,
+      undefined,
+      `${step.name} must not receive NODE_AUTH_TOKEN`,
+    );
+
+    assert.equal(step.env?.NPM_TOKEN, undefined, `${step.name} must not receive NPM_TOKEN`);
+  }
+});

@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**                   | D — Cambio Significativo / Transversal                                                                              |
 | **Nivel**                           | Estratégico                                                                                                         |
 | **Normativo**                       | Sí                                                                                                                  |
-| **Versión**                         | v0.5.0                                                                                                              |
+| **Versión**                         | v0.6.0                                                                                                              |
 | **Estado**                          | Propuesto (vehículo abierto — auditoría)                                                                            |
 | **Propietario**                     | Equipo de Arquitectura                                                                                              |
 | **Documento padre**                 | EE-DOC-005                                                                                                          |
@@ -27,7 +27,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**                    | Pendiente — RFC Propuesto                                                                                           |
 | **Audiencia**                       | Arquitectura, Desarrollo, IA, QA                                                                                    |
 | **Fecha de creación**               | 2026-10-11                                                                                                          |
-| **Última revisión**                 | 2026-10-24                                                                                                          |
+| **Última revisión**                 | 2026-10-28                                                                                                          |
 | **Próxima revisión**                | Pendiente de cierre de la oleada de auditoría                                                                       |
 
 > **Régimen:** este RFC permanece en estado **Propuesto** de forma deliberada mientras dure la **auditoría documental** del monorepo. Está indexado en **EE-DOC-001 §09.2**. Acumula y ratifica cambios Tipo D de estándares (plantillas, catálogo, metadatos, VAL/WAIVE, reglas AR volcadas a 002, etc.). **No** se interpreta como Aprobado ni como alcance cerrado hasta el cierre formal de la oleada de auditoría.
@@ -101,11 +101,189 @@ La propuesta preferida es preparar el versionado mediante un PR, publicar paquet
 
 La integridad del release requiere garantizar que el plan autorizado corresponde a los cambios de versión revisados e integrados. Se propone exigir procedencia verificable y comprobación independiente de la correspondencia entre el plan preparado y el plan autorizado para publicación, sin confiar exclusivamente en una declaración generada durante la preparación.
 
-Permanece pendiente de decisión si un release del Engineering Ecosystem puede finalizar sin paquetes npm públicos planificados. Debe distinguirse entre versionar el ecosistema y distribuir paquetes. Esta decisión condiciona la elegibilidad y creación del tag y debe resolverse antes de declarar conforme el contrato de release.
+La política de elegibilidad distingue entre versionar el ecosistema y distribuir paquetes npm. El flujo de publicación npm exige al menos un paquete público en el plan efectivo y verificado de release. Un plan sin paquetes públicos no habilita la finalización de ese flujo ni la creación de su tag. Los releases exclusivamente internos o de plataforma requieren un contrato independiente. La conformidad operativa queda condicionada a la sincronización del contrato aplicable y a su validación verificable.
 
-Los hallazgos vinculados son **PN-021** (política de publicación npm y orden commit/tag) y **PN-030** (alineación entre CODEOWNERS, ruleset, CI y script de release). Ambos permanecen abiertos hasta que el contrato normativo, la implementación y la evidencia estén alineados.
+Los hallazgos vinculados son **PN-021** (política de publicación npm y orden commit/tag), **PN-017** (aprobaciones reforzadas para cambios críticos), **PN-019** (regularización del régimen transitorio de bypass) y **PN-030** (alineación entre CODEOWNERS, rulesets, CI, permisos y automatización de release). Permanecen abiertos hasta disponer de decisiones aprobadas, configuración efectiva y evidencia verificable.
 
-Esta ampliación se gestiona en RFC-003 como parte de la oleada de auditoría. La inclusión aquí no aprueba automáticamente los cambios, no modifica documentos congelados ni configura GitHub. Cada materialización debe seguir el proceso gobernado aplicable; el RFC puede permanecer abierto mientras se aprueban e implementan paquetes de trabajo parciales.
+#### Gobernanza escalable de revisión y aprobación
+
+Se propone materializar el modelo de aprobación establecido por EE-DOC-005 y EE-DOC-007, distinguiendo cambios ordinarios y críticos.
+
+Los cambios ordinarios requieren al menos una aprobación calificada e independiente del autor y los Quality Gates aplicables. Los cambios críticos requieren al menos dos aprobaciones calificadas e independientes del autor, conforme al contrato normativo vigente.
+
+La clasificación de criticidad deberá basarse en los criterios definidos en EE-DOC-005, sin depender exclusivamente de etiquetas o declaraciones que el autor pueda modificar unilateralmente.
+
+CODEOWNERS mantiene la responsabilidad técnica sobre las áreas del monorepo. Su integración con los mecanismos de revisión deberá garantizar la participación de propietarios elegibles, sin introducir ownership ficticio ni conceder permisos administrativos innecesarios.
+
+#### Alcance consultivo inicial de PN-017
+
+La primera fase de PN-017 consiste en un inspector de evidencia de Pull Requests, integrado como job consultivo independiente de los Quality Gates obligatorios. Su ejecución no autoriza la integración, no sustituye CODEOWNERS y no certifica el cumplimiento del régimen reforzado de aprobaciones.
+
+La clasificación automatizada identifica rutas potencialmente críticas mediante indicadores conservadores. La ausencia de indicadores no constituye una clasificación afirmativa como cambio ordinario; permanece obligatoria la evaluación de impacto por los responsables autorizados.
+
+El cómputo automatizado de aprobaciones constituye evidencia numérica de revisiones independientes, no una certificación de elegibilidad de revisores, ownership, cumplimiento integral de rulesets ni vigencia de las condiciones al momento del merge.
+
+Durante el despliegue inicial, el workflow utiliza la implementación confiable disponible en la rama principal. Mientras el inspector no esté integrado allí, el job puede registrar expresamente su indisponibilidad sin ejecutar la inspección. Ese resultado deberá considerarse una omisión transitoria y nunca evidencia positiva de conformidad.
+
+Los errores al obtener o validar evidencia impedirán producir un informe de inspección válido. Un informe emitido conservará el carácter consultivo y requerirá la revisión humana y los controles nativos de GitHub correspondientes.
+
+La transición al enforcement obligatorio requerirá una decisión gobernada, configuración efectiva, participación de revisores elegibles y evidencia operativa verificable. La aprobación de esta propuesta no implica que dicha transición se haya completado.
+
+#### Régimen transitorio de adopción
+
+Mientras la composición del equipo no permita satisfacer todas las aprobaciones independientes exigidas para cambios críticos, cualquier excepción deberá estar formalmente autorizada, documentada, justificada y sujeta a revisión y cierre.
+
+El régimen transitorio no constituye cumplimiento del umbral definitivo ni permite declarar ejecutados controles omitidos.
+
+La incorporación de nuevos revisores deberá permitir completar el enforcement sin redefinir los criterios normativos, el ownership o los Quality Gates.
+
+#### Gobernanza de bypass
+
+Las autorizaciones de bypass deberán tener una finalidad excepcional, un alcance explícito, autoridad responsable, trazabilidad y condiciones de revisión y cierre.
+
+Las excepciones permanentes observadas en la configuración remota deberán evaluarse individualmente antes de su modificación. El bypass no podrá sustituir el proceso ordinario de Pull Request, revisión y validación.
+
+##### Régimen operativo transitorio (PN-019)
+
+Hasta que exista un mecanismo de recuperación administrativa aprobado y verificable, las capacidades de bypass configuradas en GitHub se considerarán **capacidades técnicas excepcionales**, no autorizaciones generales de integración.
+
+La existencia de permisos administrativos no exime del cumplimiento de las políticas de Pull Request, CODEOWNERS, revisiones independientes ni Quality Gates. Ningún bypass podrá utilizarse para declarar conforme un cambio que incumpla las condiciones normativas aplicables.
+
+Toda utilización excepcional deberá contar con un registro identificable que permita verificar:
+
+1. **Motivo y necesidad:** incidente, bloqueo técnico o riesgo que justifique la excepción.
+2. **Alcance:** repositorio, rama, PR o referencia afectada y controles que serían excepcionalmente omitidos.
+3. **Autoridad:** responsable que solicita y autoridad que aprueba la excepción, con independencia de funciones cuando sea viable.
+4. **Alternativas:** mecanismos ordinarios de recuperación evaluados y motivo de su insuficiencia.
+5. **Autorización:** decisión explícita y trazable anterior a la ejecución, salvo emergencia documentada.
+6. **Ejecución:** identidad ejecutora, operación efectuada y evidencia verificable.
+7. **Validación posterior:** comprobación de integridad, seguridad y Quality Gates afectados.
+8. **Cierre:** resultado, medidas correctivas, revisión de causa raíz y decisión sobre la permanencia de la excepción.
+
+La falta de personal suficiente para satisfacer temporalmente el número objetivo de revisores deberá registrarse como una limitación de capacidad de revisión. No constituirá por sí misma una autorización de bypass.
+
+##### Recuperación y reducción de privilegios
+
+Antes de eliminar o restringir una autorización administrativa existente deberán verificarse:
+
+- La capacidad de recuperación ante una configuración incorrecta de rulesets.
+- La existencia de una autoridad administrativa responsable y accesible.
+- La posibilidad de restablecer protecciones sin recurrir a una identidad no autorizada.
+- La evidencia de que el procedimiento de recuperación no introduce una vía ordinaria de evasión.
+- La aprobación del cambio mediante el mecanismo de gobernanza correspondiente.
+
+La reducción de privilegios se ejecutará únicamente después de validar estas condiciones. La ausencia de evidencia mantendrá PN-019 abierto y no permitirá declarar regularizada la configuración.
+
+##### Criterios de cierre de PN-019
+
+PN-019 podrá considerarse cerrado únicamente cuando:
+
+1. El régimen de excepciones esté aprobado y documentado.
+2. Las autorizaciones efectivas de bypass hayan sido inventariadas y contrastadas con la configuración remota.
+3. Cada autorización permanente disponga de justificación, alcance y responsable identificables, o haya sido retirada mediante un procedimiento validado.
+4. Exista evidencia verificable del mecanismo de recuperación administrativa.
+5. Se haya comprobado que las excepciones no sustituyen el flujo ordinario de revisión y validación.
+6. Se haya registrado la decisión final de aceptación, restricción o eliminación de cada capacidad excepcional.
+
+Mientras estas condiciones no se satisfagan, **PN-019 permanecerá abierto**.
+
+#### Gobernanza de tags y publicación
+
+La protección de tags de release deberá distinguir creación autorizada, actualización y eliminación, preservando la integridad de los identificadores de versión.
+
+La identidad de publicación deberá disponer únicamente de los permisos necesarios para ejecutar el proceso aprobado. La autenticación npm y las condiciones de finalización del release deberán verificarse antes de declarar conforme la operación.
+
+##### Estrategia propuesta de protección de tags (PN-030 / PN-021)
+
+Se propone proteger los tags de release mediante dos rulesets de tags independientes del ruleset de la rama principal, ambos aplicados al patrón `v*`:
+
+1. **Creación autorizada:** restringir la creación de nuevos tags y permitirla únicamente a la identidad de publicación expresamente autorizada.
+2. **Inmutabilidad:** restringir la actualización y eliminación de tags existentes, sin conceder a la identidad publicadora una excepción ordinaria a estas restricciones.
+
+La aplicación conjunta de ambos rulesets y sus excepciones deberá verificarse con la identidad real de publicación en un entorno controlado antes de habilitar su enforcement. La configuración efectiva permanecerá pendiente de aprobación y evidencia operativa.
+
+El alcance inicial propuesto comprende los tags cuyo nombre comience con `v`, conforme al patrón de selección admitido por GitHub Rulesets. El formato SemVer y la correspondencia entre versión, manifest y commit seguirán siendo responsabilidad del contrato de release.
+
+La estrategia de adopción será progresiva:
+
+1. Verificar la identidad efectiva que ejecuta la creación y el envío de tags.
+2. Evaluar restricciones de actualización y eliminación para impedir modificaciones no autorizadas de tags existentes.
+3. Comprobar que la creación de nuevos tags sigue siendo posible únicamente mediante el procedimiento de publicación aprobado.
+4. Determinar si la restricción de creación exige una identidad de publicación dedicada o permisos específicos de bypass.
+5. Validar la configuración mediante evidencia operativa antes de activar su enforcement definitivo.
+
+Las excepciones de ambos rulesets deberán cumplir el régimen de bypass definido para PN-019. No se concederán permisos de bypass generales a cuentas personales o equipos únicamente para facilitar la publicación.
+
+La configuración de `contents: write` en GitHub Actions no se considerará evidencia suficiente de autorización bajo el ruleset. Deberá verificarse expresamente el resultado de la operación de creación del tag.
+
+La publicación deberá minimizar la exposición de credenciales de escritura sobre GitHub. Las operaciones de validación, reconstrucción del plan y distribución npm no deberán depender de credenciales persistentes con capacidad para modificar referencias Git.
+
+La autorización para enviar el tag deberá obtenerse únicamente cuando se hayan satisfecho las condiciones de publicación y verificación aplicables. Su alcance deberá limitarse al repositorio y a la operación autorizada, evitando que dicha credencial permanezca disponible innecesariamente durante la ejecución de código de construcción o publicación.
+
+La separación de credenciales no deberá alterar la procedencia verificable del release, su recuperación idempotente ni la correspondencia entre el commit publicado y el tag definitivo.
+
+La implementación deberá incluir pruebas de contrato que verifiquen el aislamiento de credenciales, el orden de las operaciones y el rechazo de modificaciones no autorizadas de tags.
+
+La autenticación npm deberá evaluarse de forma independiente de la autorización para modificar referencias Git. El soporte efectivo de Trusted Publishing mediante OIDC requerirá verificar y, cuando corresponda, adaptar el contrato del comando de publicación.
+
+Hasta completar estas verificaciones, la protección de tags permanecerá pendiente de habilitación operativa y no podrá declararse cerrada bajo PN-021 o PN-030.
+
+##### Política propuesta de elegibilidad de publicación (PN-021)
+
+El flujo de publicación npm del Engineering Ecosystem requiere al menos un paquete público incluido en el plan efectivo y verificado de Changesets. Su aplicación operativa debe mantenerse alineada con EE-DOC-011 §08.2 y con las verificaciones de integridad y publicación correspondientes.
+
+Un plan sin paquetes públicos no será elegible para finalizar mediante este flujo ni para generar su tag de release. Los releases exclusivamente internos o de plataforma requerirán un contrato de release separado y aprobado antes de su implementación.
+
+Si las versiones públicas previstas ya existen en npm, la ejecución podrá considerarse un reintento o una recuperación idempotente, siempre que se verifiquen la identidad de las versiones publicadas, el plan autorizado y la correspondencia del tag con el commit esperado.
+
+La creación y el envío del tag deberán ocurrir únicamente después de satisfacer las verificaciones de integridad y publicación. Ningún reintento podrá sobrescribir versiones npm, desplazar tags existentes o interpretar errores de consulta como ausencia de una versión.
+
+La habilitación operativa requerirá verificar la identidad y el mecanismo de autenticación npm, así como las reglas efectivas de protección de tags. Hasta completar esas verificaciones, PN-021 permanecerá abierto.
+
+#### Matriz de materialización y brechas de GitHub Governance (PN-030)
+
+La conformidad de GitHub Governance deberá evaluarse mediante la correspondencia entre las políticas normativas, la configuración efectiva de GitHub, la implementación versionada y la evidencia de ejecución. La presencia de un archivo de configuración o una prueba local satisfactoria no equivale por sí sola a enforcement operativo.
+
+| Superficie              | Estado observado                                                                                              | Brecha o condición de cierre                                                                                                                                                          |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CODEOWNERS              | Configurado con equipos responsables por área                                                                 | Verificar participación efectiva de revisores elegibles en PR reales.                                                                                                                 |
+| Protección de `main`    | Ruleset activo con PR obligatorio, una aprobación, CODEOWNERS y `Validate` requerido                          | Mantener los controles nativos y resolver el refuerzo de aprobaciones críticas mediante PN-017.                                                                                       |
+| Aprobaciones críticas   | Dos aprobaciones requeridas normativamente; una exigida por el ruleset                                        | Demostrar enforcement efectivo del umbral crítico sin depender exclusivamente de evidencia consultiva.                                                                                |
+| Inspector de gobernanza | Implementación consultiva y pruebas locales disponibles; sin ejecución operativa confirmada en GitHub Actions | Verificar su ejecución efectiva una vez integrado en `main`, distinguir inspección ejecutada de omisión transitoria y evaluar posteriormente el enforcement de aprobaciones críticas. |
+| Bypass administrativo   | Autorización permanente asociada al rol administrativo                                                        | Aplicar el régimen de excepciones y recuperación definido para PN-019.                                                                                                                |
+| CI                      | Job `Validate` requerido; job consultivo propuesto en la rama de trabajo                                      | Verificar ejecución remota y mantener diferenciados los controles obligatorios de los informativos.                                                                                   |
+| Publicación npm         | Workflow post-merge y contrato de release implementados                                                       | Verificar identidad de publicación, credenciales y operación real sin exposición de secretos.                                                                                         |
+| Tags de release         | No se identificó un ruleset de tags en la configuración consultada                                            | Aprobar y verificar protección de creación, actualización y eliminación, compatible con la identidad autorizada.                                                                      |
+
+##### Requisitos de evidencia
+
+La evaluación de PN-030 deberá conservar, como mínimo:
+
+1. Identificación de la configuración efectiva y de las referencias de los controles aplicables.
+2. Correspondencia entre rutas protegidas por CODEOWNERS y responsabilidades de revisión.
+3. Resultado de las pruebas locales y de las ejecuciones remotas de CI relevantes.
+4. Evidencia de aprobación independiente y aplicación de los umbrales exigibles.
+5. Inventario de excepciones y autorizaciones de bypass, con sus decisiones de regularización.
+6. Verificación de la identidad de publicación y de las restricciones efectivas sobre tags.
+7. Registro de brechas pendientes, responsables y condiciones de resolución.
+
+La matriz constituye un estado de evaluación y no modifica automáticamente el ruleset, los permisos, los workflows ni las políticas normativas vigentes.
+
+**PN-030 permanecerá abierto** mientras existan brechas de enforcement o falte evidencia operativa para los controles requeridos.
+
+#### Criterios de materialización
+
+La implementación deberá demostrar, mediante pruebas y evidencia operativa:
+
+1. Bloqueo de integración sin las aprobaciones y Quality Gates exigibles.
+2. Participación efectiva de CODEOWNERS conforme a las responsabilidades aprobadas.
+3. Aplicación del control reforzado de aprobación para cambios críticos.
+4. Excepciones transitorias y bypass autorizados, trazables y sujetos a cierre.
+5. Protección efectiva de los tags frente a operaciones no autorizadas.
+6. Compatibilidad entre la identidad de publicación, los permisos GitHub y la autenticación npm.
+7. Ausencia de regresiones en los procesos de CI y release existentes.
+
+Esta ampliación se gestiona en RFC-003 como parte de la oleada de auditoría. La mera inclusión de una propuesta no constituye su aprobación normativa, que se acredita mediante la entrada correspondiente del historial de cambios. La aprobación individual no modifica automáticamente documentos congelados ni autoriza cambios operativos en GitHub. Cada materialización deberá seguir el proceso gobernado aplicable.
 
 ---
 
@@ -161,17 +339,17 @@ Este RFC no convierte por sí solo esas reglas en normativa aprobada. Las superf
 
 ### 03.6. Superficie D — Release, automatización e integración protegida
 
-| Superficie                                  | Cambio propuesto                                                                                                            | Límite                                                                                                                                        |
-| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| **EE-DOC-005 §11.3 y workflow relacionado** | Sincronizar la preparación de versiones mediante rama/PR, revisión, merge y ejecución post-merge                            | El PR lo crea la persona responsable; no se integra directamente en `main`                                                                    |
-| **EE-DOC-007**                              | Definir workflow autorizado, permisos mínimos y gobernanza de tags                                                          | La configuración real de workflows, permisos y rulesets requiere una tarea operativa y evidencia separadas                                    |
-| **EE-DOC-011 §08.2**                        | Reconciliar el contrato de preparación, procedencia verificable, elegibilidad, publicación, creación del tag y recuperación | La política para releases sin paquetes públicos y las garantías obligatorias de procedencia requieren decisión expresa y aprobación normativa |
-| **`scripts/commands/release`**              | Incorporar un modo `prepare` local y separar la preparación de la publicación post-merge                                    | No hacer push directo a `main` ni publicar desde la preparación local                                                                         |
-| **`scripts/lib/`**                          | Extraer lógica de release comprobable y permitir inyección/simulación de dependencias                                       | Evitar una refactorización no necesaria fuera de los contratos que deban probarse                                                             |
-| **`scripts/tests/`**                        | Probar preflight, elegibilidad, orden, fallos parciales e idempotencia                                                      | Sin publicaciones, commits ni tags reales en pruebas                                                                                          |
-| **CI post-merge**                           | Añadir un job separado con disparador explícito, permisos mínimos y recuperación                                            | `contents: write` solo para el job que crea el tag; OIDC de npm cuando esté soportado y configurado                                           |
-| **`scripts/README.md`**                     | Documentar modos, efectos, prerrequisitos, publicación condicional y recuperación                                           | Debe permanecer alineado con las normas y la implementación aprobadas                                                                         |
-| **EE-DOC-001 / registro de auditoría**      | Mantener trazabilidad de PN-021 y PN-030 y de su evidencia de cierre                                                        | No cerrar hallazgos antes de verificar los criterios de aceptación                                                                            |
+| Superficie                                  | Cambio propuesto                                                                                                            | Límite                                                                                                                                                                                                            |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **EE-DOC-005 §11.3 y workflow relacionado** | Sincronizar la preparación de versiones mediante rama/PR, revisión, merge y ejecución post-merge                            | El PR lo crea la persona responsable; no se integra directamente en `main`                                                                                                                                        |
+| **EE-DOC-007**                              | Definir workflow autorizado, permisos mínimos y gobernanza de tags                                                          | La configuración real de workflows, permisos y rulesets requiere una tarea operativa y evidencia separadas                                                                                                        |
+| **EE-DOC-011 §08.2**                        | Reconciliar el contrato de preparación, procedencia verificable, elegibilidad, publicación, creación del tag y recuperación | Sincronizar la política de elegibilidad definida en §02.8 y las garantías de procedencia con el contrato normativo vigente; verificar su trazabilidad y materialización conforme al mecanismo gobernado aplicable |
+| **`scripts/commands/release`**              | Incorporar un modo `prepare` local y separar la preparación de la publicación post-merge                                    | No hacer push directo a `main` ni publicar desde la preparación local                                                                                                                                             |
+| **`scripts/lib/`**                          | Extraer lógica de release comprobable y permitir inyección/simulación de dependencias                                       | Evitar una refactorización no necesaria fuera de los contratos que deban probarse                                                                                                                                 |
+| **`scripts/tests/`**                        | Probar preflight, elegibilidad, orden, fallos parciales e idempotencia                                                      | Sin publicaciones, commits ni tags reales en pruebas                                                                                                                                                              |
+| **CI post-merge**                           | Añadir un job separado con disparador explícito, permisos mínimos y recuperación                                            | `contents: write` solo para el job que crea el tag; OIDC de npm cuando esté soportado y configurado                                                                                                               |
+| **`scripts/README.md`**                     | Documentar modos, efectos, prerrequisitos, publicación condicional y recuperación                                           | Debe permanecer alineado con las normas y la implementación aprobadas                                                                                                                                             |
+| **EE-DOC-001 / registro de auditoría**      | Mantener trazabilidad de PN-021 y PN-030 y de su evidencia de cierre                                                        | No cerrar hallazgos antes de verificar los criterios de aceptación                                                                                                                                                |
 
 ### 03.7. Modelo de release propuesto
 
@@ -206,9 +384,9 @@ Un paquete es elegible si:
 
 La detección debe enumerar los workspaces configurados y no recorrer indiscriminadamente todos los `package.json`, lo que podría incluir artefactos generados o dependencias instaladas.
 
-Según el inventario observado durante esta auditoría, los **26 workspaces tenían `private: true`**. Esta condición evidencia la necesidad de distinguir el versionado del ecosistema de la distribución de paquetes npm. No se propone cambiar la privacidad de los workspaces para forzar publicaciones; el tratamiento de releases sin paquetes públicos permanece sujeto a decisión expresa de gobernanza.
+Según el inventario observado durante esta auditoría, los **26 workspaces tenían `private: true`**. Esta condición evidencia la necesidad de distinguir el versionado del ecosistema de la distribución de paquetes npm. No se propone cambiar la privacidad de los workspaces para forzar publicaciones.
 
-El tratamiento de releases sin paquetes públicos elegibles queda sujeto a decisión expresa de gobernanza. Se evaluarán dos políticas: permitir la finalización del release del ecosistema y la creación del tag sin distribución npm, o exigir al menos una release pública planificada. La política aprobada deberá aplicarse de manera coherente en el contrato normativo, la automatización y las condiciones de recuperación.
+Para el flujo de publicación npm se establece como criterio de elegibilidad la presencia de al menos un paquete público en el plan efectivo y verificado de release. Los planes sin paquetes públicos no habilitan la finalización de ese flujo ni la creación de su tag. Los releases exclusivamente internos o de plataforma requieren un contrato independiente. La aplicación de esta decisión deberá reflejarse de manera coherente en el contrato normativo, la automatización y las condiciones de recuperación.
 
 #### D. Orden de operaciones
 
@@ -246,7 +424,7 @@ La aprobación del cambio de release requiere demostrar que las garantías propu
 
 La evaluación de conformidad deberá contemplar la procedencia del plan de release, la comprobación independiente de su integridad, la elegibilidad de publicación, el orden de finalización, los reintentos seguros y el tratamiento de estados inconsistentes.
 
-La política aplicable a releases sin paquetes públicos deberá resolverse expresamente. No se considerará satisfecho este requisito mientras existan interpretaciones contradictorias entre el contrato normativo y el comportamiento implementado.
+La política de elegibilidad definida en §02.8 deberá reflejarse coherentemente en el contrato normativo, el comportamiento implementado y las condiciones de creación del tag. No se considerará satisfecho este requisito mientras existan contradicciones o falte evidencia verificable de su aplicación.
 
 Los resultados técnicos y operativos deberán registrarse en sus artefactos de evidencia correspondientes. La aprobación del RFC no implica que las verificaciones hayan sido ejecutadas ni que las configuraciones operativas estén habilitadas.
 
@@ -260,33 +438,33 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 
 ## 04. Alternativas consideradas
 
-| ID  | Alternativa                                                                                                         | Dictamen                           | Motivo                                                                                                                 |
-| --- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| A1  | Clasificar solo Tipo B (especialización 002)                                                                        | Rechazada                          | Alcance transversal (001 + familia VAL/WAIVE + catálogo global)                                                        |
-| A2  | Revertir v1.7–v1.9 y reintroducir vía RFC desde cero                                                                | Rechazada                          | Coste alto; contenido ya alineado a auditoría                                                                          |
-| A3  | RFC Tipo D retroactivo (esta propuesta)                                                                             | **Adoptada**                       | Cumple 001 R2 / 005 sin reescribir el fondo                                                                            |
-| A4  | Mantener el release local actual con commit/tag en `main` y push posterior                                          | Rechazada como objetivo            | Contradice el flujo de integración protegida y complica la recuperación ante fallos parciales                          |
-| A5  | Convertir el script solo en preflight/dry-run sin preparar la versión ni definir CI post-merge                      | Rechazada                          | Deja sin resolver quién prepara el commit de versión y cómo se completa el release                                     |
-| A6  | Preparar versión por PR; publicar condicionalmente y crear tag al final desde CI                                    | Preferida, pendiente de aprobación | Separa preparación revisable, publicación y finalización, con permisos mínimos y recuperación idempotente              |
-| A7  | Cambiar `private: true` para publicar todos los workspaces                                                          | Rechazada                          | La privacidad no es un mecanismo para forzar publicación y requiere decisiones por paquete                             |
-| A8  | Confiar únicamente en el plan declarado durante la preparación del release                                          | Rechazada como objetivo            | No proporciona una garantía independiente de correspondencia entre la preparación revisada y la publicación autorizada |
-| A9  | Exigir procedencia verificable y comprobación independiente del plan antes de publicar                              | Preferida, pendiente de aprobación | Refuerza la integridad del release sin depender exclusivamente de la declaración generada durante su preparación       |
-| A10 | Permitir releases del ecosistema sin paquetes npm públicos frente a exigir al menos una release pública planificada | Pendiente de decisión              | Debe resolverse la relación entre versionado del ecosistema, distribución npm y creación del tag                       |
+| ID  | Alternativa                                                                                                         | Dictamen                                                                    | Motivo                                                                                                                                         |
+| --- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1  | Clasificar solo Tipo B (especialización 002)                                                                        | Rechazada                                                                   | Alcance transversal (001 + familia VAL/WAIVE + catálogo global)                                                                                |
+| A2  | Revertir v1.7–v1.9 y reintroducir vía RFC desde cero                                                                | Rechazada                                                                   | Coste alto; contenido ya alineado a auditoría                                                                                                  |
+| A3  | RFC Tipo D retroactivo (esta propuesta)                                                                             | **Adoptada**                                                                | Cumple 001 R2 / 005 sin reescribir el fondo                                                                                                    |
+| A4  | Mantener el release local actual con commit/tag en `main` y push posterior                                          | Rechazada como objetivo                                                     | Contradice el flujo de integración protegida y complica la recuperación ante fallos parciales                                                  |
+| A5  | Convertir el script solo en preflight/dry-run sin preparar la versión ni definir CI post-merge                      | Rechazada                                                                   | Deja sin resolver quién prepara el commit de versión y cómo se completa el release                                                             |
+| A6  | Preparar versión por PR; publicar condicionalmente y crear tag al final desde CI                                    | Preferida, pendiente de aprobación                                          | Separa preparación revisable, publicación y finalización, con permisos mínimos y recuperación idempotente                                      |
+| A7  | Cambiar `private: true` para publicar todos los workspaces                                                          | Rechazada                                                                   | La privacidad no es un mecanismo para forzar publicación y requiere decisiones por paquete                                                     |
+| A8  | Confiar únicamente en el plan declarado durante la preparación del release                                          | Rechazada como objetivo                                                     | No proporciona una garantía independiente de correspondencia entre la preparación revisada y la publicación autorizada                         |
+| A9  | Exigir procedencia verificable y comprobación independiente del plan antes de publicar                              | Preferida, pendiente de aprobación                                          | Refuerza la integridad del release sin depender exclusivamente de la declaración generada durante su preparación                               |
+| A10 | Permitir releases del ecosistema sin paquetes npm públicos frente a exigir al menos una release pública planificada | Criterio seleccionado: exigir al menos un paquete público para el flujo npm | La política de §02.8 distingue la publicación npm de los releases exclusivamente internos; su trazabilidad y materialización deben verificarse |
 
 ---
 
 ## 05. Impacto
 
-| Ámbito                            | Impacto                                                                                                                                                                                                                                                             |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Documentos normativos**         | El RFC conserva la regularización de EE-DOC-002/EE-DOC-001 y amplía explícitamente el seguimiento a EE-DOC-005, EE-DOC-007 y EE-DOC-011 según los hallazgos incorporados                                                                                            |
-| **Release y versionado**          | Se propone exigir procedencia verificable e integridad independiente del plan de release, manteniendo preparación revisable por PR, publicación post-merge, tag final y recuperación segura; queda pendiente resolver la política de releases sin paquetes públicos |
-| **Implementación y verificación** | La materialización del contrato requiere implementación y evidencia independientes, sujetas a revisión de conformidad; su existencia no implica aprobación normativa                                                                                                |
-| **CI y seguridad**                | Se requiere un job post-merge separado, permisos mínimos y evaluación independiente de protección de tags; OIDC es preferible si está soportado y configurado                                                                                                       |
-| **Publicación npm**               | La separación entre versionado del ecosistema y distribución npm exige resolver explícitamente la política de releases sin paquetes públicos elegibles                                                                                                              |
-| **Gobernanza**                    | PN-021 y PN-030 permanecen abiertos hasta alinear norma, implementación y evidencia verificable                                                                                                                                                                     |
-| **Compatibilidad**                | Cambia el contrato operativo del release; los documentos, scripts, tests y workflow deben sincronizarse después de la aprobación correspondiente                                                                                                                    |
-| **Estado de validación**          | Esta revisión documental no implica que se hayan ejecutado tests, gates, builds ni cambios en GitHub                                                                                                                                                                |
+| Ámbito                            | Impacto                                                                                                                                                                                                                                                                       |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Documentos normativos**         | El RFC conserva la regularización de EE-DOC-002/EE-DOC-001 y amplía explícitamente el seguimiento a EE-DOC-005, EE-DOC-007 y EE-DOC-011 según los hallazgos incorporados                                                                                                      |
+| **Release y versionado**          | Se exige preservar la procedencia verificable y la integridad independiente del plan de release, manteniendo preparación revisable por PR, publicación post-merge, tag final y recuperación segura; la política de elegibilidad debe sincronizarse y validarse operativamente |
+| **Implementación y verificación** | La materialización del contrato requiere implementación y evidencia independientes, sujetas a revisión de conformidad; su existencia no implica aprobación normativa                                                                                                          |
+| **CI y seguridad**                | Se requiere un job post-merge separado, permisos mínimos y evaluación independiente de protección de tags; OIDC es preferible si está soportado y configurado                                                                                                                 |
+| **Publicación npm**               | La separación entre versionado del ecosistema y distribución npm exige resolver explícitamente la política de releases sin paquetes públicos elegibles                                                                                                                        |
+| **Gobernanza**                    | PN-021 y PN-030 permanecen abiertos hasta alinear norma, implementación y evidencia verificable                                                                                                                                                                               |
+| **Compatibilidad**                | Cambia el contrato operativo del release; los documentos, scripts, tests y workflow deben sincronizarse después de la aprobación correspondiente                                                                                                                              |
+| **Estado de validación**          | Esta revisión documental no implica que se hayan ejecutado tests, gates, builds ni cambios en GitHub                                                                                                                                                                          |
 
 ## 06. ADR
 
@@ -297,63 +475,63 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 
 ## 07. Criterios de aceptación
 
-| #   | Criterio                                                                                                                                                                    |
-| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | EE-DOC-001 §09.2 lista este RFC en **Propuesto** (vehículo abierto) hasta cierre de oleada                                                                                  |
-| 2   | EE-DOC-002 historial referencia **EE-RFC-003** / Tipo D donde aplique el paquete                                                                                            |
-| 3   | AR registradas de plantilla/metadatos volcadas a **002** (v1.10.0+) o justificadas                                                                                          |
-| 4   | Sin discrepancia SSOT 002 §18.6 ↔ 001 §09.4 (VAL/WAIVE)                                                                                                                    |
-| 5   | Al **cerrar** la oleada: estado **Aprobado** → **Implementado (documentación)** y dejar de acumular alcance sin nueva versión del RFC                                       |
-| 6   | La decisión de continuar con la enmienda colaborativa queda registrada; las versiones propuestas de 005/007/001 permanecen en revisión hasta aprobación normativa y merge   |
-| 7   | No se declara modificada la configuración GitHub sin cambio y evidencia verificables                                                                                        |
-| 8   | La aprobación de este RFC no modifica por sí sola código fuente ni configuración; la implementación posterior requiere un cambio separado, autorizado y validado            |
-| 9   | Los hallazgos transversales derivados de la auditoría se incorporan explícitamente a RFC-003 con alcance, referencias y estado trazables                                    |
-| 10  | PN-021 y PN-030 permanecen abiertos hasta que norma, implementación y evidencia satisfagan sus criterios de cierre                                                          |
-| 11  | La preparación de versión se realiza mediante rama y PR; el modo local no publica paquetes, crea el tag de release ni hace push directo a `main`                            |
-| 12  | El disparador post-merge procesa solo una versión objetivo válida y no inicia releases accidentales en pushes ordinarios                                                    |
-| 13  | La elegibilidad npm se basa en el workspace configurado, `private: false`, la inexistencia de la versión objetivo en el registro y la configuración efectiva de publicación |
-| 14  | El estado observado de los 26 workspaces con `private: true` queda registrado sin cambiar su privacidad como parte de esta propuesta                                        |
-| 15  | El tag anotado se crea únicamente después de cumplir las condiciones de finalización aprobadas, incluida la política expresa para releases sin paquetes públicos elegibles  |
-| 16  | Los reintentos verifican el estado remoto y completan operaciones pendientes sin sobrescribir versiones ni mover tags existentes                                            |
-| 17  | `contents: write` se limita al job que crea el tag; OIDC se utiliza para npm cuando esté soportado y configurado                                                            |
-| 18  | La protección de tags `v*` se evalúa separadamente y no se declara activa sin evidencia verificable                                                                         |
-| 19  | Los tests de release se ejecutan en `pnpm test:scripts` y CI y simulan Git/npm sin publicar paquetes ni crear tags reales                                                   |
-| 20  | EE-DOC-005, EE-DOC-007, EE-DOC-011, `scripts/README.md`, el script y CI se sincronizan con el contrato aprobado                                                             |
-| 21  | Los gates y pruebas se registran con resultados reales; no se declara cerrada una validación no ejecutada o fallida                                                         |
-| 22  | El contrato aprobado exige procedencia verificable del release y comprobación independiente de la integridad del plan autorizado antes de publicar                          |
-| 23  | La política para releases sin paquetes públicos queda decidida expresamente, sin contradicción entre normas, implementación y condiciones de creación del tag               |
-| 24  | La evidencia de conformidad se mantiene en los artefactos técnicos y de validación correspondientes, sin convertir este RFC en inventario de implementación                 |
+| #   | Criterio                                                                                                                                                                                                                                       |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | EE-DOC-001 §09.2 lista este RFC en **Propuesto** (vehículo abierto) hasta cierre de oleada                                                                                                                                                     |
+| 2   | EE-DOC-002 historial referencia **EE-RFC-003** / Tipo D donde aplique el paquete                                                                                                                                                               |
+| 3   | AR registradas de plantilla/metadatos volcadas a **002** (v1.10.0+) o justificadas                                                                                                                                                             |
+| 4   | Sin discrepancia SSOT 002 §18.6 ↔ 001 §09.4 (VAL/WAIVE)                                                                                                                                                                                       |
+| 5   | Al **cerrar** la oleada: estado **Aprobado** → **Implementado (documentación)** y dejar de acumular alcance sin nueva versión del RFC                                                                                                          |
+| 6   | La decisión de continuar con la enmienda colaborativa queda registrada; las versiones propuestas de 005/007/001 permanecen en revisión hasta aprobación normativa y merge                                                                      |
+| 7   | No se declara modificada la configuración GitHub sin cambio y evidencia verificables                                                                                                                                                           |
+| 8   | La aprobación de este RFC no modifica por sí sola código fuente ni configuración; la implementación posterior requiere un cambio separado, autorizado y validado                                                                               |
+| 9   | Los hallazgos transversales derivados de la auditoría se incorporan explícitamente a RFC-003 con alcance, referencias y estado trazables                                                                                                       |
+| 10  | PN-021 y PN-030 permanecen abiertos hasta que norma, implementación y evidencia satisfagan sus criterios de cierre                                                                                                                             |
+| 11  | La preparación de versión se realiza mediante rama y PR; el modo local no publica paquetes, crea el tag de release ni hace push directo a `main`                                                                                               |
+| 12  | El disparador post-merge procesa solo una versión objetivo válida y no inicia releases accidentales en pushes ordinarios                                                                                                                       |
+| 13  | La elegibilidad npm se basa en el workspace configurado, `private: false`, la inexistencia de la versión objetivo en el registro y la configuración efectiva de publicación                                                                    |
+| 14  | El estado observado de los 26 workspaces con `private: true` queda registrado sin cambiar su privacidad como parte de esta propuesta                                                                                                           |
+| 15  | El tag anotado se crea únicamente después de cumplir las condiciones de finalización aprobadas, incluida la política expresa para releases sin paquetes públicos elegibles                                                                     |
+| 16  | Los reintentos verifican el estado remoto y completan operaciones pendientes sin sobrescribir versiones ni mover tags existentes                                                                                                               |
+| 17  | `contents: write` se limita al job que crea el tag; OIDC se utiliza para npm cuando esté soportado y configurado                                                                                                                               |
+| 18  | La protección de tags `v*` se evalúa separadamente y no se declara activa sin evidencia verificable                                                                                                                                            |
+| 19  | Los tests de release se ejecutan en `pnpm test:scripts` y CI y simulan Git/npm sin publicar paquetes ni crear tags reales                                                                                                                      |
+| 20  | EE-DOC-005, EE-DOC-007, EE-DOC-011, `scripts/README.md`, el script y CI se sincronizan con el contrato aprobado                                                                                                                                |
+| 21  | Los gates y pruebas se registran con resultados reales; no se declara cerrada una validación no ejecutada o fallida                                                                                                                            |
+| 22  | El contrato aprobado exige procedencia verificable del release y comprobación independiente de la integridad del plan autorizado antes de publicar                                                                                             |
+| 23  | La política de elegibilidad que exige al menos un paquete público planificado está reflejada sin contradicciones en el contrato normativo, la implementación y las condiciones de creación del tag, con evidencia verificable de su aplicación |
+| 24  | La evidencia de conformidad se mantiene en los artefactos técnicos y de validación correspondientes, sin convertir este RFC en inventario de implementación                                                                                    |
 
 ---
 
 ## 08. Plan de aplicación (post-aprobación)
 
-| Orden | Acción                                                                                                                                                                                                                | Responsable                                      |
-| ----: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-|     1 | Mantener RFC-003 Propuesto y abierto durante la oleada de auditoría                                                                                                                                                   | Arquitectura                                     |
-|     2 | Revisar los hallazgos incorporados y aprobar cada paquete de trabajo conforme al proceso gobernado aplicable, sin presumir aprobación por su mera inclusión                                                           | Equipo de Arquitectura                           |
-|     3 | Sincronizar EE-DOC-001 §09.2/§14/§15 con el estado real del RFC y los hallazgos, respetando el orden de actualización establecido                                                                                     | Arquitectura                                     |
-|     4 | Ejecutar las migraciones documentales `PC-*` / `PN-*` por documento auditado y mantener sus referencias de trazabilidad                                                                                               | Equipo de auditoría                              |
-|     5 | Al cierre formal de la oleada, actualizar el estado del RFC conforme a los criterios de cierre; las nuevas enmiendas de alcance requieren nueva versión de trabajo                                                    | Arquitectura                                     |
-|     6 | Preparar las enmiendas de EE-DOC-005, EE-DOC-007 y EE-DOC-011 en una rama dedicada y registrar su estado de revisión sin afirmar aprobación normativa anticipada                                                      | Equipo de Arquitectura                           |
-|     7 | Resolver las decisiones pendientes sobre procedencia verificable, integridad independiente del plan y política de releases sin paquetes públicos, registrando su aprobación conforme al mecanismo gobernado aplicable | Equipo de Arquitectura                           |
-|     8 | Revisar la conformidad de la implementación existente con las decisiones aprobadas y determinar las adecuaciones necesarias sin considerar la existencia del código como aprobación normativa                         | Arquitectura / Ingeniería                        |
-|     9 | Evaluar y configurar por separado permisos, OIDC, environments y reglas de tags `v*`, registrando evidencia real                                                                                                      | Gobernanza GitHub / responsable de configuración |
-|    10 | Sincronizar `scripts/README.md` con el contrato aprobado y la implementación real                                                                                                                                     | Ingeniería / Documentación                       |
-|    11 | Ejecutar y registrar quality gates, build y pruebas de release aplicables; corregir los fallos antes del cierre                                                                                                       | Ingeniería / QA                                  |
-|    12 | Cerrar PN-021 y PN-030 únicamente cuando los criterios de aceptación estén respaldados por evidencia verificable                                                                                                      | Equipo de auditoría / Arquitectura               |
+| Orden | Acción                                                                                                                                                                                                                                                                | Responsable                                      |
+| ----: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+|     1 | Mantener RFC-003 Propuesto y abierto durante la oleada de auditoría                                                                                                                                                                                                   | Arquitectura                                     |
+|     2 | Revisar los hallazgos incorporados y aprobar cada paquete de trabajo conforme al proceso gobernado aplicable, sin presumir aprobación por su mera inclusión                                                                                                           | Equipo de Arquitectura                           |
+|     3 | Sincronizar EE-DOC-001 §09.2/§14/§15 con el estado real del RFC y los hallazgos, respetando el orden de actualización establecido                                                                                                                                     | Arquitectura                                     |
+|     4 | Ejecutar las migraciones documentales `PC-*` / `PN-*` por documento auditado y mantener sus referencias de trazabilidad                                                                                                                                               | Equipo de auditoría                              |
+|     5 | Al cierre formal de la oleada, actualizar el estado del RFC conforme a los criterios de cierre; las nuevas enmiendas de alcance requieren nueva versión de trabajo                                                                                                    | Arquitectura                                     |
+|     6 | Preparar las enmiendas de EE-DOC-005, EE-DOC-007 y EE-DOC-011 en una rama dedicada y registrar su estado de revisión sin afirmar aprobación normativa anticipada                                                                                                      | Equipo de Arquitectura                           |
+|     7 | Verificar la trazabilidad de las decisiones sobre procedencia, integridad independiente del plan y elegibilidad de publicación; sincronizar los contratos afectados y registrar evidencia de su implementación y validación conforme al mecanismo gobernado aplicable | Equipo de Arquitectura                           |
+|     8 | Revisar la conformidad de la implementación existente con las decisiones aprobadas y determinar las adecuaciones necesarias sin considerar la existencia del código como aprobación normativa                                                                         | Arquitectura / Ingeniería                        |
+|     9 | Evaluar y configurar por separado permisos, OIDC, environments y reglas de tags `v*`, registrando evidencia real                                                                                                                                                      | Gobernanza GitHub / responsable de configuración |
+|    10 | Sincronizar `scripts/README.md` con el contrato aprobado y la implementación real                                                                                                                                                                                     | Ingeniería / Documentación                       |
+|    11 | Ejecutar y registrar quality gates, build y pruebas de release aplicables; corregir los fallos antes del cierre                                                                                                                                                       | Ingeniería / QA                                  |
+|    12 | Cerrar PN-021 y PN-030 únicamente cuando los criterios de aceptación estén respaldados por evidencia verificable                                                                                                                                                      | Equipo de auditoría / Arquitectura               |
 
 ## 09. Riesgos y mitigaciones
 
-| Riesgo                                                            | Mitigación                                                                                                          |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Corpus aún no cumple código corto / historial 7 cols              | Plan por documento (M-01 / M-03 diferidos)                                                                          |
-| 015 usa otro patrón de nombre de archivo                          | 002 manda `{ID}_{Nombre}_{fecha}.md`; alinear 015 en su auditoría                                                   |
-| Alineación EE-DOC-004 v1.2.0 sin RFC específico de 006 §13.2      | Diferida a la auditoría de 006 (`PN-008`); este RFC no sustituye ese vehículo                                       |
-| Procedencia del release insuficientemente garantizada             | Exigir garantías verificables e independientes del plan declarado antes de autorizar la publicación                 |
-| Interpretaciones divergentes sobre releases sin paquetes públicos | Resolver explícitamente la política aplicable y sincronizarla con los contratos normativos afectados                |
-| Implementación anterior a la aprobación normativa completa        | Evaluar la conformidad del comportamiento existente y corregir cualquier discrepancia mediante el proceso gobernado |
-| Cierre prematuro de PN-021 y PN-030                               | Exigir coherencia entre decisión aprobada, contratos, implementación y evidencia de verificación                    |
+| Riesgo                                                            | Mitigación                                                                                                                                     |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Corpus aún no cumple código corto / historial 7 cols              | Plan por documento (M-01 / M-03 diferidos)                                                                                                     |
+| 015 usa otro patrón de nombre de archivo                          | 002 manda `{ID}_{Nombre}_{fecha}.md`; alinear 015 en su auditoría                                                                              |
+| Alineación EE-DOC-004 v1.2.0 sin RFC específico de 006 §13.2      | Diferida a la auditoría de 006 (`PN-008`); este RFC no sustituye ese vehículo                                                                  |
+| Procedencia del release insuficientemente garantizada             | Exigir garantías verificables e independientes del plan declarado antes de autorizar la publicación                                            |
+| Interpretaciones divergentes sobre releases sin paquetes públicos | Aplicar de manera consistente la política de elegibilidad definida en §02.8, sincronizar los contratos afectados y verificar su implementación |
+| Implementación anterior a la aprobación normativa completa        | Evaluar la conformidad del comportamiento existente y corregir cualquier discrepancia mediante el proceso gobernado                            |
+| Cierre prematuro de PN-021 y PN-030                               | Exigir coherencia entre decisión aprobada, contratos, implementación y evidencia de verificación                                               |
 
 ---
 
@@ -388,13 +566,14 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                            | Cambios                                                                                                                                                   | Estado       |
-| ---------- | ---------- | ---------------------- | ---------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura | —                      | C-01 auditoría 002                | Creación RFC Tipo D retroactivo                                                                                                                           | Propuesto    |
-| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Vehículo abierto auditoría        | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                   | **Aprobado** |
-| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Conformidad §18.5                 | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado | **Aprobado** |
-| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación pre-main            | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                           | **Aprobado** |
-| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría transversal de releases | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.       | **Aprobado** |
+| Versión    | Fecha      | Autor                    | Aprobado por             | Motivo                            | Cambios                                                                                                                                                                           | Estado       |
+| ---------- | ---------- | ------------------------ | ------------------------ | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura   | —                        | C-01 auditoría 002                | Creación RFC Tipo D retroactivo                                                                                                                                                   | Propuesto    |
+| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura   | Equipo de Arquitectura   | Vehículo abierto auditoría        | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                                           | **Aprobado** |
+| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura   | Equipo de Arquitectura   | Conformidad §18.5                 | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado                         | **Aprobado** |
+| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura   | Equipo de Arquitectura   | Consolidación pre-main            | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                                                   | **Aprobado** |
+| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura   | Equipo de Arquitectura   | Auditoría transversal de releases | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.                               | **Aprobado** |
+| **v0.6.0** | 2026-10-28 | Responsable del proyecto | Responsable del proyecto | Gobernanza escalable de GitHub    | Amplía §02.8 con PN-017/PN-019/PN-030: revisión independiente, CODEOWNERS, aprobaciones críticas, régimen transitorio, bypass, protección de tags y criterios de materialización. | **Aprobado** |
 
 ---
 
