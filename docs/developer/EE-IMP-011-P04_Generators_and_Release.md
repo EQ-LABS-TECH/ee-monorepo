@@ -88,27 +88,47 @@ A-GEN:
   pnpm run generate → scripts/generate → pnpm exec plop
     ├── sin plopfile.js → exit 0 + mensaje EE-DOC-012
     └── con plopfile.js → plop interactivo (futuro)
+```
 
+```text
 A-REL:
+A-REL — modelo histórico previo a PN-021:
   pnpm run release → scripts/release
     → branch main + working tree limpio + changesets
     → pnpm version-packages
     → sync versión raíz
-    → pnpm validate          ← obligatorio (EE-DOC-011 §08)
-    → pnpm run build         ← invocación canónica (no turbo ad hoc)
+    → pnpm validate
+    → pnpm run build
     → pnpm -r publish
     → git tag + push
+
+A-REL — evolución asociada a PN-021:
+  preparación revisable
+    → versionado + changelogs + plan y procedencia
+    → Pull Request
+    → merge autorizado
+
+  finalización post-merge
+    → verificación independiente de procedencia y plan
+    → Quality Gates y build aplicables
+    → reconciliación de estado npm y Git
+    → publicación de versiones autorizadas pendientes
+    → tag final sujeto a condiciones aprobadas
+
+El primer flujo se conserva exclusivamente como referencia histórica del cierre original de P04. El segundo describe la evolución posterior vinculada a PN-021. La gobernanza GitHub de dicha evolución se relaciona con PN-030 y pertenece a EE-DOC-007. La correspondencia técnica exacta debe comprobarse frente a la implementación y su evidencia de validación.
 ```
 
 ### 04.1. Responsabilidades
 
-| Componente            | Responsabilidad                                |
-| :-------------------- | :--------------------------------------------- |
-| **scripts/generate**  | Entrypoint A-GEN; no crea árboles fuera de 006 |
-| **Plop**              | Motor de templates (cuando exista plopfile)    |
-| **scripts/release**   | Orquestación A-REL; no omite validate          |
-| **Changesets**        | Plan SemVer (`changeset` / `version-packages`) |
-| **pnpm run validate** | Agregador de gates ACTIVE (EE-DOC-010)         |
+| Componente                            | Responsabilidad                                                                                            |
+| :------------------------------------ | :--------------------------------------------------------------------------------------------------------- |
+| **scripts/generate**                  | Entrypoint A-GEN; no crea árboles fuera de 006                                                             |
+| **Plop**                              | Motor de templates (cuando exista plopfile)                                                                |
+| **scripts/release**                   | Orquestación A-REL; no omite validate                                                                      |
+| **Changesets**                        | Plan SemVer (`changeset` / `version-packages`)                                                             |
+| **pnpm run validate**                 | Agregador de gates ACTIVE (EE-DOC-010)                                                                     |
+| **Preparación y procedencia A-REL**   | Registra el origen y el plan verificable del release, conforme al contrato de EE-DOC-011 §08.2.            |
+| **Verificación y finalización A-REL** | Comprueba independientemente la correspondencia del plan y coordina publicación, recuperación y tag final. |
 
 ---
 
@@ -175,6 +195,20 @@ A-REL:
 | `pnpm validate` en release            | Presente         |
 | `pnpm run build` en release           | Presente         |
 | `encoding: "utf8"` en generate        | Presente         |
+
+### 07.4. Evolución posterior — PN-021: Release y procedencia verificable
+
+La evolución de A-REL responde al pendiente de auditoría **PN-021**, relacionado con preparación revisable, elegibilidad npm, integridad del release, publicación post-merge y recuperación. Su integración con los controles de GitHub se relaciona con **PN-030**, sin trasladar a este documento la responsabilidad normativa de EE-DOC-007.
+
+La preparación del release produce los cambios de versionado y changelog que deben integrarse mediante Pull Request, junto con la información necesaria para verificar posteriormente su procedencia. Esta fase no realiza publicaciones npm ni crea el tag final.
+
+La ejecución post-merge valida que el release solicitado corresponda a una preparación autorizada, contrasta el plan declarado con una reconstrucción independiente y determina qué versiones públicas planificadas requieren publicación. La ausencia de una versión en el registro no autoriza por sí sola a publicar un paquete ajeno al plan.
+
+La secuencia de publicación preserva la verificación de prerrequisitos, los Quality Gates aplicables, el build y la comprobación final del estado del repositorio antes de efectuar operaciones irreversibles. La recuperación distingue versiones ya publicadas, publicaciones pendientes y tags existentes, rechazando inconsistencias en lugar de sobrescribir estados remotos.
+
+La evolución incorpora controles para detectar alteraciones de la procedencia o del plan autorizado, así como condiciones de fallo explícitas cuando no puede demostrarse la correspondencia entre preparación y publicación. El tratamiento de releases sin paquetes públicos planificados permanece sujeto a la decisión normativa correspondiente.
+
+Esta subsección registra la evolución de implementación y no modifica retrospectivamente el dictamen histórico de cierre de P04. Los resultados de pruebas, auditoría y conformidad transversal se documentan separadamente.
 
 ---
 
@@ -254,18 +288,20 @@ Push a `main` con bypass de admin (single-operator; EE-DOC-007).
 ### 11.3. Dictamen
 
 > **EE-IMP-011-P04 se declara Cerrado (Completado) v1.2.0.**  
-> La automatización A-GEN y A-REL del monorepo cumple EE-DOC-011 §07–§08 en el estado actual del repositorio. Los únicos diferidos legítimos son templates (EE-DOC-012) y deuda menor de scripts no-gate (backlog).
+> La revisión histórica de P04 consideró conforme la automatización A-GEN y A-REL con la especificación evaluada en su cierre original. Los diferidos registrados fueron templates (EE-DOC-012) y deuda menor de scripts no-gate (backlog). Este dictamen no constituye evidencia de validación de la evolución posterior asociada a PN-021.
 
 ---
 
 ## 12. Trazabilidad
 
-| Artefacto       | Referencia                                                       |
-| :-------------- | :--------------------------------------------------------------- |
-| Norma           | EE-DOC-011 §07, §08, §12 P04                                     |
-| Previa          | EE-IMP-011-P03 Completado                                        |
-| Siguiente       | **EE-IMP-011-P05** — Validation and Closure                      |
-| TEC consolidado | **EE-TEC-006** (Documentación Técnica Consolidada de EE-DOC-011) |
+| Artefacto                     | Referencia                                                                                 |
+| :---------------------------- | :----------------------------------------------------------------------------------------- |
+| Norma                         | EE-DOC-011 §07, §08, §12 P04                                                               |
+| Previa                        | EE-IMP-011-P03 Completado                                                                  |
+| Siguiente                     | **EE-IMP-011-P05** — Validation and Closure                                                |
+| TEC consolidado               | **EE-TEC-006** (Documentación Técnica Consolidada de EE-DOC-011)                           |
+| Auditoría A-REL               | **PN-021** — preparación, publicación, elegibilidad, integridad y recuperación del release |
+| Gobernanza GitHub relacionada | **PN-030** — compatibilidad con protecciones, permisos, workflows y controles de GitHub    |
 
 ---
 
@@ -273,7 +309,7 @@ Push a `main` con bypass de admin (single-operator; EE-DOC-007).
 
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                            | Cambios                                                                       | Estado         |
 | :--------- | :--------- | :--------------------- | :--------------------- | :-------------------------------- | :---------------------------------------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | —                      | Apertura P04                      | Audit GEN/REL; procedimiento                                                  | Borrador       |
+| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Apertura P04                      | Audit GEN/REL; procedimiento                                                  | Borrador       |
 | **v1.1.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre operativo                  | cls; shell; build canónico; Buffer; CI ✓                                      | Completado     |
 | **v1.2.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Revisión arquitectónica de cierre | Dictamen §11; alcance/estructura §02–§04; TEC-006 SSOT; backlog D-P04-005/006 | **Completado** |
 

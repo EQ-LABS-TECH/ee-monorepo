@@ -16,12 +16,12 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                                        |
 | **Nivel**             | Técnico                                               |
 | **Normativo**         | No                                                    |
-| **Versión**           | v0.2.0                                                |
+| **Versión**           | v1.0.0                                                |
 | **Estado**            | Completado                                            |
 | **Propietario**       | Equipo de Arquitectura                                |
 | **Documento padre**   | EE-DOC-007 — GitHub Governance                        |
 | **Dependencias**      | EE-DOC-005, EE-DOC-007, EE-IMP-007-P01 … P04          |
-| **Aprobado por**      | Pendiente                                             |
+| **Aprobado por**      | Equipo de Arquitectura                                |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps                      |
 | **Fecha de creación** | 2026-09-23                                            |
 | **Última revisión**   | 2026-09-23                                            |
@@ -132,6 +132,10 @@ No otorgar `contents: write`, `pull-requests: write`, `id-token: write`, etc. si
 
 ## 05. Workflow objetivo — `ci.yml`
 
+Esta sección conserva el diseño y los ejemplos de implementación del ciclo original de P05, iniciado en septiembre de 2026. Los bloques YAML de §05.1 y §05.3 son referencias históricas y no deben utilizarse como reproducción exacta de la configuración actual.
+
+El estado versionado vigente de CI se encuentra en `.github/workflows/ci.yml`. La evolución de publicación posterior se describe en §08.5 y se materializa mediante `.github/workflows/release.yml`.
+
 Scaffold de **Continuous Integration** de plataforma. No sustituye el catálogo de QG de EE-DOC-010; ejecuta los scripts del monorepo **si existen** en `package.json` raíz.
 
 ### 05.1. Contenido
@@ -191,7 +195,7 @@ jobs:
         run: pnpm run validate
 ```
 
-> **Nota as-built:** la versión en `main` puede omitir temporalmente `with:` en setup-node; se recomienda **mantener** `node-version-file: ".nvmrc"` y `cache: "pnpm"` para reproducibilidad alineada con EE (Node ≥ 22.19 < 23 vía `.nvmrc`).
+> **Nota de reproducibilidad:** el workflow debe utilizar `node-version-file: ".nvmrc"` y `cache: "pnpm"` conforme al baseline Node 24 de EE-ADR-003. La configuración efectiva debe verificarse en el workflow versionado.
 
 ### 05.2. Adaptación si faltan scripts en `package.json`
 
@@ -313,7 +317,7 @@ Hasta P06, el merge a `main` **no** exige el check CI en el ruleset (sigue OFF).
 
 ## 08. Evidencia As-Built
 
-Evidencia capturada 2026-09-23.
+Las subsecciones §08.1–§08.4 conservan la evidencia histórica capturada durante el cierre original de P05. La §08.5 documenta la evolución posterior asociada a PN-030 y PN-021; sus garantías y controles requieren evidencia de validación independiente y no se consideran cubiertos por las ejecuciones históricas de CI.
 
 ### 08.1. Scripts root
 
@@ -324,7 +328,7 @@ Evidencia capturada 2026-09-23.
 | `test`            | Sí                                              | Sí                                               |
 | `validate`        | Sí                                              | Sí                                               |
 | `format`          | Sí                                              | **No** (escribe archivos; no hay `format:check`) |
-| Variante CI usada | §05.1 adaptada (sin format:check; con validate) |
+| Variante CI usada | §05.1 adaptada (sin format:check; con validate) |                                                  |
 
 ### 08.2. Workflow
 
@@ -352,6 +356,30 @@ Evidencia capturada 2026-09-23.
 | Sin catálogo EE-DOC-010 embebido            | **Sí**                          |
 | Sin automatización de producto (EE-DOC-011) | **Sí**                          |
 | Required checks en ruleset                  | **OFF** (intencional hasta P06) |
+
+### 08.5. Evolución posterior — PN-030: GitHub Actions de release
+
+La evolución asociada a **PN-030**, en coordinación con **PN-021**, incorpora una automatización de publicación post-merge posterior al cierre inicial de P05. Esta capacidad mantiene separadas las responsabilidades de validación de Pull Requests y finalización de releases.
+
+La automatización de release se activa a partir de cambios integrados en la rama principal y debe determinar si existe una transición de versión raíz válida antes de ejecutar operaciones de publicación. Los cambios ordinarios que no representan un release no deben iniciar una publicación.
+
+El workflow verifica la correspondencia entre la transición de versión, el origen autorizado y la procedencia declarada. La ejecución debe detenerse cuando el origen resulte ambiguo, la procedencia no pueda verificarse o las precondiciones exigidas no se satisfagan.
+
+El workflow `.github/workflows/release.yml` declara `contents: write` en el job `publish`, por lo que ese permiso está disponible durante la ejecución del job y no exclusivamente en el paso de creación del tag. La publicación npm utiliza `NODE_AUTH_TOKEN`, obtenido de `secrets.NPM_TOKEN`, como mecanismo de autenticación independiente. Esta configuración corresponde al estado versionado del workflow; la autorización efectiva y la protección remota de tags requieren verificación de plataforma conforme a PN-030.
+
+La automatización limita ejecuciones concurrentes que puedan intervenir sobre el mismo flujo de release y conserva la política de no sobrescribir tags ni versiones npm existentes.
+
+El workflow de release constituye una capacidad de plataforma bajo EE-DOC-007. La determinación funcional del plan, la elegibilidad y la recuperación corresponde a EE-DOC-011, mientras que la implementación de esos contratos se documenta en EE-IMP-011-P04.
+
+Esta evolución no modifica retrospectivamente el estado de cierre de P05 ni demuestra por sí sola que la publicación npm, las protecciones remotas o la autenticación federada hayan sido validadas operativamente.
+
+**Artefacto físico:** `.github/workflows/release.yml`.
+
+El workflow utiliza `push` sobre `main` y determina si existe una transición de versión raíz. Cuando corresponde un release, verifica el contrato del manifiesto y prepara las dependencias históricas necesarias para reconstruir el plan antes de invocar `pnpm run release -- publish`.
+
+Tras completarse correctamente el comando de publicación, el workflow ejecuta `git push origin "v${version}"` y verifica que el tag remoto corresponda al commit esperado. El orden observado es, por tanto, publicación y creación local del tag dentro del comando A-REL, push del tag y comprobación remota posterior.
+
+La existencia de estos pasos no acredita, por sí sola, una publicación npm exitosa ni la aplicación efectiva de las protecciones remotas.
 
 ---
 
@@ -391,27 +419,31 @@ Evidencia capturada 2026-09-23.
 
 ## 11. Correcciones / Warnings
 
-| ID            | Severidad   | Descripción                                                           | Tratamiento                                                    |
-| :------------ | :---------- | :-------------------------------------------------------------------- | :------------------------------------------------------------- |
-| **W-P05-001** | Informativo | Required checks aún OFF en ruleset                                    | Intencional hasta P06                                          |
-| **W-P05-002** | Informativo | Sin `format:check` en root                                            | No usar `format` en CI; añadir check en P06 si aplica          |
-| **B-P05-001** | Tipo B      | Deprecation Node 20 en Actions runners                                | Resuelto: checkout@v5, setup-node@v5, pnpm/action-setup@v4.4.0 |
-| **W-P05-003** | Informativo | Recomendado `node-version-file: .nvmrc` + `cache: pnpm` en setup-node | Asegurar reproducibilidad Node 22 del monorepo                 |
+| ID            | Severidad   | Descripción                                                           | Tratamiento                                                                       |
+| :------------ | :---------- | :-------------------------------------------------------------------- | :-------------------------------------------------------------------------------- |
+| **W-P05-001** | Informativo | Required checks aún OFF en ruleset                                    | Intencional hasta P06                                                             |
+| **W-P05-002** | Informativo | Sin `format:check` en root                                            | No usar `format` en CI; añadir check en P06 si aplica                             |
+| **B-P05-001** | Tipo B      | Deprecation Node 20 en Actions runners                                | Resuelto: checkout@v5, setup-node@v5, pnpm/action-setup@v4.4.0                    |
+| **W-P05-003** | Informativo | Recomendado `node-version-file: .nvmrc` + `cache: pnpm` en setup-node | Asegurar reproducibilidad conforme al baseline Node 24 establecido por EE-ADR-003 |
 
 ---
 
 ## 12. Trazabilidad
 
-| Elemento                   | Referencia                                 |
-| :------------------------- | :----------------------------------------- |
-| **Norma**                  | EE-DOC-007 §09                             |
-| **Workflow de desarrollo** | EE-DOC-005                                 |
-| **Prerrequisitos**         | EE-IMP-007-P01 … P04                       |
-| **Siguiente**              | EE-IMP-007-P06 — Quality Gates Integration |
+| Elemento                        | Referencia                                                                                       |
+| :------------------------------ | :----------------------------------------------------------------------------------------------- |
+| **Norma**                       | EE-DOC-007 §09                                                                                   |
+| **Workflow de desarrollo**      | EE-DOC-005                                                                                       |
+| **Prerrequisitos**              | EE-IMP-007-P01 … P04                                                                             |
+| **Siguiente**                   | EE-IMP-007-P06 — Quality Gates Integration                                                       |
+| **Auditoría GitHub Governance** | **PN-030** — compatibilidad de releases con rulesets, permisos, CODEOWNERS y controles de GitHub |
+| **Auditoría A-REL relacionada** | **PN-021** — preparación, publicación post-merge, integridad y recuperación                      |
 
 ---
 
 ## 13. Referencias
+
+Las referencias y versiones descritas originalmente en esta sección corresponden al contexto de implementación de septiembre de 2026. La evolución posterior se rige por las versiones normativas vigentes de EE-DOC-007, EE-DOC-010 y EE-DOC-011, y por los pendientes PN-030 y PN-021 del backlog canónico de auditoría.
 
 | Código             | Documento                                                  |
 | :----------------- | :--------------------------------------------------------- |
@@ -426,10 +458,10 @@ Evidencia capturada 2026-09-23.
 
 ## 14. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por | Motivo       | Cambios                                                           | Estado         |
-| :--------- | :--------- | :----------------------- | :----------- | :----------- | :---------------------------------------------------------------- | :------------- |
-| **v0.1.0** | 2026-09-23 | AI Engineering Assistant | —            | Apertura P05 | Convenciones; ci.yml §05.1/§05.3; permisos; fronteras P06/010/011 | En Elaboración |
-| **v0.2.0** | 2026-09-23 | AI Engineering Assistant | —            | Cierre P05   | CI success en main; B-P05-001 Node 24 actions; as-built conforme  | **Completado** |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo       | Cambios                                                           | Estado         |
+| :--------- | :--------- | :----------------------- | :--------------------- | :----------- | :---------------------------------------------------------------- | :------------- |
+| **v0.1.0** | 2026-09-23 | AI Engineering Assistant | Equipo de Arquitectura | Apertura P05 | Convenciones; ci.yml §05.1/§05.3; permisos; fronteras P06/010/011 | Borrador       |
+| **v1.0.0** | 2026-09-23 | AI Engineering Assistant | Equipo de Arquitectura | Cierre P05   | CI success en main; B-P05-001 Node 24 actions; as-built conforme  | **Completado** |
 
 ---
 

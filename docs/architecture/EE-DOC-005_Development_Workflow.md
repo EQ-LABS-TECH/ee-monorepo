@@ -1077,18 +1077,18 @@ El Engineering Ecosystem soporta dos modelos de branching, dependiendo de la com
 
 ### 06.2. Tipos de Ramas
 
-| Tipo de Rama    | Propósito                                | Ciclo de Vida                                            | Ejemplo                       |
-| :-------------- | :--------------------------------------- | :------------------------------------------------------- | :---------------------------- |
-| **main**        | Rama principal de producción.            | Permanente. Protegida.                                   | `main`                        |
-| **develop**     | Rama de integración continua (opcional). | Permanente (si se usa). Protegida.                       | `develop`                     |
-| **feature/**    | Nueva funcionalidad.                     | Nace de `main` o `develop`. Muere en `main` o `develop`. | `feature/user-authentication` |
-| **bugfix/**     | Corrección de errores no críticos.       | Nace de `main` o `develop`. Muere en `main` o `develop`. | `bugfix/login-error`          |
-| **hotfix/**     | Corrección urgente en producción.        | Nace de `main`. Muere en `main` y `develop`.             | `hotfix/security-patch`       |
-| **release/**    | Preparación de una nueva versión.        | Nace de `develop`. Muere en `main` y `develop`.          | `release/v1.2.0`              |
-| **spike/**      | Investigación o prototipo.               | Nace de `main` o `develop`. Se descarta o se fusiona.    | `spike/new-auth-flow`         |
-| **docs/**       | Documentación exclusivamente.            | Nace de `main`. Muere en `main`.                         | `docs/api-reference`          |
-| **refactor/**   | Refactorización sin cambio funcional.    | Nace de `main` o `develop`. Muere en `main` o `develop`. | `refactor/kernel-module`      |
-| **experiment/** | Experimentos sin garantía de fusión.     | Nace de `main`. Se descarta o se fusiona.                | `experiment/new-ai-model`     |
+| Tipo de Rama    | Propósito                                | Ciclo de Vida                                                                                                                    | Ejemplo                       |
+| :-------------- | :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------- | :---------------------------- |
+| **main**        | Rama principal de producción.            | Permanente. Protegida.                                                                                                           | `main`                        |
+| **develop**     | Rama de integración continua (opcional). | Permanente (si se usa). Protegida.                                                                                               | `develop`                     |
+| **feature/**    | Nueva funcionalidad.                     | Nace de `main` o `develop`. Muere en `main` o `develop`.                                                                         | `feature/user-authentication` |
+| **bugfix/**     | Corrección de errores no críticos.       | Nace de `main` o `develop`. Muere en `main` o `develop`.                                                                         | `bugfix/login-error`          |
+| **hotfix/**     | Corrección urgente en producción.        | Nace de `main`. Muere en `main` y `develop`.                                                                                     | `hotfix/security-patch`       |
+| **release/**    | Preparación de una nueva versión.        | En Main-oriented nace de `main` y se integra en `main`; en Main + Develop sigue el flujo de release definido por esa estrategia. | `release/v1.2.0`              |
+| **spike/**      | Investigación o prototipo.               | Nace de `main` o `develop`. Se descarta o se fusiona.                                                                            | `spike/new-auth-flow`         |
+| **docs/**       | Documentación exclusivamente.            | Nace de `main`. Muere en `main`.                                                                                                 | `docs/api-reference`          |
+| **refactor/**   | Refactorización sin cambio funcional.    | Nace de `main` o `develop`. Muere en `main` o `develop`.                                                                         | `refactor/kernel-module`      |
+| **experiment/** | Experimentos sin garantía de fusión.     | Nace de `main`. Se descarta o se fusiona.                                                                                        | `experiment/new-ai-model`     |
 
 ### 06.3. Reglas de Creación
 
@@ -1377,24 +1377,29 @@ EE-DOC-007  → enforcement efectivo de lo ACTIVE
 
 ### 11.3. Proceso de Release
 
-El ciclo de publicación y versionado del monorepo utiliza **Changesets** (`@changesets/cli`) como motor oficial conforme a **EE-ADR-001**:
+El ciclo de release del monorepo utiliza `Changesets` como mecanismo de declaración y preparación del versionado. La integración, aprobación y publicación constituyen responsabilidades separadas y deben respetar el flujo de Pull Requests y los controles de protección definidos por EE-DOC-007.
 
-**Diagrama — Proceso de Release (orquestado).**
+**Diagrama — Proceso gobernado de release.**
 
 ```mermaid
 flowchart TD
-    A[Code Ready en Main] --> B[Crear Changeset: pnpm changeset]
-    B --> C[Ejecutar Validaciones: pnpm validate]
-    C -->|Pass| D["pnpm release — orquesta version-packages + publish + tag (EE-DOC-011 §08)"]
-    D --> E[Git Tag vX.Y.Z y Release Notes]
-    E --> F[Push a Remoto]
+    A[Cambios desarrollados y Changesets declarados] --> B[Preparar versiones y changelogs]
+    B --> C[Validar y crear commit de preparación]
+    C --> D[Pull Request y revisión]
+    D -->|Aprobado| E[Merge autorizado a main]
+    E --> F[Verificar elegibilidad e integridad del release]
+    F -->|Conforme| G[Publicación post-merge autorizada]
+    G --> H[Creación del tag al finalizar]
+    F -->|No conforme| I[Bloquear release y registrar incidencia]
 ```
 
-> **As-built:** no ejecutar `pnpm version-packages` **y** después `pnpm release` como pasos separados si `scripts/release` **ya** invoca el versionado: se consumirían los changesets antes de tiempo. El comando canónico de publicación es **`pnpm release`** (detalle en **EE-DOC-011 §08** / EE-DOC-006 scripts). `pnpm version-packages` queda para casos documentados en 011, no como paso previo obligatorio duplicado.
+1. **Declaración de cambios:** los cambios sujetos a versionado deben registrarse mediante Changesets, de acuerdo con su impacto SemVer y la política aplicable.
+2. **Preparación revisable:** el versionado y los changelogs se preparan en una rama de release. La preparación produce cambios revisables mediante Pull Request y no publica paquetes ni crea el tag.
+3. **Integración protegida:** el merge requiere las aprobaciones y Quality Gates aplicables. La preparación no autoriza cambios directos en `main` ni excepciones a sus controles.
+4. **Publicación post-merge:** la finalización del release solo puede ejecutarse desde un commit integrado y autorizado. Debe satisfacer los contratos de elegibilidad, procedencia, integridad y recuperación definidos en EE-DOC-011.
+5. **Finalización y trazabilidad:** la creación del tag se realiza después de cumplir las condiciones de finalización aprobadas. Los resultados y excepciones deben permanecer auditables conforme a EE-DOC-007 y EE-DOC-010.
 
-1. **Declaración de Cambios:** Todo cambio destinado a producción debe incorporar un archivo changeset (`pnpm changeset`) que describa el impacto (major, minor, patch) en los paquetes afectados.
-2. **Versionado Automático:** El comando `pnpm version-packages` actualiza los `package.json` individuales y el `CHANGELOG.md` del monorepo.
-3. **Publicación y Etiquetado:** El script `pnpm release` valida los contratos, publica los paquetes autorizados en el registro npm y genera la etiqueta Git global (`vX.Y.Z`) vinculada a la versión canónica del ecosistema.
+EE-DOC-005 determina el proceso y las responsabilidades del release. EE-DOC-011 establece su contrato de automatización y EE-DOC-007 gobierna las operaciones ejecutadas mediante GitHub.
 
 ---
 
@@ -1587,6 +1592,8 @@ Una excepción de workflow modifica temporalmente la forma de ejecución del wor
 
 > **Availability:** hooks pre-commit/pre-push, husky y commitlint son **PENDING** de materialización salvo evidencia en el repo; la verificación continua de Conventional Commits se apoya en CI/PR según EE-DOC-007 / EE-DOC-010 cuando existan checks.
 
+---
+
 ## 17. Referencias
 
 | Código         | Documento                              | Descripción                                                     |
@@ -1608,15 +1615,15 @@ Una excepción de workflow modifica temporalmente la forma de ejecución del wor
 
 ## 18. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                | Cambios                                                                                                                                                                                   | Estado        |
-| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
-| **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                      | Versión inicial del Development Workflow                                                                                                                                                  | **Congelado** |
-| **v1.1.0** | 2026-08-20 | Equipo de Arquitectura | Equipo de Arquitectura | Incorporación de Implementación Adaptativa Controlada | Nueva Sección 04; actualización de principios, flujo SDLC y alcance                                                                                                                       | **Congelado** |
-| **v1.2.0** | 2026-08-21 | Equipo de Arquitectura | Equipo de Arquitectura | Implementación por fase y reordenamiento documental   | Se añadió Implementación → Validación → Borrador DT por fase; DT precede a Validación Final y Congelación apunta a Descubrimiento.                                                        | **Congelado** |
-| **v1.3.0** | 2026-09-17 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets      | Integración de Changesets en Release Workflow, especificación de Vitest/Playwright en Quality Gates y precisión SSOT.                                                                     | Congelado     |
-| **v1.3.1** | 2026-09-29 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación Formatting con EE-DOC-010                  | Gate Formatting = Prettier **check** (no write); puntero SSOT a EE-DOC-010                                                                                                                | Congelado     |
-| **v1.4.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — auditoría 001–004                          | Meta DOC-005/Fundacional/deps; First; Tipo B; gates PENDING; release; refs                                                                                                                | **Congelado** |
-| **v1.5.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Enmienda propuesta de workflow colaborativo           | §06.3 cambio coherente por rama; §08 responsabilidades del PR, trazabilidad de validaciones y separación documentación/código. Propuesta en revisión; no equivale a aprobación normativa. | **Congelado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                | Cambios                                                                                                                            | Estado        |
+| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------- | :------------ |
+| **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                      | Versión inicial del Development Workflow                                                                                           | **Congelado** |
+| **v1.1.0** | 2026-08-20 | Equipo de Arquitectura | Equipo de Arquitectura | Incorporación de Implementación Adaptativa Controlada | Nueva Sección 04; actualización de principios, flujo SDLC y alcance                                                                | **Congelado** |
+| **v1.2.0** | 2026-08-21 | Equipo de Arquitectura | Equipo de Arquitectura | Implementación por fase y reordenamiento documental   | Se añadió Implementación → Validación → Borrador DT por fase; DT precede a Validación Final y Congelación apunta a Descubrimiento. | **Congelado** |
+| **v1.3.0** | 2026-09-17 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets      | Integración de Changesets en Release Workflow, especificación de Vitest/Playwright en Quality Gates y precisión SSOT.              | Congelado     |
+| **v1.3.1** | 2026-09-29 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación Formatting con EE-DOC-010                  | Gate Formatting = Prettier **check** (no write); puntero SSOT a EE-DOC-010                                                         | Congelado     |
+| **v1.4.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — auditoría 001–004                          | Meta DOC-005/Fundacional/deps; First; Tipo B; gates PENDING; release; refs                                                         | **Congelado** |
+| **v1.5.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Enmienda propuesta de workflow colaborativo           | §06.3 cambio coherente por rama; §08 responsabilidades del PR, trazabilidad de validaciones y separación documentación/código.     | **Congelado** |
 
 ---
 

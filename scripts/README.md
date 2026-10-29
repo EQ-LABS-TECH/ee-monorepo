@@ -72,17 +72,39 @@ The canonical release command supports two explicit modes:
 
 The `.github/workflows/release.yml` workflow invokes `publish` after a push to `main` when the root package version changes. It pushes the tag only after the command succeeds.
 
-Publication eligibility is based on effective package metadata and registry state, not on the presence of Changeset files: a package must not be private, and its exact `name@version` must not already exist in the npm registry. Registry errors other than a definitive missing-version response stop the release.
+### Release integrity and provenance
 
-Retries must be idempotent: already published package versions are skipped; a tag already pointing to the current commit is reused; a tag pointing to another commit is a hard error. Do not rerun versioning blindly after a failed release.
+Release preparation records a normalized manifest containing the canonical release version, the source base commit, Changeset IDs, the effective release plan, and the workspace package inventory.  
+Publication validates this manifest and independently reconstructs the effective Changesets plan from the recorded base commit in an isolated Git worktree.  
+Reconstruction uses frozen, offline dependency installation. The CI workflow may prepare the historical dependency cache before the publication command runs.  
+A reconstruction failure, source mismatch, unexpected release, registry error, or conflicting tag prevents publication.
 
-The release workflow requires the GitHub tag-push permission declared in its workflow. npm credentials are needed only when at least one eligible package must be published. Configure npm Trusted Publishing with OIDC if supported by the chosen publishing mechanism; otherwise configure `NPM_TOKEN` as a repository secret before publishing public packages.
+### Publication safety
+
+The publication command requires a clean Git working tree before starting.  
+Validation executes `pnpm format` in write mode as its first step.  
+Consequently, publication performs another clean-working-tree check after validation and build, before querying the npm registry or publishing any package.  
+If validation or build modifies tracked files or produces untracked files, publication stops. Review and commit the changes through the normal development process; do not bypass the check.  
+Only public packages explicitly included in the verified release plan may be published. Existing exact package versions are not republished.  
+The current implementation requires at least one planned public package release. An all-private release plan is rejected; it does not create a tag.  
+The release tag is created only after the required public versions have been verified in npm.
+
+### Recovery and authentication
+
+A release tag pointing to another commit is a hard error.  
+If the remote tag already points to the expected commit, the recovery path verifies the planned public package versions before treating the release as complete.  
+Failures must not trigger automatic repetition of Changesets versioning.  
+The current GitHub workflow supplies `NODE_AUTH_TOKEN` using the `NPM_TOKEN` repository secret.  
+The current publication command requires `NODE_AUTH_TOKEN` or `NPM_TOKEN` before publishing a missing package version.  
+OIDC/Trusted Publishing is not yet established as a verified alternative by this implementation. It requires a separately approved
+and validated authentication configuration.
 
 ### Format write vs check
 
-- `pnpm run format` rewrites files (local convenience).
-- The format **Quality Gate** uses check mode inside `pnpm run validate`
-  (EE-DOC-010 / EE-DOC-011). CI must not rely on write-only format as a gate.
+- `pnpm format` runs Prettier in write mode, lists modified files, and reports processed, modified, and unchanged file counts.
+- `pnpm validate` runs `pnpm format` first, then the remaining Quality Gates, including a final Prettier check.
+- The format check verifies the final state; it does not replace the initial automatic formatting step.
+- Release publication requires a clean working tree again after validation and build, preventing automatic formatting changes from reaching publication without review.
 
 ### Auxiliary files
 
@@ -122,10 +144,10 @@ Declaring a dependency before it is actively used allows:
 
 ## Publication Policy
 
-The Engineering Ecosystem currently uses public package publication.
+The Engineering Ecosystem currently uses public package publication.  
 Package publication is controlled by the package metadata and the Changesets configuration.
-A package is eligible for publication only when its package metadata and repository release policy permit publication.
-Private workspaces are not considered public distribution artifacts.
+A package is eligible for publication only when its package metadata and repository release policy permit publication.  
+Private workspaces are not considered public distribution artifacts.  
 The release process must not infer publication intent from workspace membership alone.
 The following properties must be evaluated before publication:
 
@@ -136,15 +158,15 @@ The following properties must be evaluated before publication:
 - authentication state;
 - publication access policy.
 
-The current Changesets access policy is `public`.
-The release process must preserve this policy until a formal architecture or release-policy decision changes it.
+The current Changesets access policy is `public`.  
+The release process must preserve this policy until a formal architecture or release-policy decision changes it.  
 Changing package visibility or registry distribution policy is a cross-cutting release-policy change and must be reviewed by the Architecture Team before implementation.
 
 ## Release Versioning Policy
 
-The Engineering Ecosystem is versioned as a single release unit.
-The root `package.json` `version` field is the canonical version of the Engineering Ecosystem.
-Workspace packages maintain their own package versions for npm publication and are versioned by Changesets according to the changes included in each release.
+The Engineering Ecosystem is versioned as a single release unit.  
+The root `package.json` `version` field is the canonical version of the Engineering Ecosystem.  
+Workspace packages maintain their own package versions for npm publication and are versioned by Changesets according to the changes included in each release.  
 The release process synchronizes the canonical Engineering Ecosystem version explicitly with the Changesets release plan.
 The Engineering Ecosystem release tag follows the format:
 
@@ -196,7 +218,8 @@ pnpm typecheck
 pnpm validate
 pnpm doctor
 pnpm generate
-pnpm release
+pnpm run release -- prepare
+pnpm run release -- publish
 pnpm clean
 ```
 
@@ -241,17 +264,17 @@ Package operation
 
 ## Stability Contract
 
-The names and responsibilities of the existing root scripts are stable interfaces of the Engineering Ecosystem.
+The names and responsibilities of the existing root scripts are stable interfaces of the Engineering Ecosystem.  
 Existing scripts must not be modified in an incompatible manner.
-New scripts may be introduced only in a backward-compatible manner and must not change the established behavior of existing commands.
+New scripts may be introduced only in a backward-compatible manner and must not change the established behavior of existing commands.  
 Changing the task orchestration architecture requires the appropriate governance mechanism.
 
 ## Governance
 
 The workspace task orchestration strategy is defined by:
 
-ADR-001 — Estrategia de Orquestación de Tareas del Workspace
-Changes to that architectural decision require review by the Engineering Ecosystem Architecture Team.
+ADR-001 — Estrategia de Orquestación de Tareas del Workspace.
+Changes to that architectural decision require review by the Engineering Ecosystem Architecture Team.  
 Significant or cross-cutting changes must comply with the Engineering Ecosystem governance and change-management process.
 
 ## Generation registry (EE-IMP-012-P05)
@@ -264,8 +287,6 @@ Significant or cross-cutting changes must comply with the Engineering Ecosystem 
 
 Examples:
 
-Examples:
-
 ```bash
 pnpm run generate -- app-node sample-app
 pnpm run generate -- connector-typescript sample-conn
@@ -275,13 +296,9 @@ Missing registry ⇒ exit code ≠ 0 (No False Pass). Do not commit sample trees
 
 ## E2E orchestration
 
-The root command `pnpm run e2e` runs the `test:e2e` task for
-`@eq-labs/dashboard`. The root command `pnpm run validate` includes E2E
-as a critical gate, and CI invokes `validate`.
+The root command `pnpm run e2e` runs the `test:e2e` task for `@eq-labs/dashboard`. The root command `pnpm run validate` includes E2E as a critical gate, and CI invokes `validate`.
 
-The reported local validation passed `QG-TEST-E2E` with one Dashboard test.
-The gate is integrated, but multi-package E2E orchestration and coverage
-remain pending implementation and evidence.
+The reported local validation passed `QG-TEST-E2E` with one Dashboard test. The gate is integrated, but multi-package E2E orchestration and coverage remain pending implementation and evidence.
 
 Use the following Turbo command to inspect the Dashboard suite directly:
 
@@ -289,59 +306,32 @@ Use the following Turbo command to inspect the Dashboard suite directly:
 pnpm exec turbo run test:e2e --filter=@eq-labs/dashboard
 ```
 
-The `test:e2e` task sets `cache: false` and depends on the upstream builds
-declared in Turbo. This evidence does not establish E2E coverage for other
-workspaces. Gate availability is governed by EE-DOC-010; CI composition is
-governed by EE-DOC-007.
+The `test:e2e` task sets `cache: false` and depends on the upstream builds declared in Turbo. This evidence does not establish E2E coverage for other workspaces. Gate availability is governed by EE-DOC-010; CI composition is governed by EE-DOC-007.
 
-The typecheck, lint, test, build, and Dashboard E2E wrappers classify a
-successful Turbo exit with zero executed tasks as `SKIPPED`, not `PASS`, and
-return a non-zero status so the root `validate` aggregator fails the critical
-gate. The script-test runner fails if `scripts/tests/` contains no
-`*.test.mjs` files.
+The typecheck, lint, test, build, and Dashboard E2E wrappers classify a successful Turbo exit with zero executed tasks as `SKIPPED`, not `PASS`, and return a non-zero status so the root `validate` aggregator fails the critical gate. The script-test runner fails if `scripts/tests/` contains no `*.test.mjs` files.
 
 ## Windows: Vitest and %TEMP%
 
-`@eq-labs/knowledge` uses Vitest. On Windows, Vitest workers create
-subdirectories under `%TEMP%`, which is frequently blocked by antivirus
-or restricted permissions (`EPERM`).
+`@eq-labs/knowledge` uses Vitest. On Windows, Vitest workers create subdirectories under `%TEMP%`, which is frequently blocked by antivirus or restricted permissions (`EPERM`).
 
-`scripts/commands/test` redirects `TMP`/`TEMP`/`TMPDIR` to
-`<root>/.tmp/vitest` before invoking Turbo, and `turbo.json` declares
-`globalPassThroughEnv` so Turbo propagates them to each task.
+`scripts/commands/test` redirects `TMP`/`TEMP`/`TMPDIR` to `<root>/.tmp/vitest` before invoking Turbo, and `turbo.json` declares `globalPassThroughEnv` so Turbo propagates them to each task.
 
 **Consequences:**
 
-- `pnpm test` and `pnpm run validate` are safe on Windows.
-- `pnpm exec turbo run test` (direct, bypassing the wrapper) is **not
-  supported on Windows**: it will re-use the system `%TEMP%` and may fail
-  with `EPERM`. Use `pnpm test` instead.
+- `pnpm test` uses the repository-local temporary directory to reduce Windows worker permission failures.
+- `pnpm run validate` invokes the test wrapper and therefore benefits from the same mitigation during test execution.
+- Running `pnpm exec turbo run test` directly bypasses this mitigation and may encounter `EPERM` when the system temporary directory is restricted. Use `pnpm test` for the supported repository-level test entrypoint.
+
+This mitigation does not guarantee successful execution under every Windows environment or security configuration.
 
 ## Release safety
 
-`pnpm run release` requires a clean working tree, versions packages through Changesets, runs validation and build, stages only tracked release changes plus generated `CHANGELOG.md` files, and creates the release commit/tag before publication. It does not use `git add .`. If publication fails after the local release commit/tag is created, inspect the local release state and resume deliberately; do not rerun versioning blindly.
+Release preparation and publication are separate operations.
 
-## Known issues
+`pnpm run release -- prepare` requires a clean working tree, applies Changesets versioning, synchronizes the canonical root version, verifies the release manifest, runs validation and build, and commits the prepared changes on a dedicated release branch. It does not use `git add .` or create the final release tag.
 
-### braces (high, temporary waiver)
+`pnpm run release -- publish` runs after the release PR is merged. It verifies the release manifest, independently reconstructs the Changesets plan, checks applicable Quality Gates and build requirements, and reconciles npm registry and Git tag state before performing publication operations.
 
-`GHSA-vfj7-8cjw-p6xm` — `braces@3.0.3` is reported vulnerable to
-stack exhaustion through the root development-tooling chain
-`plop > liftoff > findup-sync > micromatch > braces`. The local
-`pnpm run validate` result dated 2026-10-22 passed QG-SEC-001 only
-because the active waiver
-`docs/validation/waivers/EE-WAIVE-QG-SEC-001-braces-20261016.md`
-covers this high finding. The waiver expires **2026-10-23**; it is not
-a remediation. Re-evaluate or renew/close it before expiry under the
-governance policy.
+The annotated release tag is created only after the required public package versions have been verified in npm. The GitHub release workflow subsequently pushes the tag and verifies its remote target.
 
-### sprintf-js (moderate, temporary waiver)
-
-`GHSA-hp3w-g68c-fv3c` — `sprintf-js` is reported as a moderate
-transitive finding in the legacy Jest configuration dependency chain.
-The active waiver
-`docs/validation/waivers/EE-WAIVE-QG-SEC-001-sprintf-js-20261016.md`
-expires **2026-10-23**. The current security audit threshold is high;
-the moderate finding does not independently cross that threshold.
-Re-audit and close or renew the waiver before expiry. Neither waiver
-means that the underlying advisory is fixed.
+If publication fails, inspect the release manifest, working tree, npm registry versions, and local and remote tag state before retrying. Do not repeat Changesets versioning blindly or overwrite conflicting remote state.

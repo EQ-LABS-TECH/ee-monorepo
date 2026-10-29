@@ -328,12 +328,14 @@ Automatización de **versionado y release de paquetes del monorepo Engineering E
 1. No se publica una versión que no haya pasado el conjunto de gates **ACTIVE** aplicables (010 + enforcement 007).
 2. Los scripts de release no omiten validación por conveniencia. La preparación y publicación son fases separadas: `prepare` genera una rama de release y un commit que deben revisarse mediante PR; `publish` solo se ejecuta después del merge en la rama principal protegida.
 3. El modo `prepare` exige un árbol limpio, aplica Changesets, sincroniza la versión raíz, ejecuta `pnpm validate` y `pnpm run build`, y limita el staging a cambios de release identificados. No automatiza el merge ni elude las reglas de PR.
-4. La publicación se ejecuta post-merge cuando cambia la versión raíz. La elegibilidad se determina por los metadatos efectivos del paquete (`private !== true`) y la ausencia de la versión exacta `name@version` en el registro. La presencia o ausencia de archivos Changeset no determina por sí misma la elegibilidad de publicación.
-5. El orden obligatorio es: validación, build, publicación de versiones elegibles que falten en el registro y creación del tag al final. Si no hay paquetes elegibles, se permite crear el tag tras confirmar ese resultado. El tag se sube únicamente después de que el comando de publicación termine correctamente.
-6. Los reintentos deben ser idempotentes: las versiones ya existentes en el registro se omiten; un tag existente solo se acepta si apunta al mismo commit de release. Un tag que apunte a otro commit constituye un error y no debe sobrescribirse.
-7. Si la publicación falla, no se crea ni se sube el tag en esa ejecución. La recuperación debe reconsultar el registro y completar las operaciones pendientes sin repetir a ciegas el versionado.
-8. El workflow post-merge debe utilizar permisos mínimos. `contents: write` se limita al workflow que crea/sube el tag; los permisos y reglas de protección de tags `v*` se configuran y verifican por separado conforme a EE-DOC-007.
-9. La publicación npm no debe depender de credenciales persistentes si Trusted Publishing con OIDC es compatible y está configurado. En caso contrario, cualquier token necesario se gestiona como secreto de plataforma conforme a EE-DOC-007, nunca en código ni en archivos versionados.
+4. La publicación se ejecuta post-merge cuando cambia la versión raíz. El plan autorizado identifica los paquetes y versiones comprendidos en el release; la condición pública del paquete (`private !== true`) determina su posibilidad de distribución npm, y la existencia de la versión exacta `name@version` en el registro determina si su publicación continúa pendiente. Una versión ya publicada no debe publicarse nuevamente. La presencia o ausencia de archivos Changeset en el estado post-merge no determina por sí misma el contenido del plan autorizado.
+5. La preparación debe establecer una procedencia verificable que vincule la versión objetivo, el origen autorizado y el plan efectivo de release. La publicación debe comprobar independientemente la integridad y correspondencia de ese plan antes de realizar operaciones de distribución.
+6. La publicación debe rechazar planes incompletos, inconsistentes o cuya procedencia no pueda verificarse. No se permite aceptar exclusivamente una declaración de preparación como prueba suficiente de autorización.
+7. La finalización del release exige verificar primero el origen autorizado, la integridad del plan y las condiciones que permiten iniciar el proceso; ejecutar satisfactoriamente los Quality Gates y el build aplicables; comprobar el estado efectivo del registro; completar únicamente las publicaciones autorizadas que continúen pendientes; y crear el tag al final cuando se satisfagan las condiciones de finalización aprobadas. Deben distinguirse los releases sin paquetes públicos planificados de aquellos cuyas versiones públicas planificadas ya se encuentran publicadas. La política aplicable al primer supuesto permanece bajo el mecanismo de decisión gobernada de EE-RFC-003.
+8. Los reintentos deben ser idempotentes: las versiones ya existentes en el registro se omiten; un tag existente solo se acepta si apunta al mismo commit de release. Un tag que apunte a otro commit constituye un error y no debe sobrescribirse.
+9. Si la publicación falla, no se crea ni se sube el tag en esa ejecución. La recuperación debe reconsultar el registro y completar las operaciones pendientes sin repetir a ciegas el versionado.
+10. El workflow post-merge debe utilizar permisos mínimos. `contents: write` se limita al workflow que crea/sube el tag; los permisos y reglas de protección de tags `v*` se configuran y verifican por separado conforme a EE-DOC-007.
+11. La publicación npm no debe depender de credenciales persistentes si Trusted Publishing con OIDC es compatible y está configurado. En caso contrario, cualquier token necesario se gestiona como secreto de plataforma conforme a EE-DOC-007, nunca en código ni en archivos versionados.
 
 ---
 
@@ -496,21 +498,21 @@ Incumplimiento de un comando root que materializa un gate ACTIVE → agregación
 
 ## 16. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por                  | Motivo                                          | Cambios                                                                                                                                                                                                                    | Estado        |
-| :--------- | :--------- | :--------------------- | :---------------------------- | :---------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
-| **v0.1.0** | 2026-09-30 | Equipo de Arquitectura | —                             | Apertura EE-DOC-011                             | Borrador inicial                                                                                                                                                                                                           | Borrador      |
-| **v0.2.0** | 2026-09-30 | Equipo de Arquitectura | —                             | Revisión arquitectónica                         | Padre 006; changeset/version-packages; SSOT local vs 010; terminología ingeniería EE; determinismo contractual; CI consume 011; mapeo gates; matriz CLI; prohibiciones; plan P01–P05; refs completas; README inequívoco    | Borrador      |
-| **v0.3.0** | 2026-09-30 | Equipo de Arquitectura | —                             | Observaciones residuales                        | Invocación canónica vs fachada DX; CI consume canónico (007 compone); §05.4 separada comando/plataforma; mutación vs check; CLI y packages/config; ownership review; EE-TEC-006; P03 alineación vs ADR; sync §14; nota 015 | Borrador      |
-| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura        | Aprobación arquitectónica                       | Norma de Automation aprobada; listo para EE-IMP-011-P01                                                                                                                                                                    | Aprobado      |
-| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura        | Validación Final y Congelación                  | EE-IMP-011-P01…P05 + EE-TEC-006 Completados; TEC-006 (no TEC-011); diferidos 012/backlog documentados                                                                                                                      | **Congelado** |
-| **v1.1.1** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura        | Fix layout scripts                              | §04.2 actualizado a scripts/commands/\*; añadido comando e2e a la tabla                                                                                                                                                    | **Congelado** |
-| **v1.2.0** | 2026-10-24 | Equipo de Arquitectura | Pendiente de validación final | Integridad del release y publicación post-merge | Separación prepare/publish; publicación idempotente; tag al final; elegibilidad por metadatos y registro; workflow post-merge y permisos mínimos                                                                           | **Congelado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                          | Cambios                                                                                                                                                                                                                    | Estado        |
+| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
+| **v0.1.0** | 2026-09-30 | Equipo de Arquitectura | —                      | Apertura EE-DOC-011                             | Borrador inicial                                                                                                                                                                                                           | Borrador      |
+| **v0.2.0** | 2026-09-30 | Equipo de Arquitectura | —                      | Revisión arquitectónica                         | Padre 006; changeset/version-packages; SSOT local vs 010; terminología ingeniería EE; determinismo contractual; CI consume 011; mapeo gates; matriz CLI; prohibiciones; plan P01–P05; refs completas; README inequívoco    | Borrador      |
+| **v0.3.0** | 2026-09-30 | Equipo de Arquitectura | —                      | Observaciones residuales                        | Invocación canónica vs fachada DX; CI consume canónico (007 compone); §05.4 separada comando/plataforma; mutación vs check; CLI y packages/config; ownership review; EE-TEC-006; P03 alineación vs ADR; sync §14; nota 015 | Borrador      |
+| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica                       | Norma de Automation aprobada; listo para EE-IMP-011-P01                                                                                                                                                                    | Aprobado      |
+| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Validación Final y Congelación                  | EE-IMP-011-P01…P05 + EE-TEC-006 Completados; TEC-006 (no TEC-011); diferidos 012/backlog documentados                                                                                                                      | **Congelado** |
+| **v1.1.1** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Fix layout scripts                              | §04.2 actualizado a scripts/commands/\*; añadido comando e2e a la tabla                                                                                                                                                    | **Congelado** |
+| **v1.2.0** | 2026-10-24 | Equipo de Arquitectura | Equipo de Arquitectura | Integridad del release y publicación post-merge | Separación prepare/publish; publicación idempotente; tag final; elegibilidad, procedencia verificable, integridad independiente del plan y permisos mínimos                                                                | **Congelado** |
 
 ---
 
 ## 17. Cierre Documental
 
-> Documento **Congelado** tras Validación Final. Evidencia: **EE-IMP-011-P01…P05** (Completado) y **EE-TEC-006** v1.1.0 (Completado).
+> **Registro histórico de cierre:** esta sección conserva la Validación Final y la congelación realizadas el 2026-10-01, respaldadas por **EE-IMP-011-P01…P05** y **EE-TEC-006** v1.1.0. Sus resultados no deben interpretarse como una nueva validación de las modificaciones posteriores de release.
 
 ### 17.1. Validación Final
 
@@ -535,18 +537,18 @@ Incumplimiento de un comando root que materializa un gate ACTIVE → agregación
 
 ### 17.3. Estado Final
 
-| Campo                      | Valor                      |
-| :------------------------- | :------------------------- |
-| **Estado documental**      | **Congelado**              |
-| **Versión**                | v1.1.1                     |
-| **Validado**               | ✅ 2026-10-01              |
-| **Congelación**            | ✅ 2026-10-01              |
-| **Próximo hito normativo** | **EE-DOC-012** — Templates |
+| Campo                            | Valor                      |
+| :------------------------------- | :------------------------- |
+| **Estado documental**            | **Congelado**              |
+| **Versión del cierre histórico** | v1.1.0                     |
+| **Validado**                     | ✅ 2026-10-01              |
+| **Congelación**                  | ✅ 2026-10-01              |
+| **Próximo hito normativo**       | **EE-DOC-012** — Templates |
 
 ### 17.4. Dictamen
 
 > La automatización de ingeniería del monorepo (`scripts/`, contrato root, CLI fachada, generate/release) está **implementada, validada y documentada**.  
-> EE-DOC-011 **v1.1.0 Congelado** es fuente de verdad normativa de Automation hasta un cambio gobernado (EE-DOC-005).
+> El cierre histórico documentado corresponde a **EE-DOC-011 v1.1.0**. Las modificaciones normativas posteriores se identifican mediante los metadatos y el historial de versiones del documento; el cierre original no constituye evidencia de validación de esas modificaciones.
 
 ---
 

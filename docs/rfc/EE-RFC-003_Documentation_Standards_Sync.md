@@ -95,9 +95,13 @@ La necesidad surge de hacer explícitos los límites de responsabilidad y el cic
 
 ### 02.8. Gobernanza e integridad del release (Ampliación propuesta)
 
-Durante la auditoría del flujo **A-REL** se identificó una discrepancia entre el contrato de release de **EE-DOC-011 §08.2**, el comportamiento de `scripts/commands/release` y el flujo de integración de **EE-DOC-005** y **EE-DOC-007**. El script actual exige ejecutar el release desde `main` o `master`, prepara un commit y un tag local antes de publicar y posteriormente intenta hacer push con `git push --follow-tags`. Ese flujo entra en tensión con la integración mediante Pull Request, la revisión y los controles de rama protegida.
+Durante la auditoría del flujo **A-REL** se identificaron discrepancias entre el contrato de release de **EE-DOC-011 §08.2**, el proceso de preparación y publicación y las garantías de integración protegida establecidas por **EE-DOC-005** y **EE-DOC-007**. Estas discrepancias motivan la necesidad de gobernar explícitamente la procedencia del release, las condiciones de publicación, la creación del tag y la recuperación ante fallos.
 
-La propuesta preferida es preparar el versionado mediante un PR, publicar paquetes elegibles desde un job post-merge con permisos mínimos y crear el tag anotado al final, después de completar la publicación o confirmar que no hay paquetes elegibles. Los reintentos deben comprobar el estado remoto y completar solo las operaciones pendientes, sin sobrescribir versiones ni mover tags existentes.
+La propuesta preferida es preparar el versionado mediante un PR, publicar paquetes elegibles desde un proceso post-merge con permisos mínimos y crear el tag anotado al final, después de satisfacer las condiciones de elegibilidad y finalización aprobadas. Los reintentos deben comprobar el estado remoto y completar solo las operaciones pendientes, sin sobrescribir versiones ni mover tags existentes.
+
+La integridad del release requiere garantizar que el plan autorizado corresponde a los cambios de versión revisados e integrados. Se propone exigir procedencia verificable y comprobación independiente de la correspondencia entre el plan preparado y el plan autorizado para publicación, sin confiar exclusivamente en una declaración generada durante la preparación.
+
+Permanece pendiente de decisión si un release del Engineering Ecosystem puede finalizar sin paquetes npm públicos planificados. Debe distinguirse entre versionar el ecosistema y distribuir paquetes. Esta decisión condiciona la elegibilidad y creación del tag y debe resolverse antes de declarar conforme el contrato de release.
 
 Los hallazgos vinculados son **PN-021** (política de publicación npm y orden commit/tag) y **PN-030** (alineación entre CODEOWNERS, ruleset, CI y script de release). Ambos permanecen abiertos hasta que el contrato normativo, la implementación y la evidencia estén alineados.
 
@@ -157,17 +161,17 @@ Este RFC no convierte por sí solo esas reglas en normativa aprobada. Las superf
 
 ### 03.6. Superficie D — Release, automatización e integración protegida
 
-| Superficie                                  | Cambio propuesto                                                                                              | Límite                                                                                                     |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| **EE-DOC-005 §11.3 y workflow relacionado** | Sincronizar la preparación de versiones mediante rama/PR, revisión, merge y ejecución post-merge              | El PR lo crea la persona responsable; no se integra directamente en `main`                                 |
-| **EE-DOC-007**                              | Definir workflow autorizado, permisos mínimos y gobernanza de tags                                            | La configuración real de workflows, permisos y rulesets requiere una tarea operativa y evidencia separadas |
-| **EE-DOC-011 §08.2**                        | Actualizar el contrato de release, incluyendo preparación, elegibilidad, orden publicación/tag y recuperación | El contrato vigente no cambia hasta la aprobación y sincronización normativas correspondientes             |
-| **`scripts/commands/release`**              | Incorporar un modo `prepare` local y separar la preparación de la publicación post-merge                      | No hacer push directo a `main` ni publicar desde la preparación local                                      |
-| **`scripts/lib/`**                          | Extraer lógica de release comprobable y permitir inyección/simulación de dependencias                         | Evitar una refactorización no necesaria fuera de los contratos que deban probarse                          |
-| **`scripts/tests/`**                        | Probar preflight, elegibilidad, orden, fallos parciales e idempotencia                                        | Sin publicaciones, commits ni tags reales en pruebas                                                       |
-| **CI post-merge**                           | Añadir un job separado con disparador explícito, permisos mínimos y recuperación                              | `contents: write` solo para el job que crea el tag; OIDC de npm cuando esté soportado y configurado        |
-| **`scripts/README.md`**                     | Documentar modos, efectos, prerrequisitos, publicación condicional y recuperación                             | Debe permanecer alineado con las normas y la implementación aprobadas                                      |
-| **EE-DOC-001 / registro de auditoría**      | Mantener trazabilidad de PN-021 y PN-030 y de su evidencia de cierre                                          | No cerrar hallazgos antes de verificar los criterios de aceptación                                         |
+| Superficie                                  | Cambio propuesto                                                                                                            | Límite                                                                                                                                        |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **EE-DOC-005 §11.3 y workflow relacionado** | Sincronizar la preparación de versiones mediante rama/PR, revisión, merge y ejecución post-merge                            | El PR lo crea la persona responsable; no se integra directamente en `main`                                                                    |
+| **EE-DOC-007**                              | Definir workflow autorizado, permisos mínimos y gobernanza de tags                                                          | La configuración real de workflows, permisos y rulesets requiere una tarea operativa y evidencia separadas                                    |
+| **EE-DOC-011 §08.2**                        | Reconciliar el contrato de preparación, procedencia verificable, elegibilidad, publicación, creación del tag y recuperación | La política para releases sin paquetes públicos y las garantías obligatorias de procedencia requieren decisión expresa y aprobación normativa |
+| **`scripts/commands/release`**              | Incorporar un modo `prepare` local y separar la preparación de la publicación post-merge                                    | No hacer push directo a `main` ni publicar desde la preparación local                                                                         |
+| **`scripts/lib/`**                          | Extraer lógica de release comprobable y permitir inyección/simulación de dependencias                                       | Evitar una refactorización no necesaria fuera de los contratos que deban probarse                                                             |
+| **`scripts/tests/`**                        | Probar preflight, elegibilidad, orden, fallos parciales e idempotencia                                                      | Sin publicaciones, commits ni tags reales en pruebas                                                                                          |
+| **CI post-merge**                           | Añadir un job separado con disparador explícito, permisos mínimos y recuperación                                            | `contents: write` solo para el job que crea el tag; OIDC de npm cuando esté soportado y configurado                                           |
+| **`scripts/README.md`**                     | Documentar modos, efectos, prerrequisitos, publicación condicional y recuperación                                           | Debe permanecer alineado con las normas y la implementación aprobadas                                                                         |
+| **EE-DOC-001 / registro de auditoría**      | Mantener trazabilidad de PN-021 y PN-030 y de su evidencia de cierre                                                        | No cerrar hallazgos antes de verificar los criterios de aceptación                                                                            |
 
 ### 03.7. Modelo de release propuesto
 
@@ -202,9 +206,9 @@ Un paquete es elegible si:
 
 La detección debe enumerar los workspaces configurados y no recorrer indiscriminadamente todos los `package.json`, lo que podría incluir artefactos generados o dependencias instaladas.
 
-Según el inventario observado durante esta auditoría, los **26 workspaces tienen `private: true`**. En el estado actual, el resultado esperado es preparar versión y changelogs y finalizar con un tag, sin publicar paquetes npm. No se cambiará `private: true` para forzar publicaciones.
+Según el inventario observado durante esta auditoría, los **26 workspaces tenían `private: true`**. Esta condición evidencia la necesidad de distinguir el versionado del ecosistema de la distribución de paquetes npm. No se propone cambiar la privacidad de los workspaces para forzar publicaciones; el tratamiento de releases sin paquetes públicos permanece sujeto a decisión expresa de gobernanza.
 
-Si no hay paquetes elegibles, el job debe registrar explícitamente que no hay publicación aplicable y continuar hacia la creación del tag solo tras completar las validaciones exigidas.
+El tratamiento de releases sin paquetes públicos elegibles queda sujeto a decisión expresa de gobernanza. Se evaluarán dos políticas: permitir la finalización del release del ecosistema y la creación del tag sin distribución npm, o exigir al menos una release pública planificada. La política aprobada deberá aplicarse de manera coherente en el contrato normativo, la automatización y las condiciones de recuperación.
 
 #### D. Orden de operaciones
 
@@ -214,10 +218,10 @@ El orden propuesto es:
 2. Ejecutar los quality gates y el build exigidos por las normas vigentes.
 3. Determinar los paquetes elegibles y comprobar el estado del registro.
 4. Publicar los paquetes elegibles, si existen, y verificar el resultado.
-5. Crear el tag anotado `vX.Y.Z` únicamente después de completar correctamente la publicación o confirmar que no hay paquetes elegibles.
+5. Crear el tag anotado `vX.Y.Z` únicamente después de satisfacer las condiciones de finalización del release aprobadas, incluida la política aplicable cuando no existan paquetes públicos elegibles.
 6. Registrar el resultado y la evidencia del release.
 
-Este orden sustituye expresamente la regla de **EE-DOC-011 §08.2 #4** que crea el commit/tag antes de publicar. La sustitución no es normativa hasta que se apruebe y sincronice el documento correspondiente.
+El modelo propuesto requiere reconciliar expresamente las normas de **EE-DOC-011 §08.2** con las garantías de procedencia, elegibilidad, orden de publicación y creación del tag. Ningún cambio de contrato se considera normativo hasta completar su aprobación y sincronización documental.
 
 #### E. Reintentos y recuperación
 
@@ -236,22 +240,15 @@ El job que crea el tag requiere `contents: write`; este permiso debe limitarse a
 
 Las reglas de protección para tags `v*` deben evaluarse como una tarea de gobernanza separada. No se afirmará que están configuradas hasta verificar el estado real y registrar evidencia.
 
-### 03.8. Pruebas y evidencia de implementación
+### 03.8. Condiciones de aceptación y evidencia requerida
 
-`scripts/commands/release` ejecuta actualmente `main()` al importarse y no ofrece inyección suficiente de dependencias para simular de forma determinista Git y npm. La implementación deberá extraer a `scripts/lib/` únicamente la lógica que requiera pruebas aisladas y exponer dependencias simulables.
+La aprobación del cambio de release requiere demostrar que las garantías propuestas son exigibles, verificables y compatibles con el modelo de integración protegida del ecosistema.
 
-Las pruebas se ubicarán en `scripts/tests/*.test.mjs` y se ejecutarán mediante `pnpm test:scripts`, que ya está integrado en el flujo de validación. No se creará un runner alternativo ni se harán publicaciones, commits o tags reales desde los tests.
+La evaluación de conformidad deberá contemplar la procedencia del plan de release, la comprobación independiente de su integridad, la elegibilidad de publicación, el orden de finalización, los reintentos seguros y el tratamiento de estados inconsistentes.
 
-La evidencia de cierre debe incluir:
+La política aplicable a releases sin paquetes públicos deberá resolverse expresamente. No se considerará satisfecho este requisito mientras existan interpretaciones contradictorias entre el contrato normativo y el comportamiento implementado.
 
-- preflight sin mutaciones si falla un prerrequisito;
-- elegibilidad positiva y negativa, incluidos paquetes privados y versiones ya existentes en el registro;
-- ausencia de publicación cuando no hay paquetes elegibles;
-- orden correcto de validación, publicación y creación del tag;
-- fallos simulados de Git/npm y recuperación idempotente;
-- verificación de versión, tag y commit esperado;
-- resultados reales de los quality gates aplicables;
-- coherencia entre las normas aprobadas, `scripts/README.md`, scripts y workflow CI.
+Los resultados técnicos y operativos deberán registrarse en sus artefactos de evidencia correspondientes. La aprobación del RFC no implica que las verificaciones hayan sido ejecutadas ni que las configuraciones operativas estén habilitadas.
 
 ### 03.9. Delimitación del cambio de release
 
@@ -263,30 +260,33 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 
 ## 04. Alternativas consideradas
 
-| ID  | Alternativa                                                                                    | Dictamen                           | Motivo                                                                                                    |
-| --- | ---------------------------------------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| A1  | Clasificar solo Tipo B (especialización 002)                                                   | Rechazada                          | Alcance transversal (001 + familia VAL/WAIVE + catálogo global)                                           |
-| A2  | Revertir v1.7–v1.9 y reintroducir vía RFC desde cero                                           | Rechazada                          | Coste alto; contenido ya alineado a auditoría                                                             |
-| A3  | RFC Tipo D retroactivo (esta propuesta)                                                        | **Adoptada**                       | Cumple 001 R2 / 005 sin reescribir el fondo                                                               |
-| A4  | Mantener el release local actual con commit/tag en `main` y push posterior                     | Rechazada como objetivo            | Contradice el flujo de integración protegida y complica la recuperación ante fallos parciales             |
-| A5  | Convertir el script solo en preflight/dry-run sin preparar la versión ni definir CI post-merge | Rechazada                          | Deja sin resolver quién prepara el commit de versión y cómo se completa el release                        |
-| A6  | Preparar versión por PR; publicar condicionalmente y crear tag al final desde CI               | Preferida, pendiente de aprobación | Separa preparación revisable, publicación y finalización, con permisos mínimos y recuperación idempotente |
-| A7  | Cambiar `private: true` para publicar todos los workspaces                                     | Rechazada                          | La privacidad no es un mecanismo para forzar publicación y requiere decisiones por paquete                |
+| ID  | Alternativa                                                                                                         | Dictamen                           | Motivo                                                                                                                 |
+| --- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| A1  | Clasificar solo Tipo B (especialización 002)                                                                        | Rechazada                          | Alcance transversal (001 + familia VAL/WAIVE + catálogo global)                                                        |
+| A2  | Revertir v1.7–v1.9 y reintroducir vía RFC desde cero                                                                | Rechazada                          | Coste alto; contenido ya alineado a auditoría                                                                          |
+| A3  | RFC Tipo D retroactivo (esta propuesta)                                                                             | **Adoptada**                       | Cumple 001 R2 / 005 sin reescribir el fondo                                                                            |
+| A4  | Mantener el release local actual con commit/tag en `main` y push posterior                                          | Rechazada como objetivo            | Contradice el flujo de integración protegida y complica la recuperación ante fallos parciales                          |
+| A5  | Convertir el script solo en preflight/dry-run sin preparar la versión ni definir CI post-merge                      | Rechazada                          | Deja sin resolver quién prepara el commit de versión y cómo se completa el release                                     |
+| A6  | Preparar versión por PR; publicar condicionalmente y crear tag al final desde CI                                    | Preferida, pendiente de aprobación | Separa preparación revisable, publicación y finalización, con permisos mínimos y recuperación idempotente              |
+| A7  | Cambiar `private: true` para publicar todos los workspaces                                                          | Rechazada                          | La privacidad no es un mecanismo para forzar publicación y requiere decisiones por paquete                             |
+| A8  | Confiar únicamente en el plan declarado durante la preparación del release                                          | Rechazada como objetivo            | No proporciona una garantía independiente de correspondencia entre la preparación revisada y la publicación autorizada |
+| A9  | Exigir procedencia verificable y comprobación independiente del plan antes de publicar                              | Preferida, pendiente de aprobación | Refuerza la integridad del release sin depender exclusivamente de la declaración generada durante su preparación       |
+| A10 | Permitir releases del ecosistema sin paquetes npm públicos frente a exigir al menos una release pública planificada | Pendiente de decisión              | Debe resolverse la relación entre versionado del ecosistema, distribución npm y creación del tag                       |
 
 ---
 
 ## 05. Impacto
 
-| Ámbito                    | Impacto                                                                                                                                                                  |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Documentos normativos** | El RFC conserva la regularización de EE-DOC-002/EE-DOC-001 y amplía explícitamente el seguimiento a EE-DOC-005, EE-DOC-007 y EE-DOC-011 según los hallazgos incorporados |
-| **Release y versionado**  | Se propone preparar versiones por PR, publicar solo paquetes elegibles y crear el tag al final del proceso post-merge                                                    |
-| **Código y tests**        | Se prevé extraer lógica comprobable a `scripts/lib/` y añadir tests de release a `scripts/tests/`; no se ha implementado ni validado todavía                             |
-| **CI y seguridad**        | Se requiere un job post-merge separado, permisos mínimos y evaluación independiente de protección de tags; OIDC es preferible si está soportado y configurado            |
-| **Publicación npm**       | Los 26 workspaces observados tienen `private: true`; el comportamiento actual esperado es versión/changelog/tag sin publicación npm                                      |
-| **Gobernanza**            | PN-021 y PN-030 permanecen abiertos hasta alinear norma, implementación y evidencia verificable                                                                          |
-| **Compatibilidad**        | Cambia el contrato operativo del release; los documentos, scripts, tests y workflow deben sincronizarse después de la aprobación correspondiente                         |
-| **Estado de validación**  | Esta revisión documental no implica que se hayan ejecutado tests, gates, builds ni cambios en GitHub                                                                     |
+| Ámbito                            | Impacto                                                                                                                                                                                                                                                             |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Documentos normativos**         | El RFC conserva la regularización de EE-DOC-002/EE-DOC-001 y amplía explícitamente el seguimiento a EE-DOC-005, EE-DOC-007 y EE-DOC-011 según los hallazgos incorporados                                                                                            |
+| **Release y versionado**          | Se propone exigir procedencia verificable e integridad independiente del plan de release, manteniendo preparación revisable por PR, publicación post-merge, tag final y recuperación segura; queda pendiente resolver la política de releases sin paquetes públicos |
+| **Implementación y verificación** | La materialización del contrato requiere implementación y evidencia independientes, sujetas a revisión de conformidad; su existencia no implica aprobación normativa                                                                                                |
+| **CI y seguridad**                | Se requiere un job post-merge separado, permisos mínimos y evaluación independiente de protección de tags; OIDC es preferible si está soportado y configurado                                                                                                       |
+| **Publicación npm**               | La separación entre versionado del ecosistema y distribución npm exige resolver explícitamente la política de releases sin paquetes públicos elegibles                                                                                                              |
+| **Gobernanza**                    | PN-021 y PN-030 permanecen abiertos hasta alinear norma, implementación y evidencia verificable                                                                                                                                                                     |
+| **Compatibilidad**                | Cambia el contrato operativo del release; los documentos, scripts, tests y workflow deben sincronizarse después de la aprobación correspondiente                                                                                                                    |
+| **Estado de validación**          | Esta revisión documental no implica que se hayan ejecutado tests, gates, builds ni cambios en GitHub                                                                                                                                                                |
 
 ## 06. ADR
 
@@ -313,40 +313,47 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 | 12  | El disparador post-merge procesa solo una versión objetivo válida y no inicia releases accidentales en pushes ordinarios                                                    |
 | 13  | La elegibilidad npm se basa en el workspace configurado, `private: false`, la inexistencia de la versión objetivo en el registro y la configuración efectiva de publicación |
 | 14  | El estado observado de los 26 workspaces con `private: true` queda registrado sin cambiar su privacidad como parte de esta propuesta                                        |
-| 15  | El tag anotado se crea al final, después de publicar correctamente los paquetes elegibles o confirmar que no hay publicación aplicable                                      |
+| 15  | El tag anotado se crea únicamente después de cumplir las condiciones de finalización aprobadas, incluida la política expresa para releases sin paquetes públicos elegibles  |
 | 16  | Los reintentos verifican el estado remoto y completan operaciones pendientes sin sobrescribir versiones ni mover tags existentes                                            |
 | 17  | `contents: write` se limita al job que crea el tag; OIDC se utiliza para npm cuando esté soportado y configurado                                                            |
 | 18  | La protección de tags `v*` se evalúa separadamente y no se declara activa sin evidencia verificable                                                                         |
 | 19  | Los tests de release se ejecutan en `pnpm test:scripts` y CI y simulan Git/npm sin publicar paquetes ni crear tags reales                                                   |
 | 20  | EE-DOC-005, EE-DOC-007, EE-DOC-011, `scripts/README.md`, el script y CI se sincronizan con el contrato aprobado                                                             |
 | 21  | Los gates y pruebas se registran con resultados reales; no se declara cerrada una validación no ejecutada o fallida                                                         |
+| 22  | El contrato aprobado exige procedencia verificable del release y comprobación independiente de la integridad del plan autorizado antes de publicar                          |
+| 23  | La política para releases sin paquetes públicos queda decidida expresamente, sin contradicción entre normas, implementación y condiciones de creación del tag               |
+| 24  | La evidencia de conformidad se mantiene en los artefactos técnicos y de validación correspondientes, sin convertir este RFC en inventario de implementación                 |
 
 ---
 
 ## 08. Plan de aplicación (post-aprobación)
 
-| Orden | Acción                                                                                                                                                             | Responsable                                      |
-| ----: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ |
-|     1 | Mantener RFC-003 Propuesto y abierto durante la oleada de auditoría                                                                                                | Arquitectura                                     |
-|     2 | Revisar los hallazgos incorporados y aprobar cada paquete de trabajo conforme al proceso gobernado aplicable, sin presumir aprobación por su mera inclusión        | Equipo de Arquitectura                           |
-|     3 | Sincronizar EE-DOC-001 §09.2/§14/§15 con el estado real del RFC y los hallazgos, respetando el orden de actualización establecido                                  | Arquitectura                                     |
-|     4 | Ejecutar las migraciones documentales `PC-*` / `PN-*` por documento auditado y mantener sus referencias de trazabilidad                                            | Equipo de auditoría                              |
-|     5 | Al cierre formal de la oleada, actualizar el estado del RFC conforme a los criterios de cierre; las nuevas enmiendas de alcance requieren nueva versión de trabajo | Arquitectura                                     |
-|     6 | Preparar las enmiendas de EE-DOC-005, EE-DOC-007 y EE-DOC-011 en una rama dedicada y registrar su estado de revisión sin afirmar aprobación normativa anticipada   | Equipo de Arquitectura                           |
-|     7 | Tras la aprobación correspondiente, implementar `prepare`, la elegibilidad, el workflow post-merge y la recuperación idempotente                                   | Ingeniería / responsable de CI                   |
-|     8 | Extraer la lógica de release comprobable a `scripts/lib/` y añadir pruebas simuladas en `scripts/tests/`, integradas en `pnpm test:scripts`                        | Ingeniería                                       |
-|     9 | Evaluar y configurar por separado permisos, OIDC, environments y reglas de tags `v*`, registrando evidencia real                                                   | Gobernanza GitHub / responsable de configuración |
-|    10 | Sincronizar `scripts/README.md` con el contrato aprobado y la implementación real                                                                                  | Ingeniería / Documentación                       |
-|    11 | Ejecutar y registrar quality gates, build y pruebas de release aplicables; corregir los fallos antes del cierre                                                    | Ingeniería / QA                                  |
-|    12 | Cerrar PN-021 y PN-030 únicamente cuando los criterios de aceptación estén respaldados por evidencia verificable                                                   | Equipo de auditoría / Arquitectura               |
+| Orden | Acción                                                                                                                                                                                                                | Responsable                                      |
+| ----: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+|     1 | Mantener RFC-003 Propuesto y abierto durante la oleada de auditoría                                                                                                                                                   | Arquitectura                                     |
+|     2 | Revisar los hallazgos incorporados y aprobar cada paquete de trabajo conforme al proceso gobernado aplicable, sin presumir aprobación por su mera inclusión                                                           | Equipo de Arquitectura                           |
+|     3 | Sincronizar EE-DOC-001 §09.2/§14/§15 con el estado real del RFC y los hallazgos, respetando el orden de actualización establecido                                                                                     | Arquitectura                                     |
+|     4 | Ejecutar las migraciones documentales `PC-*` / `PN-*` por documento auditado y mantener sus referencias de trazabilidad                                                                                               | Equipo de auditoría                              |
+|     5 | Al cierre formal de la oleada, actualizar el estado del RFC conforme a los criterios de cierre; las nuevas enmiendas de alcance requieren nueva versión de trabajo                                                    | Arquitectura                                     |
+|     6 | Preparar las enmiendas de EE-DOC-005, EE-DOC-007 y EE-DOC-011 en una rama dedicada y registrar su estado de revisión sin afirmar aprobación normativa anticipada                                                      | Equipo de Arquitectura                           |
+|     7 | Resolver las decisiones pendientes sobre procedencia verificable, integridad independiente del plan y política de releases sin paquetes públicos, registrando su aprobación conforme al mecanismo gobernado aplicable | Equipo de Arquitectura                           |
+|     8 | Revisar la conformidad de la implementación existente con las decisiones aprobadas y determinar las adecuaciones necesarias sin considerar la existencia del código como aprobación normativa                         | Arquitectura / Ingeniería                        |
+|     9 | Evaluar y configurar por separado permisos, OIDC, environments y reglas de tags `v*`, registrando evidencia real                                                                                                      | Gobernanza GitHub / responsable de configuración |
+|    10 | Sincronizar `scripts/README.md` con el contrato aprobado y la implementación real                                                                                                                                     | Ingeniería / Documentación                       |
+|    11 | Ejecutar y registrar quality gates, build y pruebas de release aplicables; corregir los fallos antes del cierre                                                                                                       | Ingeniería / QA                                  |
+|    12 | Cerrar PN-021 y PN-030 únicamente cuando los criterios de aceptación estén respaldados por evidencia verificable                                                                                                      | Equipo de auditoría / Arquitectura               |
 
 ## 09. Riesgos y mitigaciones
 
-| Riesgo                                                       | Mitigación                                                                    |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| Corpus aún no cumple código corto / historial 7 cols         | Plan por documento (M-01 / M-03 diferidos)                                    |
-| 015 usa otro patrón de nombre de archivo                     | 002 manda `{ID}_{Nombre}_{fecha}.md`; alinear 015 en su auditoría             |
-| Alineación EE-DOC-004 v1.2.0 sin RFC específico de 006 §13.2 | Diferida a la auditoría de 006 (`PN-008`); este RFC no sustituye ese vehículo |
+| Riesgo                                                            | Mitigación                                                                                                          |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Corpus aún no cumple código corto / historial 7 cols              | Plan por documento (M-01 / M-03 diferidos)                                                                          |
+| 015 usa otro patrón de nombre de archivo                          | 002 manda `{ID}_{Nombre}_{fecha}.md`; alinear 015 en su auditoría                                                   |
+| Alineación EE-DOC-004 v1.2.0 sin RFC específico de 006 §13.2      | Diferida a la auditoría de 006 (`PN-008`); este RFC no sustituye ese vehículo                                       |
+| Procedencia del release insuficientemente garantizada             | Exigir garantías verificables e independientes del plan declarado antes de autorizar la publicación                 |
+| Interpretaciones divergentes sobre releases sin paquetes públicos | Resolver explícitamente la política aplicable y sincronizarla con los contratos normativos afectados                |
+| Implementación anterior a la aprobación normativa completa        | Evaluar la conformidad del comportamiento existente y corregir cualquier discrepancia mediante el proceso gobernado |
+| Cierre prematuro de PN-021 y PN-030                               | Exigir coherencia entre decisión aprobada, contratos, implementación y evidencia de verificación                    |
 
 ---
 
@@ -356,14 +363,13 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 | --------------------------- | ---------------------------------------------------------------------------------------- |
 | **EE-DOC-001**              | R2, R7, §08.1, §09.4                                                                     |
 | **EE-DOC-002**              | Estándar de forma; v1.7.0–v1.10.0+                                                       |
-| **EE-DOC-005**              | Tipo D §04.2                                                                             |
-| **EE-AUDIT-Rules_Emerging** | Inventario AR / backlog PC-PN-PA                                                         |
+| **EE-DOC-005**              | Workflow normativo; clasificación Tipo D §04.2 y ciclo de cambios gobernados             |
+| **EE-DOC-007**              | Gobernanza de GitHub; controles operativos que implementan el workflow                   |
 | **EE-DOC-010**              | WAIVED §04.6.1                                                                           |
 | **EE-DOC-015**              | Validación; padre VAL                                                                    |
-| **EE-DOC-005**              | Workflow normativo; clasificación Tipo D y ciclo de cambios gobernados                   |
-| **EE-DOC-007**              | Gobernanza de GitHub; controles operativos que implementan el workflow                   |
 | **EE-TEC-002**              | Evidencia consolidada de configuración GitHub; solo se modifica si cambia el estado real |
 | **EE-IMP-010-P03**          | Evidencia de gates/seguridad/arquitectura, si el cambio operativo afecta su alcance      |
+| **EE-AUDIT-Rules_Emerging** | Inventario AR / backlog PC-PN-PA                                                         |
 
 ---
 
@@ -388,7 +394,7 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 | **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Vehículo abierto auditoría        | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                   | **Aprobado** |
 | **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Conformidad §18.5                 | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado | **Aprobado** |
 | **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación pre-main            | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                           | **Aprobado** |
-| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura | —                      | Auditoría transversal de releases | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.       | **Aprobado** |
+| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría transversal de releases | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.       | **Aprobado** |
 
 ---
 

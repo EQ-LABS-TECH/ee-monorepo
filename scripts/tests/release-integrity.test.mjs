@@ -11,6 +11,16 @@ import {
   validateReleaseManifest,
   verifyCompletedRelease,
   parseChangesetReleaseStatus,
+  getPlannedPublicPackages,
+  runReleasePreparation,
+  validateReleaseTrigger,
+  validateReleaseSourcePlan,
+  validateReleaseChangesetFiles,
+  validateReleaseBaseVersion,
+  validateReleaseChangesetContent,
+  parseEffectiveChangesetsPlan,
+  validateEffectiveReleaseVersions,
+  validateEffectiveSourcePlan,
 } from '../lib/release-integrity.mjs';
 
 const packages = [
@@ -18,6 +28,39 @@ const packages = [
   { name: '@eq-labs/public-existing', version: '2.0.0', private: false },
   { name: '@eq-labs/private', version: '1.0.0', private: true },
 ];
+
+const createPublicManifestFixture = () =>
+  createReleaseManifest({
+    baseVersion: '1.0.0',
+    targetVersion: '1.2.0',
+    baseCommit: 'a'.repeat(40),
+    changesetIds: ['test-release'],
+    releases: [
+      {
+        name: '@eq-labs/public-new',
+        version: '1.2.0',
+        type: 'minor',
+      },
+    ],
+    packages,
+  });
+
+function manifestForPackages(releasePackages) {
+  return createReleaseManifest({
+    baseVersion: '1.0.0',
+    targetVersion: '1.2.0',
+    baseCommit: 'a'.repeat(40),
+    changesetIds: ['test-release'],
+    releases: releasePackages
+      .filter((pkg) => pkg.private === false)
+      .map((pkg) => ({
+        name: pkg.name,
+        version: pkg.version,
+        type: 'patch',
+      })),
+    packages: releasePackages,
+  });
+}
 
 test('public package selection excludes private packages', () => {
   assert.deepEqual(
@@ -45,32 +88,6 @@ test('public package selection accepts an empty workspace list', () => {
 
 test('public package selection rejects a non-array workspace list', () => {
   assert.throws(() => getPublicPackages(null), /packages must be an array/);
-});
-
-test('completed release recovery accepts all-private workspaces without registry lookups', async () => {
-  const events = [];
-
-  const result = await verifyCompletedRelease({
-    tag: 'v1.2.3',
-    version: '1.2.3',
-    packages: [
-      { name: '@eq-labs/private-a', version: '1.2.3', private: true },
-      { name: '@eq-labs/private-b', version: '1.2.3', private: true },
-    ],
-    validate: async () => events.push('validate'),
-    build: async () => events.push('build'),
-    registryHasVersion: () => {
-      events.push('registry');
-      return true;
-    },
-  });
-
-  assert.deepEqual(events, ['validate', 'build']);
-  assert.deepEqual(result, {
-    tag: 'v1.2.3',
-    version: '1.2.3',
-    publicPackages: [],
-  });
 });
 
 test('completed release recovery validates and verifies every public package', async () => {
@@ -138,23 +155,38 @@ test('eligibility propagates registry lookup failures', () => {
 
 test('publication happens after validation/build and before tag creation', async () => {
   const events = [];
+  const registry = new Set();
+
   const result = await publishThenTag({
     validate: async () => events.push('validate'),
     build: async () => events.push('build'),
-    packages,
-    registryHasVersion: (name) => name === '@eq-labs/public-existing',
-    publish: async (pkg) => events.push(`publish:${pkg.name}`),
-    verifyPublished: async (pkg) => events.push(`verify:${pkg.name}`),
+    manifest: manifestForPackages(packages),
+    registryHasVersion: (name, version) => registry.has(`${name}@${version}`),
+    publish: async (pkg) => {
+      events.push(`publish:${pkg.name}`);
+      registry.add(`${pkg.name}@${pkg.version}`);
+    },
+    verifyPublished: async (pkg) => {
+      events.push(`verify:${pkg.name}`);
+      assert.equal(registry.has(`${pkg.name}@${pkg.version}`), true);
+    },
     createTag: async () => events.push('tag'),
   });
+
   assert.deepEqual(events, [
     'validate',
     'build',
+    'publish:@eq-labs/public-existing',
+    'verify:@eq-labs/public-existing',
     'publish:@eq-labs/public-new',
     'verify:@eq-labs/public-new',
     'tag',
   ]);
-  assert.deepEqual(result.published, [{ name: '@eq-labs/public-new', version: '1.2.0' }]);
+
+  assert.deepEqual(result.published, [
+    { name: '@eq-labs/public-existing', version: '2.0.0' },
+    { name: '@eq-labs/public-new', version: '1.2.0' },
+  ]);
 });
 
 test('tag is not created when publication fails', async () => {
@@ -163,7 +195,7 @@ test('tag is not created when publication fails', async () => {
     publishThenTag({
       validate: async () => events.push('validate'),
       build: async () => events.push('build'),
-      packages: [packages[0]],
+      manifest: manifestForPackages([packages[0]]),
       registryHasVersion: () => false,
       publish: async () => {
         events.push('publish');
@@ -191,7 +223,7 @@ test('retry skips an already published package after a partial release failure',
     publishThenTag({
       validate: async () => events.push('validate'),
       build: async () => events.push('build'),
-      packages: releasePackages,
+      manifest: manifestForPackages(releasePackages),
       registryHasVersion,
       publish: async (pkg) => {
         events.push(`publish:${pkg.name}`);
@@ -231,29 +263,69 @@ test('retry skips an already published package after a partial release failure',
   assert.equal(registryHasVersion('@eq-labs/package-b', '1.2.0'), true);
 });
 
-test('release completes without registry lookups or publication when every package is private', async () => {
+test('all-private release cannot create a tag', async () => {
   const events = [];
 
-  const result = await publishThenTag({
-    validate: async () => events.push('validate'),
-    build: async () => events.push('build'),
-    packages: [
-      { name: '@eq-labs/private-a', version: '1.2.3', private: true },
-      { name: '@eq-labs/private-b', version: '1.2.3', private: true },
+  const manifest = {
+    schemaVersion: 2,
+    releaseId: 'ee-v1.2.0',
+    baseVersion: '1.0.0',
+    targetVersion: '1.2.0',
+    baseCommit: 'a'.repeat(40),
+    changesets: ['test-release'],
+    releases: [
+      {
+        name: '@eq-labs/private',
+        version: '1.0.0',
+        type: 'patch',
+      },
     ],
-    registryHasVersion: () => {
-      events.push('registry');
-      return false;
-    },
-    preflight: async () => events.push('preflight'),
-    publish: async (pkg) => events.push(`publish:${pkg.name}`),
-    verifyPublished: async (pkg) => events.push(`verify:${pkg.name}`),
-    createTag: async () => events.push('tag'),
-  });
+    packages: [
+      {
+        name: '@eq-labs/private',
+        version: '1.0.0',
+        private: true,
+      },
+    ],
+  };
 
-  assert.deepEqual(events, ['validate', 'build', 'preflight', 'tag']);
+  await assert.rejects(
+    publishThenTag({
+      manifest,
+      validate: async () => events.push('validate'),
+      build: async () => events.push('build'),
+      registryHasVersion: () => {
+        events.push('registry');
+        return false;
+      },
+      publish: async () => events.push('publish'),
+      verifyPublished: async () => events.push('verify'),
+      createTag: async () => events.push('tag'),
+    }),
+    /No public packages in Changesets release plan/,
+  );
 
-  assert.deepEqual(result, { published: [] });
+  assert.deepEqual(events, []);
+});
+
+test('completed release cannot contain only private packages', async () => {
+  await assert.rejects(
+    verifyCompletedRelease({
+      tag: 'v1.0.0',
+      version: '1.0.0',
+      packages: [
+        {
+          name: '@eq-labs/private',
+          version: '1.0.0',
+          private: true,
+        },
+      ],
+      validate: async () => {},
+      build: async () => {},
+      registryHasVersion: () => true,
+    }),
+    /Cannot complete release without public packages/,
+  );
 });
 
 test('remote preflight failure prevents tag creation when no packages are eligible', async () => {
@@ -263,7 +335,9 @@ test('remote preflight failure prevents tag creation when no packages are eligib
     publishThenTag({
       validate: async () => events.push('validate'),
       build: async () => events.push('build'),
-      packages: [{ name: '@eq-labs/public-package', version: '1.2.0', private: false }],
+      manifest: manifestForPackages([
+        { name: '@eq-labs/public-package', version: '1.2.0', private: false },
+      ]),
       registryHasVersion: () => true,
       preflight: async () => {
         events.push('preflight');
@@ -332,14 +406,18 @@ test('remote tag preflight rejects invalid tag names', () => {
 
 test('remote preflight runs after validation/build and before publication', async () => {
   const events = [];
+  const registry = new Set();
 
   await publishThenTag({
     validate: async () => events.push('validate'),
     build: async () => events.push('build'),
-    packages: [packages[0]],
-    registryHasVersion: () => false,
+    manifest: manifestForPackages([packages[0]]),
+    registryHasVersion: (name, version) => registry.has(`${name}@${version}`),
     preflight: async () => events.push('preflight'),
-    publish: async (pkg) => events.push(`publish:${pkg.name}`),
+    publish: async (pkg) => {
+      events.push(`publish:${pkg.name}`);
+      registry.add(`${pkg.name}@${pkg.version}`);
+    },
     verifyPublished: async (pkg) => events.push(`verify:${pkg.name}`),
     createTag: async () => events.push('tag'),
   });
@@ -361,7 +439,7 @@ test('remote preflight failure prevents publication and tag creation', async () 
     publishThenTag({
       validate: async () => events.push('validate'),
       build: async () => events.push('build'),
-      packages: [packages[0]],
+      manifest: manifestForPackages([packages[0]]),
       registryHasVersion: () => false,
       preflight: async () => {
         events.push('preflight');
@@ -384,7 +462,9 @@ test('preflight failure prevents registry lookup, publication, and tag creation'
     publishThenTag({
       validate: async () => events.push('validate'),
       build: async () => events.push('build'),
-      packages: [{ name: '@eq-labs/public', version: '1.2.3', private: false }],
+      manifest: manifestForPackages([
+        { name: '@eq-labs/public', version: '1.2.3', private: false },
+      ]),
       registryHasVersion: () => {
         events.push('registry');
         return false;
@@ -405,14 +485,21 @@ test('preflight failure prevents registry lookup, publication, and tag creation'
 
 test('published packages are verified before tag creation', async () => {
   const events = [];
+  const registry = new Set();
 
   await publishThenTag({
     validate: async () => events.push('validate'),
     build: async () => events.push('build'),
-    packages: [packages[0]],
-    registryHasVersion: () => false,
-    publish: async () => events.push('publish'),
-    verifyPublished: async (pkg) => events.push(`verify:${pkg.name}@${pkg.version}`),
+    manifest: manifestForPackages([packages[0]]),
+    registryHasVersion: (name, version) => registry.has(`${name}@${version}`),
+    publish: async (pkg) => {
+      events.push('publish');
+      registry.add(`${pkg.name}@${pkg.version}`);
+    },
+    verifyPublished: async (pkg) => {
+      assert.equal(registry.has(`${pkg.name}@${pkg.version}`), true);
+      events.push(`verify:${pkg.name}@${pkg.version}`);
+    },
     createTag: async () => events.push('tag'),
   });
 
@@ -432,7 +519,7 @@ test('tag is not created when post-publication verification fails', async () => 
     publishThenTag({
       validate: async () => events.push('validate'),
       build: async () => events.push('build'),
-      packages: [packages[0]],
+      manifest: manifestForPackages([packages[0]]),
       registryHasVersion: () => false,
       publish: async () => events.push('publish'),
       verifyPublished: async () => {
@@ -649,40 +736,30 @@ test('Changesets status rejects invalid release types', () => {
   );
 });
 
-const manifestFixture = () =>
-  createReleaseManifest({
-    baseVersion: '1.0.0',
-    targetVersion: '1.1.0',
-    baseCommit: 'a'.repeat(40),
-    changesetIds: ['calm-exports-glow'],
-    packages: [
-      {
-        name: '@eq-labs/config-vitest',
-        version: '0.2.0',
-        private: true,
-      },
-      {
-        name: '@eq-labs/config-jest',
-        version: '0.2.0',
-        private: true,
-      },
-    ],
-  });
+const manifestFixture = createPublicManifestFixture;
 
 test('release manifest is normalized and includes the real workspace inventory', () => {
   const manifest = manifestFixture();
 
-  assert.equal(manifest.schemaVersion, 1);
-  assert.equal(manifest.releaseId, 'ee-v1.1.0');
-  assert.deepEqual(manifest.changesets, ['calm-exports-glow']);
+  assert.equal(manifest.schemaVersion, 2);
+  assert.equal(manifest.releaseId, 'ee-v1.2.0');
+  assert.deepEqual(manifest.changesets, ['test-release']);
+  assert.deepEqual(manifest.releases, [
+    {
+      name: '@eq-labs/public-new',
+      version: '1.2.0',
+      type: 'minor',
+    },
+  ]);
+
   assert.deepEqual(
     manifest.packages.map(({ name }) => name),
-    ['@eq-labs/config-jest', '@eq-labs/config-vitest'],
+    ['@eq-labs/private', '@eq-labs/public-existing', '@eq-labs/public-new'],
   );
 
   assert.equal(
     validateReleaseManifest(manifest, {
-      expectedVersion: '1.1.0',
+      expectedVersion: '1.2.0',
       workspacePackages: manifest.packages,
     }),
     manifest,
@@ -693,7 +770,7 @@ test('release manifest rejects a target version mismatch', () => {
   assert.throws(
     () =>
       validateReleaseManifest(manifestFixture(), {
-        expectedVersion: '1.2.0',
+        expectedVersion: '9.9.9',
         workspacePackages: manifestFixture().packages,
       }),
     /does not match root version/,
@@ -706,7 +783,7 @@ test('release manifest rejects a workspace inventory mismatch', () => {
   assert.throws(
     () =>
       validateReleaseManifest(manifest, {
-        expectedVersion: '1.1.0',
+        expectedVersion: '1.2.0',
         workspacePackages: [
           ...manifest.packages,
           {
@@ -760,5 +837,1008 @@ test('release manifest rejects invalid base commit and empty Changesets', () => 
         packages: [{ name: '@eq-labs/example', version: '1.1.0', private: true }],
       }),
     /Changeset IDs/,
+  );
+});
+
+test('only planned missing versions are published', async () => {
+  const events = [];
+  const manifest = createPublicManifestFixture();
+
+  const registry = new Set();
+
+  const result = await publishThenTag({
+    manifest,
+    validate: async () => events.push('validate'),
+    build: async () => events.push('build'),
+    registryHasVersion: (name, version) => registry.has(`${name}@${version}`),
+    publish: async (pkg) => {
+      events.push(`publish:${pkg.name}`);
+      registry.add(`${pkg.name}@${pkg.version}`);
+    },
+    verifyPublished: async (pkg) => {
+      events.push(`verify:${pkg.name}`);
+      assert.equal(registry.has(`${pkg.name}@${pkg.version}`), true);
+    },
+    createTag: async () => events.push('tag'),
+  });
+
+  assert.deepEqual(result.published, [{ name: '@eq-labs/public-new', version: '1.2.0' }]);
+
+  assert.equal(events.includes('publish:@eq-labs/public-existing'), false);
+  assert.equal(events.at(-1), 'tag');
+});
+
+test('published planned versions permit tag recovery', async () => {
+  const events = [];
+
+  const result = await publishThenTag({
+    manifest: createPublicManifestFixture(),
+    validate: async () => events.push('validate'),
+    build: async () => events.push('build'),
+    registryHasVersion: () => true,
+    publish: async () => events.push('publish'),
+    verifyPublished: async () => events.push('verify'),
+    createTag: async () => events.push('tag'),
+  });
+
+  assert.deepEqual(result.published, []);
+  assert.deepEqual(events, ['validate', 'build', 'tag']);
+});
+
+test('missing release manifest fails closed', () => {
+  assert.throws(() => getPlannedPublicPackages(undefined), /Missing verified release plan/);
+});
+
+test('target version mismatch is rejected', () => {
+  const manifest = createPublicManifestFixture();
+
+  assert.throws(
+    () =>
+      validateReleaseManifest(manifest, {
+        expectedVersion: '9.9.9',
+        workspacePackages: packages,
+      }),
+    /does not match root version/,
+  );
+});
+
+test('workspace inventory mismatch is rejected', () => {
+  const manifest = createPublicManifestFixture();
+
+  assert.throws(
+    () =>
+      validateReleaseManifest(manifest, {
+        expectedVersion: '1.2.0',
+        workspacePackages: [
+          ...packages,
+          {
+            name: '@eq-labs/unexpected',
+            version: '1.0.0',
+            private: false,
+          },
+        ],
+      }),
+    /inventory does not match/,
+  );
+});
+
+test('unknown package in release plan is rejected', () => {
+  assert.throws(
+    () =>
+      createReleaseManifest({
+        baseVersion: '1.0.0',
+        targetVersion: '1.2.0',
+        baseCommit: 'a'.repeat(40),
+        changesetIds: ['test-release'],
+        releases: [
+          {
+            name: '@eq-labs/unknown',
+            version: '1.2.0',
+            type: 'minor',
+          },
+        ],
+        packages,
+      }),
+    /Planned package not found/,
+  );
+});
+
+test('unplanned public packages are not publish candidates', () => {
+  const manifest = createPublicManifestFixture();
+
+  const planned = getPlannedPublicPackages(manifest);
+
+  assert.deepEqual(
+    planned.map((pkg) => pkg.name),
+    ['@eq-labs/public-new'],
+  );
+});
+
+test('remote tag conflict is detected', () => {
+  const result = inspectRemoteReleaseTag({
+    tag: 'v1.2.0',
+    expectedCommit: 'a'.repeat(40),
+    remoteTagRefs: () => `${'b'.repeat(40)}\trefs/tags/v1.2.0`,
+  });
+
+  assert.equal(result.state, 'conflict');
+});
+
+test('remote tag lookup error propagates', () => {
+  assert.throws(
+    () =>
+      inspectRemoteReleaseTag({
+        tag: 'v1.2.0',
+        expectedCommit: 'a'.repeat(40),
+        remoteTagRefs: () => {
+          throw new Error('simulated network failure');
+        },
+      }),
+    /simulated network failure/,
+  );
+});
+
+test('failed tag push can recover without republishing npm packages', async () => {
+  const events = [];
+  const registry = new Set();
+  const manifest = createPublicManifestFixture();
+
+  const tag = 'v1.2.0';
+  const commit = 'a'.repeat(40);
+
+  let remoteTagCommit = null;
+  let failPush = true;
+
+  const plannedPackages = getPlannedPublicPackages(manifest);
+
+  const registryHasVersion = (name, version) => registry.has(`${name}@${version}`);
+
+  const inspectTag = () =>
+    inspectRemoteReleaseTag({
+      tag,
+      expectedCommit: commit,
+      remoteTagRefs: () => (remoteTagCommit ? `${remoteTagCommit}\trefs/tags/${tag}` : ''),
+    });
+
+  const runRelease = async () => {
+    const remoteState = inspectTag();
+
+    if (remoteState.state === 'conflict') {
+      throw new Error('Remote tag conflict');
+    }
+
+    if (remoteState.state === 'matches') {
+      await verifyCompletedRelease({
+        tag,
+        version: '1.2.0',
+        packages: plannedPackages,
+        validate: async () => events.push('validate'),
+        build: async () => events.push('build'),
+        registryHasVersion,
+      });
+
+      return;
+    }
+
+    await publishThenTag({
+      manifest,
+      validate: async () => events.push('validate'),
+      build: async () => events.push('build'),
+      registryHasVersion,
+      preflight: async () => {
+        assert.equal(inspectTag().state, 'absent');
+      },
+      publish: async (pkg) => {
+        events.push(`publish:${pkg.name}`);
+        registry.add(`${pkg.name}@${pkg.version}`);
+      },
+      verifyPublished: async (pkg) => {
+        events.push(`verify:${pkg.name}`);
+        assert.equal(registryHasVersion(pkg.name, pkg.version), true);
+      },
+      createTag: async () => {
+        events.push('create-local-tag');
+      },
+    });
+
+    events.push('push-tag');
+
+    if (failPush) {
+      throw new Error('simulated Git push failure');
+    }
+
+    remoteTagCommit = commit;
+
+    assert.equal(inspectTag().state, 'matches');
+  };
+
+  // First attempt: npm succeeds, but pushing the tag fails.
+  await assert.rejects(runRelease(), /simulated Git push failure/);
+
+  assert.equal(inspectTag().state, 'absent');
+
+  for (const pkg of plannedPackages) {
+    assert.equal(registryHasVersion(pkg.name, pkg.version), true);
+  }
+
+  const firstAttemptPublications = events.filter((event) => event.startsWith('publish:'));
+
+  assert.equal(firstAttemptPublications.length, plannedPackages.length);
+
+  assert.equal(events.includes('create-local-tag'), true);
+  assert.equal(events.includes('push-tag'), true);
+
+  // Second attempt: remote tag is absent, but npm is complete.
+  failPush = false;
+  events.length = 0;
+
+  await runRelease();
+
+  assert.deepEqual(events, ['validate', 'build', 'create-local-tag', 'push-tag']);
+
+  assert.equal(inspectTag().state, 'matches');
+
+  // Third attempt: the remote release is already complete.
+  events.length = 0;
+
+  await runRelease();
+
+  assert.deepEqual(events, ['validate', 'build']);
+
+  assert.equal(registry.size, plannedPackages.length);
+});
+
+function createPreparationOperations(events, failAt = null) {
+  const names = [
+    'createBranch',
+    'versionPackages',
+    'synchronizeVersion',
+    'prepareManifest',
+    'validate',
+    'build',
+    'stage',
+    'commit',
+  ];
+
+  return Object.fromEntries(
+    names.map((name) => [
+      name,
+      async () => {
+        events.push(name);
+
+        if (name === failAt) {
+          throw new Error(`simulated ${name} failure`);
+        }
+      },
+    ]),
+  );
+}
+
+test('version-packages failure stops preparation before commit', async () => {
+  const events = [];
+
+  await assert.rejects(
+    runReleasePreparation(createPreparationOperations(events, 'versionPackages')),
+    /Release preparation failed at versionPackages/,
+  );
+
+  assert.deepEqual(events, ['createBranch', 'versionPackages']);
+
+  assert.equal(events.includes('commit'), false);
+  assert.equal(events.includes('stage'), false);
+});
+
+test('validation failure does not repeat versioning or commit', async () => {
+  const events = [];
+
+  await assert.rejects(
+    runReleasePreparation(createPreparationOperations(events, 'validate')),
+    /Release preparation failed at validate/,
+  );
+
+  assert.deepEqual(events, [
+    'createBranch',
+    'versionPackages',
+    'synchronizeVersion',
+    'prepareManifest',
+    'validate',
+  ]);
+
+  assert.equal(events.filter((event) => event === 'versionPackages').length, 1);
+
+  assert.equal(events.includes('commit'), false);
+  assert.equal(events.includes('stage'), false);
+});
+
+test('build failure prevents staging and commit', async () => {
+  const events = [];
+
+  await assert.rejects(
+    runReleasePreparation(createPreparationOperations(events, 'build')),
+    /Release preparation failed at build/,
+  );
+
+  assert.deepEqual(events, [
+    'createBranch',
+    'versionPackages',
+    'synchronizeVersion',
+    'prepareManifest',
+    'validate',
+    'build',
+  ]);
+
+  assert.equal(events.includes('stage'), false);
+  assert.equal(events.includes('commit'), false);
+});
+
+test('successful preparation runs all steps in order', async () => {
+  const events = [];
+
+  await runReleasePreparation(createPreparationOperations(events));
+
+  assert.deepEqual(events, [
+    'createBranch',
+    'versionPackages',
+    'synchronizeVersion',
+    'prepareManifest',
+    'validate',
+    'build',
+    'stage',
+    'commit',
+  ]);
+});
+
+test('an invalid operation fails before creating a branch', async () => {
+  const events = [];
+  const operations = createPreparationOperations(events);
+
+  operations.versionPackages = null;
+
+  await assert.rejects(runReleasePreparation(operations), /versionPackages must be a function/);
+
+  assert.deepEqual(events, []);
+});
+
+test('root version change without manifest change is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseTrigger({
+        previousVersion: '1.0.0',
+        currentVersion: '1.2.0',
+        manifestChanged: false,
+        manifest: createPublicManifestFixture(),
+      }),
+    /without a new release manifest/,
+  );
+});
+
+test('release manifest with an incorrect base version is rejected', () => {
+  const manifest = createPublicManifestFixture();
+
+  assert.throws(
+    () =>
+      validateReleaseTrigger({
+        previousVersion: '1.1.0',
+        currentVersion: '1.2.0',
+        manifestChanged: true,
+        manifest,
+      }),
+    /Release base version mismatch/,
+  );
+});
+
+test('release manifest with an incorrect target version is rejected', () => {
+  const manifest = createPublicManifestFixture();
+
+  assert.throws(
+    () =>
+      validateReleaseTrigger({
+        previousVersion: '1.0.0',
+        currentVersion: '1.3.0',
+        manifestChanged: true,
+        manifest,
+      }),
+    /Release target version mismatch/,
+  );
+});
+
+test('valid prepared release transition is accepted', () => {
+  const manifest = createPublicManifestFixture();
+
+  const result = validateReleaseTrigger({
+    previousVersion: '1.0.0',
+    currentVersion: '1.2.0',
+    manifestChanged: true,
+    manifest,
+  });
+
+  assert.equal(result.previousVersion, '1.0.0');
+  assert.equal(result.currentVersion, '1.2.0');
+
+  assert.deepEqual(
+    result.publicPackages.map((pkg) => pkg.name),
+    ['@eq-labs/public-new'],
+  );
+});
+
+test('valid release plan excludes unrelated public packages', () => {
+  const manifest = createPublicManifestFixture();
+
+  const result = validateReleaseTrigger({
+    previousVersion: '1.0.0',
+    currentVersion: '1.2.0',
+    manifestChanged: true,
+    manifest,
+  });
+
+  assert.equal(
+    result.publicPackages.some((pkg) => pkg.name === '@eq-labs/public-existing'),
+    false,
+  );
+
+  assert.equal(result.publicPackages.length, 1);
+});
+
+test('release source plan matching the manifest is accepted', () => {
+  const manifest = createPublicManifestFixture();
+
+  const result = validateReleaseSourcePlan({
+    manifest,
+    sourcePlan: {
+      changesetIds: ['test-release'],
+      releases: [
+        {
+          name: '@eq-labs/public-new',
+          type: 'minor',
+        },
+      ],
+    },
+  });
+
+  assert.deepEqual(result.changesetIds, ['test-release']);
+  assert.equal(result.publicPackages.length, 1);
+});
+
+test('missing independent source plan is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseSourcePlan({
+        manifest: createPublicManifestFixture(),
+      }),
+    /Missing independent Changesets source plan/,
+  );
+});
+
+test('unknown Changeset ID is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseSourcePlan({
+        manifest: createPublicManifestFixture(),
+        sourcePlan: {
+          changesetIds: ['different-changeset'],
+          releases: [
+            {
+              name: '@eq-labs/public-new',
+              type: 'minor',
+            },
+          ],
+        },
+      }),
+    /Changeset IDs do not match/,
+  );
+});
+
+test('unapproved package is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseSourcePlan({
+        manifest: createPublicManifestFixture(),
+        sourcePlan: {
+          changesetIds: ['test-release'],
+          releases: [
+            {
+              name: '@eq-labs/other-package',
+              type: 'minor',
+            },
+          ],
+        },
+      }),
+    /package releases do not match/,
+  );
+});
+
+test('release type mismatch is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseSourcePlan({
+        manifest: createPublicManifestFixture(),
+        sourcePlan: {
+          changesetIds: ['test-release'],
+          releases: [
+            {
+              name: '@eq-labs/public-new',
+              type: 'patch',
+            },
+          ],
+        },
+      }),
+    /package releases do not match/,
+  );
+});
+
+test('Git base Changeset inventory matches manifest', () => {
+  const manifest = createPublicManifestFixture();
+
+  const result = validateReleaseChangesetFiles({
+    manifest,
+    baseFiles: ['.changeset/README.md', '.changeset/test-release.md'],
+  });
+
+  assert.deepEqual(result, ['test-release']);
+});
+
+test('missing Changeset in Git base is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseChangesetFiles({
+        manifest: createPublicManifestFixture(),
+        baseFiles: ['.changeset/README.md'],
+      }),
+    /Changeset IDs do not match Git base files/,
+  );
+});
+
+test('extra Changeset in Git base is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseChangesetFiles({
+        manifest: createPublicManifestFixture(),
+        baseFiles: ['.changeset/test-release.md', '.changeset/unapproved-release.md'],
+      }),
+    /Changeset IDs do not match Git base files/,
+  );
+});
+
+test('unexpected nested Changeset file is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseChangesetFiles({
+        manifest: createPublicManifestFixture(),
+        baseFiles: ['.changeset/test-release.md', '.changeset/nested/extra.md'],
+      }),
+    /Unexpected Changeset source file/,
+  );
+});
+
+test('invalid Git source inventory is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseChangesetFiles({
+        manifest: createPublicManifestFixture(),
+        baseFiles: null,
+      }),
+    /Invalid Git base Changeset file inventory/,
+  );
+});
+
+test('Git base root version matches manifest', () => {
+  const manifest = createPublicManifestFixture();
+
+  const result = validateReleaseBaseVersion({
+    manifest,
+    basePackageJson: JSON.stringify({
+      name: '@eq-labs/ee-monorepo',
+      version: '1.0.0',
+    }),
+  });
+
+  assert.equal(result, '1.0.0');
+});
+
+test('altered manifest base version is rejected', () => {
+  const manifest = createPublicManifestFixture();
+
+  assert.throws(
+    () =>
+      validateReleaseBaseVersion({
+        manifest,
+        basePackageJson: JSON.stringify({
+          name: '@eq-labs/ee-monorepo',
+          version: '0.9.0',
+        }),
+      }),
+    /Release base version mismatch/,
+  );
+});
+
+test('invalid Git base package JSON is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseBaseVersion({
+        manifest: createPublicManifestFixture(),
+        basePackageJson: '{invalid',
+      }),
+    /Invalid Git base package.json/,
+  );
+});
+
+test('missing Git base package version is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseBaseVersion({
+        manifest: createPublicManifestFixture(),
+        basePackageJson: JSON.stringify({
+          name: '@eq-labs/ee-monorepo',
+        }),
+      }),
+    /Invalid Git base package version/,
+  );
+});
+
+test('original Changeset package and type match manifest', () => {
+  const result = validateReleaseChangesetContent({
+    manifest: createPublicManifestFixture(),
+    sourceFiles: {
+      'test-release': [
+        '---',
+        '"@eq-labs/public-new": minor',
+        '---',
+        '',
+        'Release description.',
+      ].join('\n'),
+    },
+  });
+
+  assert.deepEqual(result.declaredReleases, [{ name: '@eq-labs/public-new', type: 'minor' }]);
+});
+
+test('missing original Changeset content is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseChangesetContent({
+        manifest: createPublicManifestFixture(),
+        sourceFiles: {},
+      }),
+    /content inventory does not match/,
+  );
+});
+
+test('unapproved package in original Changeset is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseChangesetContent({
+        manifest: createPublicManifestFixture(),
+        sourceFiles: {
+          'test-release': [
+            '---',
+            '"@eq-labs/other-package": minor',
+            '---',
+            '',
+            'Release description.',
+          ].join('\n'),
+        },
+      }),
+    /Changeset source release mismatch/,
+  );
+});
+
+test('original major release cannot be downgraded', () => {
+  assert.throws(
+    () =>
+      validateReleaseChangesetContent({
+        manifest: createPublicManifestFixture(),
+        sourceFiles: {
+          'test-release': [
+            '---',
+            '"@eq-labs/public-new": major',
+            '---',
+            '',
+            'Release description.',
+          ].join('\n'),
+        },
+      }),
+    /requires major/,
+  );
+});
+
+test('malformed Changeset frontmatter is rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseChangesetContent({
+        manifest: createPublicManifestFixture(),
+        sourceFiles: {
+          'test-release': 'Invalid Markdown without frontmatter',
+        },
+      }),
+    /Invalid Changeset frontmatter/,
+  );
+});
+
+test('duplicate package keys in Changeset are rejected', () => {
+  assert.throws(
+    () =>
+      validateReleaseChangesetContent({
+        manifest: createPublicManifestFixture(),
+        sourceFiles: {
+          'test-release': [
+            '---',
+            '"@eq-labs/public-new": patch',
+            '"@eq-labs/public-new": minor',
+            '---',
+            '',
+            'Release description.',
+          ].join('\n'),
+        },
+      }),
+    /Unable to parse Changeset frontmatter/,
+  );
+});
+
+test('effective Changesets releases are normalized', () => {
+  const result = parseEffectiveChangesetsPlan({
+    releases: [
+      {
+        name: '@eq-labs/package-b',
+        type: 'patch',
+        oldVersion: '1.0.0',
+        newVersion: '1.0.1',
+      },
+      {
+        name: '@eq-labs/package-a',
+        type: 'minor',
+        oldVersion: '1.0.0',
+        newVersion: '1.1.0',
+      },
+    ],
+  });
+
+  assert.deepEqual(result, [
+    {
+      name: '@eq-labs/package-a',
+      version: '1.1.0',
+      type: 'minor',
+    },
+    {
+      name: '@eq-labs/package-b',
+      version: '1.0.1',
+      type: 'patch',
+    },
+  ]);
+});
+
+test('effective releases include dependency-derived packages', () => {
+  const result = parseEffectiveChangesetsPlan({
+    changesets: [
+      {
+        id: 'test-release',
+        releases: [{ name: '@eq-labs/package-a', type: 'minor' }],
+      },
+    ],
+    releases: [
+      {
+        name: '@eq-labs/package-a',
+        type: 'minor',
+        newVersion: '1.1.0',
+      },
+      {
+        name: '@eq-labs/dependent',
+        type: 'patch',
+        newVersion: '2.0.1',
+      },
+    ],
+  });
+
+  assert.deepEqual(
+    result.map(({ name }) => name),
+    ['@eq-labs/dependent', '@eq-labs/package-a'],
+  );
+});
+
+test('missing effective release plan is rejected', () => {
+  assert.throws(
+    () => parseEffectiveChangesetsPlan({ changesets: [] }),
+    /Missing effective Changesets release plan/,
+  );
+});
+
+test('empty effective release plan is rejected', () => {
+  assert.throws(
+    () => parseEffectiveChangesetsPlan({ releases: [] }),
+    /Effective Changesets release plan is empty/,
+  );
+});
+
+test('duplicate effective package releases are rejected', () => {
+  assert.throws(
+    () =>
+      parseEffectiveChangesetsPlan({
+        releases: [
+          {
+            name: '@eq-labs/package-a',
+            type: 'minor',
+            newVersion: '1.1.0',
+          },
+          {
+            name: '@eq-labs/package-a',
+            type: 'patch',
+            newVersion: '1.0.1',
+          },
+        ],
+      }),
+    /Duplicate package in effective Changesets plan/,
+  );
+});
+
+test('malformed effective version is rejected', () => {
+  assert.throws(
+    () =>
+      parseEffectiveChangesetsPlan({
+        releases: [
+          {
+            name: '@eq-labs/package-a',
+            type: 'minor',
+            newVersion: 'not-a-version',
+          },
+        ],
+      }),
+    /Invalid effective Changesets release entry/,
+  );
+});
+
+test('effective versions match the versioned workspace', () => {
+  const releases = [
+    { name: '@eq-labs/package-a', version: '1.1.0', type: 'minor' },
+    { name: '@eq-labs/dependent', version: '2.0.1', type: 'patch' },
+  ];
+
+  const result = validateEffectiveReleaseVersions({
+    effectiveReleases: releases,
+    workspacePackages: [
+      { name: '@eq-labs/package-a', version: '1.1.0', private: false },
+      { name: '@eq-labs/dependent', version: '2.0.1', private: false },
+    ],
+  });
+
+  assert.deepEqual(result, releases);
+});
+
+test('altered versioned package is rejected', () => {
+  assert.throws(
+    () =>
+      validateEffectiveReleaseVersions({
+        effectiveReleases: [{ name: '@eq-labs/package-a', version: '1.1.0', type: 'minor' }],
+        workspacePackages: [{ name: '@eq-labs/package-a', version: '1.0.0', private: false }],
+      }),
+    /Effective Changesets version mismatch/,
+  );
+});
+
+test('missing dependency-derived package is rejected', () => {
+  assert.throws(
+    () =>
+      validateEffectiveReleaseVersions({
+        effectiveReleases: [{ name: '@eq-labs/dependent', version: '2.0.1', type: 'patch' }],
+        workspacePackages: [{ name: '@eq-labs/package-a', version: '1.1.0', private: false }],
+      }),
+    /Effective Changesets package missing from workspace/,
+  );
+});
+
+test('duplicate effective release is rejected', () => {
+  assert.throws(
+    () =>
+      validateEffectiveReleaseVersions({
+        effectiveReleases: [
+          { name: '@eq-labs/package-a', version: '1.1.0', type: 'minor' },
+          { name: '@eq-labs/package-a', version: '1.1.0', type: 'minor' },
+        ],
+        workspacePackages: [{ name: '@eq-labs/package-a', version: '1.1.0', private: false }],
+      }),
+    /Duplicate effective release/,
+  );
+});
+
+test('empty effective plan is rejected before manifest creation', () => {
+  assert.throws(
+    () =>
+      validateEffectiveReleaseVersions({
+        effectiveReleases: [],
+        workspacePackages: [],
+      }),
+    /Missing effective Changesets releases/,
+  );
+});
+
+test('independent effective plan matches manifest exactly', () => {
+  const manifest = createPublicManifestFixture();
+
+  const result = validateEffectiveSourcePlan({
+    manifest,
+    changesetIds: ['test-release'],
+    effectiveReleases: [
+      {
+        name: '@eq-labs/public-new',
+        version: '1.2.0',
+        type: 'minor',
+      },
+    ],
+  });
+
+  assert.deepEqual(result.releases, manifest.releases);
+});
+
+test('effective source version mismatch is rejected', () => {
+  assert.throws(
+    () =>
+      validateEffectiveSourcePlan({
+        manifest: createPublicManifestFixture(),
+        changesetIds: ['test-release'],
+        effectiveReleases: [
+          {
+            name: '@eq-labs/public-new',
+            version: '1.3.0',
+            type: 'minor',
+          },
+        ],
+      }),
+    /release plan does not match prepared manifest/,
+  );
+});
+
+test('unplanned derived release is rejected', () => {
+  assert.throws(
+    () =>
+      validateEffectiveSourcePlan({
+        manifest: createPublicManifestFixture(),
+        changesetIds: ['test-release'],
+        effectiveReleases: [
+          {
+            name: '@eq-labs/public-new',
+            version: '1.2.0',
+            type: 'minor',
+          },
+          {
+            name: '@eq-labs/dependent',
+            version: '1.0.1',
+            type: 'patch',
+          },
+        ],
+      }),
+    /release plan does not match prepared manifest/,
+  );
+});
+
+test('missing effective source release is rejected', () => {
+  assert.throws(
+    () =>
+      validateEffectiveSourcePlan({
+        manifest: createPublicManifestFixture(),
+        changesetIds: ['test-release'],
+        effectiveReleases: [],
+      }),
+    /Missing independent effective Changesets releases/,
+  );
+});
+
+test('duplicate effective source release is rejected', () => {
+  assert.throws(
+    () =>
+      validateEffectiveSourcePlan({
+        manifest: createPublicManifestFixture(),
+        changesetIds: ['test-release'],
+        effectiveReleases: [
+          {
+            name: '@eq-labs/public-new',
+            version: '1.2.0',
+            type: 'minor',
+          },
+          {
+            name: '@eq-labs/public-new',
+            version: '1.2.0',
+            type: 'minor',
+          },
+        ],
+      }),
+    /Invalid independent effective Changesets releases/,
   );
 });

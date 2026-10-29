@@ -281,6 +281,8 @@ Validación integral, matriz de conformidad §04–§12, cierre del ciclo IMP.
 
 ## 11. Alineación con EE-DOC-011
 
+La siguiente matriz recoge la conformidad documentada durante el cierre original del ciclo P01–P05. Sus resultados corresponden al alcance y a las evidencias disponibles en aquel momento. La evolución posterior de A-REL asociada a **PN-021** se describe separadamente en §13.3 y requiere su propia verificación frente al contrato normativo actualizado.
+
 | Elemento normativo         | Estado as-built                    | Clasificación                  |
 | :------------------------- | :--------------------------------- | :----------------------------- |
 | §04.2 Comandos root        | 14/14 presentes                    | ✅ Cumple                      |
@@ -335,21 +337,74 @@ Validación integral, matriz de conformidad §04–§12, cierre del ciclo IMP.
 > Este TEC es **apto como entrada a la Validación Final** de EE-DOC-011.  
 > Pendientes legítimos (no bloquean el TEC): **EE-DOC-012**, D-P04-005, D-P04-006.
 
+### 13.3. Evolución as-built posterior — PN-021: Integridad del release
+
+La evolución asociada al pendiente de auditoría **PN-021** introduce una frontera de integridad entre la preparación del release y su finalización post-merge. El objetivo arquitectónico es impedir que una ejecución de publicación dependa exclusivamente de información declarada durante la preparación, sin poder verificar su correspondencia con el estado autorizado. Los controles de ejecución y permisos de GitHub asociados se relacionan con **PN-030** y pertenecen a EE-DOC-007.
+
+#### 13.3.1. Componentes y responsabilidades
+
+| Componente lógico          | Responsabilidad                                                                                                     |
+| :------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| Preparación del release    | Producir cambios de versionado revisables y registrar la procedencia del plan                                       |
+| Contrato de procedencia    | Asociar el plan de release con la versión objetivo, el estado de origen y los Changesets correspondientes           |
+| Verificación independiente | Reconstruir el plan esperado a partir de su origen y comprobar que coincide con el plan declarado                   |
+| Evaluación de publicación  | Limitar las operaciones npm a las versiones públicas comprendidas en el plan autorizado y pendientes en el registro |
+| Finalización del release   | Verificar las condiciones exigidas antes de publicar y establecer el tag final                                      |
+| Recuperación               | Reconciliar el estado remoto sin repetir publicaciones ni sustituir tags inconsistentes                             |
+
+#### 13.3.2. Flujo de integridad
+
+```mermaid
+flowchart TD
+    A[Preparación revisable] --> B[Plan y procedencia del release]
+    B --> C[Integración autorizada]
+    C --> D[Verificación de procedencia]
+    D --> E[Reconstrucción independiente del plan]
+    E --> F{¿Coinciden los planes?}
+    F -->|No| X[Bloquear publicación]
+    F -->|Sí| G[Validación y build]
+    G --> H[Verificación final de precondiciones]
+    H --> I[Evaluación del estado npm]
+    I --> J[Publicación pendiente autorizada]
+    J --> K[Tag final]
+```
+
+La reconstrucción independiente utiliza el estado histórico correspondiente al origen del release y debe aislar sus operaciones del árbol de trabajo que será publicado. La comprobación se realiza antes de autorizar efectos remotos.
+
+#### 13.3.3. Invariantes arquitectónicas
+
+1. El plan de publicación debe proceder de una preparación identificable y autorizada.
+2. La declaración de procedencia no es suficiente sin una comprobación independiente de integridad.
+3. La publicación no puede incluir versiones públicas ajenas al plan autorizado.
+4. La existencia previa de una versión npm debe tratarse como estado remoto que requiere reconciliación, no como autorización para modificarla.
+5. Las operaciones de validación que puedan alterar el árbol de trabajo exigen verificar nuevamente las precondiciones de limpieza antes de publicar.
+6. El tag no puede sustituirse ni moverse silenciosamente.
+7. Los estados ambiguos o inconsistentes deben bloquear la finalización automática.
+
+#### 13.3.4. Límites de conformidad
+
+La arquitectura as-built incorpora controles de procedencia e integridad, pero su conformidad transversal permanece sujeta a la resolución de **PN-021** y a la verificación de los criterios aplicables. En particular, debe reconciliarse el tratamiento de releases sin paquetes públicos planificados con el contrato normativo de EE-DOC-011 §08.2. Este apartado no establece por sí mismo una nueva política de publicación.
+
+La configuración efectiva de permisos, credenciales y protección de tags pertenece a GitHub Governance y debe documentarse en su superficie técnica correspondiente. La existencia de un diseño de publicación no constituye evidencia de publicación real ni de configuración OIDC activa.
+
+El dictamen histórico de §13.2 permanece referido a la consolidación original de EE-DOC-011. Esta evolución posterior requiere su propia trazabilidad y verificación, sin reabrir ficticiamente las validaciones de octubre de 2026.
+
 ---
 
 ## 14. Referencias
 
-| Código             | Documento                        |
-| :----------------- | :------------------------------- |
-| EE-DOC-002         | Document Design Template (§18.4) |
-| EE-DOC-005         | Development Workflow             |
-| EE-DOC-006         | Repository Structure             |
-| EE-DOC-007         | GitHub Governance                |
-| EE-DOC-010         | Quality Gates                    |
-| EE-DOC-011         | Automation (padre)               |
-| EE-IMP-011-P01…P05 | Fases de implementación          |
-| EE-ADR-001         | Workspace Task Orchestration     |
-| EE-ADR-003         | Node 24 LTS                      |
+| Código                  | Documento                                      |
+| :---------------------- | :--------------------------------------------- |
+| EE-DOC-002              | Document Design Template (§18.4)               |
+| EE-DOC-005              | Development Workflow                           |
+| EE-DOC-006              | Repository Structure                           |
+| EE-DOC-007              | GitHub Governance                              |
+| EE-DOC-010              | Quality Gates                                  |
+| EE-DOC-011              | Automation (padre)                             |
+| EE-IMP-011-P01…P05      | Fases de implementación                        |
+| EE-ADR-001              | Workspace Task Orchestration                   |
+| EE-ADR-003              | Node 24 LTS                                    |
+| EE-AUDIT-Rules_Emerging | Backlog canónico de auditoría; PN-021 y PN-030 |
 
 ---
 
