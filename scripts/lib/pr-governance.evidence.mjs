@@ -86,12 +86,17 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
       ) {
         throw new TypeError('Malformed submitted review timestamp');
       }
+      if (review.body != null && typeof review.body !== 'string') {
+        throw new TypeError('Malformed GitHub review body');
+      }
+
       return {
         login: review.user.login,
         state: review.state,
         submittedAt: review.submitted_at,
         commitId: review.commit_id,
         sequence,
+        body: review.body ?? '',
       };
     })
     .filter(Boolean);
@@ -102,6 +107,14 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
     }
     return file.filename;
   });
+
+  // Detect review changes while collecting evidence.
+  // This is a consistency check, not an atomic GitHub snapshot.
+  const confirmedReviews = await collect('reviews', 10000);
+
+  if (JSON.stringify(confirmedReviews) !== JSON.stringify(reviews)) {
+    throw new Error('Pull request reviews changed while collecting governance evidence');
+  }
 
   const currentPr = await getJson(base);
 
@@ -123,5 +136,124 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
     reviews: normalizedReviews,
     // Evidence snapshot only. Must re-check at merge; never treat as authoritative.
     advisoryOnly: true,
+  };
+}
+
+export async function readReviewerRepositoryPermission({
+  owner,
+  repo,
+  number,
+  reviewer,
+  token,
+  fetchImpl = fetch,
+}) {
+  assertRepository(owner, repo, number);
+
+  if (!LOGIN.test(reviewer ?? '') || typeof token !== 'string' || !token) {
+    throw new TypeError('Invalid reviewer permission request');
+  }
+
+  if (typeof fetchImpl !== 'function') {
+    throw new TypeError('A fetch function is required');
+  }
+
+  const url = `https://api.github.com/repos/${owner}/${repo}/collaborators/${reviewer}/permission`;
+
+  const response = await fetchImpl(url, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`GitHub reviewer permission request returned HTTP ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  if (
+    !result ||
+    typeof result !== 'object' ||
+    typeof result.permission !== 'string' ||
+    typeof result.role_name !== 'string' ||
+    result.user?.login?.toLowerCase() !== reviewer.toLowerCase()
+  ) {
+    throw new TypeError('Malformed GitHub reviewer permission response');
+  }
+
+  const permission = result.permission.toLowerCase();
+
+  if (!['admin', 'write', 'read', 'none'].includes(permission)) {
+    throw new TypeError('Unsupported GitHub reviewer permission');
+  }
+
+  return {
+    reviewer: reviewer.toLowerCase(),
+    permission,
+    roleName: result.role_name,
+    hasWriteAccess: permission === 'admin' || permission === 'write',
+  };
+}
+
+export async function readReviewerTeamMembership({
+  owner,
+  teamSlug,
+  reviewer,
+  token,
+  fetchImpl = fetch,
+}) {
+  if (
+    !LOGIN.test(owner ?? '') ||
+    !/^[a-z\d_-]+$/i.test(teamSlug ?? '') ||
+    !LOGIN.test(reviewer ?? '') ||
+    typeof token !== 'string' ||
+    !token ||
+    typeof fetchImpl !== 'function'
+  ) {
+    throw new TypeError('Invalid reviewer team membership request');
+  }
+
+  const url = `https://api.github.com/orgs/${owner}/teams/${teamSlug}` + `/memberships/${reviewer}`;
+
+  const response = await fetchImpl(url, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+
+  if (response.status === 404) {
+    return {
+      reviewer: reviewer.toLowerCase(),
+      teamSlug,
+      active: false,
+      role: null,
+    };
+  }
+
+  if (!response.ok) {
+    throw new Error(`GitHub team membership request returned HTTP ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  if (
+    !result ||
+    !['active', 'pending'].includes(result.state) ||
+    !['member', 'maintainer'].includes(result.role)
+  ) {
+    throw new TypeError('Malformed GitHub team membership response');
+  }
+
+  return {
+    reviewer: reviewer.toLowerCase(),
+    teamSlug,
+    active: result.state === 'active',
+    role: result.role,
   };
 }

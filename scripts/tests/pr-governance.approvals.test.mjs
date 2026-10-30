@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { evaluatePrApprovals } from '../lib/pr-governance.approvals.mjs';
+import { evaluatePrApprovals, evaluateReviewerAuthority } from '../lib/pr-governance.approvals.mjs';
 
 const sha = 'a'.repeat(40);
 const review = (
@@ -98,4 +98,139 @@ test('review ordering uses submission time rather than input position', () => {
 
   assert.equal(result.status, 'BLOCKED');
   assert.equal(result.approvedCount, 0);
+});
+
+test('approval details reflect only the latest review per reviewer', () => {
+  const result = run([
+    {
+      ...review('reviewer', 'APPROVED', sha, '2026-10-28T10:00:00Z', 0),
+      body: 'EE-LABS-IMPACT: ORDINARY',
+    },
+    {
+      ...review('reviewer', 'APPROVED', sha, '2026-10-28T11:00:00Z', 1),
+      body: '',
+    },
+  ]);
+
+  assert.equal(result.status, 'PASS');
+  assert.deepEqual(result.approvedReviewDetails, [
+    {
+      reviewer: 'reviewer',
+      commitId: sha,
+      body: '',
+    },
+  ]);
+});
+
+const authorityEvidence = () => ({
+  candidate: {
+    reviewer: 'reviewer',
+    hasWriteAccess: true,
+  },
+  approvedReviewers: ['reviewer'],
+  responsibleTeams: ['maintainers'],
+  memberships: [
+    {
+      reviewer: 'reviewer',
+      teamSlug: 'maintainers',
+      active: true,
+    },
+  ],
+});
+
+test('matches independent approval and active responsible membership', () => {
+  const result = evaluateReviewerAuthority(authorityEvidence());
+
+  assert.equal(result.status, 'ELIGIBLE_EVIDENCE');
+  assert.deepEqual(result.matchedTeams, ['maintainers']);
+});
+
+test('reviewer without current approval is not eligible', () => {
+  const result = evaluateReviewerAuthority({
+    ...authorityEvidence(),
+    approvedReviewers: [],
+  });
+
+  assert.equal(result.status, 'UNVERIFIED');
+  assert.equal(result.reason, 'current-approval-not-verified');
+});
+
+test('read-only reviewer is not eligible', () => {
+  const result = evaluateReviewerAuthority({
+    ...authorityEvidence(),
+    candidate: {
+      reviewer: 'reviewer',
+      hasWriteAccess: false,
+    },
+  });
+
+  assert.equal(result.status, 'UNVERIFIED');
+  assert.equal(result.reason, 'repository-write-access-required');
+});
+
+test('unverified ownership cannot establish reviewer authority', () => {
+  const result = evaluateReviewerAuthority({
+    ...authorityEvidence(),
+    responsibleTeams: [],
+  });
+
+  assert.equal(result.status, 'UNVERIFIED');
+  assert.equal(result.reason, 'responsible-ownership-not-verified');
+});
+
+test('membership in an unrelated team is insufficient', () => {
+  const result = evaluateReviewerAuthority({
+    ...authorityEvidence(),
+    memberships: [
+      {
+        reviewer: 'reviewer',
+        teamSlug: 'contributors',
+        active: true,
+      },
+    ],
+  });
+
+  assert.equal(result.status, 'UNVERIFIED');
+  assert.deepEqual(result.matchedTeams, []);
+});
+
+test('pending membership cannot establish authority', () => {
+  const result = evaluateReviewerAuthority({
+    ...authorityEvidence(),
+    memberships: [
+      {
+        reviewer: 'reviewer',
+        teamSlug: 'maintainers',
+        active: false,
+      },
+    ],
+  });
+
+  assert.equal(result.status, 'UNVERIFIED');
+});
+
+test('another users team membership cannot establish authority', () => {
+  const result = evaluateReviewerAuthority({
+    ...authorityEvidence(),
+    memberships: [
+      {
+        reviewer: 'another-user',
+        teamSlug: 'maintainers',
+        active: true,
+      },
+    ],
+  });
+
+  assert.equal(result.status, 'UNVERIFIED');
+});
+
+test('malformed authority evidence is rejected', () => {
+  assert.throws(
+    () =>
+      evaluateReviewerAuthority({
+        ...authorityEvidence(),
+        memberships: [{ teamSlug: 'maintainers', active: true }],
+      }),
+    TypeError,
+  );
 });

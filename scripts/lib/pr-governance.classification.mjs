@@ -49,6 +49,7 @@ export function classifyCriticalChange(paths) {
     }
   }
   return {
+    status: reasons.length > 0 ? 'CRITICAL' : 'PENDING_REVIEW',
     criticalIndicatorsPresent: reasons.length > 0,
     requiresImpactReview: true,
     reasons,

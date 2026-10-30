@@ -42,3 +42,30 @@ test('rejects invalid and unsafe inputs', () => {
   assert.throws(() => classifyCriticalChange(['../.github/ci.yml']), TypeError);
   assert.throws(() => classifyCriticalChange(['/etc/passwd']), TypeError);
 });
+
+test('critical indicators produce an explicit CRITICAL status', () => {
+  const result = classifyCriticalChange(['.github/workflows/release.yml']);
+
+  assert.equal(result.status, 'CRITICAL');
+  assert.equal(result.criticalIndicatorsPresent, true);
+  assert.equal(result.requiresImpactReview, true);
+});
+
+test('absence of critical indicators never proves ordinary impact', () => {
+  const result = classifyCriticalChange(['apps/dashboard/src/main.ts']);
+
+  assert.equal(result.status, 'PENDING_REVIEW');
+  assert.equal(result.criticalIndicatorsPresent, false);
+  assert.equal(result.requiresImpactReview, true);
+});
+
+test('mixed changes cannot downgrade a critical classification', () => {
+  const result = classifyCriticalChange([
+    'README.md',
+    '.github/CODEOWNERS',
+    'apps/dashboard/src/main.ts',
+  ]);
+
+  assert.equal(result.status, 'CRITICAL');
+  assert.ok(result.reasons.some((reason) => reason.category === 'github-governance'));
+});

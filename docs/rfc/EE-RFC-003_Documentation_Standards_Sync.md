@@ -240,6 +240,96 @@ La creación y el envío del tag deberán ocurrir únicamente después de satisf
 
 La habilitación operativa requerirá verificar la identidad y el mecanismo de autenticación npm, así como las reglas efectivas de protección de tags. Hasta completar esas verificaciones, PN-021 permanecerá abierto.
 
+#### Autoridad de clasificación y enforcement de PN-017
+
+La gobernanza de Pull Requests establece mecanismos diferenciados para la clasificación del impacto, la revisión técnica, la verificación de aprobaciones y el control obligatorio previo a la integración.
+
+La clasificación deberá respetar los criterios de criticidad definidos en EE-DOC-005, las responsabilidades de CODEOWNERS establecidas en EE-DOC-007 y los requisitos de independencia y elegibilidad de los revisores.
+
+##### Autoridad para clasificar impacto
+
+La confirmación explícita de un cambio `ORDINARY` corresponde al **Equipo de Arquitectura**, manteniendo la responsabilidad de revisión técnica de los equipos definidos por `CODEOWNERS`.
+
+La clasificación deberá cumplir las siguientes reglas:
+
+1. Los indicadores críticos prevalecen sobre cualquier declaración de impacto ordinario. Un cambio identificado como `CRITICAL` no podrá reclasificarse como `ORDINARY` mediante una declaración del revisor.
+2. La ausencia de indicadores críticos no acredita automáticamente que el cambio sea ordinario. En ausencia de una clasificación autorizada, el estado será `PENDING_REVIEW`.
+3. La clasificación `ORDINARY` requerirá una declaración explícita de un revisor autorizado, independiente del autor del Pull Request y asociada a una aprobación vigente respecto del HEAD evaluado.
+4. La autoridad del revisor deberá acreditarse mediante evidencia confiable de permisos efectivos y membresía activa en el Equipo de Arquitectura. No podrá inferirse exclusivamente del nombre de usuario, permisos administrativos, comentarios, etiquetas o declaraciones del autor.
+5. La clasificación del impacto deberá evaluarse sobre el conjunto de cambios del Pull Request, sin sustituir la responsabilidad técnica de los propietarios de cada área afectada.
+6. La confirmación de una clasificación `ORDINARY` no sustituirá las aprobaciones independientes exigibles, la participación de CODEOWNERS ni los Quality Gates aplicables.
+
+Los cambios críticos requerirán al menos **dos aprobaciones independientes y calificadas**, mientras que los cambios ordinarios requerirán al menos **una aprobación independiente y calificada**, conforme a EE-DOC-005 y EE-DOC-007.
+
+El cumplimiento numérico del umbral no constituirá por sí solo evidencia de elegibilidad del revisor ni autorización de integración.
+
+##### Separación de controles
+
+La materialización de PN-017 deberá mantener dos mecanismos diferenciados:
+
+- **PR Governance Advisory:** inspector consultivo, de solo lectura, encargado de recopilar y evaluar evidencia de clasificación, aprobaciones, permisos y consistencia del Pull Request. Sus resultados no autorizan la integración.
+- **PR Governance Enforcement:** control obligatorio encargado de verificar la clasificación autorizada, la elegibilidad de los revisores y el cumplimiento del umbral de aprobaciones correspondiente antes de permitir la integración.
+
+Ambos mecanismos deberán preservar la separación entre recopilación de evidencia y autorización de integración.
+
+Un resultado satisfactorio del inspector consultivo no podrá utilizarse como sustituto del control obligatorio ni como acreditación de conformidad con las políticas de revisión.
+
+El enforcement deberá complementar los controles nativos de GitHub, incluyendo CODEOWNERS, las reglas de protección de ramas y los Quality Gates existentes, sin deshabilitarlos ni sustituirlos.
+
+##### Vigencia, consistencia y concurrencia
+
+La evaluación obligatoria deberá utilizar evidencia confiable correspondiente al Pull Request y al HEAD objeto de integración.
+
+El mecanismo deberá detectar y tratar los cambios que afecten a la validez de la decisión, incluyendo:
+
+1. Nuevos commits o modificaciones del HEAD.
+2. Aprobaciones nuevas, desestimadas o sustituidas.
+3. Modificaciones de las declaraciones de clasificación de impacto.
+4. Cambios en permisos efectivos o membresías que afecten a la elegibilidad de los revisores.
+5. Modificaciones de la identidad, procedencia o destino del Pull Request que invaliden la evidencia recopilada.
+
+Los resultados favorables anteriores no podrán conservar su efecto de autorización cuando hayan dejado de cumplirse las condiciones que los originaron.
+
+La implementación deberá gestionar las ejecuciones concurrentes y los eventos recibidos fuera de orden, evitando que evaluaciones obsoletas prevalezcan sobre evidencia más reciente.
+
+La asociación entre el resultado obligatorio y el commit evaluado deberá ser inequívoca.
+
+Los estados de ejecución que GitHub considere satisfactorios no podrán interpretarse automáticamente como conformidad normativa cuando la evaluación requerida haya sido omitida, cancelada o no ejecutada.
+
+La solución deberá verificarse operativamente mediante los mecanismos de GitHub Actions y Checks que correspondan.
+
+##### Identidad de gobernanza y permisos
+
+El mecanismo de enforcement deberá utilizar una **identidad de gobernanza independiente** de la automatización de publicación de releases.
+
+Esta identidad deberá disponer únicamente de los permisos necesarios para:
+
+1. Consultar los datos del Pull Request y sus revisiones.
+2. Verificar permisos efectivos y membresías de los revisores en los equipos autorizados.
+3. Publicar o actualizar los resultados del control obligatorio mediante el mecanismo de GitHub seleccionado.
+
+La consulta de membresías deberá utilizar una fuente confiable y deberá impedir que la falta de visibilidad, los errores de autorización o las respuestas incompletas se interpreten como evidencia favorable.
+
+Las credenciales deberán gestionarse mediante los mecanismos seguros de GitHub, sin exposición a código no confiable procedente de Pull Requests.
+
+La identidad de publicación de releases no deberá recibir permisos adicionales para resolver las necesidades de gobernanza de revisiones.
+
+##### Condiciones de materialización y activación
+
+La activación del enforcement obligatorio requerirá evidencia verificable de las siguientes condiciones:
+
+1. Implementación de la autoridad de clasificación definida en este apartado y verificación de su aplicación efectiva.
+2. Configuración y validación de la identidad de gobernanza y de sus permisos mínimos.
+3. Participación efectiva de revisores elegibles conforme a CODEOWNERS y a las responsabilidades establecidas en EE-DOC-007.
+4. Bloqueo de integración de un Pull Request crítico que disponga de una sola aprobación calificada.
+5. Aceptación del umbral de revisión crítica únicamente cuando existan al menos dos aprobaciones independientes y calificadas, sin omitir los demás controles exigibles.
+6. Rechazo o invalidación de evidencia obsoleta, aprobaciones desestimadas, declaraciones modificadas y cambios del HEAD.
+7. Tratamiento formal de las excepciones transitorias y del bypass administrativo conforme a PN-019, sin declarar conforme un cambio que incumpla los requisitos ordinarios.
+8. Verificación del comportamiento de los checks obligatorios ante ejecuciones omitidas, fallidas, concurrentes o asociadas a commits anteriores.
+9. Validación de ausencia de regresiones en los Quality Gates, el workflow de Pull Requests y los procesos de release existentes.
+
+Hasta que se verifiquen estas condiciones y se materialice el control obligatorio en GitHub, el inspector conservará su carácter consultivo y PN-017 permanecerá abierto.
+
 #### Matriz de materialización y brechas de GitHub Governance (PN-030)
 
 La conformidad de GitHub Governance deberá evaluarse mediante la correspondencia entre las políticas normativas, la configuración efectiva de GitHub, la implementación versionada y la evidencia de ejecución. La presencia de un archivo de configuración o una prueba local satisfactoria no equivale por sí sola a enforcement operativo.
