@@ -17,13 +17,14 @@ jobs:
     timeout-minutes: 30
 
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Detect root version change
         id: release
@@ -187,13 +188,39 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm run release -- publish
 
+      - name: Create release publisher token
+        id: release_app
+        if: steps.release.outputs.changed == 'true'
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.EE_RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.EE_RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+
       - name: Push release tag
         if: steps.release.outputs.changed == 'true'
         shell: bash
+        env:
+          RELEASE_APP_TOKEN: ${{ steps.release_app.outputs.token }}
         run: |
           set -euo pipefail
+
+          if [[ -z "${RELEASE_APP_TOKEN}" ]]; then
+            echo "Release publisher token is unavailable." >&2
+            exit 1
+          fi
+
           version="$(node -p "require('./package.json').version")"
-          git push origin "v${version}"
+          tag="v${version}"
+
+          auth_header="$(
+            printf 'x-access-token:%s' "${RELEASE_APP_TOKEN}" | base64 -w 0
+          )"
+
+          GIT_CONFIG_COUNT=1 \
+          GIT_CONFIG_KEY_0='http.https://github.com/.extraheader' \
+          GIT_CONFIG_VALUE_0="AUTHORIZATION: basic ${auth_header}" \
+            git -c credential.helper= push origin "refs/tags/${tag}:refs/tags/${tag}"
 
       - name: Verify remote release tag
         if: steps.release.outputs.changed == 'true'

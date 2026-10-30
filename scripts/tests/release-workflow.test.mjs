@@ -46,7 +46,7 @@ function getStep(steps, name) {
 test('release workflow YAML and trigger are valid', () => {
   const { job } = getSteps();
 
-  assert.equal(job.permissions?.contents, 'write');
+  assert.equal(job.permissions?.contents, 'read');
 });
 
 test('release steps preserve the required order', () => {
@@ -60,6 +60,7 @@ test('release steps preserve the required order', () => {
     'Verify release manifest contract',
     'Prepare historical release dependencies',
     'Publish eligible package versions and create tag',
+    'Create release publisher token',
     'Push release tag',
     'Verify remote release tag',
   ];
@@ -125,6 +126,7 @@ test('publication and remote tag verification remain gated', () => {
     'Verify release manifest contract',
     'Prepare historical release dependencies',
     'Publish eligible package versions and create tag',
+    'Create release publisher token',
     'Push release tag',
     'Verify remote release tag',
   ];
@@ -162,7 +164,7 @@ test('release publication precedes tag push and remote verification', () => {
   const push = getStep(steps, 'Push release tag');
   const verify = getStep(steps, 'Verify remote release tag');
 
-  assert.match(push.run, /git push origin/);
+  assert.match(push.run, /git -c credential\.helper= push origin/);
   assert.match(verify.run, /git ls-remote --tags origin/);
   assert.match(verify.run, /inspectRemoteReleaseTag/);
 });
@@ -187,5 +189,71 @@ test('npm publication token is scoped to the publication step', () => {
     );
 
     assert.equal(step.env?.NPM_TOKEN, undefined, `${step.name} must not receive NPM_TOKEN`);
+  }
+});
+
+test('checkout does not persist GitHub credentials', () => {
+  const { steps } = getSteps();
+  const checkout = getStep(steps, 'Checkout');
+
+  assert.equal(checkout.with?.['persist-credentials'], false);
+});
+
+test('release publisher token is scoped and created after publication', () => {
+  const { job, steps } = getSteps();
+
+  const publish = getStep(steps, 'Publish eligible package versions and create tag');
+  const createToken = getStep(steps, 'Create release publisher token');
+  const push = getStep(steps, 'Push release tag');
+  const verify = getStep(steps, 'Verify remote release tag');
+
+  const names = steps.map((step) => step.name);
+
+  assert.ok(names.indexOf(createToken.name) > names.indexOf(publish.name));
+  assert.ok(names.indexOf(createToken.name) < names.indexOf(push.name));
+  assert.ok(names.indexOf(verify.name) > names.indexOf(push.name));
+
+  assert.equal(job.permissions?.contents, 'read');
+
+  assert.equal(
+    createToken.uses,
+    'actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510',
+  );
+
+  assert.equal(createToken.id, 'release_app');
+  assert.equal(createToken.with?.['client-id'], '${{ vars.EE_RELEASE_APP_CLIENT_ID }}');
+  assert.equal(createToken.with?.['app-id'], undefined);
+  assert.equal(createToken.with?.['private-key'], '${{ secrets.EE_RELEASE_APP_PRIVATE_KEY }}');
+  assert.equal(createToken.with?.['permission-contents'], 'write');
+
+  assert.equal(createToken.if, "steps.release.outputs.changed == 'true'");
+
+  assert.equal(push.env?.RELEASE_APP_TOKEN, '${{ steps.release_app.outputs.token }}');
+
+  assert.match(push.run, /GIT_CONFIG_COUNT=1/);
+  assert.match(push.run, /GIT_CONFIG_VALUE_0/);
+  assert.match(push.run, /git -c credential\.helper= push origin/);
+
+  assert.equal(publish.env?.RELEASE_APP_TOKEN, undefined);
+  assert.equal(verify.env?.RELEASE_APP_TOKEN, undefined);
+
+  for (const step of steps) {
+    if (step.name === createToken.name) continue;
+
+    assert.equal(
+      step.with?.['private-key'],
+      undefined,
+      `${step.name} must not receive the App private key`,
+    );
+  }
+
+  for (const step of steps) {
+    if (step.name === push.name) continue;
+
+    assert.equal(
+      step.env?.RELEASE_APP_TOKEN,
+      undefined,
+      `${step.name} must not receive the release publisher token`,
+    );
   }
 });
