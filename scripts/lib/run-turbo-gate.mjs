@@ -85,6 +85,48 @@ function evaluateTasks(tasks) {
   return { status: 'PASS' };
 }
 
+function completeGate({ gateId, primary, additionalChecks, writeOut, log }) {
+  const results = [primary];
+
+  for (const check of additionalChecks) {
+    try {
+      const result = check();
+
+      if (!result || !['PASS', 'FAIL', 'SKIPPED', 'ERROR'].includes(result.status)) {
+        results.push({
+          status: 'ERROR',
+          detail: 'Additional gate check returned invalid evidence.',
+        });
+      } else {
+        results.push(result);
+      }
+    } catch (error) {
+      results.push({
+        status: 'ERROR',
+        detail: `Additional gate check failed: ${error instanceof Error ? error.message : String(error)}`,
+      });
+    }
+  }
+
+  const status = ['ERROR', 'FAIL', 'SKIPPED', 'PASS'].find((candidate) =>
+    results.some((result) => result.status === candidate),
+  );
+  const detail = results
+    .map((result) => result.detail)
+    .filter(Boolean)
+    .join(' ');
+  const exitCode = status === 'PASS' ? 0 : status === 'SKIPPED' ? 2 : 1;
+
+  return emitResult({
+    gateId,
+    status,
+    exitCode,
+    detail,
+    writeOut,
+    log,
+  });
+}
+
 /**
  * Exit contract:
  *   0 = PASS
@@ -99,6 +141,7 @@ export function runTurboGate({
   env = process.env,
   spawnSyncImpl = spawnSync,
   readSummaryImpl = readExecutionSummary,
+  additionalChecks = [],
   writeOut = (value) => process.stdout.write(value),
   writeErr = (value) => process.stderr.write(value),
   log = console,
@@ -120,23 +163,28 @@ export function runTurboGate({
   if (stdout) writeOut(stdout);
   if (stderr) writeErr(stderr);
 
+  if (!Array.isArray(additionalChecks)) {
+    additionalChecks = [() => ({ status: 'ERROR', detail: 'Additional checks must be a list.' })];
+  }
+
   if (result.error) {
-    return emitResult({
+    return completeGate({
       gateId,
-      status: 'ERROR',
-      exitCode: 1,
-      detail: `unable to start Turbo: ${result.error.message}`,
+      primary: { status: 'ERROR', detail: `unable to start Turbo: ${result.error.message}` },
+      additionalChecks,
       writeOut,
       log,
     });
   }
 
   if (result.status !== 0) {
-    return emitResult({
+    return completeGate({
       gateId,
-      status: 'FAIL',
-      exitCode: 1,
-      detail: `Turbo exited with status ${result.status ?? 'unknown'}.`,
+      primary: {
+        status: 'FAIL',
+        detail: `Turbo exited with status ${result.status ?? 'unknown'}.`,
+      },
+      additionalChecks,
       writeOut,
       log,
     });
@@ -147,11 +195,13 @@ export function runTurboGate({
   try {
     summary = readSummaryImpl({ cwd, stdout, stderr });
   } catch (error) {
-    return emitResult({
+    return completeGate({
       gateId,
-      status: 'ERROR',
-      exitCode: 1,
-      detail: `execution evidence unavailable: ${error instanceof Error ? error.message : String(error)}`,
+      primary: {
+        status: 'ERROR',
+        detail: `execution evidence unavailable: ${error instanceof Error ? error.message : String(error)}`,
+      },
+      additionalChecks,
       writeOut,
       log,
     });
@@ -159,11 +209,10 @@ export function runTurboGate({
 
   const evaluated = evaluateTasks(summary.tasks);
 
-  return emitResult({
+  return completeGate({
     gateId,
-    status: evaluated.status,
-    exitCode: evaluated.status === 'PASS' ? 0 : evaluated.status === 'SKIPPED' ? 2 : 1,
-    detail: evaluated.detail,
+    primary: evaluated,
+    additionalChecks,
     writeOut,
     log,
   });

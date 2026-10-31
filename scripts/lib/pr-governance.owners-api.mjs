@@ -1,4 +1,4 @@
-import { parseCodeowners, resolveCodeowners } from './pr-governance.codeowners.mjs';
+import { parseCodeowners, resolveCodeowners } from '@eq-labs/governance/pr-governance/codeowners';
 
 const SHA = /^[0-9a-f]{40}$/i;
 const OWNER = /^[a-z\d-]+$/i;

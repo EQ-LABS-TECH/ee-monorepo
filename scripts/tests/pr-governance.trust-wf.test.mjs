@@ -16,19 +16,29 @@ function readWorkflow() {
   return document.toJS();
 }
 
-test('governance verification is manual-only', () => {
+test('governance verification runs for trusted PR and review events', () => {
   const workflow = readWorkflow();
 
-  assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch']);
-  assert.equal(workflow.jobs.verify.if, "github.ref == 'refs/heads/main'");
+  assert.deepEqual(Object.keys(workflow.on), [
+    'pull_request_target',
+    'pull_request_review',
+    'workflow_run',
+    'schedule',
+    'workflow_dispatch',
+  ]);
+  assert.deepEqual(workflow.on.schedule, [{ cron: '17 * * * *' }]);
+  assert.deepEqual(workflow.on.pull_request_review.types, ['submitted', 'edited', 'dismissed']);
+  assert.match(workflow.jobs.verify.if, /github\.event_name == 'pull_request_review'/);
+  assert.match(workflow.jobs.verify.if, /github\.event\.pull_request\.base\.ref == 'main'/);
   assert.equal(workflow.jobs.verify.name, 'Verify PR Governance');
 });
 
-test('workflow serializes execution by PR without cancellation', () => {
+test('workflow serializes governance executions with a bounded queue', () => {
   const workflow = readWorkflow();
 
-  assert.match(workflow.concurrency.group, /inputs\.pr_number/);
+  assert.equal(workflow.concurrency.group, 'pr-governance-${{ github.repository }}');
   assert.equal(workflow.concurrency['cancel-in-progress'], false);
+  assert.equal(workflow.concurrency.queue, 'max');
 });
 
 test('workflow executes only trusted main implementation', () => {
@@ -41,9 +51,17 @@ test('workflow executes only trusted main implementation', () => {
   assert.equal(checkout.with['persist-credentials'], false);
 
   const execute = steps.find((step) => step.name === 'Execute trusted governance');
+  const resolve = steps.find((step) => step.name === 'Resolve current PR HEAD');
 
   assert.match(execute.run, /node scripts\/commands\/enforce/);
-  assert.equal(execute.env.PR_HEAD_SHA, '${{ inputs.head_sha }}');
+  assert.match(resolve.run, /PR_HEAD_SHA=\$\{resolved\.expectedHeadSha\}/);
+  assert.match(resolve.run, /validateRequestedPrGovernanceHead/);
+  assert.equal(resolve.env.REQUESTED_HEAD_SHA, "${{ inputs.head_sha || '' }}");
+  assert.equal(resolve.env.GITHUB_EVENT_NAME, '${{ github.event_name }}');
+  assert.equal(
+    resolve.env.PR_NUMBER,
+    '${{ github.event.pull_request.number || inputs.pr_number }}',
+  );
   assert.equal(execute.env.GOVERNANCE_APP_ID, '${{ vars.EE_GOVERNANCE_APP_ID }}');
 });
 
@@ -111,15 +129,19 @@ test('trusted workflow does not expose App credentials to shell commands', () =>
   );
 });
 
-test('manual governance does not silently enable automatic enforcement', () => {
+test('automatic governance triggers do not silently enable required-check enforcement', () => {
   const workflow = readWorkflow();
 
-  assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch']);
+  assert.ok(Object.hasOwn(workflow.on, 'pull_request_target'));
+  assert.ok(Object.hasOwn(workflow.on, 'pull_request_review'));
+  assert.ok(Object.hasOwn(workflow.on, 'workflow_run'));
+  assert.ok(Object.hasOwn(workflow.on, 'workflow_dispatch'));
 
-  assert.equal(workflow.jobs.verify.if, "github.ref == 'refs/heads/main'");
+  assert.match(workflow.jobs.verify.if, /github\.ref == 'refs\/heads\/main'/);
   assert.equal(workflow.concurrency['cancel-in-progress'], false);
 
-  assert.equal(Object.hasOwn(workflow.on, 'pull_request_target'), false);
-  assert.equal(Object.hasOwn(workflow.on, 'pull_request_review'), false);
   assert.equal(Object.hasOwn(workflow.on, 'repository_dispatch'), false);
+  assert.match(workflow.jobs.reconcile.if, /github\.event\.workflow_run\.event == 'pull_request'/);
+  assert.match(workflow.jobs.reconcile.if, /github\.event_name == 'schedule'/);
+  assert.match(workflow.jobs.reconcile.if, /github\.ref == 'refs\/heads\/main'/);
 });

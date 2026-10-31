@@ -77,6 +77,7 @@ export async function resolvePrGovernanceRoute({ route, token, fetchImpl = fetch
     repo,
     number,
     expectedHeadSha: second.headSha,
+    baseRef: second.baseRef,
     baseSha: second.baseSha,
   };
 }

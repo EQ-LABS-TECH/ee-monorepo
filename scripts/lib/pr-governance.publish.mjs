@@ -1,7 +1,7 @@
 import {
   createPrGovernanceCheckPayload,
   PR_GOVERNANCE_CHECK_NAME,
-} from './pr-governance.check.mjs';
+} from '@eq-labs/governance/pr-governance/check';
 
 const SHA = /^[0-9a-f]{40}$/i;
 const OWNER = /^[a-z\d](?:[a-z\d-]{0,38}[a-z\d])?$/i;

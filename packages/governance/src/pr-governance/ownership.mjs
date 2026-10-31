@@ -1,4 +1,4 @@
-import { evaluateReviewerAuthority } from './pr-governance.approvals.mjs';
+import { evaluateReviewerAuthority } from './approvals.mjs';
 
 /**
  * Evaluates CODEOWNERS coverage per changed file.

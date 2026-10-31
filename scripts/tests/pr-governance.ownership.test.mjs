@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { evaluatePrOwnership } from '../lib/pr-governance.ownership.mjs';
-import { evaluatePrGovernanceEnforcement } from '../lib/pr-governance.enforcement.mjs';
+import { evaluatePrOwnership } from '@eq-labs/governance/pr-governance/ownership';
+import { evaluatePrGovernanceEnforcement } from '@eq-labs/governance/pr-governance/enforcement';
 
 const requirements = [
   {

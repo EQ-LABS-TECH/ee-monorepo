@@ -1,12 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { classifyCriticalChange } from '../lib/pr-governance.classification.mjs';
+import { classifyCriticalChange } from '@eq-labs/governance/pr-governance/classification';
 import {
   readPullRequestEvidence,
   readReviewerRepositoryPermission,
   readReviewerTeamMembership,
 } from '../lib/pr-governance.evidence.mjs';
-import { evaluatePrApprovals, evaluateReviewerAuthority } from '../lib/pr-governance.approvals.mjs';
+import {
+  evaluatePrApprovals,
+  evaluateReviewerAuthority,
+} from '@eq-labs/governance/pr-governance/approvals';
 
 const headSha = 'a'.repeat(40);
 const baseSha = 'b'.repeat(40);

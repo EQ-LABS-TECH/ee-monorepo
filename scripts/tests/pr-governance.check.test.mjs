@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {
   createPrGovernanceCheckPayload,
   PR_GOVERNANCE_CHECK_NAME,
-} from '../lib/pr-governance.check.mjs';
+} from '@eq-labs/governance/pr-governance/check';
 
 const headSha = 'a'.repeat(40);
 

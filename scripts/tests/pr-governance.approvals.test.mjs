@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { evaluatePrApprovals, evaluateReviewerAuthority } from '../lib/pr-governance.approvals.mjs';
+import {
+  evaluatePrApprovals,
+  evaluateReviewerAuthority,
+} from '@eq-labs/governance/pr-governance/approvals';
 
 const sha = 'a'.repeat(40);
 const review = (

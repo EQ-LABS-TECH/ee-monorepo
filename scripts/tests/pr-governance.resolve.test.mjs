@@ -66,6 +66,7 @@ test('resolves current HEAD from two consistent GitHub reads', async () => {
     repo: 'ee-monorepo',
     number: 42,
     expectedHeadSha: headSha,
+    baseRef: 'main',
     baseSha,
   });
 

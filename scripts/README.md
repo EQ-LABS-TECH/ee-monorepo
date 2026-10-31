@@ -119,9 +119,9 @@ EE-DOC-005, EE-DOC-007, and RFC-003 §02.8.
 Implementation:
 
 - `scripts/commands/governance`: advisory command entry point.
-- `scripts/lib/pr-governance.classification.mjs`: conservative critical-change indicators.
+- `packages/governance/src/pr-governance/classification.mjs`: conservative critical-change indicators.
 - `scripts/lib/pr-governance.evidence.mjs`: GitHub PR, review, permission, and team-membership evidence.
-- `scripts/lib/pr-governance.approvals.mjs`: approval thresholds and reviewer-eligibility evidence.
+- `packages/governance/src/pr-governance/approvals.mjs`: approval thresholds and reviewer-eligibility evidence.
 - `scripts/lib/pr-governance.inspect.mjs`: advisory report composition.
 - `scripts/tests/pr-governance.*.test.mjs`: regression and integration tests.
 
@@ -231,18 +231,23 @@ Private workspaces remain excluded from public npm distribution.
 
 These commands use Turbo as the workspace task orchestrator:
 
-| Command     | Implementation        | Responsibility            |
-| ----------- | --------------------- | ------------------------- |
-| `build`     | `turbo run build`     | Build all workspaces      |
-| `test`      | `turbo run test`      | Run tests                 |
-| `lint`      | `turbo run lint`      | Lint all workspaces       |
-| `typecheck` | `turbo run typecheck` | Type checking             |
-| `dev`       | `turbo run dev`       | Development mode          |
-| `clean`     | `turbo run clean`     | Clean workspace artifacts |
+| Command     | Implementation                            | Responsibility                                        |
+| ----------- | ----------------------------------------- | ----------------------------------------------------- |
+| `build`     | `turbo run build`                         | Build all workspaces                                  |
+| `test`      | `turbo run test`                          | Run tests                                             |
+| `lint`      | `turbo run lint` + ESLint over `scripts/` | Lint workspaces and engineering scripts (QG-LINT-001) |
+| `typecheck` | `turbo run typecheck`                     | Type checking                                         |
+| `dev`       | `turbo run dev`                           | Development mode                                      |
+| `clean`     | `turbo run clean`                         | Clean workspace artifacts                             |
 
 Each workspace must define the corresponding task in its `package.json` when that workspace participates in the task.
 
 ## Usage
+
+The canonical `pnpm run lint` gate runs workspace lint tasks and analyzes the
+JavaScript source under `scripts/`, including extensionless command entrypoints,
+with the shared `@eq-labs/config-eslint` rules. Both phases contribute to one
+`QG-LINT-001` result; missing or incomplete script-file evidence fails closed.
 
 The scripts are exposed through the root package commands:
 

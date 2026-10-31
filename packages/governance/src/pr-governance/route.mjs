@@ -1,4 +1,4 @@
-import { classifyPrGovernanceEvent } from './pr-governance.events.mjs';
+import { classifyPrGovernanceEvent } from './events.mjs';
 
 const REPOSITORY = /^[a-z\d-]+\/[a-z\d_.-]+$/i;
 

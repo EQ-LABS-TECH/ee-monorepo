@@ -1,4 +1,4 @@
-import { routePrGovernanceEvent } from './pr-governance.route.mjs';
+import { routePrGovernanceEvent } from '@eq-labs/governance/pr-governance/route';
 import { resolvePrGovernanceRoute } from './pr-governance.resolve.mjs';
 import { runPrGovernance } from './pr-governance.run.mjs';
 

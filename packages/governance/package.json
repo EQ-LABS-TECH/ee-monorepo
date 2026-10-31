@@ -5,6 +5,19 @@
   "description": "Governance layer of the EQ-LABS Engineering Ecosystem.",
   "license": "Apache-2.0",
   "type": "module",
+  "exports": {
+    "./pr-governance/approvals": "./src/pr-governance/approvals.mjs",
+    "./pr-governance/check": "./src/pr-governance/check.mjs",
+    "./pr-governance/classification": "./src/pr-governance/classification.mjs",
+    "./pr-governance/authority": "./src/pr-governance/authority.mjs",
+    "./pr-governance/codeowners": "./src/pr-governance/codeowners.mjs",
+    "./pr-governance/enforcement": "./src/pr-governance/enforcement.mjs",
+    "./pr-governance/events": "./src/pr-governance/events.mjs",
+    "./pr-governance/evaluation": "./src/pr-governance/evaluation.mjs",
+    "./pr-governance/ownership": "./src/pr-governance/ownership.mjs",
+    "./pr-governance/route": "./src/pr-governance/route.mjs",
+    "./pr-governance/workflow": "./src/pr-governance/workflow.mjs"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit false",
     "typecheck": "tsc -p tsconfig.json --noEmit",

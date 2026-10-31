@@ -200,7 +200,12 @@ function successfulFixture({
     const method = init.method;
     const authorization = init.headers.Authorization;
 
-    calls.push({ method, url, authorization });
+    calls.push({
+      method,
+      url,
+      authorization,
+      body: init.body ? JSON.parse(init.body) : undefined,
+    });
 
     let data;
     let status = 200;
@@ -432,9 +437,5 @@ test('revoked approval during execution prevents success publication', async () 
   const patches = mock.calls.filter(({ method }) => method === 'PATCH');
 
   assert.equal(patches.length, 1);
-
-  assert.equal(
-    patches.every(({ method }) => method === 'PATCH'),
-    true,
-  );
+  assert.equal(patches[0].url.endsWith('/check-runs/456'), true);
 });

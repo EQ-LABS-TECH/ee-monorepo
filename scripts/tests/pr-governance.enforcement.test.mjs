@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { evaluatePrGovernanceEnforcement } from '../lib/pr-governance.enforcement.mjs';
+import { evaluatePrGovernanceEnforcement } from '@eq-labs/governance/pr-governance/enforcement';
 
 const verified = {
   classification: 'ORDINARY',

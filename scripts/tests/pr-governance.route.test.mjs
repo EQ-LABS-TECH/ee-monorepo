@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { routePrGovernanceEvent } from '../lib/pr-governance.route.mjs';
+import { routePrGovernanceEvent } from '@eq-labs/governance/pr-governance/route';
 
 const expectedRepository = 'EQ-LABS-TECH/ee-monorepo';
 
@@ -31,11 +31,16 @@ test('routes review events to the trusted repository', () => {
   );
 });
 
-test('ignores untrusted HEAD in webhook payload', () => {
-  const route = routePrGovernanceEvent({
+test('event claims cannot become governance evidence', () => {
+  const result = routePrGovernanceEvent({
     eventName: 'pull_request_review',
     payload: {
       ...prPayload,
+      review: {
+        state: 'APPROVED',
+        body: 'EE-LABS-IMPACT: ORDINARY',
+      },
+      conclusion: 'success',
       pull_request: {
         number: 42,
         head: { sha: 'invalid-or-stale' },
@@ -44,8 +49,13 @@ test('ignores untrusted HEAD in webhook payload', () => {
     expectedRepository,
   });
 
-  assert.equal(route.status, 'READY');
-  assert.equal(Object.hasOwn(route, 'headSha'), false);
+  assert.deepEqual(result, {
+    status: 'READY',
+    scope: 'PR_SCOPE',
+    owner: 'EQ-LABS-TECH',
+    repo: 'ee-monorepo',
+    number: 42,
+  });
 });
 
 test('rejects a different repository', () => {

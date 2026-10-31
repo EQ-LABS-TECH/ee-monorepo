@@ -1,8 +1,8 @@
-import { classifyCriticalChange } from './pr-governance.classification.mjs';
-import { evaluatePrApprovals } from './pr-governance.approvals.mjs';
+import { classifyCriticalChange } from '@eq-labs/governance/pr-governance/classification';
+import { evaluatePrApprovals } from '@eq-labs/governance/pr-governance/approvals';
+import { composePrGovernanceEvaluation } from '@eq-labs/governance/pr-governance/evaluation';
 import { readCodeownersEvidence } from './pr-governance.owners-api.mjs';
-import { evaluatePrOwnership } from './pr-governance.ownership.mjs';
-import { evaluatePrGovernanceEnforcement } from './pr-governance.enforcement.mjs';
+import { evaluatePrOwnership } from '@eq-labs/governance/pr-governance/ownership';
 import {
   readPullRequestEvidence,
   readReviewerRepositoryPermission,
@@ -11,7 +11,6 @@ import {
   readCodeownerTeamVisibility,
 } from './pr-governance.evidence.mjs';
 
-const ORDINARY_DECLARATION = 'EE-LABS-IMPACT: ORDINARY';
 const ARCHITECTURE_TEAM = 'architecture';
 
 function sameSnapshot(first, second) {
@@ -200,32 +199,6 @@ export async function evaluatePrGovernance({
         memberships,
       });
 
-  const ordinaryDeclarations = approvals.approvedReviewDetails.filter(
-    (review) => review.body.trim() === ORDINARY_DECLARATION,
-  );
-
-  const authorizedOrdinaryReviewers = ordinaryDeclarations
-    .filter(({ reviewer }) => {
-      const permission = permissions.find((entry) => entry.reviewer === reviewer.toLowerCase());
-
-      return (
-        permission?.hasWriteAccess === true &&
-        memberships.some(
-          (membership) =>
-            membership.reviewer === reviewer.toLowerCase() &&
-            membership.teamSlug === ARCHITECTURE_TEAM &&
-            membership.active,
-        )
-      );
-    })
-    .map(({ reviewer }) => reviewer.toLowerCase());
-
-  const classification = indicators.criticalIndicatorsPresent
-    ? 'CRITICAL'
-    : authorizedOrdinaryReviewers.length > 0
-      ? 'ORDINARY'
-      : 'PENDING_REVIEW';
-
   // Re-read after all external queries. An earlier snapshot cannot
   // establish that permissions, ownership and reviews are still valid.
   const confirmedEvidence = await readPullRequestEvidence({
@@ -259,24 +232,13 @@ export async function evaluatePrGovernance({
     throw new Error('PR governance evidence changed during final verification');
   }
 
-  const decision = evaluatePrGovernanceEnforcement({
-    classification,
-    classificationAuthorized:
-      classification === 'ORDINARY' && authorizedOrdinaryReviewers.length > 0,
-    qualifiedReviewers: ownership.qualifiedReviewers,
-    ownershipVerified: ownership.ownershipVerified,
-    evidenceCurrent: true,
-  });
-
-  return {
-    mode: 'EVALUATION_ONLY',
-    headSha: evidence.headSha,
-    baseSha: evidence.baseSha,
-    classification,
-    criticalIndicators: indicators.reasons,
-    authorizedOrdinaryReviewers,
+  return composePrGovernanceEvaluation({
+    pullRequestEvidence: evidence,
+    criticalIndicators: indicators,
     approvalEvidence: approvals,
     ownershipEvidence: ownership,
-    decision,
-  };
+    permissions,
+    memberships,
+    evidenceCurrent: true,
+  });
 }

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { parseCodeowners, resolveCodeowners } from '../lib/pr-governance.codeowners.mjs';
+import { parseCodeowners, resolveCodeowners } from '@eq-labs/governance/pr-governance/codeowners';
 
 const source = `
 * @EQ-LABS-TECH/maintainers

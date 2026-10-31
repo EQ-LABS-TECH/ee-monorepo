@@ -27,7 +27,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**                    | Pendiente — RFC Propuesto                                                                                           |
 | **Audiencia**                       | Arquitectura, Desarrollo, IA, QA                                                                                    |
 | **Fecha de creación**               | 2026-10-11                                                                                                          |
-| **Última revisión**                 | 2026-10-28                                                                                                          |
+| **Última revisión**                 | 2026-10-31                                                                                                          |
 | **Próxima revisión**                | Pendiente de cierre de la oleada de auditoría                                                                       |
 
 > **Régimen:** este RFC permanece en estado **Propuesto** de forma deliberada mientras dure la **auditoría documental** del monorepo. Está indexado en **EE-DOC-001 §09.2**. Acumula y ratifica cambios Tipo D de estándares (plantillas, catálogo, metadatos, VAL/WAIVE, reglas AR volcadas a 002, etc.). **No** se interpreta como Aprobado ni como alcance cerrado hasta el cierre formal de la oleada de auditoría.
@@ -129,26 +129,57 @@ Los errores al obtener o validar evidencia impedirán producir un informe de ins
 
 La transición al enforcement obligatorio requerirá una decisión gobernada, configuración efectiva, participación de revisores elegibles y evidencia operativa verificable. La aprobación de esta propuesta no implica que dicha transición se haya completado.
 
-##### PN-017 — Requisitos pendientes para enforcement automático
+##### PN-017 — Modo operativo Actions-only y requisitos de activación
 
-La implementación experimental incluye evaluación de aprobaciones, verificación de CODEOWNERS, publicación de checks y coordinación de entregas mediante leases.
+Se adopta **GitHub Actions-only** como arquitectura operativa objetivo para PN-017. El enforcement deberá ejecutarse mediante GitHub Actions utilizando una implementación confiable y una GitHub App de gobernanza independiente de la identidad de publicación de releases.
 
-Estos componentes no constituyen por sí mismos un servicio operativo ni autorizan activar `PR Governance` como required check.
+Esta decisión no declara el enforcement activo ni modifica por sí misma los rulesets de GitHub. PN-017 permanece abierto hasta completar las condiciones de activación y aportar evidencia operativa verificable.
 
-Antes de habilitar el enforcement automático deberán verificarse:
+**Controles nativos y dinámicos.**
 
-1. **Runtime confiable:** receptor de webhooks desplegado fuera del contexto ejecutable de Pull Requests no confiables.
-2. **Autenticación:** validación HMAC del cuerpo original del webhook, verificación de identidad del repositorio y credenciales de GitHub App con permisos mínimos.
-3. **Persistencia compartida:** almacenamiento durable con operaciones CAS atómicas, revisiones no reutilizables y reloj confiable.
-4. **Concurrencia:** renovación supervisada de leases, recuperación tras expiración y protección frente a trabajadores obsoletos.
-5. **Efectos externos:** prevención de publicaciones favorables tardías cuando cambien las aprobaciones, la autoridad de los revisores o el HEAD del Pull Request.
-6. **Eventos organizacionales:** descubrimiento y reevaluación de PRs afectados por cambios de permisos, equipos o membresías.
-7. **Validación operativa:** pruebas de integración con servicios reales, fallos de infraestructura, reintentos y revocación de autorizaciones.
-8. **Activación gobernada:** aprobación normativa, configuración efectiva de GitHub y evidencia de validación.
+1. El ruleset nativo deberá exigir un mínimo ordinario de una aprobación, sujeto a la configuración de revisión y CODEOWNERS aplicable.
+2. El control dinámico `PR Governance` deberá exigir al menos una aprobación independiente y calificada para `ORDINARY` y al menos dos para `CRITICAL`.
+3. `PENDING_REVIEW` no podrá producir una decisión favorable.
+4. La existencia del check obligatorio no sustituirá CODEOWNERS, revisión humana ni los Quality Gates existentes.
 
-La implementación de pruebas unitarias y de integración simulada no sustituye estos requisitos.
+**Ejecución confiable y activación.**
 
-Hasta completar la decisión gobernada, el workflow de enforcement permanece manual y no se configura como condición obligatoria de merge.
+Antes de habilitar el check obligatorio deberán verificarse:
+
+1. **Implementación confiable:** código de enforcement integrado y validado en `main`, sin ejecutar código no confiable procedente del Pull Request en un contexto privilegiado.
+2. **Eventos:** identificación y cobertura de cambios de Pull Request, revisiones, HEAD y autorizaciones relevantes. Los eventos no disponibles directamente en Actions deberán cubrirse mediante un mecanismo alternativo gobernado.
+3. **Identidad:** GitHub App dedicada con permisos mínimos para consultar revisiones, permisos y membresías y publicar checks. La identidad emisora deberá coincidir con la seleccionada en el required check.
+4. **Sujeto evaluado:** resolución confiable de repositorio, número de Pull Request y HEAD vigente. Los identificadores proporcionados por eventos o entradas manuales no constituirán por sí solos evidencia de conformidad.
+5. **Evaluación:** clasificación autorizada, elegibilidad de revisores, aprobaciones vigentes, CODEOWNERS y condiciones aplicables, con resultado desfavorable ante evidencia inválida o indeterminada.
+6. **Publicación:** check `PR Governance` asociado inequívocamente al HEAD evaluado, con tratamiento explícito de errores, ejecuciones concurrentes y resultados obsoletos.
+7. **Invalidación:** reevaluación ante revocaciones, modificación de revisiones, cambios de permisos, membresías y nuevos commits, sin conservar como conforme una evaluación cuyas condiciones hayan dejado de cumplirse.
+8. **Validación operativa:** pruebas controladas de aprobaciones ordinarias y críticas, revocaciones, cambios de permisos, actualización de HEAD, fallos y concurrencia.
+9. **Activación gobernada:** aprobación de la modificación normativa aplicable, configuración efectiva del ruleset, identificación comprobada del emisor, participación de revisores elegibles y evidencia de bloqueo y aceptación correctos.
+
+**Límites de consistencia.**
+
+La reevaluación ante eventos cubiertos reduce el riesgo de decisiones obsoletas, pero no proporciona una garantía atómica de vigencia de permisos en el instante exacto del merge. No se declarará dicha garantía sin un mecanismo adicional aprobado y validado. La reconciliación periódica de Pull Requests abiertos corresponde a P1 y queda fuera de esta entrega P0; hasta materializarla, se documentará la ventana de desactualización asociada a eventos no recibidos.
+
+La compatibilidad operativa con `merge_group` permanece pendiente de implementación, pero su contrato objetivo queda establecido de la siguiente manera:
+
+1. El evaluador resolverá desde evidencia confiable el conjunto completo de Pull Requests integrantes y verificará que corresponden al repositorio y al merge group evaluado.
+2. Cada Pull Request se evaluará individualmente con las reglas vigentes de PN-017 y evidencia actual de clasificación, aprobaciones, permisos, membresías y ownership.
+3. Solo se publicará un resultado agregado favorable cuando todos los Pull Requests integrantes hayan sido identificados y evaluados favorablemente. La imposibilidad de identificar un integrante, obtener evidencia válida o completar una evaluación producirá un resultado bloqueante.
+4. El check agregado `PR Governance` se publicará sobre el SHA exacto del merge group. Resultados de otro SHA o de una ejecución anterior no constituirán evidencia válida para ese grupo.
+
+Este contrato no proporciona garantía atómica de vigencia de permisos en el instante del merge ni requiere CAS durable. Hasta implementar y validar este flujo, el ejecutor de un único Pull Request y su HEAD no cubre eventos `merge_group`.
+
+**Capacidades experimentales y diferidas.**
+
+Los módulos `delivery`, `lease`, `lease-store`, `receive`, `webhook` y `dispatch` permanecen como capacidades experimentales no operativas. No forman parte del camino de producción Actions-only ni constituyen evidencia de un runtime persistente activo.
+
+El servicio HTTP, la persistencia CAS durable y los leases automáticos quedan diferidos hasta una necesidad arquitectónica demostrada y una decisión gobernada posterior. Su incorporación al camino operativo requerirá evaluación de seguridad, mantenimiento, dependencias y nuevas evidencias de validación.
+
+**Criterio de cierre.**
+
+PN-017 solo podrá cerrarse cuando el control automático esté integrado, la GitHub App esté vinculada al required check, los rulesets efectivos estén verificados y existan evidencias de aceptación y bloqueo ante cambios de aprobaciones, permisos y HEAD.
+
+Hasta entonces, `PR Governance Advisory` conserva su carácter consultivo y el enforcement no se considera activo.
 
 #### Régimen transitorio de adopción
 
@@ -677,14 +708,14 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por             | Motivo                            | Cambios                                                                                                                                                                           | Estado       |
-| ---------- | ---------- | ------------------------ | ------------------------ | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura   | —                        | C-01 auditoría 002                | Creación RFC Tipo D retroactivo                                                                                                                                                   | Propuesto    |
-| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura   | Equipo de Arquitectura   | Vehículo abierto auditoría        | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                                           | **Aprobado** |
-| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura   | Equipo de Arquitectura   | Conformidad §18.5                 | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado                         | **Aprobado** |
-| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura   | Equipo de Arquitectura   | Consolidación pre-main            | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                                                   | **Aprobado** |
-| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura   | Equipo de Arquitectura   | Auditoría transversal de releases | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.                               | **Aprobado** |
-| **v0.6.0** | 2026-10-28 | Responsable del proyecto | Responsable del proyecto | Gobernanza escalable de GitHub    | Amplía §02.8 con PN-017/PN-019/PN-030: revisión independiente, CODEOWNERS, aprobaciones críticas, régimen transitorio, bypass, protección de tags y criterios de materialización. | **Aprobado** |
+| Versión    | Fecha      | Autor                    | Aprobado por             | Motivo                            | Cambios                                                                                                                                                   | Estado       |
+| ---------- | ---------- | ------------------------ | ------------------------ | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura   | —                        | C-01 auditoría 002                | Creación RFC Tipo D retroactivo                                                                                                                           | Propuesto    |
+| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura   | Equipo de Arquitectura   | Vehículo abierto auditoría        | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                   | **Aprobado** |
+| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura   | Equipo de Arquitectura   | Conformidad §18.5                 | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado | **Aprobado** |
+| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura   | Equipo de Arquitectura   | Consolidación pre-main            | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                           | **Aprobado** |
+| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura   | Equipo de Arquitectura   | Auditoría transversal de releases | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.       | **Aprobado** |
+| **v0.6.0** | 2026-10-31 | Responsable del proyecto | Responsable del proyecto | PN-017 Actions-only P0            | Consolida §02.8: Actions-only, seguridad de triggers y límites de consistencia; CAS durable, servicio HTTP y leases diferidos.                            | **Aprobado** |
 
 ---
 

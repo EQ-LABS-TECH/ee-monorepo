@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { classifyPrGovernanceEvent } from '../lib/pr-governance.events.mjs';
+import { classifyPrGovernanceEvent } from '@eq-labs/governance/pr-governance/events';
 
 const prPayload = {
   repository: { full_name: 'EQ-LABS-TECH/ee-monorepo' },
