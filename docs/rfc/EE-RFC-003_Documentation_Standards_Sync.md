@@ -129,6 +129,27 @@ Los errores al obtener o validar evidencia impedirán producir un informe de ins
 
 La transición al enforcement obligatorio requerirá una decisión gobernada, configuración efectiva, participación de revisores elegibles y evidencia operativa verificable. La aprobación de esta propuesta no implica que dicha transición se haya completado.
 
+##### PN-017 — Requisitos pendientes para enforcement automático
+
+La implementación experimental incluye evaluación de aprobaciones, verificación de CODEOWNERS, publicación de checks y coordinación de entregas mediante leases.
+
+Estos componentes no constituyen por sí mismos un servicio operativo ni autorizan activar `PR Governance` como required check.
+
+Antes de habilitar el enforcement automático deberán verificarse:
+
+1. **Runtime confiable:** receptor de webhooks desplegado fuera del contexto ejecutable de Pull Requests no confiables.
+2. **Autenticación:** validación HMAC del cuerpo original del webhook, verificación de identidad del repositorio y credenciales de GitHub App con permisos mínimos.
+3. **Persistencia compartida:** almacenamiento durable con operaciones CAS atómicas, revisiones no reutilizables y reloj confiable.
+4. **Concurrencia:** renovación supervisada de leases, recuperación tras expiración y protección frente a trabajadores obsoletos.
+5. **Efectos externos:** prevención de publicaciones favorables tardías cuando cambien las aprobaciones, la autoridad de los revisores o el HEAD del Pull Request.
+6. **Eventos organizacionales:** descubrimiento y reevaluación de PRs afectados por cambios de permisos, equipos o membresías.
+7. **Validación operativa:** pruebas de integración con servicios reales, fallos de infraestructura, reintentos y revocación de autorizaciones.
+8. **Activación gobernada:** aprobación normativa, configuración efectiva de GitHub y evidencia de validación.
+
+La implementación de pruebas unitarias y de integración simulada no sustituye estos requisitos.
+
+Hasta completar la decisión gobernada, el workflow de enforcement permanece manual y no se configura como condición obligatoria de merge.
+
 #### Régimen transitorio de adopción
 
 Mientras la composición del equipo no permita satisfacer todas las aprobaciones independientes exigidas para cambios críticos, cualquier excepción deberá estar formalmente autorizada, documentada, justificada y sujeta a revisión y cierre.

@@ -4,9 +4,17 @@ import { evaluatePrApprovals } from './pr-governance.approvals.mjs';
 import {
   readPullRequestEvidence,
   readReviewerRepositoryPermission,
+  readReviewerTeamMembership,
 } from './pr-governance.evidence.mjs';
 
-export async function inspectPrGovernance({ owner, repo, number, token, fetchImpl }) {
+export async function inspectPrGovernance({
+  owner,
+  repo,
+  number,
+  token,
+  membershipToken,
+  fetchImpl,
+}) {
   const evidence = await readPullRequestEvidence({ owner, repo, number, token, fetchImpl });
   const classification = classifyCriticalChange(evidence.paths);
   const evaluation = evaluatePrApprovals({
@@ -49,6 +57,32 @@ export async function inspectPrGovernance({ owner, repo, number, token, fetchImp
     (candidate) => candidate.hasWriteAccess,
   );
 
+  const authorizedOrdinaryReviewers = [];
+
+  if (membershipToken !== undefined) {
+    if (typeof membershipToken !== 'string' || !membershipToken) {
+      throw new TypeError('Invalid governance membership token');
+    }
+
+    const memberships = await Promise.all(
+      candidatesWithPermissions.map((candidate) =>
+        readReviewerTeamMembership({
+          owner,
+          teamSlug: 'architecture',
+          reviewer: candidate.reviewer,
+          token: membershipToken,
+          fetchImpl,
+        }),
+      ),
+    );
+
+    for (const membership of memberships) {
+      if (membership.active) {
+        authorizedOrdinaryReviewers.push(membership.reviewer);
+      }
+    }
+  }
+
   if (ordinaryCandidates.length > 0) {
     const confirmedEvidence = await readPullRequestEvidence({
       owner,
@@ -60,6 +94,7 @@ export async function inspectPrGovernance({ owner, repo, number, token, fetchImp
 
     if (
       confirmedEvidence.headSha !== evidence.headSha ||
+      confirmedEvidence.baseSha !== evidence.baseSha ||
       confirmedEvidence.author !== evidence.author ||
       JSON.stringify(confirmedEvidence.paths) !== JSON.stringify(evidence.paths) ||
       JSON.stringify(confirmedEvidence.reviews) !== JSON.stringify(evidence.reviews)
@@ -75,12 +110,23 @@ export async function inspectPrGovernance({ owner, repo, number, token, fetchImp
     mode: 'ADVISORY',
     status: 'PENDING',
     headSha: evidence.headSha,
-    classification,
+    classification: {
+      ...classification,
+      status: classification.criticalIndicatorsPresent
+        ? 'CRITICAL'
+        : authorizedOrdinaryReviewers.length > 0
+          ? 'ORDINARY'
+          : 'PENDING_REVIEW',
+    },
     approvalEvidence: evaluation,
     ordinaryClassificationEvidence: {
-      status: 'UNVERIFIED',
+      status: authorizedOrdinaryReviewers.length > 0 ? 'VERIFIED' : 'UNVERIFIED',
       candidates: candidatesWithPermissions,
-      reason: 'reviewer-authority-not-yet-verified',
+      authorizedReviewers: authorizedOrdinaryReviewers,
+      reason:
+        authorizedOrdinaryReviewers.length > 0
+          ? 'architecture-membership-verified'
+          : 'reviewer-authority-not-yet-verified',
     },
     reasons: [
       'impact-classification-requires-authorized-review',

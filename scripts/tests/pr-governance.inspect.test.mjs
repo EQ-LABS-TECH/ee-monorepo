@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { inspectPrGovernance } from '../lib/pr-governance.inspect.mjs';
 
 const sha = 'a'.repeat(40);
+const baseSha = 'b'.repeat(40);
+
 const pr = {
   number: 7,
   user: { login: 'author' },
@@ -12,6 +14,7 @@ const pr = {
   },
   base: {
     ref: 'main',
+    sha: baseSha,
     repo: { full_name: 'EQ-LABS-TECH/ee-monorepo' },
   },
 };
@@ -88,7 +91,11 @@ test('unavailable API fails closed', async () => {
 test('ordinary impact declaration is evidence, not authorization', async () => {
   const report = await inspectPrGovernance({
     ...options,
-    fetchImpl: fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]),
+    fetchImpl: async (url, init) => {
+      assert.doesNotMatch(url, /\/teams\/architecture\/memberships\//);
+
+      return fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }])(url, init);
+    },
   });
 
   assert.equal(report.classification.status, 'PENDING_REVIEW');
@@ -104,6 +111,9 @@ test('ordinary impact declaration is evidence, not authorization', async () => {
   ]);
 
   assert.equal(report.ordinaryClassificationEvidence.reason, 'reviewer-authority-not-yet-verified');
+  assert.deepEqual(report.ordinaryClassificationEvidence.authorizedReviewers, []);
+  assert.equal(report.classification.status, 'PENDING_REVIEW');
+  assert.equal(report.mode, 'ADVISORY');
   assert.equal(report.status, 'PENDING');
 });
 
@@ -385,4 +395,101 @@ test('rejects ordinary evidence changed during permission verification', async (
   );
 
   assert.equal(reviewReads, 4);
+});
+
+test('active architecture reviewer establishes ordinary impact evidence', async () => {
+  const baseFetch = fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]);
+
+  const report = await inspectPrGovernance({
+    ...options,
+    membershipToken: 'membership-test-token',
+    fetchImpl: async (url, init) => {
+      if (url.includes('/teams/architecture/memberships/')) {
+        assert.equal(init.headers.Authorization, 'Bearer membership-test-token');
+
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            state: 'active',
+            role: 'member',
+          }),
+        };
+      }
+
+      return baseFetch(url, init);
+    },
+  });
+
+  assert.equal(report.classification.status, 'ORDINARY');
+  assert.equal(report.ordinaryClassificationEvidence.status, 'VERIFIED');
+  assert.deepEqual(report.ordinaryClassificationEvidence.authorizedReviewers, ['reviewer']);
+  assert.equal(report.mode, 'ADVISORY');
+  assert.equal(report.status, 'PENDING');
+});
+
+test('inactive architecture membership cannot establish ordinary impact', async () => {
+  const baseFetch = fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]);
+
+  const report = await inspectPrGovernance({
+    ...options,
+    membershipToken: 'membership-test-token',
+    fetchImpl: async (url, init) => {
+      if (url.includes('/teams/architecture/memberships/')) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            state: 'pending',
+            role: 'member',
+          }),
+        };
+      }
+
+      return baseFetch(url, init);
+    },
+  });
+
+  assert.equal(report.classification.status, 'PENDING_REVIEW');
+  assert.equal(report.ordinaryClassificationEvidence.status, 'UNVERIFIED');
+  assert.deepEqual(report.ordinaryClassificationEvidence.authorizedReviewers, []);
+  assert.equal(report.status, 'PENDING');
+});
+
+test('governance membership API failure prevents ordinary classification', async () => {
+  const baseFetch = fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]);
+
+  await assert.rejects(
+    inspectPrGovernance({
+      ...options,
+      membershipToken: 'membership-test-token',
+      fetchImpl: async (url, init) => {
+        if (url.includes('/teams/architecture/memberships/')) {
+          return { ok: false, status: 403 };
+        }
+
+        return baseFetch(url, init);
+      },
+    }),
+    /HTTP 403/,
+  );
+});
+
+test('critical classification prevails over active architecture membership', async () => {
+  const baseFetch = fixture(
+    ['.github/CODEOWNERS'],
+    [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }],
+  );
+
+  const report = await inspectPrGovernance({
+    ...options,
+    membershipToken: 'membership-test-token',
+    fetchImpl: async (url, init) => {
+      assert.doesNotMatch(url, /\/teams\/architecture\/memberships\//);
+      return baseFetch(url, init);
+    },
+  });
+
+  assert.equal(report.classification.status, 'CRITICAL');
+  assert.equal(report.status, 'PENDING');
 });

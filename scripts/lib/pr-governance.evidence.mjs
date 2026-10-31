@@ -59,6 +59,7 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
     pr.number !== number ||
     typeof pr.base?.ref !== 'string' ||
     !pr.base.ref ||
+    !SHA.test(pr.base?.sha ?? '') ||
     pr.base?.repo?.full_name?.toLowerCase() !== `${owner}/${repo}`.toLowerCase()
   ) {
     throw new TypeError('Invalid GitHub pull request response');
@@ -124,7 +125,8 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
     currentPr?.head?.sha !== pr.head.sha ||
     currentPr?.head?.repo?.full_name?.toLowerCase() !== pr.head.repo.full_name.toLowerCase() ||
     currentPr?.base?.repo?.full_name?.toLowerCase() !== `${owner}/${repo}`.toLowerCase() ||
-    currentPr?.base?.ref !== pr.base.ref
+    currentPr?.base?.ref !== pr.base.ref ||
+    currentPr?.base?.sha !== pr.base.sha
   ) {
     throw new Error('Pull request changed while collecting governance evidence');
   }
@@ -132,6 +134,7 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
   return {
     author: pr.user.login,
     headSha: pr.head.sha,
+    baseSha: pr.base.sha.toLowerCase(),
     paths,
     reviews: normalizedReviews,
     // Evidence snapshot only. Must re-check at merge; never treat as authoritative.
@@ -255,5 +258,100 @@ export async function readReviewerTeamMembership({
     teamSlug,
     active: result.state === 'active',
     role: result.role,
+  };
+}
+
+export async function readCodeownerTeamPermission({
+  owner,
+  repo,
+  teamSlug,
+  token,
+  fetchImpl = fetch,
+}) {
+  if (
+    !LOGIN.test(owner ?? '') ||
+    !/^[a-z\d_.-]+$/i.test(repo ?? '') ||
+    !/^[a-z\d_-]+$/i.test(teamSlug ?? '') ||
+    typeof token !== 'string' ||
+    !token ||
+    typeof fetchImpl !== 'function'
+  ) {
+    throw new TypeError('Invalid CODEOWNERS team permission request');
+  }
+
+  const url = `https://api.github.com/orgs/${owner}/teams/${teamSlug}/repos/${owner}/${repo}`;
+
+  const response = await fetchImpl(url, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/vnd.github.v3.repository+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`GitHub CODEOWNERS team permission request returned HTTP ${response.status}`);
+  }
+
+  if (response.status !== 200) {
+    throw new TypeError('CODEOWNERS team permission details are unavailable');
+  }
+
+  const result = await response.json();
+
+  if (
+    !result ||
+    result.full_name?.toLowerCase() !== `${owner}/${repo}`.toLowerCase() ||
+    !result.permissions ||
+    typeof result.permissions.push !== 'boolean' ||
+    typeof result.permissions.admin !== 'boolean'
+  ) {
+    throw new TypeError('Malformed CODEOWNERS team permission response');
+  }
+
+  return {
+    teamSlug: teamSlug.toLowerCase(),
+    hasWriteAccess: result.permissions.push || result.permissions.admin,
+  };
+}
+
+export async function readCodeownerTeamVisibility({ owner, teamSlug, token, fetchImpl = fetch }) {
+  if (
+    !LOGIN.test(owner ?? '') ||
+    !/^[a-z\d_-]+$/i.test(teamSlug ?? '') ||
+    typeof token !== 'string' ||
+    !token ||
+    typeof fetchImpl !== 'function'
+  ) {
+    throw new TypeError('Invalid CODEOWNERS team visibility request');
+  }
+
+  const response = await fetchImpl(`https://api.github.com/orgs/${owner}/teams/${teamSlug}`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+
+  if (!response.ok || response.status !== 200) {
+    throw new Error(`GitHub CODEOWNERS team visibility request returned HTTP ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  if (
+    !result ||
+    result.slug?.toLowerCase() !== teamSlug.toLowerCase() ||
+    !['closed', 'secret'].includes(result.privacy)
+  ) {
+    throw new TypeError('Malformed CODEOWNERS team visibility response');
+  }
+
+  return {
+    teamSlug: teamSlug.toLowerCase(),
+    visible: result.privacy === 'closed',
   };
 }

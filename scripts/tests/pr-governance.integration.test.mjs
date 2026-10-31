@@ -9,6 +9,8 @@ import {
 import { evaluatePrApprovals, evaluateReviewerAuthority } from '../lib/pr-governance.approvals.mjs';
 
 const headSha = 'a'.repeat(40);
+const baseSha = 'b'.repeat(40);
+
 const base = {
   number: 42,
   user: { login: 'author' },
@@ -18,6 +20,7 @@ const base = {
   },
   base: {
     ref: 'main',
+    sha: baseSha,
     repo: { full_name: 'EQ-LABS-TECH/ee-monorepo' },
   },
 };

@@ -1,0 +1,70 @@
+# PN-017 — Trusted governance verification.
+# Manual validation only; not yet a required check.
+name: PR Governance Verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number
+        required: true
+        type: number
+      head_sha:
+        description: Exact PR HEAD commit SHA
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: pr-governance-${{ github.repository }}-${{ inputs.pr_number }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify PR Governance
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout trusted implementation
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version-file: '.nvmrc'
+          package-manager-cache: false
+
+      - name: Create governance App token
+        id: governance-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.EE_GOVERNANCE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.EE_GOVERNANCE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: read
+          permission-pull-requests: read
+          permission-checks: write
+          permission-members: read
+
+      - name: Execute trusted governance
+        shell: bash
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+          PR_HEAD_SHA: ${{ inputs.head_sha }}
+          GOVERNANCE_APP_ID: ${{ vars.EE_GOVERNANCE_APP_ID }}
+          GOVERNANCE_PR_TOKEN: ${{ github.token }}
+          GOVERNANCE_EVIDENCE_TOKEN: ${{ steps.governance-token.outputs.token }}
+          GOVERNANCE_PUBLISHER_TOKEN: ${{ steps.governance-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          node scripts/commands/enforce

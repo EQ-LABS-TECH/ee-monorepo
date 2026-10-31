@@ -4,9 +4,13 @@ import {
   readPullRequestEvidence,
   readReviewerRepositoryPermission,
   readReviewerTeamMembership,
+  readCodeownerTeamPermission,
+  readCodeownerTeamVisibility,
 } from '../lib/pr-governance.evidence.mjs';
 
 const sha = 'a'.repeat(40);
+const baseSha = 'b'.repeat(40);
+
 const base = {
   number: 27,
   user: { login: 'contributor' },
@@ -16,6 +20,7 @@ const base = {
   },
   base: {
     ref: 'main',
+    sha: baseSha,
     repo: { full_name: 'EQ-LABS-TECH/ee-monorepo' },
   },
 };
@@ -173,6 +178,51 @@ test('rejects a PR whose target branch changes during evidence collection', asyn
           base: {
             ...base.base,
             ref: 'develop',
+          },
+        },
+      }),
+    }),
+    /Pull request changed while collecting governance evidence/,
+  );
+});
+
+test('preserves the exact base commit SHA', async () => {
+  const evidence = await readPullRequestEvidence({
+    ...locator,
+    fetchImpl: mockFetch(),
+  });
+
+  assert.equal(evidence.baseSha, baseSha);
+});
+
+test('rejects a PR without a valid base commit SHA', async () => {
+  await assert.rejects(
+    readPullRequestEvidence({
+      ...locator,
+      fetchImpl: mockFetch({
+        pr: {
+          ...base,
+          base: {
+            ...base.base,
+            sha: undefined,
+          },
+        },
+      }),
+    }),
+    /Invalid GitHub pull request response/,
+  );
+});
+
+test('rejects a base SHA changed during evidence collection', async () => {
+  await assert.rejects(
+    readPullRequestEvidence({
+      ...locator,
+      fetchImpl: mockFetch({
+        finalPr: {
+          ...base,
+          base: {
+            ...base.base,
+            sha: 'c'.repeat(40),
           },
         },
       }),
@@ -520,4 +570,160 @@ test('rejects a head change after the second review read', async () => {
 
   assert.equal(reviewReads, 2);
   assert.equal(prReads, 2);
+});
+
+test('verifies repository write permission of a CODEOWNERS team', async () => {
+  const result = await readCodeownerTeamPermission({
+    owner: 'EQ-LABS-TECH',
+    repo: 'ee-monorepo',
+    teamSlug: 'architecture',
+    token: 'test-token',
+    fetchImpl: async (url, init) => {
+      assert.equal(
+        url,
+        'https://api.github.com/orgs/EQ-LABS-TECH/teams/architecture/repos/EQ-LABS-TECH/ee-monorepo',
+      );
+
+      assert.equal(init.method, 'GET');
+      assert.equal(init.headers.Accept, 'application/vnd.github.v3.repository+json');
+
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          full_name: 'EQ-LABS-TECH/ee-monorepo',
+          permissions: {
+            pull: true,
+            push: true,
+            admin: false,
+          },
+        }),
+      };
+    },
+  });
+
+  assert.deepEqual(result, {
+    teamSlug: 'architecture',
+    hasWriteAccess: true,
+  });
+});
+
+test('read-only CODEOWNERS team does not qualify', async () => {
+  const result = await readCodeownerTeamPermission({
+    owner: 'EQ-LABS-TECH',
+    repo: 'ee-monorepo',
+    teamSlug: 'maintainers',
+    token: 'test-token',
+    fetchImpl: async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        full_name: 'EQ-LABS-TECH/ee-monorepo',
+        permissions: {
+          pull: true,
+          push: false,
+          admin: false,
+        },
+      }),
+    }),
+  });
+
+  assert.equal(result.hasWriteAccess, false);
+});
+
+test('missing CODEOWNERS team permission evidence fails closed', async () => {
+  await assert.rejects(
+    readCodeownerTeamPermission({
+      owner: 'EQ-LABS-TECH',
+      repo: 'ee-monorepo',
+      teamSlug: 'architecture',
+      token: 'test-token',
+      fetchImpl: async () => ({
+        ok: false,
+        status: 403,
+      }),
+    }),
+    /HTTP 403/,
+  );
+});
+
+test('visible CODEOWNERS team is eligible for visibility', async () => {
+  const result = await readCodeownerTeamVisibility({
+    owner: 'EQ-LABS-TECH',
+    teamSlug: 'architecture',
+    token: 'test-token',
+    fetchImpl: async (url, init) => {
+      assert.equal(url, 'https://api.github.com/orgs/EQ-LABS-TECH/teams/architecture');
+      assert.equal(init.method, 'GET');
+      assert.equal(init.headers.Authorization, 'Bearer test-token');
+
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          slug: 'architecture',
+          privacy: 'closed',
+        }),
+      };
+    },
+  });
+
+  assert.deepEqual(result, {
+    teamSlug: 'architecture',
+    visible: true,
+  });
+});
+
+test('secret CODEOWNERS team is not visible', async () => {
+  const result = await readCodeownerTeamVisibility({
+    owner: 'EQ-LABS-TECH',
+    teamSlug: 'architecture',
+    token: 'test-token',
+    fetchImpl: async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        slug: 'architecture',
+        privacy: 'secret',
+      }),
+    }),
+  });
+
+  assert.deepEqual(result, {
+    teamSlug: 'architecture',
+    visible: false,
+  });
+});
+
+test('unavailable or malformed CODEOWNERS visibility fails closed', async () => {
+  const args = {
+    owner: 'EQ-LABS-TECH',
+    teamSlug: 'architecture',
+    token: 'test-token',
+  };
+
+  await assert.rejects(
+    readCodeownerTeamVisibility({
+      ...args,
+      fetchImpl: async () => ({
+        ok: false,
+        status: 403,
+      }),
+    }),
+    /HTTP 403/,
+  );
+
+  await assert.rejects(
+    readCodeownerTeamVisibility({
+      ...args,
+      fetchImpl: async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          slug: 'architecture',
+        }),
+      }),
+    }),
+    /Malformed CODEOWNERS team visibility response/,
+  );
 });
