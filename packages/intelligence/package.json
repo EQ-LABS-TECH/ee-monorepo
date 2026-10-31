@@ -28,8 +28,8 @@
   "devDependencies": {
     "@eq-labs/config-eslint": "workspace:*",
     "@eq-labs/config-typescript": "workspace:*",
-    "@types/node": "24.19.2",
-    "eslint": "9.35.0",
-    "typescript": "5.9.2"
+    "@types/node": "26.6.5",
+    "eslint": "10.13.0",
+    "typescript": "7.0.2"
   }
 }
