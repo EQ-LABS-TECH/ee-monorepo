@@ -1,6 +1,6 @@
 # PN-017 — Trusted governance verification.
 # Automatic validation; not yet a required check.
-name: PR Governance Verification
+name: Governance Verification
 
 on:
   pull_request_target:

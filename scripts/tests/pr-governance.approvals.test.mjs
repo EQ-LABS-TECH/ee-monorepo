@@ -20,6 +20,21 @@ test('ordinary PR passes with one independent current approval', () => {
   assert.equal(run([review('reviewer')]).status, 'PASS');
 });
 
+test('bot approvals never count toward governance thresholds', () => {
+  const botApproval = review('dependabot[bot]');
+  const humanApproval = review('reviewer');
+
+  const ordinary = run([botApproval]);
+
+  assert.equal(ordinary.approvedCount, 0);
+  assert.equal(ordinary.status, 'BLOCKED');
+
+  const critical = run([botApproval, humanApproval], true);
+
+  assert.equal(critical.approvedCount, 1);
+  assert.equal(critical.status, 'BLOCKED');
+});
+
 test('critical PR requires two independent current approvals', () => {
   assert.equal(run([review('reviewer')], true).status, 'BLOCKED');
   assert.equal(run([review('reviewer'), review('reviewer2')], true).status, 'PASS');

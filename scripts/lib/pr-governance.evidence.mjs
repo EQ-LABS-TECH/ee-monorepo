@@ -4,6 +4,8 @@
  */
 const SHA = /^[0-9a-f]{40}$/i;
 const LOGIN = /^[a-z\d](?:[a-z\d-]{0,38}[a-z\d])?$/i;
+const PR_AUTHOR_LOGIN = /^[a-z\d](?:[a-z\d-]{0,38}[a-z\d])?(?:\[bot\])?$/i;
+const BOT_LOGIN = /^[a-z\d](?:[a-z\d-]{0,38}[a-z\d])?\[bot\]$/i;
 
 function assertRepository(owner, repo, number) {
   if (
@@ -52,7 +54,7 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
 
   if (
     !pr ||
-    !LOGIN.test(pr.user?.login ?? '') ||
+    !PR_AUTHOR_LOGIN.test(pr.user?.login ?? '') ||
     !SHA.test(pr.head?.sha ?? '') ||
     typeof pr.head?.repo?.full_name !== 'string' ||
     !pr.head.repo.full_name ||
@@ -71,6 +73,11 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
   const reviews = await collect('reviews', 10000);
   const normalizedReviews = reviews
     .map((review, sequence) => {
+      // Bot reviews are not valid governance approval evidence.
+      if (BOT_LOGIN.test(review?.user?.login ?? '')) {
+        return null;
+      }
+
       if (
         !review ||
         !LOGIN.test(review.user?.login ?? '') ||

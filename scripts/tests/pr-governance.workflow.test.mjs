@@ -136,6 +136,22 @@ test('governance advisory checks out trusted main implementation', () => {
 
   assert.match(setup.uses, /^actions\/setup-node@[0-9a-f]{40}$/);
   assert.equal(setup.with?.['node-version-file'], '.nvmrc');
+
+  const steps = job.steps.map((step) => step.name);
+
+  assert.ok(
+    steps.indexOf('Setup pnpm') > steps.indexOf('Checkout trusted governance implementation'),
+  );
+  assert.ok(steps.indexOf('Setup pnpm') < steps.indexOf('Setup Node.js'));
+
+  assert.equal(
+    getStep(job, 'Install workspace dependencies').run,
+    'pnpm install --frozen-lockfile',
+  );
+
+  assert.ok(
+    steps.indexOf('Install workspace dependencies') < steps.indexOf('Inspect PR governance'),
+  );
 });
 
 test('governance inspector receives PR context and remains advisory', () => {

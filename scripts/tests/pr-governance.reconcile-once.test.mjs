@@ -53,15 +53,18 @@ test('evaluates all discovered PRs', async () => {
   ]);
 });
 
-test('continues after an individual failure', async () => {
+test('continues after an individual failure and logs sanitized execution details', async (t) => {
   const calls = [];
+  const logs = [];
+
+  t.mock.method(console, 'error', (...args) => logs.push(args));
 
   const { context } = fixture({
     run: async ({ number }) => {
       calls.push(number);
 
       if (number === 10) {
-        throw new Error('Evaluation failed');
+        throw new Error('Evaluation failed with HTTP 403 and sensitive-token');
       }
 
       return {
@@ -81,6 +84,66 @@ test('continues after an individual failure', async () => {
     { number: 10, status: 'ERROR' },
     { number: 20, status: 'PASS' },
   ]);
+  assert.equal(logs.length, 1);
+  assert.equal(logs[0][0], 'PN-017 reconciliation PR failure:');
+  assert.deepEqual(JSON.parse(logs[0][1]), {
+    number: 10,
+    phase: 'execute',
+    kind: 'Error',
+    httpStatus: 403,
+  });
+  assert.equal(JSON.stringify(logs).includes('sensitive-token'), false);
+});
+
+test('logs resolution failures without external error messages', async (t) => {
+  const logs = [];
+
+  t.mock.method(console, 'error', (...args) => logs.push(args));
+
+  const { context } = fixture({
+    discover: async () => [10],
+    resolve: async () => {
+      throw new TypeError('GitHub lookup returned HTTP 404 and private details');
+    },
+  });
+
+  const result = await reconcileOpenGovernancePrs(context);
+
+  assert.equal(result.status, 'INCOMPLETE');
+  assert.deepEqual(JSON.parse(logs[0][1]), {
+    number: 10,
+    phase: 'resolve',
+    kind: 'TypeError',
+    httpStatus: 404,
+  });
+  assert.equal(JSON.stringify(logs).includes('private details'), false);
+});
+
+test('extracts HTTP status from AggregateError causes without logging messages', async (t) => {
+  const logs = [];
+
+  t.mock.method(console, 'error', (...args) => logs.push(args));
+
+  const { context } = fixture({
+    discover: async () => [10],
+    run: async () => {
+      throw new AggregateError(
+        [new Error('GitHub evidence returned HTTP 403 with private details')],
+        'Governance evaluation and failure publication both failed',
+      );
+    },
+  });
+
+  const result = await reconcileOpenGovernancePrs(context);
+
+  assert.equal(result.status, 'INCOMPLETE');
+  assert.deepEqual(JSON.parse(logs[0][1]), {
+    number: 10,
+    phase: 'execute',
+    kind: 'AggregateError',
+    httpStatus: 403,
+  });
+  assert.equal(JSON.stringify(logs).includes('private details'), false);
 });
 
 test('a policy-blocked PR is distinct from an operational error', async () => {
@@ -108,7 +171,11 @@ test('rejects duplicate discovery results', async () => {
   await assert.rejects(reconcileOpenGovernancePrs(context), /Invalid governance discovery results/);
 });
 
-test('rejects an unexpected target branch', async () => {
+test('rejects an unexpected target branch and records it as a resolution error', async (t) => {
+  const logs = [];
+
+  t.mock.method(console, 'error', (...args) => logs.push(args));
+
   const { context } = fixture({
     discover: async () => [10],
     resolve: async () => ({
@@ -124,6 +191,11 @@ test('rejects an unexpected target branch', async () => {
 
   assert.equal(result.status, 'INCOMPLETE');
   assert.equal(result.results[0].status, 'ERROR');
+  assert.deepEqual(JSON.parse(logs[0][1]), {
+    number: 10,
+    phase: 'resolve',
+    kind: 'Error',
+  });
 });
 
 test('fails when discovery is unavailable', async () => {
