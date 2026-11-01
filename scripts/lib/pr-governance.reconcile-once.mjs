@@ -106,19 +106,19 @@ export async function reconcileOpenGovernancePrs({
 
       results.push({
         number,
-        status: result.conclusion,
+        status: result.conclusion === 'success' ? 'PASS' : 'BLOCKED',
       });
     } catch {
       // Do not expose API responses or credentials in logs.
       results.push({
         number,
-        status: 'error',
+        status: 'ERROR',
       });
     }
   }
 
   return {
-    status: results.every((item) => item.status === 'success') ? 'SUCCESS' : 'INCOMPLETE',
+    status: results.every((item) => item.status !== 'ERROR') ? 'SUCCESS' : 'INCOMPLETE',
     results,
   };
 }

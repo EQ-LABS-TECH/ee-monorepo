@@ -1,5 +1,6 @@
 const SHA = /^[0-9a-f]{40}$/i;
 const REPOSITORY = /^[a-z\d-]+\/[a-z\d_.-]+$/i;
+const RECONCILABLE_WORKFLOW_EVENTS = new Set(['pull_request', 'pull_request_review']);
 
 export function validateRequestedPrGovernanceHead({
   eventName,
@@ -50,7 +51,7 @@ export function validateGovernanceWorkflowRun({
 
   if (
     event.action !== 'completed' ||
-    run?.event !== 'pull_request' ||
+    !RECONCILABLE_WORKFLOW_EVENTS.has(run?.event) ||
     run.name !== expectedWorkflowName ||
     run.path !== expectedWorkflowPath ||
     !Number.isSafeInteger(run.workflow_id) ||

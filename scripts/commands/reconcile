@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { readFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 
 import {
   validateGovernanceSchedule,
@@ -8,7 +9,7 @@ import {
 } from '@eq-labs/governance/pr-governance/workflow';
 import { reconcileOpenGovernancePrs } from '../lib/pr-governance.reconcile-once.mjs';
 
-async function main(env = process.env) {
+export async function main(env = process.env, { reconcile = reconcileOpenGovernancePrs } = {}) {
   if (!['schedule', 'workflow_run'].includes(env.GITHUB_EVENT_NAME)) {
     throw new Error('Unsupported governance reconciliation event');
   }
@@ -34,7 +35,7 @@ async function main(env = process.env) {
       expectedWorkflowPath: '.github/workflows/ci.yml',
     });
 
-    if (origin.sourceEvent !== 'pull_request') {
+    if (!['pull_request', 'pull_request_review'].includes(origin.sourceEvent)) {
       throw new Error('Unsupported governance reconciliation source');
     }
   } else {
@@ -46,7 +47,7 @@ async function main(env = process.env) {
 
   const [owner, repo] = env.GITHUB_REPOSITORY.split('/');
 
-  const result = await reconcileOpenGovernancePrs({
+  const result = await reconcile({
     owner,
     repo,
     token: env.GOVERNANCE_PR_TOKEN,
@@ -60,7 +61,9 @@ async function main(env = process.env) {
     JSON.stringify({
       status: result.status,
       processed: result.results.length,
-      successful: result.results.filter((item) => item.status === 'success').length,
+      passed: result.results.filter((item) => item.status === 'PASS').length,
+      blocked: result.results.filter((item) => item.status === 'BLOCKED').length,
+      errors: result.results.filter((item) => item.status === 'ERROR').length,
     }),
   );
 
@@ -69,9 +72,11 @@ async function main(env = process.env) {
   }
 }
 
-try {
-  await main();
-} catch (error) {
-  console.error('PN-017 reconciliation failed:', error.name);
-  process.exitCode = 1;
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
+  try {
+    await main();
+  } catch (error) {
+    console.error('PN-017 reconciliation failed:', error.name);
+    process.exitCode = 1;
+  }
 }

@@ -48,8 +48,8 @@ test('evaluates all discovered PRs', async () => {
   assert.equal(result.status, 'SUCCESS');
   assert.deepEqual(calls, [10, 20]);
   assert.deepEqual(result.results, [
-    { number: 10, status: 'success' },
-    { number: 20, status: 'success' },
+    { number: 10, status: 'PASS' },
+    { number: 20, status: 'PASS' },
   ]);
 });
 
@@ -78,12 +78,12 @@ test('continues after an individual failure', async () => {
   assert.equal(result.status, 'INCOMPLETE');
   assert.deepEqual(calls, [10, 20]);
   assert.deepEqual(result.results, [
-    { number: 10, status: 'error' },
-    { number: 20, status: 'success' },
+    { number: 10, status: 'ERROR' },
+    { number: 20, status: 'PASS' },
   ]);
 });
 
-test('a blocked PR makes the execution incomplete', async () => {
+test('a policy-blocked PR is distinct from an operational error', async () => {
   const { context } = fixture({
     discover: async () => [10],
     run: async () => ({
@@ -96,8 +96,8 @@ test('a blocked PR makes the execution incomplete', async () => {
 
   const result = await reconcileOpenGovernancePrs(context);
 
-  assert.equal(result.status, 'INCOMPLETE');
-  assert.deepEqual(result.results, [{ number: 10, status: 'failure' }]);
+  assert.equal(result.status, 'SUCCESS');
+  assert.deepEqual(result.results, [{ number: 10, status: 'BLOCKED' }]);
 });
 
 test('rejects duplicate discovery results', async () => {
@@ -123,7 +123,7 @@ test('rejects an unexpected target branch', async () => {
   const result = await reconcileOpenGovernancePrs(context);
 
   assert.equal(result.status, 'INCOMPLETE');
-  assert.equal(result.results[0].status, 'error');
+  assert.equal(result.results[0].status, 'ERROR');
 });
 
 test('fails when discovery is unavailable', async () => {

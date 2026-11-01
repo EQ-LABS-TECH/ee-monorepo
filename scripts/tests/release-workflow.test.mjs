@@ -46,6 +46,7 @@ function getStep(steps, name) {
 test('release workflow YAML and trigger are valid', () => {
   const { job } = getSteps();
 
+  assert.equal(job.environment, 'release-main');
   assert.equal(job.permissions?.contents, 'read');
 });
 

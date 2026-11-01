@@ -120,6 +120,19 @@ test('accepts the expected CI workflow for a pull request', () => {
   });
 });
 
+test('accepts the expected CI workflow for a review signal', () => {
+  const result = validateGovernanceWorkflowRun({
+    ...context,
+    event: event({ event: 'pull_request_review' }),
+  });
+
+  assert.deepEqual(result, {
+    workflowRunId: 123,
+    repository,
+    sourceEvent: 'pull_request_review',
+  });
+});
+
 test('rejects a different source workflow name or path', () => {
   assert.throws(
     () =>
@@ -131,7 +144,7 @@ test('rejects a different source workflow name or path', () => {
   );
 });
 
-test('rejects non-pull-request executions', () => {
+test('rejects unsupported workflow run event origins', () => {
   assert.throws(
     () =>
       validateGovernanceWorkflowRun({

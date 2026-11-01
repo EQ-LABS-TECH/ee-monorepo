@@ -16,19 +16,18 @@ function readWorkflow() {
   return document.toJS();
 }
 
-test('governance verification runs for trusted PR and review events', () => {
+test('governance verification runs only for trusted PR target events', () => {
   const workflow = readWorkflow();
 
   assert.deepEqual(Object.keys(workflow.on), [
     'pull_request_target',
-    'pull_request_review',
     'workflow_run',
     'schedule',
     'workflow_dispatch',
   ]);
   assert.deepEqual(workflow.on.schedule, [{ cron: '17 * * * *' }]);
-  assert.deepEqual(workflow.on.pull_request_review.types, ['submitted', 'edited', 'dismissed']);
-  assert.match(workflow.jobs.verify.if, /github\.event_name == 'pull_request_review'/);
+  assert.equal(Object.hasOwn(workflow.on, 'pull_request_review'), false);
+  assert.match(workflow.jobs.verify.if, /github\.event_name == 'pull_request_target'/);
   assert.match(workflow.jobs.verify.if, /github\.event\.pull_request\.base\.ref == 'main'/);
   assert.equal(workflow.jobs.verify.name, 'Verify PR Governance');
 });
@@ -49,6 +48,15 @@ test('workflow executes only trusted main implementation', () => {
 
   assert.equal(checkout.with.ref, 'main');
   assert.equal(checkout.with['persist-credentials'], false);
+  assert.equal(workflow.jobs.verify.environment, 'governance-main');
+  assert.ok(
+    steps.findIndex((step) => step.name === 'Setup pnpm') <
+      steps.findIndex((step) => step.name === 'Setup Node.js'),
+  );
+  assert.equal(
+    steps.find((step) => step.name === 'Install workspace dependencies').run,
+    'pnpm install --frozen-lockfile',
+  );
 
   const execute = steps.find((step) => step.name === 'Execute trusted governance');
   const resolve = steps.find((step) => step.name === 'Resolve current PR HEAD');
@@ -133,7 +141,7 @@ test('automatic governance triggers do not silently enable required-check enforc
   const workflow = readWorkflow();
 
   assert.ok(Object.hasOwn(workflow.on, 'pull_request_target'));
-  assert.ok(Object.hasOwn(workflow.on, 'pull_request_review'));
+  assert.equal(Object.hasOwn(workflow.on, 'pull_request_review'), false);
   assert.ok(Object.hasOwn(workflow.on, 'workflow_run'));
   assert.ok(Object.hasOwn(workflow.on, 'workflow_dispatch'));
 
@@ -142,6 +150,14 @@ test('automatic governance triggers do not silently enable required-check enforc
 
   assert.equal(Object.hasOwn(workflow.on, 'repository_dispatch'), false);
   assert.match(workflow.jobs.reconcile.if, /github\.event\.workflow_run\.event == 'pull_request'/);
+  assert.match(
+    workflow.jobs.reconcile.if,
+    /github\.event\.workflow_run\.event == 'pull_request_review'/,
+  );
+  assert.equal(workflow.jobs.reconcile.environment, 'governance-main');
+  assert.ok(
+    workflow.jobs.reconcile.steps.find((step) => step.name === 'Install workspace dependencies'),
+  );
   assert.match(workflow.jobs.reconcile.if, /github\.event_name == 'schedule'/);
   assert.match(workflow.jobs.reconcile.if, /github\.ref == 'refs\/heads\/main'/);
 });
