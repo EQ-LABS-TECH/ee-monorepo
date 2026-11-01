@@ -40,6 +40,7 @@ test('CI preserves pull request, main push and manual triggers', () => {
   const workflow = loadWorkflow();
 
   assert.ok(Object.hasOwn(workflow.on, 'pull_request'));
+  assert.deepEqual(workflow.on?.pull_request_review?.types, ['submitted', 'edited', 'dismissed']);
   assert.deepEqual(workflow.on?.push?.branches, ['main']);
   assert.ok(Object.hasOwn(workflow.on, 'workflow_dispatch'));
   assert.deepEqual(workflow.permissions, { contents: 'read' });
@@ -95,6 +96,7 @@ test('governance advisory runs only for same-repository pull requests', () => {
   assert.equal(job['runs-on'], 'ubuntu-latest');
 
   assert.match(job.if, /github\.event_name == 'pull_request'/);
+  assert.match(job.if, /github\.event_name == 'pull_request_review'/);
   assert.match(job.if, /github\.event\.pull_request\.head\.repo\.full_name == github\.repository/);
 });
 

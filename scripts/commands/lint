@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { runTurboGate } from '../lib/run-turbo-gate.mjs';
+import { lintScripts } from '../lib/lint-scripts.mjs';
 
 console.log('🔍 Running linter (QG-LINT-001)...');
 console.log('');
@@ -7,5 +8,6 @@ console.log('');
 const status = runTurboGate({
   task: 'lint',
   gateId: 'QG-LINT-001',
+  additionalChecks: [lintScripts],
 });
 process.exit(status);

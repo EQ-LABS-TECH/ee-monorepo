@@ -28,6 +28,7 @@
     "version-packages": "changeset version"
   },
   "devDependencies": {
+    "@eq-labs/governance": "workspace:*",
     "@eq-labs/config-prettier": "workspace:*",
     "@changesets/cli": "3.0.2",
     "ajv": "8.20.0",

@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Gobernanza                                                             |
 | **Nivel**             | Especializado                                                          |
 | **Normativo**         | Sí                                                                     |
-| **Versión**           | v1.2.0                                                                 |
+| **Versión**           | v1.3.0                                                                 |
 | **Estado**            | Congelado                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-006                                                             |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                   |
 | **Fecha de creación** | 2026-09-21                                                             |
-| **Última revisión**   | 2026-10-22                                                             |
+| **Última revisión**   | 2026-10-31                                                             |
 | **Próxima revisión**  | No aplica — Documento Congelado (cambio solo vía RFC)                  |
 
 ---
@@ -845,6 +845,49 @@ flowchart TD
     Standard --> Merge
     Critical --> Merge
 ```
+
+#### 07.10.1. Materialización de aprobaciones dinámicas — PN-017
+
+La materialización operativa del régimen de aprobaciones reforzadas utilizará **GitHub Actions-only**, conforme a la decisión gobernada en EE-RFC-003. No requerirá un servicio HTTP persistente ni almacenamiento CAS durable para su primera activación.
+
+**Separación de controles.**
+
+- **Ruleset nativo:** exigirá al menos una aprobación y las reglas aplicables de CODEOWNERS.
+- **PR Governance:** check obligatorio de GitHub App que verificará el umbral dinámico de una aprobación independiente y calificada para `ORDINARY` y dos para `CRITICAL`.
+- **PENDING_REVIEW:** impedirá emitir un resultado favorable.
+- **Quality Gates:** mantendrán el required check `Validate` y los contratos definidos por EE-DOC-010.
+
+La clasificación `ORDINARY` estará sujeta a la autoridad definida por EE-DOC-005 y la decisión gobernada en EE-RFC-003. La falta de indicadores críticos no implicará una clasificación ordinaria automática.
+
+**Ejecución e identidad confiables.**
+
+El enforcement se ejecutará mediante código confiable integrado en `main`. Los contextos privilegiados no ejecutarán código no confiable procedente de Pull Requests.
+
+La GitHub App de gobernanza tendrá una identidad independiente de la automatización de releases, permisos mínimos y vinculación explícita como emisor autorizado del required check.
+
+El resultado se asociará al HEAD evaluado y verificará clasificación, aprobaciones, elegibilidad de revisores, CODEOWNERS y evidencias vigentes. Ante errores o evidencia insuficiente no se emitirá conformidad.
+
+**Eventos, invalidación y reconciliación.**
+
+La implementación deberá evaluar cambios de Pull Request, revisiones, HEAD y autorizaciones que afecten a la decisión. Los cambios de permisos o membresías sin evento directamente utilizable deberán cubrirse mediante reconciliación u otro mecanismo aprobado.
+
+La reconciliación periódica reduce el intervalo de desactualización, pero no garantiza vigencia atómica de permisos en el instante exacto del merge.
+
+La ejecución concurrente y los resultados anteriores deberán tratarse de forma que no prevalezcan decisiones obsoletas sobre evidencias posteriores.
+
+**Límites arquitectónicos.**
+
+El contrato objetivo para `merge_group`, conforme a EE-RFC-003 §02.8, exige identificar desde evidencia confiable todos los Pull Requests integrantes y comprobar que pertenecen al grupo evaluado; evaluar individualmente cada Pull Request con la evidencia vigente requerida por PN-017; y publicar un único check agregado `PR Governance` sobre el SHA exacto del grupo. El resultado será bloqueante si no puede verificarse la identidad o la evaluación de cualquier integrante. Esta definición no acredita implementación operativa ni garantiza vigencia atómica al momento del merge. La compatibilidad permanecerá pendiente hasta implementar y validar el flujo.
+
+Los módulos experimentales de delivery, lease, lease-store, receive, webhook y dispatch no forman parte del runtime operativo Actions-only. El servicio HTTP, CAS durable y leases automáticos quedan diferidos hasta una decisión arquitectónica posterior.
+
+**Condición de activación.**
+
+Este apartado establece el contrato objetivo; no acredita enforcement activo.
+
+La activación del required check `PR Governance` exigirá previamente código confiable integrado, triggers automáticos validados, identidad de App verificada, ruleset configurado y evidencia real de aceptación y bloqueo ante revocaciones, cambios de permisos y actualizaciones del HEAD.
+
+PN-017 permanecerá abierto hasta demostrar dichas condiciones. El inspector `PR Governance Advisory` no sustituye el enforcement obligatorio.
 
 ### 07.11. Estrategia de Merge
 
@@ -5490,6 +5533,7 @@ La implementación concreta de herramientas, automatizaciones o políticas que e
 | **v1.0.0** | 2026-09-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Aprobación normativa                 | Revisión arquitectónica cerrada; documento aprobado. Próximo hito: Implementación EE-IMP-007-P01…P08                                                                                                                       | **Aprobado**       |
 | **v1.1.0** | 2026-09-23 | Equipo de Arquitectura                            | Equipo de Arquitectura | Cierre Documental                    | P01–P08 completados; Validación Final conforme; EE-TEC-002; estado **Congelado**                                                                                                                                           | **Congelado**      |
 | **v1.2.0** | 2026-10-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Alineación del workflow colaborativo | Aclara aplicación en GitHub de rama por cambio coherente, PR creado por el usuario, revisión/merge autorizado, separación entre documentación y configuración.                                                             | **Congelado**      |
+| **v1.3.0** | 2026-10-31 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 Actions-only                  | EE-RFC-003: define aprobaciones dinámicas, identidad del check, límites operativos y activación gobernada.                                                                                                                 | **Congelado**      |
 
 ---
 

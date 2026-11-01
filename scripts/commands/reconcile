@@ -1,0 +1,82 @@
+#!/usr/bin/env node
+
+import { readFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
+
+import {
+  validateGovernanceSchedule,
+  validateGovernanceWorkflowRun,
+} from '@eq-labs/governance/pr-governance/workflow';
+import { reconcileOpenGovernancePrs } from '../lib/pr-governance.reconcile-once.mjs';
+
+export async function main(env = process.env, { reconcile = reconcileOpenGovernancePrs } = {}) {
+  if (!['schedule', 'workflow_run'].includes(env.GITHUB_EVENT_NAME)) {
+    throw new Error('Unsupported governance reconciliation event');
+  }
+
+  if (
+    typeof env.GITHUB_REPOSITORY !== 'string' ||
+    !/^[a-z\d-]+\/[a-z\d_.-]+$/i.test(env.GITHUB_REPOSITORY)
+  ) {
+    throw new Error('Invalid governance GitHub Actions context');
+  }
+
+  if (env.GITHUB_EVENT_NAME === 'workflow_run') {
+    if (typeof env.GITHUB_EVENT_PATH !== 'string' || !env.GITHUB_EVENT_PATH) {
+      throw new Error('Invalid governance GitHub Actions context');
+    }
+
+    // Never interpret artifacts from the triggering workflow as authority.
+    const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8'));
+    const origin = validateGovernanceWorkflowRun({
+      event,
+      expectedRepository: env.GITHUB_REPOSITORY,
+      expectedWorkflowName: 'CI',
+      expectedWorkflowPath: '.github/workflows/ci.yml',
+    });
+
+    if (!['pull_request', 'pull_request_review'].includes(origin.sourceEvent)) {
+      throw new Error('Unsupported governance reconciliation source');
+    }
+  } else {
+    validateGovernanceSchedule({
+      expectedRepository: env.GITHUB_REPOSITORY,
+      ref: env.GITHUB_REF,
+    });
+  }
+
+  const [owner, repo] = env.GITHUB_REPOSITORY.split('/');
+
+  const result = await reconcile({
+    owner,
+    repo,
+    token: env.GOVERNANCE_PR_TOKEN,
+    governanceToken: env.GOVERNANCE_EVIDENCE_TOKEN,
+    publisherToken: env.GOVERNANCE_PUBLISHER_TOKEN,
+    expectedAppId: Number(env.GOVERNANCE_APP_ID),
+  });
+
+  // Output only non-sensitive operational information.
+  console.log(
+    JSON.stringify({
+      status: result.status,
+      processed: result.results.length,
+      passed: result.results.filter((item) => item.status === 'PASS').length,
+      blocked: result.results.filter((item) => item.status === 'BLOCKED').length,
+      errors: result.results.filter((item) => item.status === 'ERROR').length,
+    }),
+  );
+
+  if (result.status !== 'SUCCESS') {
+    throw new Error('Governance reconciliation is incomplete');
+  }
+}
+
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
+  try {
+    await main();
+  } catch (error) {
+    console.error('PN-017 reconciliation failed:', error.name);
+    process.exitCode = 1;
+  }
+}

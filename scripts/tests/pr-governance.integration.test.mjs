@@ -1,10 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readPullRequestEvidence } from '../lib/pr-governance.evidence.mjs';
-import { classifyCriticalChange } from '../lib/pr-governance.classification.mjs';
-import { evaluatePrApprovals } from '../lib/pr-governance.approvals.mjs';
+import { classifyCriticalChange } from '@eq-labs/governance/pr-governance/classification';
+import {
+  readPullRequestEvidence,
+  readReviewerRepositoryPermission,
+  readReviewerTeamMembership,
+} from '../lib/pr-governance.evidence.mjs';
+import {
+  evaluatePrApprovals,
+  evaluateReviewerAuthority,
+} from '@eq-labs/governance/pr-governance/approvals';
 
 const headSha = 'a'.repeat(40);
+const baseSha = 'b'.repeat(40);
+
 const base = {
   number: 42,
   user: { login: 'author' },
@@ -14,6 +23,7 @@ const base = {
   },
   base: {
     ref: 'main',
+    sha: baseSha,
     repo: { full_name: 'EQ-LABS-TECH/ee-monorepo' },
   },
 };
@@ -130,4 +140,83 @@ test('impact is unresolved for ordinary-looking paths', async () => {
   assert.equal(classification.requiresImpactReview, true);
   // Do not automatically pass `critical: false` to a production enforcement decision.
   assert.equal(evidence.advisoryOnly, true);
+});
+
+test('reviewer eligibility evidence does not authorize ordinary impact', async () => {
+  const { evidence, classification } = await snapshot({
+    paths: ['packages/execution/src/engine.ts'],
+    reviews: [
+      {
+        ...approval('reviewer-a'),
+        body: 'EE-LABS-IMPACT: ORDINARY',
+      },
+    ],
+  });
+
+  const approvals = evaluate(evidence, false);
+
+  const permission = await readReviewerRepositoryPermission({
+    ...locator,
+    reviewer: 'reviewer-a',
+    fetchImpl: async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        permission: 'write',
+        role_name: 'write',
+        user: { login: 'reviewer-a' },
+      }),
+    }),
+  });
+
+  const membership = await readReviewerTeamMembership({
+    owner: locator.owner,
+    teamSlug: 'architecture',
+    reviewer: 'reviewer-a',
+    token: locator.token,
+    fetchImpl: async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        state: 'active',
+        role: 'member',
+      }),
+    }),
+  });
+
+  const authority = evaluateReviewerAuthority({
+    candidate: {
+      reviewer: permission.reviewer,
+      hasWriteAccess: permission.hasWriteAccess,
+    },
+    approvedReviewers: approvals.approvedReviewers,
+    memberships: [membership],
+    responsibleTeams: ['architecture'],
+  });
+
+  assert.equal(classification.status, 'PENDING_REVIEW');
+  assert.equal(approvals.status, 'PASS');
+  assert.equal(authority.status, 'ELIGIBLE_EVIDENCE');
+  assert.equal(evidence.advisoryOnly, true);
+});
+
+test('active membership outside the stipulated team is insufficient', () => {
+  const authority = evaluateReviewerAuthority({
+    candidate: {
+      reviewer: 'reviewer-a',
+      hasWriteAccess: true,
+    },
+    approvedReviewers: ['reviewer-a'],
+    memberships: [
+      {
+        reviewer: 'reviewer-a',
+        teamSlug: 'maintainers',
+        active: true,
+      },
+    ],
+    responsibleTeams: ['architecture'],
+  });
+
+  assert.equal(authority.status, 'UNVERIFIED');
+  assert.equal(authority.reason, 'active-responsible-team-membership-required');
 });

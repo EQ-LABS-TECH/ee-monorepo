@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+import { executeGovernanceCommand } from '../lib/pr-governance.command.mjs';
+
+try {
+  process.exitCode = await executeGovernanceCommand({
+    env: process.env,
+  });
+} catch (error) {
+  console.error('PN-017 enforcement failed:', error.name);
+  process.exitCode = 1;
+}

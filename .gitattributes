@@ -94,5 +94,4 @@ pnpm-lock.yaml text eol=lf
 # Git Merge Behavior
 ###############################################################################
 
-package.json merge=union
 CHANGELOG.md merge=union

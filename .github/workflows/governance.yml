@@ -1,0 +1,203 @@
+# PN-017 — Trusted governance verification.
+# Automatic validation; not yet a required check.
+name: PR Governance Verification
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - edited
+      - ready_for_review
+      - converted_to_draft
+      - review_requested
+      - review_request_removed
+    branches:
+      - main
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Pull request number
+        required: true
+        type: number
+      head_sha:
+        description: Exact PR HEAD commit SHA
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: pr-governance-${{ github.repository }}
+  cancel-in-progress: false
+  queue: max
+
+jobs:
+  verify:
+    name: Verify PR Governance
+    if: >-
+      (github.event_name == 'pull_request_target' &&
+       github.event.pull_request.base.ref == 'main') ||
+      (github.event_name == 'workflow_dispatch' &&
+       github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: governance-main
+
+    steps:
+      - name: Checkout trusted implementation
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version-file: '.nvmrc'
+          package-manager-cache: false
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Resolve current PR HEAD
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+          REQUESTED_HEAD_SHA: ${{ inputs.head_sha || '' }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { appendFileSync } from 'node:fs';
+          import { validateRequestedPrGovernanceHead } from '@eq-labs/governance/pr-governance/workflow';
+          import { resolvePrGovernanceRoute } from './scripts/lib/pr-governance.resolve.mjs';
+
+          const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
+
+          const resolved = await resolvePrGovernanceRoute({
+            route: {
+              status: 'READY',
+              scope: 'PR_SCOPE',
+              owner,
+              repo,
+              number: Number(process.env.PR_NUMBER),
+            },
+            token: process.env.GITHUB_TOKEN,
+          });
+
+          if (resolved.baseRef !== 'main') {
+            throw new Error('Unexpected PR base branch');
+          }
+
+          validateRequestedPrGovernanceHead({
+            eventName: process.env.GITHUB_EVENT_NAME,
+            requestedHeadSha: process.env.REQUESTED_HEAD_SHA,
+            resolvedHeadSha: resolved.expectedHeadSha,
+          });
+
+          appendFileSync(
+            process.env.GITHUB_ENV,
+            `PR_HEAD_SHA=${resolved.expectedHeadSha}\n`,
+          );
+          NODE
+
+      - name: Create governance App token
+        id: governance-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.EE_GOVERNANCE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.EE_GOVERNANCE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: read
+          permission-pull-requests: read
+          permission-checks: write
+          permission-members: read
+
+      - name: Execute trusted governance
+        shell: bash
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+          GOVERNANCE_APP_ID: ${{ vars.EE_GOVERNANCE_APP_ID }}
+          GOVERNANCE_PR_TOKEN: ${{ github.token }}
+          GOVERNANCE_EVIDENCE_TOKEN: ${{ steps.governance-token.outputs.token }}
+          GOVERNANCE_PUBLISHER_TOKEN: ${{ steps.governance-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          node scripts/commands/enforce
+
+  reconcile:
+    name: Reconcile PR Governance
+    if: >-
+      (github.event_name == 'workflow_run' &&
+       (github.event.workflow_run.event == 'pull_request' ||
+        github.event.workflow_run.event == 'pull_request_review')) ||
+      (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: governance-main
+
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Checkout trusted implementation
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version-file: '.nvmrc'
+          package-manager-cache: false
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create governance App token
+        id: governance-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.EE_GOVERNANCE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.EE_GOVERNANCE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: read
+          permission-pull-requests: read
+          permission-checks: write
+          permission-members: read
+
+      - name: Reconcile open PRs
+        shell: bash
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GOVERNANCE_APP_ID: ${{ vars.EE_GOVERNANCE_APP_ID }}
+          GOVERNANCE_PR_TOKEN: ${{ github.token }}
+          GOVERNANCE_EVIDENCE_TOKEN: ${{ steps.governance-token.outputs.token }}
+          GOVERNANCE_PUBLISHER_TOKEN: ${{ steps.governance-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          node scripts/commands/reconcile

@@ -111,6 +111,45 @@ and validated authentication configuration.
 The command implementations live under `scripts/commands/`; shared helpers and
 regression tests are kept in `scripts/lib/` and `scripts/tests/`, respectively.
 
+### PR Governance Inspector (PN-017)
+
+The PR governance inspector is a read-only, advisory capability governed by
+EE-DOC-005, EE-DOC-007, and RFC-003 §02.8.
+
+Implementation:
+
+- `scripts/commands/governance`: advisory command entry point.
+- `packages/governance/src/pr-governance/classification.mjs`: conservative critical-change indicators.
+- `scripts/lib/pr-governance.evidence.mjs`: GitHub PR, review, permission, and team-membership evidence.
+- `packages/governance/src/pr-governance/approvals.mjs`: approval thresholds and reviewer-eligibility evidence.
+- `scripts/lib/pr-governance.inspect.mjs`: advisory report composition.
+- `scripts/tests/pr-governance.*.test.mjs`: regression and integration tests.
+
+The inspector identifies `CRITICAL` changes through conservative path indicators.
+When no critical indicators are detected, classification remains `PENDING_REVIEW`;
+absence of indicators does not establish `ORDINARY`.
+
+Explicit `EE-LABS-IMPACT: ORDINARY` declarations are collected only from current,
+independent approvals associated with the observed PR HEAD. Repository permissions
+are checked for ordinary-classification candidates. Team membership can be queried,
+but authoritative ownership and classification are not yet integrated.
+
+The inspector performs consistency checks on PR identity, HEAD, changed files,
+and review evidence. These checks do not provide an atomic snapshot or guarantee
+that approvals remain valid until merge.
+
+The `PR Governance Advisory` job in `.github/workflows/ci.yml` runs for eligible
+same-repository pull requests and observes review submission, editing, and
+dismissal events. It checks out trusted implementation from `main` and uses
+read-only permissions.
+
+Reports retain `mode: ADVISORY` and `status: PENDING`. Ordinary-classification
+evidence remains `UNVERIFIED`. A successful advisory job is not merge authorization.
+
+Mandatory enforcement remains pending: approved classification authority,
+trusted ownership and membership evidence, suitable credentials, current
+required-check semantics, and operational validation in GitHub.
+
 ## Prospective Dependencies
 
 The root `package.json` may declare dependencies that are not currently used by any script but are retained for planned implementation.
@@ -192,18 +231,23 @@ Private workspaces remain excluded from public npm distribution.
 
 These commands use Turbo as the workspace task orchestrator:
 
-| Command     | Implementation        | Responsibility            |
-| ----------- | --------------------- | ------------------------- |
-| `build`     | `turbo run build`     | Build all workspaces      |
-| `test`      | `turbo run test`      | Run tests                 |
-| `lint`      | `turbo run lint`      | Lint all workspaces       |
-| `typecheck` | `turbo run typecheck` | Type checking             |
-| `dev`       | `turbo run dev`       | Development mode          |
-| `clean`     | `turbo run clean`     | Clean workspace artifacts |
+| Command     | Implementation                            | Responsibility                                        |
+| ----------- | ----------------------------------------- | ----------------------------------------------------- |
+| `build`     | `turbo run build`                         | Build all workspaces                                  |
+| `test`      | `turbo run test`                          | Run tests                                             |
+| `lint`      | `turbo run lint` + ESLint over `scripts/` | Lint workspaces and engineering scripts (QG-LINT-001) |
+| `typecheck` | `turbo run typecheck`                     | Type checking                                         |
+| `dev`       | `turbo run dev`                           | Development mode                                      |
+| `clean`     | `turbo run clean`                         | Clean workspace artifacts                             |
 
 Each workspace must define the corresponding task in its `package.json` when that workspace participates in the task.
 
 ## Usage
+
+The canonical `pnpm run lint` gate runs workspace lint tasks and analyzes the
+JavaScript source under `scripts/`, including extensionless command entrypoints,
+with the shared `@eq-labs/config-eslint` rules. Both phases contribute to one
+`QG-LINT-001` result; missing or incomplete script-file evidence fails closed.
 
 The scripts are exposed through the root package commands:
 

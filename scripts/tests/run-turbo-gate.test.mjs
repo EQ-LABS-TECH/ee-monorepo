@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { runTurboGate } from '../lib/run-turbo-gate.mjs';
 
-function harness({ result, summary, summaryError }) {
+function harness({ result, summary, summaryError, additionalChecks = [] }) {
   const output = {
     stdout: '',
     stderr: '',
@@ -24,6 +24,7 @@ function harness({ result, summary, summaryError }) {
       if (summaryError) throw summaryError;
       return summary;
     },
+    additionalChecks,
     writeOut: (value) => {
       output.stdout += value;
     },
@@ -170,4 +171,48 @@ test('returns ERROR when Turbo cannot be launched', () => {
   assert.equal(status, 1);
   assert.match(output.errors[0], /ERROR.*unable to start Turbo/);
   assert.equal(contract.status, 'ERROR');
+});
+
+test('aggregates additional checks into one gate result', () => {
+  const { status, output, contract } = harness({
+    result: { status: 0, stdout: '', stderr: '' },
+    summary: { tasks: [{ taskId: 'workspace#lint', execution: { exitCode: 0 } }] },
+    additionalChecks: [() => ({ status: 'PASS', detail: 'Scripts linted.' })],
+  });
+
+  assert.equal(status, 0);
+  assert.equal(contract.status, 'PASS');
+  assert.equal(
+    output.stdout.split(/\r?\n/).filter((line) => line.startsWith('QG_RESULT ')).length,
+    1,
+  );
+  assert.match(output.logs.join('\n'), /Scripts linted/);
+});
+
+test('an additional check failure fails the composite gate', () => {
+  const { status, contract } = harness({
+    result: { status: 0, stdout: '', stderr: '' },
+    summary: { tasks: [{ taskId: 'workspace#lint', execution: { exitCode: 0 } }] },
+    additionalChecks: [() => ({ status: 'FAIL', detail: 'Scripts lint failed.' })],
+  });
+
+  assert.equal(status, 1);
+  assert.equal(contract.status, 'FAIL');
+});
+
+test('additional checks still run when Turbo fails', () => {
+  let checked = false;
+  const { status, contract } = harness({
+    result: { status: 1, stdout: '', stderr: 'workspace lint failed' },
+    additionalChecks: [
+      () => {
+        checked = true;
+        return { status: 'PASS' };
+      },
+    ],
+  });
+
+  assert.equal(checked, true);
+  assert.equal(status, 1);
+  assert.equal(contract.status, 'FAIL');
 });
