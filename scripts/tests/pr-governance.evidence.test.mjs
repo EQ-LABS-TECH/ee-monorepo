@@ -80,6 +80,29 @@ test('normalizes PR files and reviews from GitHub without write calls', async ()
   assert.equal(evidence.advisoryOnly, true);
 });
 
+test('accepts bot PR authors but excludes bot reviews', async () => {
+  const evidence = await readPullRequestEvidence({
+    ...locator,
+    fetchImpl: mockFetch({
+      pr: {
+        ...base,
+        user: { login: 'dependabot[bot]' },
+      },
+      reviews: [
+        {
+          ...review,
+          user: { login: 'dependabot[bot]' },
+        },
+        review,
+      ],
+    }),
+  });
+
+  assert.equal(evidence.author, 'dependabot[bot]');
+  assert.equal(evidence.reviews.length, 1);
+  assert.equal(evidence.reviews[0].login, 'reviewer');
+});
+
 test('preserves review body as classification evidence', async () => {
   const evidence = await readPullRequestEvidence({
     ...locator,

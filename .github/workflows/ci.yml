@@ -100,11 +100,17 @@ jobs:
           ref: main
           persist-credentials: false
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+
       - name: Setup Node.js
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version-file: '.nvmrc'
           package-manager-cache: false
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Inspect PR governance
         env:

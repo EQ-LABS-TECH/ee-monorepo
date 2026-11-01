@@ -49,6 +49,7 @@ export function evaluatePrApprovals({ author, headSha, reviews, critical }) {
   const approved = [...latest]
     .filter(
       ([login, review]) =>
+        !login.endsWith('[bot]') &&
         login !== author.toLowerCase() &&
         review.state === 'APPROVED' &&
         review.commitId.toLowerCase() === headSha.toLowerCase(),
