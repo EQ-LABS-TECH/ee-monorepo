@@ -309,12 +309,12 @@ export async function completePrGovernanceCheck({
       checks.total_count > 100 ||
       !Array.isArray(checks.check_runs) ||
       checks.check_runs.length !== checks.total_count ||
-      !Number.isFinite(Date.parse(currentCheck.created_at))
+      !Number.isFinite(Date.parse(currentCheck.started_at))
     ) {
       throw new Error('PR governance check concurrency evidence is incomplete');
     }
 
-    const currentCreatedAt = Date.parse(currentCheck.created_at);
+    const currentStartedAt = Date.parse(currentCheck.started_at);
     let currentFound = false;
 
     for (const check of checks.check_runs) {
@@ -324,7 +324,7 @@ export async function completePrGovernanceCheck({
         check.name !== PR_GOVERNANCE_CHECK_NAME ||
         check.app?.id !== expectedAppId ||
         check.head_sha?.toLowerCase() !== payload.head_sha ||
-        !Number.isFinite(Date.parse(check.created_at))
+        !Number.isFinite(Date.parse(check.started_at))
       ) {
         throw new Error('Malformed PR governance concurrent check');
       }
@@ -335,7 +335,7 @@ export async function completePrGovernanceCheck({
       }
 
       // Equal timestamps are ambiguous: fail closed.
-      if (Date.parse(check.created_at) >= currentCreatedAt) {
+      if (Date.parse(check.started_at) >= currentStartedAt) {
         throw new Error('Newer or concurrent PR governance check exists');
       }
     }

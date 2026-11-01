@@ -334,6 +334,8 @@ function completionFixture({
   checkHeadSha = headSha,
   checkStatus = 'in_progress',
   patchStatus = 200,
+  currentCheckStartedAt = '2026-10-30T12:00:00Z',
+  listedCheckStartedAt = '2026-10-30T12:00:00Z',
 } = {}) {
   const calls = [];
 
@@ -367,7 +369,7 @@ function completionFixture({
           name: 'PR Governance',
           head_sha: checkHeadSha,
           status: checkStatus,
-          created_at: '2026-10-30T12:00:00Z',
+          ...(currentCheckStartedAt === null ? {} : { started_at: currentCheckStartedAt }),
         }),
       };
     }
@@ -384,7 +386,7 @@ function completionFixture({
               app: { id: 789 },
               name: 'PR Governance',
               head_sha: headSha,
-              created_at: '2026-10-30T12:00:00Z',
+              ...(listedCheckStartedAt === null ? {} : { started_at: listedCheckStartedAt }),
             },
           ],
         }),
@@ -439,6 +441,49 @@ test('completes the same governance check with success', async () => {
     ['GET', 'GET', 'GET', 'PATCH'],
   );
 });
+
+for (const [label, startedAt] of [
+  ['missing', null],
+  ['invalid', 'not-a-timestamp'],
+]) {
+  test(`missing or invalid current started_at blocks completion (${label})`, async () => {
+    const mock = completionFixture({ currentCheckStartedAt: startedAt });
+
+    await assert.rejects(
+      completePrGovernanceCheck({
+        ...options,
+        checkId: 456,
+        expectedAppId: 789,
+        fetchImpl: mock.fetchImpl,
+      }),
+      /check concurrency evidence is incomplete/,
+    );
+
+    assert.equal(
+      mock.calls.some((call) => call.method === 'PATCH'),
+      false,
+    );
+  });
+
+  test(`missing or invalid listed started_at blocks completion (${label})`, async () => {
+    const mock = completionFixture({ listedCheckStartedAt: startedAt });
+
+    await assert.rejects(
+      completePrGovernanceCheck({
+        ...options,
+        checkId: 456,
+        expectedAppId: 789,
+        fetchImpl: mock.fetchImpl,
+      }),
+      /Malformed PR governance concurrent check/,
+    );
+
+    assert.equal(
+      mock.calls.some((call) => call.method === 'PATCH'),
+      false,
+    );
+  });
+}
 
 test('completes BLOCKED governance with failure', async () => {
   const mock = completionFixture();
@@ -624,14 +669,58 @@ test('concurrent newer governance check prevents success', async () => {
                   app: { id: 789 },
                   name: 'PR Governance',
                   head_sha: headSha,
-                  created_at: '2026-10-30T12:00:00Z',
+                  started_at: '2026-10-30T12:00:00Z',
                 },
                 {
                   id: 457,
                   app: { id: 789 },
                   name: 'PR Governance',
                   head_sha: headSha,
-                  created_at: '2026-10-30T12:01:00Z',
+                  started_at: '2026-10-30T12:01:00Z',
+                },
+              ],
+            }),
+          };
+        }
+
+        return mock.fetchImpl(url, init);
+      },
+    }),
+    /Newer or concurrent PR governance check exists/,
+  );
+
+  assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 0);
+});
+
+test('concurrent governance check with equal timestamp prevents success', async () => {
+  const mock = completionFixture();
+
+  await assert.rejects(
+    completePrGovernanceCheck({
+      ...options,
+      checkId: 456,
+      expectedAppId: 789,
+      fetchImpl: async (url, init) => {
+        if (init.method === 'GET' && url.includes('/commits/') && url.includes('/check-runs?')) {
+          return {
+            ok: true,
+            status: 200,
+            json: async () => ({
+              total_count: 2,
+              check_runs: [
+                {
+                  id: 456,
+                  app: { id: 789 },
+                  name: 'PR Governance',
+                  head_sha: headSha,
+                  started_at: '2026-10-30T12:00:00Z',
+                },
+                {
+                  id: 457,
+                  app: { id: 789 },
+                  name: 'PR Governance',
+                  head_sha: headSha,
+                  started_at: '2026-10-30T12:00:00Z',
                 },
               ],
             }),
