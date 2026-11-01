@@ -253,7 +253,7 @@ function successfulFixture({
             app: { id: 789 },
             name: 'PR Governance',
             head_sha: headSha,
-            created_at: '2026-10-30T12:00:00Z',
+            started_at: '2026-10-30T12:00:00Z',
           },
         ],
       };
@@ -264,7 +264,7 @@ function successfulFixture({
         name: 'PR Governance',
         head_sha: headSha,
         status: 'in_progress',
-        created_at: '2026-10-30T12:00:00Z',
+        started_at: '2026-10-30T12:00:00Z',
       };
     } else if (url.endsWith('/check-runs') && method === 'POST') {
       const payload = JSON.parse(init.body);
