@@ -202,7 +202,7 @@ La materialización física **no** es criterio de este RFC (corresponde a EE-IMP
 |   1   | Aprobar EE-RFC-002                                                                                                  | Equipo de Arquitectura |
 |   2   | Parche normativo **EE-DOC-006 v1.5.0**                                                                              | Arquitectura           |
 |   3   | Revisión arquitectónica y aprobación de **EE-DOC-012**                                                              | Arquitectura           |
-|   4   | Verificar coherencia 006 ↔ 012 ↔ RFC                                                                              | Arquitectura           |
+|   4   | Verificar coherencia 006 ↔ 012 ↔ RFC                                                                                | Arquitectura           |
 |   5   | Preparar (sin publicar) el parche de **EE-DOC-001 v2.9.0** (artefacto + referencia RFC + 012 Aprobado)              | Arquitectura           |
 |   6   | **Sincronización de estados de 001 (§03.2) — última acción**; publicar 006 v1.5.0 y 001 v2.9.0 **concurrentemente** | Arquitectura           |
 |   7   | EE-IMP-012-P01…P02 (scaffold físico de `templates/`)                                                                | Implementación         |

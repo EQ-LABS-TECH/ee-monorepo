@@ -275,13 +275,13 @@ Push a `main` con bypass de admin (single-operator; EE-DOC-007).
 
 ### 11.2. Observaciones de revisión y resolución
 
-| #   | Observación                                                               | Severidad       | Resolución                                                                                                                                                        |
-| :-- | :------------------------------------------------------------------------ | :-------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| R1  | Faltaba dictamen formal de cierre arquitectónico                          | Type A          | Añadido §11 (esta versión)                                                                                                                                        |
+| #   | Observación                                                               | Severidad       | Resolución                                                                                                                                                     |
+| :-- | :------------------------------------------------------------------------ | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1  | Faltaba dictamen formal de cierre arquitectónico                          | Type A          | Añadido §11 (esta versión)                                                                                                                                     |
 | R2  | Trazabilidad citaba «EE-TEC-011» de forma confusa                         | Type A          | **SSOT de consolidación = EE-TEC-006** (serie TEC correlativa a orden de emisión: TEC-001↔006 … TEC-005↔010, TEC-006↔011). El código del DOC no numera el TEC. |
-| R3  | Estructura IMP ligeramente alejada de §18.3 (alcance / estructura física) | Type A          | Reordenada en v1.2.0 (§02–§04)                                                                                                                                    |
-| R4  | D-P04-005/006 sin dueño temporal                                          | Type A          | Marcados backlog; **no** bloquean cierre P04                                                                                                                      |
-| R5  | Nota operativa generate/012 en README                                     | Type A opcional | Tabla de comandos ya lista generate/release; detalle 012 puede vivir en P05/TEC-006                                                                               |
+| R3  | Estructura IMP ligeramente alejada de §18.3 (alcance / estructura física) | Type A          | Reordenada en v1.2.0 (§02–§04)                                                                                                                                 |
+| R4  | D-P04-005/006 sin dueño temporal                                          | Type A          | Marcados backlog; **no** bloquean cierre P04                                                                                                                   |
+| R5  | Nota operativa generate/012 en README                                     | Type A opcional | Tabla de comandos ya lista generate/release; detalle 012 puede vivir en P05/TEC-006                                                                            |
 
 **Ninguna observación bloqueante permanece abierta** para el alcance de P04.
 

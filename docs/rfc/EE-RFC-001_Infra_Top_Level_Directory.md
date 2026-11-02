@@ -200,7 +200,7 @@ La materialización física en git **no** es criterio de este RFC. Corresponde a
 |   1   | Aprobar EE-RFC-001                                                                            | Equipo de Arquitectura |
 |   2   | Parche normativo **EE-DOC-006** (`infra/` en §05 + categoría)                                 | Arquitectura           |
 |   3   | Parche normativo **EE-DOC-001** (artefacto 009) — **mismo paquete / misma ola** que el paso 2 | Arquitectura           |
-|   4   | Verificar sincronización 001 ↔ 006 ↔ 009 §08                                                | Arquitectura           |
+|   4   | Verificar sincronización 001 ↔ 006 ↔ 009 §08                                                  | Arquitectura           |
 |   5   | Continuar ciclo EE-DOC-009 (revisión / Aprobado)                                              | Arquitectura           |
 |   6   | EE-IMP-009-P01 — scaffold físico `infra/` (incluye ownership/CODEOWNERS si aplica)            | Implementación         |
 

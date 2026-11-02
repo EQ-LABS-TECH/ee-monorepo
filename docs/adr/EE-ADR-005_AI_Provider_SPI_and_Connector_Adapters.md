@@ -161,7 +161,7 @@ Materializado en **EE-DOC-006** (vigente) (R-CONN; composition root sin SDK).
 | Solo connectors sin SPI en Foundation | Rompe AI Layer de 004                                |
 | `packages/ai/` top-level              | Viola EE-DOC-006                                     |
 | SPI "en Intelligence o Foundation"    | Doble SSOT                                           |
-| Dejar §13.2 sin Connectors            | Divergencia silenciosa 006 ↔ 013                    |
+| Dejar §13.2 sin Connectors            | Divergencia silenciosa 006 ↔ 013                     |
 | SDK como composition root             | Contradice **R-SDK-3** y release (public vs private) |
 
 ---

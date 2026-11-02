@@ -112,7 +112,7 @@ Dev Container, si se adopta en el futuro, será **entorno local gobernado**, no 
 | **Status P04**            | **Diferida** (sin bloqueo de conformidad mínima)                                                                               |
 | **Motivo**                | Bootstrap local viable (P01–P03); política EE-DOC-008 permite deferir; sin valor inmediato de paridad contenedor en esta etapa |
 | **Condición de adopción** | Decisión de Arquitectura + **ADR** si se convierte en baseline obligatorio; materialización de `.devcontainer/` bajo §07.3     |
-| **Impacto**               | Cero sobre P05 (paridad local ↔ CI se valida sin Dev Container)                                                               |
+| **Impacto**               | Cero sobre P05 (paridad local ↔ CI se valida sin Dev Container)                                                                |
 
 ### 05.2. Baseline confirmado (P01–P03)
 

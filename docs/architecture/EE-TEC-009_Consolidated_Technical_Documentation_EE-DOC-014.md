@@ -156,14 +156,14 @@ Commits de referencia: `774cdd8`, `6a0c415`, `517fba2`, `ccc463c`.
 
 ## 09. Alineación con EE-DOC-014
 
-| Requisito                     | As-built           |
-| :---------------------------- | :----------------- |
-| Port en Foundation            | ✅                 |
-| Impl en knowledge             | ✅                 |
-| Root apps/\*                  | ✅                 |
+| Requisito                    | As-built           |
+| :--------------------------- | :----------------- |
+| Port en Foundation           | ✅                 |
+| Impl en knowledge            | ✅                 |
+| Root apps/\*                 | ✅                 |
 | Sin intelligence ↔ knowledge | ✅                 |
-| data/ bajo 006                | ✅                 |
-| No ACTIVE producto sin store  | ✅ (No False Pass) |
+| data/ bajo 006               | ✅                 |
+| No ACTIVE producto sin store | ✅ (No False Pass) |
 
 ---
 

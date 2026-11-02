@@ -125,7 +125,7 @@ definition → implementation → invocation → result → evidence → CI → 
 | :--------------------------------------------- | :------------------------------------------- |
 | **A — Declarar ACTIVE en 010 sin enforcement** | Viola **No False Pass**; simula cumplimiento |
 | **Quitar obligatoriedad en 005**               | Debilita Quality by Default del workflow     |
-| **“PENDING no bloquea” sin régimen**           | Contradicción silenciosa 005 ↔ 010          |
+| **“PENDING no bloquea” sin régimen**           | Contradicción silenciosa 005 ↔ 010           |
 
 ---
 

@@ -161,11 +161,11 @@ Evidencia 2026-09-24 (Windows / PowerShell). Controles alineados al job **`Valid
 
 ### 07.1. Resultado de la Implementación y Estado de la Fase
 
-| Campo                 | Valor                                                         |
-| :-------------------- | :------------------------------------------------------------ |
-| **Estado de la fase** | **Completada**                                                |
+| Campo                 | Valor                                                        |
+| :-------------------- | :----------------------------------------------------------- |
+| **Estado de la fase** | **Completada**                                               |
 | **Dictamen**          | **Conforme** (paridad de **comandos** local ↔ CI; ver §07.2) |
-| **Fecha evidencia**   | 2026-09-24                                                    |
+| **Fecha evidencia**   | 2026-09-24                                                   |
 
 **Paridad estructural:** los cuatro controles del job `Validate` (`lint`, `typecheck`, `test`, `validate`) se ejecutaron en local con el mismo baseline Node/pnpm que CI declara (`.nvmrc` / Corepack).
 

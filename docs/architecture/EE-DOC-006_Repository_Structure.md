@@ -856,35 +856,35 @@ Cada unidad de implementación física del monorepo es responsable de materializ
 
 ## 18. Referencias
 
-| Código         | Documento                                              | Uso en este documento                                                        |
-| :------------- | :----------------------------------------------------- | :--------------------------------------------------------------------------- |
-| **EE-DOC-001** | Master Documentation Index                             | Índice y roadmap                                                             |
-| **EE-DOC-002** | Document Design Template                               | Plantilla y ciclo documental                                                 |
-| **EE-DOC-003** | Engineering Ecosystem Constitution                     | Principios (Vendor Agnostic, etc.)                                           |
-| **EE-DOC-004** | Engineering Architecture                               | Capas lógicas; Adapter Pattern                                               |
-| **EE-DOC-005** | Development Workflow                                   | Implementación, cambio gobernado                                             |
-| **EE-DOC-007** | GitHub Governance                                      | `.github/`, CODEOWNERS                                                       |
-| **EE-DOC-008** | Development Environment                                | `.vscode/`, runtime local                                                    |
-| **EE-DOC-009** | Infrastructure                                         | Semántica de `infra/`                                                        |
-| **EE-DOC-010** | Quality Gates                                          | Enforcement; No False Pass, Availability, WAIVE, QG-ARCH                     |
-| **EE-DOC-011** | Automation                                             | Scripts root; release                                                        |
-| **EE-DOC-012** | Templates                                              | `templates/`; T-CON / T-PKG                                                  |
-| **EE-DOC-013** | AI Ecosystem                                           | Intelligence; consumo de connectors vía composition root                     |
-| **EE-DOC-014** | Knowledge Management                                   | Restricciones de import knowledge                                            |
-| **EE-DOC-015** | Engineering Ecosystem Validation                       | PENDING/DEGRADED; V-E2E                                                      |
-| **EE-ADR-001** | Workspace Task Orchestration Strategy                  | Turborepo / pnpm / Changesets                                                |
-| **EE-ADR-002** | Engineering Ecosystem Testing Standard                 | Vitest / Playwright, e2e                                                     |
-| **EE-ADR-003** | Node.js Baseline Upgrade to 24 LTS                     | `.nvmrc` / engines                                                           |
-| **EE-ADR-004** | Node / toolchain (si aplica)                           | Quality Gates Progressive Adoption                                           |
-| **EE-ADR-005** | AI Provider SPI and Connector Adapters                 | SPI en Foundation; connectors; composition root                              |
-| **EE-ADR-006** | Workflow-AI Interaction via Injected Ports             | Aristas Intelligence↔Execution y Knowledge→Intelligence; puertos inyectados |
-| **EE-RFC-001** | Infra Top-Level Directory                              | Incorporación de `infra/`                                                    |
-| **EE-RFC-002** | Templates Top-Level Directory                          | Incorporación de `templates/`                                                |
-| **EE-RFC-003** | Sync estándares documentación; mapeo 004↔006 (PN-008) |                                                                              |
-| **EE-TEC-001** | Consolidated Technical Documentation EE-DOC-006        | As-built consolidado                                                         |
-| **EE-IMP-006** | (histórico)                                            | Materialización de la estructura base                                        |
-| **EE-IMP-009** | Infrastructure implementation                          | Materialización de `infra/`                                                  |
-| **EE-IMP-012** | Templates implementation                               | Materialización generativa de `templates/`                                   |
+| Código         | Documento                                             | Uso en este documento                                                       |
+| :------------- | :---------------------------------------------------- | :-------------------------------------------------------------------------- |
+| **EE-DOC-001** | Master Documentation Index                            | Índice y roadmap                                                            |
+| **EE-DOC-002** | Document Design Template                              | Plantilla y ciclo documental                                                |
+| **EE-DOC-003** | Engineering Ecosystem Constitution                    | Principios (Vendor Agnostic, etc.)                                          |
+| **EE-DOC-004** | Engineering Architecture                              | Capas lógicas; Adapter Pattern                                              |
+| **EE-DOC-005** | Development Workflow                                  | Implementación, cambio gobernado                                            |
+| **EE-DOC-007** | GitHub Governance                                     | `.github/`, CODEOWNERS                                                      |
+| **EE-DOC-008** | Development Environment                               | `.vscode/`, runtime local                                                   |
+| **EE-DOC-009** | Infrastructure                                        | Semántica de `infra/`                                                       |
+| **EE-DOC-010** | Quality Gates                                         | Enforcement; No False Pass, Availability, WAIVE, QG-ARCH                    |
+| **EE-DOC-011** | Automation                                            | Scripts root; release                                                       |
+| **EE-DOC-012** | Templates                                             | `templates/`; T-CON / T-PKG                                                 |
+| **EE-DOC-013** | AI Ecosystem                                          | Intelligence; consumo de connectors vía composition root                    |
+| **EE-DOC-014** | Knowledge Management                                  | Restricciones de import knowledge                                           |
+| **EE-DOC-015** | Engineering Ecosystem Validation                      | PENDING/DEGRADED; V-E2E                                                     |
+| **EE-ADR-001** | Workspace Task Orchestration Strategy                 | Turborepo / pnpm / Changesets                                               |
+| **EE-ADR-002** | Engineering Ecosystem Testing Standard                | Vitest / Playwright, e2e                                                    |
+| **EE-ADR-003** | Node.js Baseline Upgrade to 24 LTS                    | `.nvmrc` / engines                                                          |
+| **EE-ADR-004** | Node / toolchain (si aplica)                          | Quality Gates Progressive Adoption                                          |
+| **EE-ADR-005** | AI Provider SPI and Connector Adapters                | SPI en Foundation; connectors; composition root                             |
+| **EE-ADR-006** | Workflow-AI Interaction via Injected Ports            | Aristas Intelligence↔Execution y Knowledge→Intelligence; puertos inyectados |
+| **EE-RFC-001** | Infra Top-Level Directory                             | Incorporación de `infra/`                                                   |
+| **EE-RFC-002** | Templates Top-Level Directory                         | Incorporación de `templates/`                                               |
+| **EE-RFC-003** | Sync estándares documentación; mapeo 004↔006 (PN-008) |                                                                             |
+| **EE-TEC-001** | Consolidated Technical Documentation EE-DOC-006       | As-built consolidado                                                        |
+| **EE-IMP-006** | (histórico)                                           | Materialización de la estructura base                                       |
+| **EE-IMP-009** | Infrastructure implementation                         | Materialización de `infra/`                                                 |
+| **EE-IMP-012** | Templates implementation                              | Materialización generativa de `templates/`                                  |
 
 ---
 
