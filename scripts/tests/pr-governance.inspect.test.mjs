@@ -25,7 +25,20 @@ const review = {
   submitted_at: '2026-10-29T01:00:00Z',
 };
 const options = { owner: 'EQ-LABS-TECH', repo: 'ee-monorepo', number: 7, token: 'fake' };
-function fixture(paths, reviews = [review]) {
+function classificationComment(
+  login = 'reviewer',
+  body = `EE-LABS-IMPACT: ORDINARY\nHEAD: ${sha}`,
+) {
+  return {
+    id: 123,
+    user: { login },
+    body,
+    created_at: '2026-10-29T01:00:00Z',
+    updated_at: '2026-10-29T01:00:00Z',
+  };
+}
+
+function fixture(paths, reviews = [review], classificationComments = []) {
   return async (url, init) => {
     assert.equal(init.method, 'GET');
     return {
@@ -36,17 +49,19 @@ function fixture(paths, reviews = [review]) {
           ? paths.map((filename) => ({ filename }))
           : url.includes('/reviews?')
             ? reviews
-            : url.includes('/collaborators/')
-              ? {
-                  permission: 'write',
-                  role_name: 'maintain',
-                  user: {
-                    login: decodeURIComponent(
-                      url.split('/collaborators/')[1].split('/permission')[0],
-                    ),
-                  },
-                }
-              : pr,
+            : url.includes('/issues/7/comments?')
+              ? classificationComments
+              : url.includes('/collaborators/')
+                ? {
+                    permission: 'write',
+                    role_name: 'maintain',
+                    user: {
+                      login: decodeURIComponent(
+                        url.split('/collaborators/')[1].split('/permission')[0],
+                      ),
+                    },
+                  }
+                : pr,
     };
   };
 }
@@ -94,7 +109,7 @@ test('ordinary impact declaration is evidence, not authorization', async () => {
     fetchImpl: async (url, init) => {
       assert.doesNotMatch(url, /\/teams\/architecture\/memberships\//);
 
-      return fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }])(url, init);
+      return fixture(['README.md'], [review], [classificationComment()])(url, init);
     },
   });
 
@@ -103,7 +118,7 @@ test('ordinary impact declaration is evidence, not authorization', async () => {
   assert.deepEqual(report.ordinaryClassificationEvidence.candidates, [
     {
       reviewer: 'reviewer',
-      commitId: sha,
+      headSha: sha,
       permission: 'write',
       roleName: 'maintain',
       hasWriteAccess: true,
@@ -120,10 +135,7 @@ test('ordinary impact declaration is evidence, not authorization', async () => {
 test('critical path cannot be downgraded by impact declaration', async () => {
   const report = await inspectPrGovernance({
     ...options,
-    fetchImpl: fixture(
-      ['.github/workflows/ci.yml'],
-      [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }],
-    ),
+    fetchImpl: fixture(['.github/workflows/ci.yml'], [review], [classificationComment()]),
   });
 
   assert.equal(report.classification.status, 'CRITICAL');
@@ -139,9 +151,9 @@ test('author declaration cannot establish ordinary impact', async () => {
         {
           ...review,
           user: { login: 'author' },
-          body: 'EE-LABS-IMPACT: ORDINARY',
         },
       ],
+      [classificationComment('author')],
     ),
   });
 
@@ -156,34 +168,19 @@ test('stale declaration does not count as current evidence', async () => {
       [
         {
           ...review,
-          commit_id: 'b'.repeat(40),
-          body: 'EE-LABS-IMPACT: ORDINARY',
         },
       ],
+      [classificationComment('reviewer', `EE-LABS-IMPACT: ORDINARY\nHEAD: ${'b'.repeat(40)}`)],
     ),
   });
 
   assert.deepEqual(report.ordinaryClassificationEvidence.candidates, []);
 });
 
-test('superseded ordinary declaration is not valid evidence', async () => {
+test('approval review text alone cannot classify impact', async () => {
   const report = await inspectPrGovernance({
     ...options,
-    fetchImpl: fixture(
-      ['README.md'],
-      [
-        {
-          ...review,
-          body: 'EE-LABS-IMPACT: ORDINARY',
-          submitted_at: '2026-10-29T01:00:00Z',
-        },
-        {
-          ...review,
-          body: '',
-          submitted_at: '2026-10-29T02:00:00Z',
-        },
-      ],
-    ),
+    fetchImpl: fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]),
   });
 
   assert.equal(report.approvalEvidence.status, 'PASS');
@@ -193,7 +190,7 @@ test('superseded ordinary declaration is not valid evidence', async () => {
 });
 
 test('read-only reviewer cannot authorize ordinary classification', async () => {
-  const baseFetch = fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]);
+  const baseFetch = fixture(['README.md'], [review], [classificationComment()]);
 
   const report = await inspectPrGovernance({
     ...options,
@@ -224,13 +221,13 @@ test('only reviewers with write access remain ordinary candidates', async () => 
   const baseFetch = fixture(
     ['README.md'],
     [
-      { ...review, body: 'EE-LABS-IMPACT: ORDINARY' },
+      review,
       {
         ...review,
         user: { login: 'reviewer2' },
-        body: 'EE-LABS-IMPACT: ORDINARY',
       },
     ],
+    [classificationComment(), classificationComment('reviewer2')],
   );
 
   const report = await inspectPrGovernance({
@@ -264,7 +261,7 @@ test('only reviewers with write access remain ordinary candidates', async () => 
 });
 
 test('permission API failure prevents a valid inspection report', async () => {
-  const baseFetch = fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]);
+  const baseFetch = fixture(['README.md'], [review], [classificationComment()]);
 
   await assert.rejects(
     inspectPrGovernance({
@@ -282,10 +279,7 @@ test('permission API failure prevents a valid inspection report', async () => {
 });
 
 test('critical changes do not query permissions to downgrade impact', async () => {
-  const baseFetch = fixture(
-    ['.github/workflows/release.yml'],
-    [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }],
-  );
+  const baseFetch = fixture(['.github/workflows/release.yml'], [review], [classificationComment()]);
 
   const report = await inspectPrGovernance({
     ...options,
@@ -308,9 +302,10 @@ test('quoted ordinary declarations are not accepted as evidence', async () => {
       [
         {
           ...review,
-          body: '> EE-LABS-IMPACT: ORDINARY',
+          body: 'regular code review',
         },
       ],
+      [classificationComment('reviewer', `> EE-LABS-IMPACT: ORDINARY\nHEAD: ${sha}`)],
     ),
   });
 
@@ -329,6 +324,7 @@ test('ordinary declaration embedded in review prose is not accepted', async () =
           body: 'Example:\nEE-LABS-IMPACT: ORDINARY',
         },
       ],
+      [classificationComment('reviewer', `Example:\nEE-LABS-IMPACT: ORDINARY\nHEAD: ${sha}`)],
     ),
   });
 
@@ -344,9 +340,10 @@ test('ordinary declaration tolerates surrounding whitespace', async () => {
       [
         {
           ...review,
-          body: '  \nEE-LABS-IMPACT: ORDINARY\n  ',
+          body: 'regular review text',
         },
       ],
+      [classificationComment('reviewer', `  \nEE-LABS-IMPACT: ORDINARY\nHEAD: ${sha}\n  `)],
     ),
   });
 
@@ -356,9 +353,9 @@ test('ordinary declaration tolerates surrounding whitespace', async () => {
 });
 
 test('rejects ordinary evidence changed during permission verification', async () => {
-  let reviewReads = 0;
+  let commentReads = 0;
 
-  const baseFetch = fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]);
+  const baseFetch = fixture(['README.md'], [review], [classificationComment()]);
 
   await assert.rejects(
     inspectPrGovernance({
@@ -376,14 +373,14 @@ test('rejects ordinary evidence changed during permission verification', async (
           };
         }
 
-        if (url.includes('/reviews?')) {
-          reviewReads += 1;
+        if (url.includes('/issues/7/comments?')) {
+          commentReads += 1;
 
-          if (reviewReads > 2) {
+          if (commentReads > 2) {
             return {
               ok: true,
               status: 200,
-              json: async () => [{ ...review, body: 'Impact requires further review' }],
+              json: async () => [],
             };
           }
         }
@@ -394,11 +391,11 @@ test('rejects ordinary evidence changed during permission verification', async (
     /PR governance evidence changed while verifying reviewer permissions/,
   );
 
-  assert.equal(reviewReads, 4);
+  assert.equal(commentReads, 4);
 });
 
 test('active architecture reviewer establishes ordinary impact evidence', async () => {
-  const baseFetch = fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]);
+  const baseFetch = fixture(['README.md'], [review], [classificationComment()]);
 
   const report = await inspectPrGovernance({
     ...options,
@@ -429,7 +426,7 @@ test('active architecture reviewer establishes ordinary impact evidence', async 
 });
 
 test('inactive architecture membership cannot establish ordinary impact', async () => {
-  const baseFetch = fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]);
+  const baseFetch = fixture(['README.md'], [review], [classificationComment()]);
 
   const report = await inspectPrGovernance({
     ...options,
@@ -457,7 +454,7 @@ test('inactive architecture membership cannot establish ordinary impact', async 
 });
 
 test('governance membership API failure prevents ordinary classification', async () => {
-  const baseFetch = fixture(['README.md'], [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }]);
+  const baseFetch = fixture(['README.md'], [review], [classificationComment()]);
 
   await assert.rejects(
     inspectPrGovernance({
@@ -476,10 +473,7 @@ test('governance membership API failure prevents ordinary classification', async
 });
 
 test('critical classification prevails over active architecture membership', async () => {
-  const baseFetch = fixture(
-    ['.github/CODEOWNERS'],
-    [{ ...review, body: 'EE-LABS-IMPACT: ORDINARY' }],
-  );
+  const baseFetch = fixture(['.github/CODEOWNERS'], [review], [classificationComment()]);
 
   const report = await inspectPrGovernance({
     ...options,

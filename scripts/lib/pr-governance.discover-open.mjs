@@ -47,6 +47,7 @@ export async function discoverOpenGovernancePrs({ owner, repo, token, fetchImpl 
         !Number.isSafeInteger(pr?.number) ||
         pr.number < 1 ||
         pr.state !== 'open' ||
+        typeof pr.draft !== 'boolean' ||
         pr.base?.ref !== 'main' ||
         pr.base?.repo?.full_name?.toLowerCase() !== `${owner}/${repo}`.toLowerCase() ||
         seen.has(pr.number)
@@ -55,7 +56,7 @@ export async function discoverOpenGovernancePrs({ owner, repo, token, fetchImpl 
       }
 
       seen.add(pr.number);
-      numbers.push(pr.number);
+      if (!pr.draft) numbers.push(pr.number);
     }
 
     if (prs.length < 100) {

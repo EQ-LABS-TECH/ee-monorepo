@@ -16,20 +16,21 @@ function readWorkflow() {
   return document.toJS();
 }
 
-test('governance verification runs only for trusted PR target events', () => {
+test('governance evaluation waits for completed CI or a PR comment signal', () => {
   const workflow = readWorkflow();
 
   assert.deepEqual(Object.keys(workflow.on), [
-    'pull_request_target',
     'workflow_run',
+    'issue_comment',
     'schedule',
     'workflow_dispatch',
   ]);
   assert.deepEqual(workflow.on.schedule, [{ cron: '17 * * * *' }]);
+  assert.deepEqual(workflow.on.issue_comment.types, ['created', 'edited', 'deleted']);
+  assert.equal(Object.hasOwn(workflow.on, 'pull_request_target'), false);
   assert.equal(Object.hasOwn(workflow.on, 'pull_request_review'), false);
-  assert.match(workflow.jobs.verify.if, /github\.event_name == 'pull_request_target'/);
-  assert.match(workflow.jobs.verify.if, /github\.event\.pull_request\.base\.ref == 'main'/);
-  assert.equal(workflow.jobs.verify.name, 'Verify PR Governance');
+  assert.match(workflow.jobs.verify.if, /github\.event_name == 'workflow_dispatch'/);
+  assert.equal(workflow.jobs.verify.name, 'PR Governance Verify');
 });
 
 test('workflow serializes governance executions with a bounded queue', () => {
@@ -66,10 +67,8 @@ test('workflow executes only trusted main implementation', () => {
   assert.match(resolve.run, /validateRequestedPrGovernanceHead/);
   assert.equal(resolve.env.REQUESTED_HEAD_SHA, "${{ inputs.head_sha || '' }}");
   assert.equal(resolve.env.GITHUB_EVENT_NAME, '${{ github.event_name }}');
-  assert.equal(
-    resolve.env.PR_NUMBER,
-    '${{ github.event.pull_request.number || inputs.pr_number }}',
-  );
+  assert.equal(resolve.env.PR_NUMBER, '${{ inputs.pr_number }}');
+  assert.equal(execute.env.PR_NUMBER, '${{ inputs.pr_number }}');
   assert.equal(execute.env.GOVERNANCE_APP_ID, '${{ vars.EE_GOVERNANCE_APP_ID }}');
 });
 
@@ -140,9 +139,10 @@ test('trusted workflow does not expose App credentials to shell commands', () =>
 test('automatic governance triggers do not silently enable required-check enforcement', () => {
   const workflow = readWorkflow();
 
-  assert.ok(Object.hasOwn(workflow.on, 'pull_request_target'));
+  assert.equal(Object.hasOwn(workflow.on, 'pull_request_target'), false);
   assert.equal(Object.hasOwn(workflow.on, 'pull_request_review'), false);
   assert.ok(Object.hasOwn(workflow.on, 'workflow_run'));
+  assert.ok(Object.hasOwn(workflow.on, 'issue_comment'));
   assert.ok(Object.hasOwn(workflow.on, 'workflow_dispatch'));
 
   assert.match(workflow.jobs.verify.if, /github\.ref == 'refs\/heads\/main'/);
@@ -154,6 +154,8 @@ test('automatic governance triggers do not silently enable required-check enforc
     workflow.jobs.reconcile.if,
     /github\.event\.workflow_run\.event == 'pull_request_review'/,
   );
+  assert.match(workflow.jobs.reconcile.if, /github\.event_name == 'issue_comment'/);
+  assert.match(workflow.jobs.reconcile.if, /github\.event\.issue\.pull_request != null/);
   assert.equal(workflow.jobs.reconcile.environment, 'governance-main');
   assert.ok(
     workflow.jobs.reconcile.steps.find((step) => step.name === 'Install workspace dependencies'),

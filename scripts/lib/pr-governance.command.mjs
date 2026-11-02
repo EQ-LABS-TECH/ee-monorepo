@@ -57,6 +57,22 @@ export async function executeGovernanceCommand({ env, run = runPrGovernance, log
   const result = await run(context);
 
   if (
+    result?.mode === 'WAITING_FOR_VALIDATION' &&
+    result.headSha?.toLowerCase() === context.expectedHeadSha &&
+    (result.validationCheckRunId === null ||
+      (Number.isSafeInteger(result.validationCheckRunId) && result.validationCheckRunId > 0))
+  ) {
+    log(
+      JSON.stringify({
+        status: 'WAITING_FOR_VALIDATION',
+        headSha: result.headSha,
+        validationCheckRunId: result.validationCheckRunId,
+      }),
+    );
+    return 0;
+  }
+
+  if (
     result?.mode !== 'EVALUATION_AND_PUBLICATION' ||
     !['CRITICAL', 'ORDINARY', 'PENDING_REVIEW'].includes(result.classification) ||
     !['PASS', 'BLOCKED'].includes(result.decision?.status) ||

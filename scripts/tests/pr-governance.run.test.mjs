@@ -16,7 +16,7 @@ const options = {
   publisherToken: 'publisher-token',
 };
 
-function fixture({ startStatus = 201, patchStatus = 200 } = {}) {
+function fixture({ startStatus = 201, patchStatus = 200, validateConclusion = 'success' } = {}) {
   const calls = [];
 
   const fetchImpl = async (url, init) => {
@@ -26,6 +26,26 @@ function fixture({ startStatus = 201, patchStatus = 200 } = {}) {
       authorization: init.headers.Authorization,
       body: init.body ? JSON.parse(init.body) : undefined,
     });
+
+    if (init.method === 'GET' && url.includes('/check-runs?check_name=Validate')) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          total_count: 1,
+          check_runs: [
+            {
+              id: 111,
+              app: { id: 15368 },
+              name: 'Validate',
+              status: 'completed',
+              conclusion: validateConclusion,
+              started_at: '2026-10-30T12:00:00Z',
+            },
+          ],
+        }),
+      };
+    }
 
     if (init.method === 'GET' && url.endsWith('/pulls/42')) {
       const publisher = init.headers.Authorization === 'Bearer publisher-token';
@@ -116,7 +136,7 @@ test('evaluation error completes the same check as failure', async () => {
 
   assert.deepEqual(
     mock.calls.map(({ method }) => method),
-    ['GET', 'POST', 'GET', 'GET', 'GET', 'PATCH'],
+    ['GET', 'GET', 'POST', 'GET', 'GET', 'GET', 'PATCH'],
   );
 
   const patch = mock.calls.find(({ method }) => method === 'PATCH');
@@ -138,7 +158,7 @@ test('check start error prevents evaluation and completion', async () => {
 
   assert.deepEqual(
     mock.calls.map(({ method }) => method),
-    ['GET', 'POST'],
+    ['GET', 'GET', 'POST'],
   );
 });
 
@@ -190,7 +210,16 @@ function successfulFixture({
       state: 'APPROVED',
       commit_id: headSha,
       submitted_at: '2026-10-29T00:00:00Z',
-      body: 'EE-LABS-IMPACT: ORDINARY',
+      body: 'Looks good',
+    },
+  ];
+  const classificationComments = [
+    {
+      id: 900,
+      user: { login: 'architect' },
+      body: `EE-LABS-IMPACT: ORDINARY\nHEAD: ${headSha}`,
+      created_at: '2026-10-29T00:00:00Z',
+      updated_at: '2026-10-29T00:00:00Z',
     },
   ];
 
@@ -219,6 +248,8 @@ function successfulFixture({
 
       // readPullRequestEvidence reads reviews twice per evaluation.
       data = revokeAfterFirstEvaluation && reviewReadCount > 2 ? [] : reviews;
+    } else if (url.includes('/issues/42/comments?')) {
+      data = classificationComments;
     } else if (url.includes('/codeowners/errors?')) {
       data = { errors: [] };
     } else if (url.includes('/contents/.github/CODEOWNERS?')) {
@@ -244,6 +275,20 @@ function successfulFixture({
       data = { slug: 'architecture', privacy: 'closed' };
     } else if (url.includes('/teams/architecture/memberships/architect')) {
       data = { state: 'active', role: 'member' };
+    } else if (method === 'GET' && url.includes('/check-runs?check_name=Validate')) {
+      data = {
+        total_count: 1,
+        check_runs: [
+          {
+            id: 123,
+            app: { id: 15368 },
+            name: 'Validate',
+            status: 'completed',
+            conclusion: 'success',
+            started_at: '2026-10-30T12:00:00Z',
+          },
+        ],
+      };
     } else if (method === 'GET' && url.includes('/commits/') && url.includes('/check-runs?')) {
       data = {
         total_count: 1,
@@ -301,7 +346,7 @@ function successfulFixture({
       url.includes('/check-runs') ||
       (url.endsWith('/pulls/42') && authorization === 'Bearer publisher-token')
         ? authorization
-        : url.includes('/pulls/42')
+        : url.includes('/pulls/42') || url.includes('/issues/42/comments')
           ? 'Bearer pr-token'
           : 'Bearer governance-token';
 
@@ -387,7 +432,7 @@ test('approval removal blocks governance without changing HEAD', async () => {
   });
 
   assert.equal(result.headSha, headSha);
-  assert.equal(result.classification, 'PENDING_REVIEW');
+  assert.equal(result.classification, 'ORDINARY');
   assert.equal(result.decision.status, 'BLOCKED');
   assert.equal(result.conclusion, 'failure');
 

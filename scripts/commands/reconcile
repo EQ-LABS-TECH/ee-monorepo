@@ -6,11 +6,12 @@ import { pathToFileURL } from 'node:url';
 import {
   validateGovernanceSchedule,
   validateGovernanceWorkflowRun,
+  validateGovernanceIssueComment,
 } from '@eq-labs/governance/pr-governance/workflow';
 import { reconcileOpenGovernancePrs } from '../lib/pr-governance.reconcile-once.mjs';
 
 export async function main(env = process.env, { reconcile = reconcileOpenGovernancePrs } = {}) {
-  if (!['schedule', 'workflow_run'].includes(env.GITHUB_EVENT_NAME)) {
+  if (!['schedule', 'workflow_run', 'issue_comment'].includes(env.GITHUB_EVENT_NAME)) {
     throw new Error('Unsupported governance reconciliation event');
   }
 
@@ -21,22 +22,29 @@ export async function main(env = process.env, { reconcile = reconcileOpenGoverna
     throw new Error('Invalid governance GitHub Actions context');
   }
 
-  if (env.GITHUB_EVENT_NAME === 'workflow_run') {
+  if (env.GITHUB_EVENT_NAME === 'workflow_run' || env.GITHUB_EVENT_NAME === 'issue_comment') {
     if (typeof env.GITHUB_EVENT_PATH !== 'string' || !env.GITHUB_EVENT_PATH) {
       throw new Error('Invalid governance GitHub Actions context');
     }
 
     // Never interpret artifacts from the triggering workflow as authority.
     const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8'));
-    const origin = validateGovernanceWorkflowRun({
-      event,
-      expectedRepository: env.GITHUB_REPOSITORY,
-      expectedWorkflowName: 'CI',
-      expectedWorkflowPath: '.github/workflows/ci.yml',
-    });
+    if (env.GITHUB_EVENT_NAME === 'workflow_run') {
+      const origin = validateGovernanceWorkflowRun({
+        event,
+        expectedRepository: env.GITHUB_REPOSITORY,
+        expectedWorkflowName: 'CI',
+        expectedWorkflowPath: '.github/workflows/ci.yml',
+      });
 
-    if (!['pull_request', 'pull_request_review'].includes(origin.sourceEvent)) {
-      throw new Error('Unsupported governance reconciliation source');
+      if (!['pull_request', 'pull_request_review'].includes(origin.sourceEvent)) {
+        throw new Error('Unsupported governance reconciliation source');
+      }
+    } else {
+      validateGovernanceIssueComment({
+        event,
+        expectedRepository: env.GITHUB_REPOSITORY,
+      });
     }
   } else {
     validateGovernanceSchedule({
@@ -64,6 +72,9 @@ export async function main(env = process.env, { reconcile = reconcileOpenGoverna
       passed: result.results.filter((item) => item.status === 'PASS').length,
       blocked: result.results.filter((item) => item.status === 'BLOCKED').length,
       errors: result.results.filter((item) => item.status === 'ERROR').length,
+      waitingForValidation: result.results.filter(
+        (item) => item.status === 'WAITING_FOR_VALIDATION',
+      ).length,
     }),
   );
 

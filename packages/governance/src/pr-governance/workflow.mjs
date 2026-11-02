@@ -51,6 +51,7 @@ export function validateGovernanceWorkflowRun({
 
   if (
     event.action !== 'completed' ||
+    run?.status !== 'completed' ||
     !RECONCILABLE_WORKFLOW_EVENTS.has(run?.event) ||
     run.name !== expectedWorkflowName ||
     run.path !== expectedWorkflowPath ||
@@ -69,5 +70,40 @@ export function validateGovernanceWorkflowRun({
     workflowRunId: run.id,
     repository: expectedRepository,
     sourceEvent: run.event,
+  };
+}
+
+export function validateGovernanceIssueComment({ event, expectedRepository }) {
+  const repository = REPOSITORY.exec(expectedRepository ?? '');
+  const issue = event?.issue;
+  const pullRequestUrl = issue?.pull_request?.url;
+  const number = Number.isSafeInteger(issue?.number) ? issue.number : null;
+  const [owner, repo] = expectedRepository?.split('/') ?? [];
+  const expectedUrl =
+    repository && number !== null
+      ? `https://api.github.com/repos/${owner}/${repo}/pulls/${number}`
+      : '';
+
+  if (
+    !repository ||
+    !event ||
+    !['created', 'edited', 'deleted'].includes(event.action) ||
+    event.repository?.full_name?.toLowerCase() !== expectedRepository.toLowerCase() ||
+    number === null ||
+    number < 1 ||
+    typeof pullRequestUrl !== 'string' ||
+    pullRequestUrl.toLowerCase() !== expectedUrl.toLowerCase() ||
+    !Number.isSafeInteger(event.comment?.id) ||
+    event.comment.id < 1 ||
+    typeof event.comment.user?.login !== 'string' ||
+    !event.comment.user.login
+  ) {
+    throw new TypeError('Invalid governance PR comment context');
+  }
+
+  return {
+    repository: expectedRepository,
+    number,
+    sourceEvent: 'issue_comment',
   };
 }

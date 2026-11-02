@@ -5,13 +5,26 @@ import { composePrGovernanceEvaluation } from '@eq-labs/governance/pr-governance
 
 const headSha = 'a'.repeat(40);
 const baseSha = 'b'.repeat(40);
+const classificationComment = {
+  id: 1,
+  login: 'architect',
+  body: `EE-LABS-IMPACT: ORDINARY\nHEAD: ${headSha}`,
+  createdAt: '2026-10-29T00:00:00Z',
+  updatedAt: '2026-10-29T00:00:00Z',
+  sequence: 0,
+};
 
 function input(overrides = {}) {
   return {
-    pullRequestEvidence: { headSha, baseSha },
+    pullRequestEvidence: {
+      headSha,
+      baseSha,
+      author: 'contributor',
+      classificationComments: [classificationComment],
+    },
     criticalIndicators: { criticalIndicatorsPresent: false, reasons: [] },
     approvalEvidence: {
-      approvedReviewDetails: [{ reviewer: 'architect', body: 'EE-LABS-IMPACT: ORDINARY' }],
+      approvedReviewDetails: [{ reviewer: 'reviewer', body: 'Looks good' }],
     },
     ownershipEvidence: {
       ownershipVerified: true,
@@ -33,13 +46,18 @@ test('composes an ordinary passing result from verified domain evidence', () => 
   assert.equal(result.headSha, headSha);
   assert.equal(result.baseSha, baseSha);
   assert.equal(result.classification, 'ORDINARY');
-  assert.deepEqual(result.authorizedOrdinaryReviewers, ['architect']);
+  assert.deepEqual(result.authorizedClassifiers, ['architect']);
   assert.equal(result.decision.status, 'PASS');
 });
 
 test('composes pending classification as blocked', () => {
   const result = composePrGovernanceEvaluation(
-    input({ approvalEvidence: { approvedReviewDetails: [] } }),
+    input({
+      pullRequestEvidence: { headSha, baseSha, author: 'contributor', classificationComments: [] },
+      approvalEvidence: {
+        approvedReviewDetails: [{ reviewer: 'reviewer', body: 'EE-LABS-IMPACT: ORDINARY' }],
+      },
+    }),
   );
 
   assert.equal(result.classification, 'PENDING_REVIEW');

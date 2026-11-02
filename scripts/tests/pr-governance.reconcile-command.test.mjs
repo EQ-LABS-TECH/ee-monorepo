@@ -106,6 +106,22 @@ test('policy-blocked result is a successful reconciliation operation', async () 
   );
 });
 
+test('waiting for Validate is a successful non-decision reconciliation result', async () => {
+  await main(
+    {
+      GITHUB_EVENT_NAME: 'schedule',
+      GITHUB_REF: 'refs/heads/main',
+      GITHUB_REPOSITORY: repository,
+    },
+    {
+      reconcile: async () => ({
+        status: 'SUCCESS',
+        results: [{ number: 10, status: 'WAITING_FOR_VALIDATION' }],
+      }),
+    },
+  );
+});
+
 test('operational reconciliation errors fail the command', async () => {
   await assert.rejects(
     main(

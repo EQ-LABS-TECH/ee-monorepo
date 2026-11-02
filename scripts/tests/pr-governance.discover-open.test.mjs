@@ -10,6 +10,7 @@ function pullRequest(number, overrides = {}) {
   return {
     number,
     state: 'open',
+    draft: false,
     base: {
       ref: 'main',
       repo: { full_name: `${owner}/${repo}` },
@@ -76,6 +77,14 @@ test('discovers open PR numbers without trusting review evidence', async () => {
   assert.equal(url.searchParams.get('state'), 'open');
   assert.equal(url.searchParams.get('base'), 'main');
   assert.equal(url.searchParams.get('per_page'), '100');
+});
+
+test('does not reconcile draft PRs before they are ready for review', async () => {
+  const fixture = createFixture([
+    [pullRequest(10), pullRequest(20, { draft: true }), pullRequest(30)],
+  ]);
+
+  assert.deepEqual(await discover(fixture.fetchImpl), [10, 30]);
 });
 
 test('paginates until a page contains fewer than 100 PRs', async () => {

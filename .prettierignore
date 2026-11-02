@@ -19,3 +19,6 @@ coverage/
 
 # Handlebars templates contain literal template expressions and must be preserved.
 templates/**/files/**/*.hbs
+
+# Generated lockfile managed by pnpm, not Prettier.
+pnpm-lock.yaml

@@ -46,14 +46,18 @@ function responseFor({ paths, reviews, pr = base, brokenEndpoint } = {}) {
       ? 'files'
       : url.includes('/reviews?')
         ? 'reviews'
-        : 'pr';
+        : url.includes('/issues/42/comments?')
+          ? 'comments'
+          : 'pr';
     if (endpoint === brokenEndpoint) return { ok: false, status: 403 };
     const data =
       endpoint === 'files'
         ? paths.map((filename) => ({ filename }))
         : endpoint === 'reviews'
           ? reviews
-          : pr;
+          : endpoint === 'comments'
+            ? []
+            : pr;
     return { ok: true, json: async () => data };
   };
 }

@@ -1,5 +1,6 @@
 import { evaluatePrGovernance } from './pr-governance.evaluate.mjs';
 import { startPrGovernanceCheck, completePrGovernanceCheck } from './pr-governance.publish.mjs';
+import { readValidateReadiness } from './pr-governance.ci.mjs';
 
 /**
  * Trusted orchestration only.
@@ -40,6 +41,22 @@ export async function runPrGovernance({
     token: publisherToken,
     fetchImpl,
   };
+
+  const validation = await readValidateReadiness({
+    owner,
+    repo,
+    headSha: expectedHeadSha,
+    token,
+    fetchImpl,
+  });
+
+  if (validation.status !== 'READY') {
+    return {
+      mode: 'WAITING_FOR_VALIDATION',
+      headSha: expectedHeadSha.toLowerCase(),
+      validationCheckRunId: validation.checkRunId,
+    };
+  }
 
   const started = await startPrGovernanceCheck(publication);
 
