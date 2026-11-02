@@ -1,6 +1,7 @@
 /** PN-017: read-only, advisory PR governance evidence. Never authorizes a merge. */
 import { classifyCriticalChange } from '@eq-labs/governance/pr-governance/classification';
 import { evaluatePrApprovals } from '@eq-labs/governance/pr-governance/approvals';
+import { ordinaryClassificationCandidates } from '@eq-labs/governance/pr-governance/authority';
 import {
   readPullRequestEvidence,
   readReviewerRepositoryPermission,
@@ -26,12 +27,11 @@ export async function inspectPrGovernance({
 
   const ordinaryCandidates = classification.criticalIndicatorsPresent
     ? []
-    : evaluation.approvedReviewDetails
-        .filter((review) => review.body.trim() === 'EE-LABS-IMPACT: ORDINARY')
-        .map(({ reviewer, commitId }) => ({
-          reviewer,
-          commitId,
-        }));
+    : ordinaryClassificationCandidates({
+        classificationComments: evidence.classificationComments,
+        headSha: evidence.headSha,
+        author: evidence.author,
+      }).map((reviewer) => ({ reviewer, headSha: evidence.headSha }));
 
   const permissionEvidence = await Promise.all(
     ordinaryCandidates.map(async (candidate) => {
@@ -97,7 +97,9 @@ export async function inspectPrGovernance({
       confirmedEvidence.baseSha !== evidence.baseSha ||
       confirmedEvidence.author !== evidence.author ||
       JSON.stringify(confirmedEvidence.paths) !== JSON.stringify(evidence.paths) ||
-      JSON.stringify(confirmedEvidence.reviews) !== JSON.stringify(evidence.reviews)
+      JSON.stringify(confirmedEvidence.reviews) !== JSON.stringify(evidence.reviews) ||
+      JSON.stringify(confirmedEvidence.classificationComments) !==
+        JSON.stringify(evidence.classificationComments)
     ) {
       throw new Error('PR governance evidence changed while verifying reviewer permissions');
     }

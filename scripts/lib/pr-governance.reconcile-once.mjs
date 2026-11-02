@@ -125,6 +125,16 @@ export async function reconcileOpenGovernancePrs({
       });
 
       if (
+        result?.mode === 'WAITING_FOR_VALIDATION' &&
+        result.headSha?.toLowerCase() === resolved.expectedHeadSha.toLowerCase() &&
+        (result.validationCheckRunId === null ||
+          (Number.isSafeInteger(result.validationCheckRunId) && result.validationCheckRunId > 0))
+      ) {
+        results.push({ number, status: 'WAITING_FOR_VALIDATION' });
+        continue;
+      }
+
+      if (
         result?.mode !== 'EVALUATION_AND_PUBLICATION' ||
         result.headSha?.toLowerCase() !== resolved.expectedHeadSha.toLowerCase() ||
         !['success', 'failure'].includes(result.conclusion) ||

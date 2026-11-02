@@ -36,19 +36,24 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
     return response.json();
   }
 
-  async function collect(endpoint, maxItems) {
+  async function collectFrom(urlForPage, label, maxItems) {
     const result = [];
     for (let page = 1; page <= Math.ceil(maxItems / 100) + 1; page++) {
-      const items = await getJson(`${base}/${endpoint}?per_page=100&page=${page}`);
-      if (!Array.isArray(items)) throw new TypeError(`Invalid ${endpoint} response`);
+      const items = await getJson(urlForPage(page));
+      if (!Array.isArray(items)) throw new TypeError(`Invalid ${label} response`);
       result.push(...items);
       if (result.length > maxItems) {
-        throw new Error(`GitHub ${endpoint} evidence exceeds supported limit`);
+        throw new Error(`GitHub ${label} evidence exceeds supported limit`);
       }
       if (items.length < 100) return result;
     }
-    throw new Error(`GitHub ${endpoint} pagination incomplete`);
+    throw new Error(`GitHub ${label} pagination incomplete`);
   }
+
+  const collect = (endpoint, maxItems) =>
+    collectFrom((page) => `${base}/${endpoint}?per_page=100&page=${page}`, endpoint, maxItems);
+
+  const commentsUrl = `https://api.github.com/repos/${owner}/${repo}/issues/${number}/comments`;
 
   const pr = await getJson(base);
 
@@ -71,6 +76,11 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
   // deny classification rather than silently omit potentially critical paths.
   const files = await collect('files', 2999);
   const reviews = await collect('reviews', 10000);
+  const comments = await collectFrom(
+    (page) => `${commentsUrl}?per_page=100&page=${page}`,
+    'issue comments',
+    10000,
+  );
   const normalizedReviews = reviews
     .map((review, sequence) => {
       // Bot reviews are not valid governance approval evidence.
@@ -109,6 +119,31 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
     })
     .filter(Boolean);
 
+  const classificationComments = comments.map((comment, sequence) => {
+    if (
+      !comment ||
+      !Number.isSafeInteger(comment.id) ||
+      comment.id < 1 ||
+      !LOGIN.test(comment.user?.login ?? '') ||
+      (comment.body !== null && comment.body !== undefined && typeof comment.body !== 'string') ||
+      typeof comment.created_at !== 'string' ||
+      !Number.isFinite(Date.parse(comment.created_at)) ||
+      typeof comment.updated_at !== 'string' ||
+      !Number.isFinite(Date.parse(comment.updated_at))
+    ) {
+      throw new TypeError('Malformed GitHub PR issue comment');
+    }
+
+    return {
+      id: comment.id,
+      login: comment.user.login,
+      body: comment.body ?? '',
+      createdAt: comment.created_at,
+      updatedAt: comment.updated_at,
+      sequence,
+    };
+  });
+
   const paths = files.map((file) => {
     if (typeof file?.filename !== 'string') {
       throw new TypeError('Malformed GitHub changed file');
@@ -122,6 +157,16 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
 
   if (JSON.stringify(confirmedReviews) !== JSON.stringify(reviews)) {
     throw new Error('Pull request reviews changed while collecting governance evidence');
+  }
+
+  const confirmedComments = await collectFrom(
+    (page) => `${commentsUrl}?per_page=100&page=${page}`,
+    'issue comments',
+    10000,
+  );
+
+  if (JSON.stringify(confirmedComments) !== JSON.stringify(comments)) {
+    throw new Error('Pull request classification comments changed while collecting evidence');
   }
 
   const currentPr = await getJson(base);
@@ -144,6 +189,7 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
     baseSha: pr.base.sha.toLowerCase(),
     paths,
     reviews: normalizedReviews,
+    classificationComments,
     // Evidence snapshot only. Must re-check at merge; never treat as authoritative.
     advisoryOnly: true,
   };

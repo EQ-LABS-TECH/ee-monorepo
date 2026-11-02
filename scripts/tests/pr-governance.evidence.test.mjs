@@ -36,6 +36,7 @@ function mockFetch({
   finalPr = pr,
   files = [{ filename: '.github/CODEOWNERS' }],
   reviews = [review],
+  classificationComments = [],
   status = 200,
 } = {}) {
   let prReads = 0;
@@ -50,6 +51,8 @@ function mockFetch({
       data = files;
     } else if (url.includes('/reviews?')) {
       data = reviews;
+    } else if (url.includes('/issues/27/comments?')) {
+      data = classificationComments;
     } else {
       prReads += 1;
       data = prReads === 1 ? pr : finalPr;
@@ -103,7 +106,7 @@ test('accepts bot PR authors but excludes bot reviews', async () => {
   assert.equal(evidence.reviews[0].login, 'reviewer');
 });
 
-test('preserves review body as classification evidence', async () => {
+test('keeps classification comments separate from approval review bodies', async () => {
   const evidence = await readPullRequestEvidence({
     ...locator,
     fetchImpl: mockFetch({
@@ -113,10 +116,41 @@ test('preserves review body as classification evidence', async () => {
           body: 'EE-LABS-IMPACT: ORDINARY',
         },
       ],
+      classificationComments: [
+        {
+          id: 99,
+          user: { login: 'architect' },
+          body: `EE-LABS-IMPACT: ORDINARY\nHEAD: ${sha}`,
+          created_at: '2026-10-29T00:00:00Z',
+          updated_at: '2026-10-29T00:00:00Z',
+        },
+      ],
     }),
   });
 
   assert.equal(evidence.reviews[0].body, 'EE-LABS-IMPACT: ORDINARY');
+  assert.deepEqual(evidence.classificationComments, [
+    {
+      id: 99,
+      login: 'architect',
+      body: `EE-LABS-IMPACT: ORDINARY\nHEAD: ${sha}`,
+      createdAt: '2026-10-29T00:00:00Z',
+      updatedAt: '2026-10-29T00:00:00Z',
+      sequence: 0,
+    },
+  ]);
+});
+
+test('rejects malformed PR classification comment evidence', async () => {
+  await assert.rejects(
+    readPullRequestEvidence({
+      ...locator,
+      fetchImpl: mockFetch({
+        classificationComments: [{ id: 'invalid', user: { login: 'architect' } }],
+      }),
+    }),
+    /Malformed GitHub PR issue comment/,
+  );
 });
 
 test('rejects malformed review body', async () => {
@@ -483,6 +517,10 @@ test('rejects reviews changed during evidence collection', async () => {
       };
     }
 
+    if (url.includes('/issues/27/comments?')) {
+      return { ok: true, status: 200, json: async () => [] };
+    }
+
     return {
       ok: true,
       status: 200,
@@ -498,18 +536,17 @@ test('rejects reviews changed during evidence collection', async () => {
   assert.equal(reviewReads, 2);
 });
 
-test('rejects an ordinary declaration edited during evidence collection', async () => {
-  let reviewReads = 0;
+test('rejects a classification comment edited during evidence collection', async () => {
+  let commentReads = 0;
 
-  const originalReview = {
-    ...review,
-    body: 'EE-LABS-IMPACT: ORDINARY',
+  const originalComment = {
+    id: 11,
+    user: { login: 'architect' },
+    body: `EE-LABS-IMPACT: ORDINARY\nHEAD: ${sha}`,
+    created_at: '2026-10-29T00:00:00Z',
+    updated_at: '2026-10-29T00:00:00Z',
   };
-
-  const editedReview = {
-    ...originalReview,
-    body: 'Impact requires further review',
-  };
+  const editedComment = { ...originalComment, body: 'Impact requires further review' };
 
   const fetchImpl = async (url) => {
     if (url.includes('/files?')) {
@@ -521,12 +558,16 @@ test('rejects an ordinary declaration edited during evidence collection', async 
     }
 
     if (url.includes('/reviews?')) {
-      reviewReads += 1;
+      return { ok: true, status: 200, json: async () => [review] };
+    }
+
+    if (url.includes('/issues/27/comments?')) {
+      commentReads += 1;
 
       return {
         ok: true,
         status: 200,
-        json: async () => [reviewReads === 1 ? originalReview : editedReview],
+        json: async () => [commentReads === 1 ? originalComment : editedComment],
       };
     }
 
@@ -539,10 +580,10 @@ test('rejects an ordinary declaration edited during evidence collection', async 
 
   await assert.rejects(
     readPullRequestEvidence({ ...locator, fetchImpl }),
-    /Pull request reviews changed while collecting governance evidence/,
+    /Pull request classification comments changed while collecting evidence/,
   );
 
-  assert.equal(reviewReads, 2);
+  assert.equal(commentReads, 2);
 });
 
 test('rejects a head change after the second review read', async () => {
@@ -566,6 +607,10 @@ test('rejects a head change after the second review read', async () => {
         status: 200,
         json: async () => [review],
       };
+    }
+
+    if (url.includes('/issues/27/comments?')) {
+      return { ok: true, status: 200, json: async () => [] };
     }
 
     prReads += 1;

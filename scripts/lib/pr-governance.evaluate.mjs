@@ -1,6 +1,7 @@
 import { classifyCriticalChange } from '@eq-labs/governance/pr-governance/classification';
 import { evaluatePrApprovals } from '@eq-labs/governance/pr-governance/approvals';
 import { composePrGovernanceEvaluation } from '@eq-labs/governance/pr-governance/evaluation';
+import { ordinaryClassificationCandidates } from '@eq-labs/governance/pr-governance/authority';
 import { readCodeownersEvidence } from './pr-governance.owners-api.mjs';
 import { evaluatePrOwnership } from '@eq-labs/governance/pr-governance/ownership';
 import {
@@ -19,7 +20,8 @@ function sameSnapshot(first, second) {
     first.headSha === second.headSha &&
     first.baseSha === second.baseSha &&
     JSON.stringify(first.paths) === JSON.stringify(second.paths) &&
-    JSON.stringify(first.reviews) === JSON.stringify(second.reviews)
+    JSON.stringify(first.reviews) === JSON.stringify(second.reviews) &&
+    JSON.stringify(first.classificationComments) === JSON.stringify(second.classificationComments)
   );
 }
 
@@ -160,6 +162,14 @@ export async function evaluatePrGovernance({
   }));
 
   const approvedReviewers = approvals.approvedReviewers;
+  const classificationCandidates = indicators.criticalIndicatorsPresent
+    ? []
+    : ordinaryClassificationCandidates({
+        classificationComments: evidence.classificationComments,
+        headSha: evidence.headSha,
+        author: evidence.author,
+      });
+  const authorityReviewers = [...new Set([...approvedReviewers, ...classificationCandidates])];
 
   const teams = new Set(ownershipRequirements.flatMap((requirement) => requirement.eligibleTeams));
 
@@ -172,7 +182,7 @@ export async function evaluatePrGovernance({
     repo,
     number,
     token: governanceToken,
-    reviewers: approvedReviewers,
+    reviewers: authorityReviewers,
     teams: [...teams],
     fetchImpl,
   };

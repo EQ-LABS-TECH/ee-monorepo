@@ -46,7 +46,16 @@ function review(reviewer, body = '') {
 
 function fixture({
   paths = ['README.md'],
-  reviews = [review('architect', 'EE-LABS-IMPACT: ORDINARY')],
+  reviews = [review('architect')],
+  classificationComments = [
+    {
+      id: 1,
+      user: { login: 'architect' },
+      body: `EE-LABS-IMPACT: ORDINARY\nHEAD: ${headSha}`,
+      created_at: '2026-10-29T00:00:00Z',
+      updated_at: '2026-10-29T00:00:00Z',
+    },
+  ],
   memberTeams = {
     architect: ['architecture'],
     administrator: ['repository-admin'],
@@ -60,7 +69,8 @@ function fixture({
   return async (url, init) => {
     assert.equal(init.method, 'GET');
 
-    const expectedToken = url.includes('/pulls/') ? 'pr-token' : 'governance-token';
+    const expectedToken =
+      url.includes('/pulls/') || url.includes('/issues/') ? 'pr-token' : 'governance-token';
 
     assert.equal(init.headers.Authorization, `Bearer ${expectedToken}`);
 
@@ -115,6 +125,8 @@ function fixture({
       data = paths.map((filename) => ({ filename }));
     } else if (url.includes('/reviews?')) {
       data = reviews;
+    } else if (url.includes('/issues/42/comments?')) {
+      data = classificationComments;
     } else if (url.includes('/pulls/42')) {
       prReads += 1;
 
@@ -148,6 +160,7 @@ test('ordinary-looking change remains pending without architecture declaration',
     ...options,
     fetchImpl: fixture({
       reviews: [review('architect')],
+      classificationComments: [],
     }),
   });
 

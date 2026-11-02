@@ -3,23 +3,16 @@
 name: Governance Verification
 
 on:
-  pull_request_target:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - edited
-      - ready_for_review
-      - converted_to_draft
-      - review_requested
-      - review_request_removed
-    branches:
-      - main
   workflow_run:
     workflows:
       - CI
     types:
       - completed
+  issue_comment:
+    types:
+      - created
+      - edited
+      - deleted
   schedule:
     - cron: '17 * * * *'
   workflow_dispatch:
@@ -44,15 +37,18 @@ concurrency:
 
 jobs:
   verify:
-    name: Verify PR Governance
+    name: PR Governance Verify
     if: >-
-      (github.event_name == 'pull_request_target' &&
-       github.event.pull_request.base.ref == 'main') ||
       (github.event_name == 'workflow_dispatch' &&
        github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: governance-main
+
+    permissions:
+      contents: read
+      pull-requests: read
+      checks: read
 
     steps:
       - name: Checkout trusted implementation
@@ -78,7 +74,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
-          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+          PR_NUMBER: ${{ inputs.pr_number }}
           REQUESTED_HEAD_SHA: ${{ inputs.head_sha || '' }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
@@ -134,7 +130,7 @@ jobs:
         shell: bash
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+          PR_NUMBER: ${{ inputs.pr_number }}
           GOVERNANCE_APP_ID: ${{ vars.EE_GOVERNANCE_APP_ID }}
           GOVERNANCE_PR_TOKEN: ${{ github.token }}
           GOVERNANCE_EVIDENCE_TOKEN: ${{ steps.governance-token.outputs.token }}
@@ -144,11 +140,14 @@ jobs:
           node scripts/commands/enforce
 
   reconcile:
-    name: Reconcile PR Governance
+    name: PR Governance Reconcile
     if: >-
       (github.event_name == 'workflow_run' &&
        (github.event.workflow_run.event == 'pull_request' ||
         github.event.workflow_run.event == 'pull_request_review')) ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request != null &&
+       github.ref == 'refs/heads/main') ||
       (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -157,6 +156,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
+      checks: read
 
     steps:
       - name: Checkout trusted implementation

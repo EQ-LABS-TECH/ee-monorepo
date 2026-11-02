@@ -14,17 +14,18 @@ export function composePrGovernanceEvaluation({
   memberships,
   evidenceCurrent,
 }) {
-  const { classification, authorizedOrdinaryReviewers } = resolvePrGovernanceClassification({
+  const { classification, authorizedClassifiers } = resolvePrGovernanceClassification({
     criticalIndicatorsPresent: criticalIndicators.criticalIndicatorsPresent,
-    approvedReviewDetails: approvalEvidence.approvedReviewDetails,
+    classificationComments: pullRequestEvidence.classificationComments,
+    author: pullRequestEvidence.author,
+    headSha: pullRequestEvidence.headSha,
     permissions,
     memberships,
   });
 
   const decision = evaluatePrGovernanceEnforcement({
     classification,
-    classificationAuthorized:
-      classification === 'ORDINARY' && authorizedOrdinaryReviewers.length > 0,
+    classificationAuthorized: classification === 'CRITICAL' || authorizedClassifiers.length > 0,
     qualifiedReviewers: ownershipEvidence.qualifiedReviewers,
     ownershipVerified: ownershipEvidence.ownershipVerified,
     evidenceCurrent,
@@ -36,7 +37,8 @@ export function composePrGovernanceEvaluation({
     baseSha: pullRequestEvidence.baseSha,
     classification,
     criticalIndicators: criticalIndicators.reasons,
-    authorizedOrdinaryReviewers,
+    authorizedClassifiers,
+    classificationEvidence: pullRequestEvidence.classificationComments,
     approvalEvidence,
     ownershipEvidence,
     decision,

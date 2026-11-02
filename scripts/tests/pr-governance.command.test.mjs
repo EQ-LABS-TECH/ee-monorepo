@@ -99,6 +99,26 @@ test('pending classification never returns zero', async () => {
   assert.equal(exitCode, 1);
 });
 
+test('waits for Validate without publishing a governance result', async () => {
+  const messages = [];
+  const exitCode = await executeGovernanceCommand({
+    env,
+    run: async () => ({
+      mode: 'WAITING_FOR_VALIDATION',
+      headSha: sha,
+      validationCheckRunId: 987,
+    }),
+    log: (message) => messages.push(message),
+  });
+
+  assert.equal(exitCode, 0);
+  assert.deepEqual(JSON.parse(messages[0]), {
+    status: 'WAITING_FOR_VALIDATION',
+    headSha: sha,
+    validationCheckRunId: 987,
+  });
+});
+
 test('inconsistent evaluation result is rejected', async () => {
   await assert.rejects(
     executeGovernanceCommand({

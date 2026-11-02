@@ -112,7 +112,7 @@ test('governance advisory uses read-only permissions', () => {
   assert.equal(job.env?.GITHUB_TOKEN, undefined);
 
   for (const step of job.steps) {
-    if (step.name === 'Inspect PR governance') continue;
+    if (step.name === 'PR Governance Inspect') continue;
 
     assert.equal(
       step.env?.GITHUB_TOKEN,
@@ -150,7 +150,7 @@ test('governance advisory checks out trusted main implementation', () => {
   );
 
   assert.ok(
-    steps.indexOf('Install workspace dependencies') < steps.indexOf('Inspect PR governance'),
+    steps.indexOf('Install workspace dependencies') < steps.indexOf('PR Governance Inspect'),
   );
 });
 
@@ -158,7 +158,7 @@ test('governance inspector receives PR context and remains advisory', () => {
   const workflow = loadWorkflow();
   const job = getJob(workflow, 'pr-governance-advisory');
 
-  const inspect = getStep(job, 'Inspect PR governance');
+  const inspect = getStep(job, 'PR Governance Inspect');
 
   assert.equal(inspect.shell, 'bash');
   assert.equal(inspect.env?.GITHUB_TOKEN, '${{ github.token }}');

@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Gobernanza                                                             |
 | **Nivel**             | Especializado                                                          |
 | **Normativo**         | Sí                                                                     |
-| **Versión**           | v1.3.0                                                                 |
+| **Versión**           | v1.4.0                                                                 |
 | **Estado**            | Congelado                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-006                                                             |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                   |
 | **Fecha de creación** | 2026-09-21                                                             |
-| **Última revisión**   | 2026-10-31                                                             |
+| **Última revisión**   | 2026-11-01                                                             |
 | **Próxima revisión**  | No aplica — Documento Congelado (cambio solo vía RFC)                  |
 
 ---
@@ -859,9 +859,20 @@ La materialización operativa del régimen de aprobaciones reforzadas utilizará
 
 La clasificación `ORDINARY` estará sujeta a la autoridad definida por EE-DOC-005 y la decisión gobernada en EE-RFC-003. La falta de indicadores críticos no implicará una clasificación ordinaria automática.
 
+**Evidencia independiente de clasificación.**
+
+- Los indicadores críticos determinan `CRITICAL` y no pueden ser anulados por una declaración ordinaria.
+- Sin indicadores críticos, `ORDINARY` requiere un comentario de conversación del Pull Request cuyo cuerpo sea `EE-LABS-IMPACT: ORDINARY`, seguido de `HEAD: <SHA actual de 40 caracteres>` en la línea siguiente.
+- La declaración solo es válida si la emite una persona distinta del autor, con permiso efectivo de escritura y membresía activa en el Equipo de Arquitectura. Un comentario del autor, bot, usuario sin permiso o miembro inactivo no clasifica el Pull Request.
+- Esta declaración clasifica impacto; no es una aprobación y no cuenta para el umbral de revisión. Las aprobaciones se obtienen exclusivamente de revisiones aprobadas vigentes de GitHub, sin texto especial.
+- Un SHA distinto, edición o eliminación del comentario, revocación de permisos o cambio de membresía invalida la evidencia correspondiente y requiere reevaluar el Pull Request.
+- Si no existe evidencia autorizada, la clasificación es `PENDING_REVIEW` y el check no puede ser favorable.
+
 **Ejecución e identidad confiables.**
 
 El enforcement se ejecutará mediante código confiable integrado en `main`. Los contextos privilegiados no ejecutarán código no confiable procedente de Pull Requests.
+
+La secuencia de enforcement exigirá que `Validate` complete con conclusión satisfactoria sobre el mismo SHA actual del Pull Request antes de crear o completar `PR Governance`. El workflow privilegiado verificará el check mediante la API de GitHub y solo aceptará la ejecución emitida por GitHub Actions con nombre `Validate`. Ante ausencia, espera, fallo, cancelación o SHA distinto, conservará el resultado en espera y no emitirá conformidad. Después de superar este gate, recopilará evidencia actual de la API; el payload, artefactos y código de la ejecución originadora no serán autoridad.
 
 La GitHub App de gobernanza tendrá una identidad independiente de la automatización de releases, permisos mínimos y vinculación explícita como emisor autorizado del required check.
 
@@ -870,6 +881,8 @@ El resultado se asociará al HEAD evaluado y verificará clasificación, aprobac
 **Eventos, invalidación y reconciliación.**
 
 La implementación deberá evaluar cambios de Pull Request, revisiones, HEAD y autorizaciones que afecten a la decisión. Los cambios de permisos o membresías sin evento directamente utilizable deberán cubrirse mediante reconciliación u otro mecanismo aprobado.
+
+La finalización de `Validate` y los eventos de comentarios de conversación creados, editados o eliminados podrán iniciar la reconciliación desde el workflow confiable de `main`. Las revisiones deberán volver a ejecutar `Validate` y no habilitarán una evaluación anticipada de aprobaciones. Los comentarios de clasificación quedan ligados al HEAD y se vuelven a validar junto con las revisiones actuales.
 
 La reconciliación periódica reduce el intervalo de desactualización, pero no garantiza vigencia atómica de permisos en el instante exacto del merge.
 
@@ -2151,7 +2164,7 @@ Un elemento adicional deberá incorporarse únicamente cuando:
 
 Las plantillas de Issue, Pull Request y cualquier mensaje emitido por automatizaciones de plataforma (GitHub Actions, bots de gobernanza u otros mecanismos configurados bajo `.github/`) constituyen **artefactos técnicos de repositorio**, no documentos normativos.
 
-La **fuente normativa de idioma por tipo de artefacto** es **EE-DOC-002 §16.1 — Política de Idioma por Tipo de Artefacto**.  
+La **fuente normativa de idioma por tipo de artefacto** es **EE-DOC-002 §16.1 — Política de Idioma por Tipo de Artefacto**.
 **EE-DOC-006 §07.1** especializa dicha política para nomenclatura del monorepo; no la redefine.
 
 Aplicación a artefactos de GitHub Governance (derivada de la Regla de Oro de EE-DOC-002: _código e interfaces en inglés; gobernanza y arquitectura en español_):
@@ -3344,15 +3357,15 @@ EE-DOC-007 únicamente establece la integración de dichas reglas con GitHub.
 
 | Definición                                 | Estado                                 |
 | :----------------------------------------- | :------------------------------------- |
-| Integración EE-DOC-005 ↔ EE-DOC-007       | **Definido**                           |
-| Issue ↔ GitHub                            | **Definido conceptualmente**           |
-| Branch ↔ GitHub                           | **Definido / Sección 07**              |
-| Commit ↔ GitHub                           | **Definido**                           |
-| Push ↔ GitHub                             | **Definido**                           |
-| Pull Request ↔ GitHub                     | **Definido**                           |
-| CODEOWNERS ↔ Code Review                  | **Definido / Sección 08**              |
-| GitHub Actions ↔ Quality Gates            | **Definido / Sección 09 + EE-DOC-010** |
-| Branch Protection ↔ Merge                 | **Definido / Sección 07**              |
+| Integración EE-DOC-005 ↔ EE-DOC-007        | **Definido**                           |
+| Issue ↔ GitHub                             | **Definido conceptualmente**           |
+| Branch ↔ GitHub                            | **Definido / Sección 07**              |
+| Commit ↔ GitHub                            | **Definido**                           |
+| Push ↔ GitHub                              | **Definido**                           |
+| Pull Request ↔ GitHub                      | **Definido**                           |
+| CODEOWNERS ↔ Code Review                   | **Definido / Sección 08**              |
+| GitHub Actions ↔ Quality Gates             | **Definido / Sección 09 + EE-DOC-010** |
+| Branch Protection ↔ Merge                  | **Definido / Sección 07**              |
 | Trazabilidad del workflow                  | **Definido / Sección 11**              |
 | Quality Gates concretos                    | **EE-DOC-010**                         |
 | Workflows concretos                        | **Pendiente de implementación**        |
@@ -5519,21 +5532,22 @@ La implementación concreta de herramientas, automatizaciones o políticas que e
 
 ## 18. Historial de Cambios
 
-| Versión    | Fecha      | Autor                                             | Aprobado por           | Motivo                               | Cambios                                                                                                                                                                                                                    | Estado             |
-| :--------- | :--------- | :------------------------------------------------ | :--------------------- | :----------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------- |
-| **v0.1.0** | 2026-09-21 | IA Asistente                                      | —                      | Creación inicial                     | Definición inicial de propósito, alcance, límites normativos y estructura de GitHub Governance                                                                                                                             | **En Elaboración** |
-| **v0.1.1** | 2026-09-21 | Equipo de Arquitectura / AI Engineering Assistant | —                      | Revisión secciones 08–12             | Aclaraciones: frontera EE-DOC-011, `pull_request_target`, límites §09, QG de seguridad → EE-DOC-010, ownership docs, templates opcionales §10, matriz §12, referencias 008/009/011                                         | **En Elaboración** |
-| **v0.1.2** | 2026-09-21 | AI Engineering Assistant                          | —                      | Sección 18 Cumplimiento              | Incorporación de §18 Cumplimiento conforme a EE-DOC-002 §18.1; consolidación formal del modelo de §14                                                                                                                      | **En Elaboración** |
-| **v0.1.3** | 2026-09-21 | AI Engineering Assistant                          | —                      | Cierre documental formal             | Actualización de §19 Referencias; §20 Historial; incorporación de §21 Cierre Documental (pendiente de validación final)                                                                                                    | **En Elaboración** |
-| **v0.1.4** | 2026-09-21 | AI Engineering Assistant                          | —                      | Correcciones de cumplimiento         | §10.4.1 idioma en-US para plantillas y mensajes de automatización; relación EE-IMP-006 vs EE-IMP-007 en Plan de Implementación                                                                                             | **En Elaboración** |
-| **v0.1.5** | 2026-09-21 | AI Engineering Assistant                          | —                      | SSOT idioma                          | §10.4.1 apunta a EE-DOC-002 §16.1 como norma; EE-DOC-006 §07.1 como especialización de nomenclatura                                                                                                                        | **En Elaboración** |
-| **v0.1.6** | 2026-09-22 | AI Engineering Assistant                          | —                      | Revisión arquitectónica              | Resolución de observaciones: claridad SSOT §17↔§15 y §18↔§14; organización/equipos vinculados a P01/P02; refuerzo de pendientes de implementación en §05 y §16                                                           | **En Elaboración** |
-| **v0.1.7** | 2026-09-22 | AI Engineering Assistant                          | —                      | Unificación estructural              | Unificación §14/§15/§16/§17/§18: cola alineada con EE-DOC-002 y EE-DOC-006 — §14 Plan, §15 Evolución (ex-§15), §16 Cumplimiento (ex-§14), §17 Referencias, §18 Historial, §19 Cierre; eliminadas secciones duales formales | **En Elaboración** |
-| **v0.1.8** | 2026-09-22 | AI Engineering Assistant                          | —                      | Clarificaciones revisión             | §06.8 nota RACI≠roles GitHub; §12.3 autoridad tracking alternativo; §14 dependencias P01–P08 y ADR branching en P03; §15.11 autoridad clasificación CODEOWNERS                                                             | **En Elaboración** |
-| **v1.0.0** | 2026-09-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Aprobación normativa                 | Revisión arquitectónica cerrada; documento aprobado. Próximo hito: Implementación EE-IMP-007-P01…P08                                                                                                                       | **Aprobado**       |
-| **v1.1.0** | 2026-09-23 | Equipo de Arquitectura                            | Equipo de Arquitectura | Cierre Documental                    | P01–P08 completados; Validación Final conforme; EE-TEC-002; estado **Congelado**                                                                                                                                           | **Congelado**      |
-| **v1.2.0** | 2026-10-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Alineación del workflow colaborativo | Aclara aplicación en GitHub de rama por cambio coherente, PR creado por el usuario, revisión/merge autorizado, separación entre documentación y configuración.                                                             | **Congelado**      |
-| **v1.3.0** | 2026-10-31 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 Actions-only                  | EE-RFC-003: define aprobaciones dinámicas, identidad del check, límites operativos y activación gobernada.                                                                                                                 | **Congelado**      |
+| Versión    | Fecha      | Autor                                             | Aprobado por           | Motivo                                     | Cambios                                                                                                                                                                                                                    | Estado             |
+| :--------- | :--------- | :------------------------------------------------ | :--------------------- | :----------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------- |
+| **v0.1.0** | 2026-09-21 | IA Asistente                                      | —                      | Creación inicial                           | Definición inicial de propósito, alcance, límites normativos y estructura de GitHub Governance                                                                                                                             | **En Elaboración** |
+| **v0.1.1** | 2026-09-21 | Equipo de Arquitectura / AI Engineering Assistant | —                      | Revisión secciones 08–12                   | Aclaraciones: frontera EE-DOC-011, `pull_request_target`, límites §09, QG de seguridad → EE-DOC-010, ownership docs, templates opcionales §10, matriz §12, referencias 008/009/011                                         | **En Elaboración** |
+| **v0.1.2** | 2026-09-21 | AI Engineering Assistant                          | —                      | Sección 18 Cumplimiento                    | Incorporación de §18 Cumplimiento conforme a EE-DOC-002 §18.1; consolidación formal del modelo de §14                                                                                                                      | **En Elaboración** |
+| **v0.1.3** | 2026-09-21 | AI Engineering Assistant                          | —                      | Cierre documental formal                   | Actualización de §19 Referencias; §20 Historial; incorporación de §21 Cierre Documental (pendiente de validación final)                                                                                                    | **En Elaboración** |
+| **v0.1.4** | 2026-09-21 | AI Engineering Assistant                          | —                      | Correcciones de cumplimiento               | §10.4.1 idioma en-US para plantillas y mensajes de automatización; relación EE-IMP-006 vs EE-IMP-007 en Plan de Implementación                                                                                             | **En Elaboración** |
+| **v0.1.5** | 2026-09-21 | AI Engineering Assistant                          | —                      | SSOT idioma                                | §10.4.1 apunta a EE-DOC-002 §16.1 como norma; EE-DOC-006 §07.1 como especialización de nomenclatura                                                                                                                        | **En Elaboración** |
+| **v0.1.6** | 2026-09-22 | AI Engineering Assistant                          | —                      | Revisión arquitectónica                    | Resolución de observaciones: claridad SSOT §17↔§15 y §18↔§14; organización/equipos vinculados a P01/P02; refuerzo de pendientes de implementación en §05 y §16                                                             | **En Elaboración** |
+| **v0.1.7** | 2026-09-22 | AI Engineering Assistant                          | —                      | Unificación estructural                    | Unificación §14/§15/§16/§17/§18: cola alineada con EE-DOC-002 y EE-DOC-006 — §14 Plan, §15 Evolución (ex-§15), §16 Cumplimiento (ex-§14), §17 Referencias, §18 Historial, §19 Cierre; eliminadas secciones duales formales | **En Elaboración** |
+| **v0.1.8** | 2026-09-22 | AI Engineering Assistant                          | —                      | Clarificaciones revisión                   | §06.8 nota RACI≠roles GitHub; §12.3 autoridad tracking alternativo; §14 dependencias P01–P08 y ADR branching en P03; §15.11 autoridad clasificación CODEOWNERS                                                             | **En Elaboración** |
+| **v1.0.0** | 2026-09-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Aprobación normativa                       | Revisión arquitectónica cerrada; documento aprobado. Próximo hito: Implementación EE-IMP-007-P01…P08                                                                                                                       | **Aprobado**       |
+| **v1.1.0** | 2026-09-23 | Equipo de Arquitectura                            | Equipo de Arquitectura | Cierre Documental                          | P01–P08 completados; Validación Final conforme; EE-TEC-002; estado **Congelado**                                                                                                                                           | **Congelado**      |
+| **v1.2.0** | 2026-10-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Alineación del workflow colaborativo       | Aclara aplicación en GitHub de rama por cambio coherente, PR creado por el usuario, revisión/merge autorizado, separación entre documentación y configuración.                                                             | **Congelado**      |
+| **v1.3.0** | 2026-10-31 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 Actions-only                        | EE-RFC-003: define aprobaciones dinámicas, identidad del check, límites operativos y activación gobernada.                                                                                                                 | **Congelado**      |
+| **v1.4.0** | 2026-11-01 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 orden y clasificación independiente | EE-RFC-003 gate de `Validate` sobre HEAD actual; clasificación `ORDINARY` separada de aprobaciones; reevaluación de señales confiables.                                                                                    | **Congelado**      |
 
 ---
 

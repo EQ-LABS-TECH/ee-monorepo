@@ -5,6 +5,7 @@ import {
   validateRequestedPrGovernanceHead,
   validateGovernanceSchedule,
   validateGovernanceWorkflowRun,
+  validateGovernanceIssueComment,
 } from '@eq-labs/governance/pr-governance/workflow';
 
 const repository = 'EQ-LABS-TECH/ee-monorepo';
@@ -20,6 +21,8 @@ function event(overrides = {}) {
       path: '.github/workflows/ci.yml',
       event: 'pull_request',
       head_sha: 'a'.repeat(40),
+      status: 'completed',
+      conclusion: 'success',
       repository: { full_name: repository },
       ...overrides,
     },
@@ -152,6 +155,40 @@ test('rejects unsupported workflow run event origins', () => {
         event: event({ event: 'push' }),
       }),
     /Untrusted or unsupported/,
+  );
+});
+
+test('accepts PR issue-comment events as trusted reevaluation signals', () => {
+  const event = {
+    action: 'created',
+    repository: { full_name: repository },
+    issue: {
+      number: 28,
+      pull_request: {
+        url: 'https://api.github.com/repos/EQ-LABS-TECH/ee-monorepo/pulls/28',
+      },
+    },
+    comment: { id: 123, user: { login: 'edus-architecture' } },
+  };
+
+  assert.deepEqual(validateGovernanceIssueComment({ event, expectedRepository: repository }), {
+    repository,
+    number: 28,
+    sourceEvent: 'issue_comment',
+  });
+});
+
+test('rejects issue comments that are not for a pull request in the trusted repository', () => {
+  const event = {
+    action: 'created',
+    repository: { full_name: repository },
+    issue: { number: 28 },
+    comment: { id: 123, user: { login: 'edus-architecture' } },
+  };
+
+  assert.throws(
+    () => validateGovernanceIssueComment({ event, expectedRepository: repository }),
+    /Invalid governance PR comment context/,
   );
 });
 
