@@ -74,7 +74,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | QG-SEC-002   | ACTIVE                                                            | secret scanning + push protection + Gitleaks CLI         | P03 `4bdaae3`/`6b1793f` |
 | QG-ARCH-001  | ACTIVE (alcance: dirs requeridos + allowlist/forbidden top-level) | `validateStructure()`                                    | P03                     |
 | QG-DOC-001   | ACTIVE                                                            | `validateDocumentation()`                                | P04 `7682e45`           |
-| QG-DOC-002   | ACTIVE                                                            | name + `engines.node` ↔ `.nvmrc`                        | P04                     |
+| QG-DOC-002   | ACTIVE                                                            | name + `engines.node` ↔ `.nvmrc`                         | P04                     |
 | QG-INFRA-001 | ACTIVE                                                            | `validateInfra()` (existencia de rutas)                  | P04                     |
 | QG-SEC-003   | PENDING                                                           | sin SAST                                                 | §07                     |
 | QG-PERF-001  | PENDING                                                           | sin umbral normativo                                     | §07                     |

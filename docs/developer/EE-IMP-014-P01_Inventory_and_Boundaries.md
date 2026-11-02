@@ -105,15 +105,15 @@ Formalizar el **inventario as-built** de la Knowledge Layer, verificar **fronter
 
 ## 04. Fronteras (boundaries)
 
-| Frontera                  | Norma (014)                                                                           | Evidencia P01                                       |
-| :------------------------ | :------------------------------------------------------------------------------------ | :-------------------------------------------------- |
+| Frontera                 | Norma (014)                                                                           | Evidencia P01                                       |
+| :----------------------- | :------------------------------------------------------------------------------------ | :-------------------------------------------------- |
 | Intelligence ↔ Knowledge | **Prohibido** en ambas direcciones                                                    | knowledge sin dep intelligence; no cableado         |
-| Registry vs Knowledge     | Registry = specialists; Knowledge = conocimiento; **CatalogPort** sin tipos Knowledge | Sin import package knowledge en registry (as-built) |
-| Knowledge → Execution     | **Prohibido** (política 014)                                                          | Sin dep execution                                   |
-| Knowledge → connectors    | **Prohibido**                                                                         | Sin deps connector                                  |
-| `docs/` SSOT editorial    | Knowledge indexa; no write-back Congelados                                            | N/A código P01                                      |
-| Composition root          | Solo `apps/*`; no SDK                                                                 | Sin root knowledge aún                              |
-| Embeddings de producto    | Store ownership Knowledge; capability vía Foundation + root                           | Embedding ABI → P03/P04                             |
+| Registry vs Knowledge    | Registry = specialists; Knowledge = conocimiento; **CatalogPort** sin tipos Knowledge | Sin import package knowledge en registry (as-built) |
+| Knowledge → Execution    | **Prohibido** (política 014)                                                          | Sin dep execution                                   |
+| Knowledge → connectors   | **Prohibido**                                                                         | Sin deps connector                                  |
+| `docs/` SSOT editorial   | Knowledge indexa; no write-back Congelados                                            | N/A código P01                                      |
+| Composition root         | Solo `apps/*`; no SDK                                                                 | Sin root knowledge aún                              |
+| Embeddings de producto   | Store ownership Knowledge; capability vía Foundation + root                           | Embedding ABI → P03/P04                             |
 
 ---
 

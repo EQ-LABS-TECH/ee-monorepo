@@ -76,10 +76,10 @@ Este documento **no** redefine Quality Gates (EE-DOC-010), estructura de primer 
 
 ### 02.3. Precedente de roadmap vs padre estructural
 
-| Relación                     | Documento                                                               |
-| :--------------------------- | :---------------------------------------------------------------------- |
-| **Padre estructural**        | EE-DOC-004 (Knowledge Layer §07.7)                                      |
-| **Precedente de roadmap**    | EE-DOC-013 (Fase 3)                                                     |
+| Relación                     | Documento                                                              |
+| :--------------------------- | :--------------------------------------------------------------------- |
+| **Padre estructural**        | EE-DOC-004 (Knowledge Layer §07.7)                                     |
+| **Precedente de roadmap**    | EE-DOC-013 (Fase 3)                                                    |
 | **Dependencia de contenido** | EE-DOC-006 (capas §13), EE-DOC-013 (frontera Intelligence ↔ Knowledge) |
 
 ---
@@ -313,14 +313,14 @@ Produce **propuestas**; no escribe Congelados; PR + CODEOWNERS + QG mandan. El s
 
 ## 06. Relación con Intelligence, Registry y Governance
 
-| Tema                          | Norma                                                                                                                         |
-| :---------------------------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| Tema                         | Norma                                                                                                                         |
+| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------- |
 | `intelligence` ↔ `knowledge` | **Prohibido** en ambas direcciones (política 014)                                                                             |
-| Señales IA → Knowledge        | Solo **Foundation** (eventos/puertos)                                                                                         |
-| Registry vs Knowledge         | Registry = specialists; Knowledge = conocimiento del ecosistema                                                               |
-| Registry y Knowledge          | Registry consume **KnowledgePort** (inyección); sin import package knowledge por defecto; **CatalogPort sin tipos Knowledge** |
-| Governance → Knowledge        | Permitido; no redefine QG                                                                                                     |
-| Degradación                   | **KN-10**                                                                                                                     |
+| Señales IA → Knowledge       | Solo **Foundation** (eventos/puertos)                                                                                         |
+| Registry vs Knowledge        | Registry = specialists; Knowledge = conocimiento del ecosistema                                                               |
+| Registry y Knowledge         | Registry consume **KnowledgePort** (inyección); sin import package knowledge por defecto; **CatalogPort sin tipos Knowledge** |
+| Governance → Knowledge       | Permitido; no redefine QG                                                                                                     |
+| Degradación                  | **KN-10**                                                                                                                     |
 
 ---
 

@@ -578,7 +578,7 @@ La evidencia de implementación se registrará en **EE-IMP-008-P0x**. La documen
 | Bootstrap `doctor` (entorno)                                    |             ✅              |
 | Bootstrap / paridad `validate` (+ lint/typecheck/test según CI) |             ✅              |
 | `.vscode/extensions.json` + `settings.json` versionados         |             ✅              |
-| Alineación editor ↔ `packages/config/`                         |             ✅              |
+| Alineación editor ↔ `packages/config/`                          |             ✅              |
 | Dev Container (si adoptado)                                     | ✅ N/A — **diferido** (P04) |
 | Ausencia de secretos en artefactos de entorno                   |             ✅              |
 | Trazabilidad IMP + TEC                                          |        ✅ EE-TEC-003        |

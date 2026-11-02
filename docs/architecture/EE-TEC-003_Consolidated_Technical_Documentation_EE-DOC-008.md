@@ -53,16 +53,16 @@ Consolidar el estado **as-built** del entorno de desarrollo del monorepo `ee-mon
 
 ## 03. Resumen Ejecutivo del Estado As-Built
 
-| Aspecto                                            |   Estado    | Evidencia principal |
-| :------------------------------------------------- | :---------: | :------------------ |
-| Runtime Node 24 / pnpm packageManager              |     ✅      | EE-IMP-008-P01      |
-| Bootstrap doctor + validate                        |     ✅      | EE-IMP-008-P01      |
-| `.vscode/` extensions + settings                   |     ✅      | EE-IMP-008-P02      |
-| Editor tooling (tasks/launch)                      | ✅ Opción A | EE-IMP-008-P03      |
-| Dev Container                                      | ✅ Diferido | EE-IMP-008-P04      |
+| Aspecto                                           |   Estado    | Evidencia principal |
+| :------------------------------------------------ | :---------: | :------------------ |
+| Runtime Node 24 / pnpm packageManager             |     ✅      | EE-IMP-008-P01      |
+| Bootstrap doctor + validate                       |     ✅      | EE-IMP-008-P01      |
+| `.vscode/` extensions + settings                  |     ✅      | EE-IMP-008-P02      |
+| Editor tooling (tasks/launch)                     | ✅ Opción A | EE-IMP-008-P03      |
+| Dev Container                                     | ✅ Diferido | EE-IMP-008-P04      |
 | Paridad local ↔ CI (lint/typecheck/test/validate) |     ✅      | EE-IMP-008-P05      |
-| Consolidación implementación                       |     ✅      | EE-IMP-008-P06      |
-| Conformidad mínima del entorno                     |     ✅      | P01+P02+P03+P05+P06 |
+| Consolidación implementación                      |     ✅      | EE-IMP-008-P06      |
+| Conformidad mínima del entorno                    |     ✅      | P01+P02+P03+P05+P06 |
 
 | Ítem             | Valor                                        |
 | :--------------- | :------------------------------------------- |

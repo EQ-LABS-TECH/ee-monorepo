@@ -351,7 +351,7 @@ EE-DOC-007  →  elige qué mecanismos invoca el job CI
 | :----- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
 | **R1** | CI no redefine el catálogo de gates (010).                                                                                                    |
 | **R2** | Scripts no relajan umbrales normativos de 010.                                                                                                |
-| **R3** | Paridad local ↔ CI: mismos comandos root cuando el entorno cumple EE-DOC-008.                                                                |
+| **R3** | Paridad local ↔ CI: mismos comandos root cuando el entorno cumple EE-DOC-008.                                                                 |
 | **R4** | `doctor` no sustituye `validate` ni el required check de plataforma.                                                                          |
 | **R5** | **011** define la invocación canónica; **007** define la composición del job (desglose y/o `validate`), siempre consumiendo contratos de 011. |
 
@@ -426,7 +426,7 @@ Cada IMP documentará: propósito, artefactos, QG aplicables, restricciones, dep
 
 | Fase | Criterios de aceptación (resumen)                                       |
 | :--- | :---------------------------------------------------------------------- |
-| P01  | Tabla §04.2 ↔ realidad sin gaps no justificados; README sincronizado   |
+| P01  | Tabla §04.2 ↔ realidad sin gaps no justificados; README sincronizado    |
 | P02  | Comandos de gate con contrato de exit code verificable; `validate` PASS |
 | P03  | CLI documentado; delegación a root sin reimplementar gates              |
 | P04  | generate respeta 006; release no omite validación ACTIVE                |

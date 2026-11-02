@@ -95,7 +95,7 @@ Esta decisión se alinea con el patrón ya establecido en `EE-ADR-005` (provider
 | Documento      | Sección | Cambio                                                                              |
 | -------------- | ------- | ----------------------------------------------------------------------------------- |
 | **EE-DOC-006** | §13.2   | `Intelligence` → `Foundation, Intelligence`. `Knowledge` → `Foundation, Knowledge`. |
-| **EE-DOC-006** | §13.2   | Añadir nota al pie: interacción Workflow↔AI por puertos de Foundation inyectados.  |
+| **EE-DOC-006** | §13.2   | Añadir nota al pie: interacción Workflow↔AI por puertos de Foundation inyectados.   |
 | **EE-DOC-013** | §04.2   | Tabla: `Intelligence` solo importa `Foundation, Intelligence`.                      |
 | **EE-DOC-004** | §11.2   | Nota PN-008: resolución aplicada. Retirar remisión a RFC-003.                       |
 | **EE-DOC-014** | §04.5   | Sin cambios: ya dice lo que debe.                                                   |
@@ -246,10 +246,10 @@ No se introduce ningún puerto nuevo en este ADR. El ADR fija la regla de no imp
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                    | Cambios                                                                                              | Estado    |
-| ---------- | ---------- | ---------------------- | ---------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------- | --------- |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                    | Cambios                                                                                             | Estado    |
+| ---------- | ---------- | ---------------------- | ---------------------- | ------------------------- | --------------------------------------------------------------------------------------------------- | --------- |
 | **v0.1.0** | 2026-10-18 | Equipo de Arquitectura | —                      | Creación inicial          | Resolución de contradicción 004 ↔ 006 sobre aristas Intelligence-Execution y Knowledge-Intelligence | Propuesto |
-| **v1.0.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica | ADR aprobado; habilita implementación de los cambios en 004, 006 y 013                               | Aprobado  |
+| **v1.0.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica | ADR aprobado; habilita implementación de los cambios en 004, 006 y 013                              | Aprobado  |
 
 ---
 
