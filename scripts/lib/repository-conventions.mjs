@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { basename, extname } from 'node:path';
+import YAML from 'yaml';
 
 const ROOT = process.cwd();
 const BRANCH_TYPES = new Set([
@@ -44,6 +45,10 @@ const ROOT_FILE_EXCEPTIONS = new Set([
   'Makefile',
   'NOTICE',
   'README.md',
+]);
+const DEPENDABOT_ECOSYSTEMS = new Map([
+  ['github-actions', 'github_actions'],
+  ['npm', 'npm_and_yarn'],
 ]);
 
 function git(args) {
@@ -160,8 +165,13 @@ export function validateRepositoryFileNames(paths) {
 }
 
 export function validateBranchName(branch) {
-  if (typeof branch !== 'string' || !branch) throw new TypeError('Branch name is required');
+  if (typeof branch !== 'string' || !branch) {
+    return { branch: typeof branch === 'string' ? branch : '', code: 'branch-name-required' };
+  }
   if (['main', 'master', 'develop'].includes(branch)) return null;
+  if (branch.startsWith('dependabot/')) {
+    return isAuthorizedDependabotBranch(branch) ? null : { branch, code: 'branch-name-invalid' };
+  }
   const match = /^([^/]+)\/(.+)$/.exec(branch);
   if (!match || !BRANCH_TYPES.has(match[1])) {
     return { branch, code: 'branch-name-invalid' };
@@ -174,6 +184,62 @@ export function validateBranchName(branch) {
     return { branch, code: 'branch-name-invalid' };
   }
   return null;
+}
+
+function isAuthorizedDependabotBranch(branch) {
+  const context = getCurrentPullRequestContext();
+  const pullRequest = context?.pullRequest;
+  const repository = context?.repository;
+
+  if (
+    !context ||
+    !['pull_request', 'pull_request_review'].includes(context.eventName) ||
+    pullRequest?.user?.login !== 'dependabot[bot]' ||
+    !repository ||
+    pullRequest.head?.ref !== branch ||
+    pullRequest.head?.repo?.full_name !== repository ||
+    pullRequest.base?.repo?.full_name !== repository
+  ) {
+    return false;
+  }
+
+  try {
+    const dependabotConfig = YAML.parse(
+      readFileSync(new URL('../../.github/dependabot.yml', import.meta.url), 'utf8'),
+    );
+    return (dependabotConfig.updates ?? []).some((update) => {
+      const ecosystem = DEPENDABOT_ECOSYSTEMS.get(update['package-ecosystem']);
+      if (!ecosystem) return false;
+
+      return Object.keys(update.groups ?? {}).some((group) => {
+        const escapedEcosystem = ecosystem.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const escapedGroup = group.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return new RegExp(`^dependabot/${escapedEcosystem}/${escapedGroup}-[a-z0-9]+$`).test(
+          branch,
+        );
+      });
+    });
+  } catch {
+    return false;
+  }
+}
+
+export function getCurrentPullRequestContext() {
+  const eventName = process.env.GITHUB_EVENT_NAME;
+  if (!['pull_request', 'pull_request_review'].includes(eventName)) return null;
+  if (!process.env.GITHUB_EVENT_PATH)
+    return { eventName, repository: process.env.GITHUB_REPOSITORY };
+
+  try {
+    const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+    return {
+      eventName,
+      repository: process.env.GITHUB_REPOSITORY,
+      pullRequest: event.pull_request,
+    };
+  } catch {
+    return { eventName, repository: process.env.GITHUB_REPOSITORY };
+  }
 }
 
 export function validateCommitMessages(messages) {
@@ -194,14 +260,9 @@ export function getChangedRepositoryPaths() {
 }
 
 export function getCurrentBranchName() {
+  const pullRequestContext = getCurrentPullRequestContext();
+  if (pullRequestContext) return pullRequestContext.pullRequest?.head?.ref ?? '';
   if (process.env.GITHUB_HEAD_REF) return process.env.GITHUB_HEAD_REF;
-
-  if (process.env.GITHUB_EVENT_NAME === 'pull_request_review') {
-    if (!process.env.GITHUB_EVENT_PATH) return '';
-
-    const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
-    return event.pull_request?.head?.ref ?? '';
-  }
 
   return git(['branch', '--show-current']);
 }
