@@ -45,23 +45,24 @@ The architectural decision is defined by **ADR-001 — Workspace Task Orchestrat
 Normative contract: **EE-DOC-011 — Automation**. This README is operational
 documentation derived from that contract — not an independent source of truth.
 
-| Command            | Implementation               | Category | Responsibility                                       |
-| ------------------ | ---------------------------- | -------- | ---------------------------------------------------- |
-| `bootstrap`        | `scripts/commands/bootstrap` | A-ROOT   | Environment setup                                    |
-| `build`            | `scripts/commands/build`     | A-ROOT   | Workspace build (QG-BUILD-001)                       |
-| `dev`              | `scripts/commands/dev`       | A-ROOT   | Local development (long-running)                     |
-| `test`             | `scripts/commands/test`      | A-ROOT   | Orchestrated tests (QG-TEST-001)                     |
-| `lint`             | `scripts/commands/lint`      | A-ROOT   | Lint (QG-LINT-001)                                   |
-| `format`           | `scripts/commands/format`    | A-ROOT   | Prettier **write** (local tool; not the format gate) |
-| `typecheck`        | `scripts/commands/typecheck` | A-ROOT   | Typecheck (QG-TYPE-001)                              |
-| `validate`         | `scripts/commands/validate`  | A-ROOT   | Local validation aggregator (EE-DOC-010)             |
-| `doctor`           | `scripts/commands/doctor`    | A-ROOT   | Environment diagnostics (does not replace validate)  |
-| `generate`         | `scripts/commands/generate`  | A-GEN    | Scaffolding (Plop)                                   |
-| `e2e`              | `scripts/commands/e2e`       | A-ROOT   | End-to-end tests (Playwright)                        |
-| `release`          | `scripts/commands/release`   | A-REL    | Monorepo release orchestration                       |
-| `clean`            | `scripts/commands/clean`     | A-ROOT   | Clean build artifacts / caches                       |
-| `changeset`        | `@changesets/cli`            | A-REL    | Declare SemVer changes (no file under `scripts/`)    |
-| `version-packages` | `changeset version`          | A-REL    | Apply package versions (no file under `scripts/`)    |
+| Command            | Implementation                   | Category | Responsibility                                       |
+| ------------------ | -------------------------------- | -------- | ---------------------------------------------------- |
+| `bootstrap`        | `scripts/commands/bootstrap`     | A-ROOT   | Environment setup                                    |
+| `build`            | `scripts/commands/build`         | A-ROOT   | Workspace build (QG-BUILD-001)                       |
+| `dev`              | `scripts/commands/dev`           | A-ROOT   | Local development (long-running)                     |
+| `test`             | `scripts/commands/test`          | A-ROOT   | Orchestrated tests (QG-TEST-001)                     |
+| `lint`             | `scripts/commands/lint`          | A-ROOT   | Lint (QG-LINT-001)                                   |
+| `format`           | `scripts/commands/format`        | A-ROOT   | Prettier **write** (local tool; not the format gate) |
+| `hooks:install`    | `scripts/commands/install-hooks` | A-ROOT   | Install optional repository-local Git hooks          |
+| `typecheck`        | `scripts/commands/typecheck`     | A-ROOT   | Typecheck (QG-TYPE-001)                              |
+| `validate`         | `scripts/commands/validate`      | A-ROOT   | Local validation aggregator (EE-DOC-010)             |
+| `doctor`           | `scripts/commands/doctor`        | A-ROOT   | Environment diagnostics (does not replace validate)  |
+| `generate`         | `scripts/commands/generate`      | A-GEN    | Scaffolding (Plop)                                   |
+| `e2e`              | `scripts/commands/e2e`           | A-ROOT   | End-to-end tests (Playwright)                        |
+| `release`          | `scripts/commands/release`       | A-REL    | Monorepo release orchestration                       |
+| `clean`            | `scripts/commands/clean`         | A-ROOT   | Clean build artifacts / caches                       |
+| `changeset`        | `@changesets/cli`                | A-REL    | Declare SemVer changes (no file under `scripts/`)    |
+| `version-packages` | `changeset version`              | A-REL    | Apply package versions (no file under `scripts/`)    |
 
 ### Release workflow
 
@@ -82,7 +83,7 @@ A reconstruction failure, source mismatch, unexpected release, registry error, o
 ### Publication safety
 
 The publication command requires a clean Git working tree before starting.  
-Validation executes `pnpm format` in write mode as its first step.  
+Validation runs checks only and does not rewrite source or documentation files.
 Consequently, publication performs another clean-working-tree check after validation and build, before querying the npm registry or publishing any package.  
 If validation or build modifies tracked files or produces untracked files, publication stops. Review and commit the changes through the normal development process; do not bypass the check.  
 Only public packages explicitly included in the verified release plan may be published. Existing exact package versions are not republished.  
@@ -102,9 +103,16 @@ and validated authentication configuration.
 ### Format write vs check
 
 - `pnpm format` runs Prettier in write mode, lists modified files, and reports processed, modified, and unchanged file counts.
-- `pnpm validate` runs `pnpm format` first, then the remaining Quality Gates, including a final Prettier check.
-- The format check verifies the final state; it does not replace the initial automatic formatting step.
+- `pnpm validate` runs Prettier in check mode along with the other Quality Gates.
+- Use `pnpm format` explicitly when you intend to rewrite files, then inspect and review the resulting diff.
 - Release publication requires a clean working tree again after validation and build, preventing automatic formatting changes from reaching publication without review.
+
+### Local Git hooks
+
+Run `pnpm run hooks:install` once in each clone to configure `.githooks/`. The
+pre-commit hook runs lint, Prettier check, repository naming, and branch naming;
+the commit-msg hook checks Conventional Commits. Hooks are local convenience;
+CI remains the required enforcement path.
 
 ### Auxiliary files
 
@@ -126,13 +134,14 @@ Implementation:
 - `scripts/tests/pr-governance.*.test.mjs`: regression and integration tests.
 
 The inspector identifies `CRITICAL` changes through conservative path indicators.
-When no critical indicators are detected, classification remains `PENDING_REVIEW`;
-absence of indicators does not establish `ORDINARY`.
+Complete changed-path evidence without a critical indicator defaults to `ORDINARY`;
+missing or incomplete path evidence remains `PENDING_REVIEW`.
 
-Explicit `EE-LABS-IMPACT: ORDINARY` declarations are collected only from current,
-independent approvals associated with the observed PR HEAD. Repository permissions
-are checked for ordinary-classification candidates. Team membership can be queried,
-but authoritative ownership and classification are not yet integrated.
+An authorized Architecture member may escalate an otherwise ordinary change using
+`EE-LABS-IMPACT: CRITICAL`, the current `HEAD`, and a non-empty `RATIONALE`. This
+evidence is separate from code review; automatic critical indicators cannot be
+downgraded. The advisory inspector verifies available permission and membership
+evidence but never authorizes a merge.
 
 The inspector performs consistency checks on PR identity, HEAD, changed files,
 and review evidence. These checks do not provide an atomic snapshot or guarantee
@@ -143,8 +152,8 @@ same-repository pull requests and observes review submission, editing, and
 dismissal events. It checks out trusted implementation from `main` and uses
 read-only permissions.
 
-Reports retain `mode: ADVISORY` and `status: PENDING`. Ordinary-classification
-evidence remains `UNVERIFIED`. A successful advisory job is not merge authorization.
+Reports retain `mode: ADVISORY` and `status: PENDING`. Critical escalation evidence
+may be `UNVERIFIED`; a successful advisory job is not merge authorization.
 
 Mandatory enforcement remains pending: approved classification authority,
 trusted ownership and membership evidence, suitable credentials, current

@@ -317,10 +317,36 @@ console.log('');
 
 const validations = [
   {
-    cmd: 'pnpm',
-    args: ['run', 'format'],
-    label: 'Format',
+    cmd: 'node',
+    args: ['scripts/commands/validate-names'],
+    label: 'Repository naming',
     critical: true,
+    requireGateContract: true,
+    expectedGateId: 'QG-NAM-001',
+  },
+  {
+    cmd: 'node',
+    args: ['scripts/commands/validate-branch'],
+    label: 'Branch name',
+    critical: true,
+    requireGateContract: true,
+    expectedGateId: 'QG-BRANCH-001',
+  },
+  {
+    cmd: 'node',
+    args: ['scripts/commands/validate-commit'],
+    label: 'Commit messages',
+    critical: true,
+    requireGateContract: true,
+    expectedGateId: 'QG-COMMIT-001',
+  },
+  {
+    cmd: 'node',
+    args: ['scripts/commands/validate-architecture'],
+    label: 'Architecture dependencies',
+    critical: true,
+    requireGateContract: true,
+    expectedGateId: 'QG-ARCH-001',
   },
   {
     cmd: 'node',

@@ -1,3 +1,5 @@
+import { createGitHubHttpError } from './pr-governance.github-error.mjs';
+
 const SHA = /^[0-9a-f]{40}$/i;
 const OWNER = /^[a-z\d-]+$/i;
 const REPO = /^[a-z\d_.-]+$/i;
@@ -32,7 +34,7 @@ export async function resolvePrGovernanceRoute({ route, token, fetchImpl = fetch
     });
 
     if (!response.ok || response.status !== 200) {
-      throw new Error(`PN-017 PR resolution returned HTTP ${response.status}`);
+      throw createGitHubHttpError(response, 'PN-017 PR resolution');
     }
 
     const pr = await response.json();

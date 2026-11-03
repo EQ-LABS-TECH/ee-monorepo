@@ -1,7 +1,7 @@
 /** PN-017: read-only, advisory PR governance evidence. Never authorizes a merge. */
 import { classifyCriticalChange } from '@eq-labs/governance/pr-governance/classification';
 import { evaluatePrApprovals } from '@eq-labs/governance/pr-governance/approvals';
-import { ordinaryClassificationCandidates } from '@eq-labs/governance/pr-governance/authority';
+import { criticalEscalationCandidates } from '@eq-labs/governance/pr-governance/authority';
 import {
   readPullRequestEvidence,
   readReviewerRepositoryPermission,
@@ -18,23 +18,18 @@ export async function inspectPrGovernance({
 }) {
   const evidence = await readPullRequestEvidence({ owner, repo, number, token, fetchImpl });
   const classification = classifyCriticalChange(evidence.paths);
-  const evaluation = evaluatePrApprovals({
-    author: evidence.author,
-    headSha: evidence.headSha,
-    reviews: evidence.reviews,
-    critical: classification.criticalIndicatorsPresent,
-  });
 
-  const ordinaryCandidates = classification.criticalIndicatorsPresent
-    ? []
-    : ordinaryClassificationCandidates({
-        classificationComments: evidence.classificationComments,
-        headSha: evidence.headSha,
-        author: evidence.author,
-      }).map((reviewer) => ({ reviewer, headSha: evidence.headSha }));
+  const escalationCandidates =
+    classification.criticalIndicatorsPresent || !classification.evidenceComplete
+      ? []
+      : criticalEscalationCandidates({
+          classificationComments: evidence.classificationComments,
+          headSha: evidence.headSha,
+          author: evidence.author,
+        }).map(({ reviewer }) => ({ reviewer, headSha: evidence.headSha }));
 
   const permissionEvidence = await Promise.all(
-    ordinaryCandidates.map(async (candidate) => {
+    escalationCandidates.map(async (candidate) => {
       const permission = await readReviewerRepositoryPermission({
         owner,
         repo,
@@ -57,7 +52,7 @@ export async function inspectPrGovernance({
     (candidate) => candidate.hasWriteAccess,
   );
 
-  const authorizedOrdinaryReviewers = [];
+  const authorizedEscalators = [];
 
   if (membershipToken !== undefined) {
     if (typeof membershipToken !== 'string' || !membershipToken) {
@@ -78,12 +73,12 @@ export async function inspectPrGovernance({
 
     for (const membership of memberships) {
       if (membership.active) {
-        authorizedOrdinaryReviewers.push(membership.reviewer);
+        authorizedEscalators.push(membership.reviewer);
       }
     }
   }
 
-  if (ordinaryCandidates.length > 0) {
+  if (escalationCandidates.length > 0) {
     const confirmedEvidence = await readPullRequestEvidence({
       owner,
       repo,
@@ -105,8 +100,15 @@ export async function inspectPrGovernance({
     }
   }
 
-  // Lack of path indicators is not an affirmative noncritical classification.
-  // Even when approvals are numerically sufficient, this cannot certify a merge.
+  const evaluation = evaluatePrApprovals({
+    author: evidence.author,
+    headSha: evidence.headSha,
+    reviews: evidence.reviews,
+    critical: classification.criticalIndicatorsPresent || authorizedEscalators.length > 0,
+  });
+
+  // Advisory evidence never authorizes a merge. Complete paths without a
+  // critical indicator classify as ordinary unless an authorized escalation exists.
 
   return {
     mode: 'ADVISORY',
@@ -116,24 +118,29 @@ export async function inspectPrGovernance({
       ...classification,
       status: classification.criticalIndicatorsPresent
         ? 'CRITICAL'
-        : authorizedOrdinaryReviewers.length > 0
-          ? 'ORDINARY'
-          : 'PENDING_REVIEW',
+        : !classification.evidenceComplete
+          ? 'PENDING_REVIEW'
+          : authorizedEscalators.length > 0
+            ? 'CRITICAL'
+            : 'ORDINARY',
     },
     approvalEvidence: evaluation,
-    ordinaryClassificationEvidence: {
-      status: authorizedOrdinaryReviewers.length > 0 ? 'VERIFIED' : 'UNVERIFIED',
+    criticalEscalationEvidence: {
+      status:
+        authorizedEscalators.length > 0
+          ? 'VERIFIED'
+          : escalationCandidates.length > 0
+            ? 'UNVERIFIED'
+            : 'NOT_REQUIRED',
       candidates: candidatesWithPermissions,
-      authorizedReviewers: authorizedOrdinaryReviewers,
+      authorizedReviewers: authorizedEscalators,
       reason:
-        authorizedOrdinaryReviewers.length > 0
-          ? 'architecture-membership-verified'
-          : 'reviewer-authority-not-yet-verified',
+        authorizedEscalators.length > 0
+          ? 'architecture-escalation-verified'
+          : escalationCandidates.length > 0
+            ? 'architecture-escalation-not-verified'
+            : 'critical-escalation-not-requested',
     },
-    reasons: [
-      'impact-classification-requires-authorized-review',
-      'review-evidence-must-be-current-at-merge',
-      'transitional-exception-not-implemented',
-    ],
+    reasons: ['review-evidence-must-be-current-at-merge', 'transitional-exception-not-implemented'],
   };
 }

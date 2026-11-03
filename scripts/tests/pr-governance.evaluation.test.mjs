@@ -22,7 +22,7 @@ function input(overrides = {}) {
       author: 'contributor',
       classificationComments: [classificationComment],
     },
-    criticalIndicators: { criticalIndicatorsPresent: false, reasons: [] },
+    criticalIndicators: { criticalIndicatorsPresent: false, evidenceComplete: true, reasons: [] },
     approvalEvidence: {
       approvedReviewDetails: [{ reviewer: 'reviewer', body: 'Looks good' }],
     },
@@ -46,14 +46,19 @@ test('composes an ordinary passing result from verified domain evidence', () => 
   assert.equal(result.headSha, headSha);
   assert.equal(result.baseSha, baseSha);
   assert.equal(result.classification, 'ORDINARY');
-  assert.deepEqual(result.authorizedClassifiers, ['architect']);
+  assert.deepEqual(result.authorizedEscalators, []);
   assert.equal(result.decision.status, 'PASS');
 });
 
-test('composes pending classification as blocked', () => {
+test('composes incomplete path evidence as pending and blocked', () => {
   const result = composePrGovernanceEvaluation(
     input({
       pullRequestEvidence: { headSha, baseSha, author: 'contributor', classificationComments: [] },
+      criticalIndicators: {
+        criticalIndicatorsPresent: false,
+        evidenceComplete: false,
+        reasons: [],
+      },
       approvalEvidence: {
         approvedReviewDetails: [{ reviewer: 'reviewer', body: 'EE-LABS-IMPACT: ORDINARY' }],
       },
@@ -70,12 +75,42 @@ test('blocks critical changes without the required qualified approvals', () => {
     input({
       criticalIndicators: {
         criticalIndicatorsPresent: true,
+        evidenceComplete: true,
         reasons: [{ category: 'github-governance', path: '.github/CODEOWNERS' }],
       },
     }),
   );
 
   assert.equal(result.classification, 'CRITICAL');
+  assert.equal(result.decision.status, 'BLOCKED');
+  assert.ok(result.decision.reasons.includes('insufficient-qualified-approvals'));
+});
+
+test('requires two qualified approvals when Architecture escalates the impact to critical', () => {
+  const result = composePrGovernanceEvaluation(
+    input({
+      pullRequestEvidence: {
+        headSha,
+        baseSha,
+        author: 'contributor',
+        classificationComments: [
+          {
+            ...classificationComment,
+            body: `EE-LABS-IMPACT: CRITICAL\nHEAD: ${headSha}\nRATIONALE: Cross-cutting security impact`,
+          },
+        ],
+      },
+      ownershipEvidence: {
+        ownershipVerified: true,
+        qualifiedReviewers: ['architect'],
+        coverage: [],
+        uncoveredPaths: [],
+      },
+    }),
+  );
+
+  assert.equal(result.classification, 'CRITICAL');
+  assert.equal(result.decision.requiredCount, 2);
   assert.equal(result.decision.status, 'BLOCKED');
   assert.ok(result.decision.reasons.includes('insufficient-qualified-approvals'));
 });

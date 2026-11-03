@@ -6,29 +6,29 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## METADATOS
 
-| Campo                               | Valor                                                                                                               |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| **ID**                              | EE-RFC-003                                                                                                          |
-| **Documento**                       | Documentation Standards Sync                                                                                        |
-| **Código corto**                    | RFC-003                                                                                                             |
-| **Tipo**                            | Request for Comments (Cambio gobernado)                                                                             |
-| **Clasificación**                   | D — Cambio Significativo / Transversal                                                                              |
-| **Nivel**                           | Estratégico                                                                                                         |
-| **Normativo**                       | Sí                                                                                                                  |
-| **Versión**                         | v0.7.0                                                                                                              |
-| **Estado**                          | Propuesto (vehículo abierto — auditoría)                                                                            |
-| **Propietario**                     | Equipo de Arquitectura                                                                                              |
-| **Documento padre**                 | EE-DOC-005                                                                                                          |
-| **Dependencias**                    | padre=EE-DOC-005; contenido=EE-DOC-001, EE-DOC-002, EE-DOC-005, EE-DOC-007, EE-DOC-011                              |
-| **Solicitante**                     | Auditoría transversal del monorepo: documentación, gobernanza, release y automatización                             |
-| **Documentos normativos afectados** | EE-DOC-001, EE-DOC-002, EE-DOC-005, EE-DOC-007, EE-DOC-011 y documentos/artefactos vinculados a hallazgos auditados |
-| **Documento de dominio**            | EE-DOC-002 — Document Design Template                                                                               |
-| **ADR asociado**                    | No requerido por esta propuesta: los hallazgos transversales de la oleada se gobiernan en RFC-003                   |
-| **Aprobado por**                    | Pendiente — RFC Propuesto                                                                                           |
-| **Audiencia**                       | Arquitectura, Desarrollo, IA, QA                                                                                    |
-| **Fecha de creación**               | 2026-10-11                                                                                                          |
-| **Última revisión**                 | 2026-11-01                                                                                                          |
-| **Próxima revisión**                | Pendiente de cierre de la oleada de auditoría                                                                       |
+| Campo                               | Valor                                                                                                                                                                                   |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ID**                              | EE-RFC-003                                                                                                                                                                              |
+| **Documento**                       | Documentation Standards Sync                                                                                                                                                            |
+| **Código corto**                    | RFC-003                                                                                                                                                                                 |
+| **Tipo**                            | Request for Comments (Cambio gobernado)                                                                                                                                                 |
+| **Clasificación**                   | D — Cambio Significativo / Transversal                                                                                                                                                  |
+| **Nivel**                           | Estratégico                                                                                                                                                                             |
+| **Normativo**                       | Sí                                                                                                                                                                                      |
+| **Versión**                         | v0.7.0                                                                                                                                                                                  |
+| **Estado**                          | Propuesto (vehículo abierto — auditoría)                                                                                                                                                |
+| **Propietario**                     | Equipo de Arquitectura                                                                                                                                                                  |
+| **Documento padre**                 | EE-DOC-005                                                                                                                                                                              |
+| **Dependencias**                    | padre=EE-DOC-005; contenido=EE-DOC-001, EE-DOC-002, EE-DOC-005, EE-DOC-007, EE-DOC-011                                                                                                  |
+| **Solicitante**                     | Auditoría transversal del monorepo: documentación, gobernanza, release y automatización                                                                                                 |
+| **Documentos normativos afectados** | EE-DOC-002, EE-DOC-004, EE-DOC-005, EE-DOC-006, EE-DOC-007, EE-DOC-010, EE-DOC-011 y documentos/artefactos vinculados a hallazgos auditados; EE-DOC-001 no se modifica en esta enmienda |
+| **Documento de dominio**            | EE-DOC-002 — Document Design Template                                                                                                                                                   |
+| **ADR asociado**                    | No requerido por esta propuesta: los hallazgos transversales de la oleada se gobiernan en RFC-003                                                                                       |
+| **Aprobado por**                    | Pendiente — RFC Propuesto                                                                                                                                                               |
+| **Audiencia**                       | Arquitectura, Desarrollo, IA, QA                                                                                                                                                        |
+| **Fecha de creación**               | 2026-10-11                                                                                                                                                                              |
+| **Última revisión**                 | 2026-11-02                                                                                                                                                                              |
+| **Próxima revisión**                | Pendiente de cierre de la oleada de auditoría                                                                                                                                           |
 
 > **Régimen:** este RFC permanece en estado **Propuesto** de forma deliberada mientras dure la **auditoría documental** del monorepo. Está indexado en **EE-DOC-001 §09.2**. Acumula y ratifica cambios Tipo D de estándares (plantillas, catálogo, metadatos, VAL/WAIVE, reglas AR volcadas a 002, etc.). **No** se interpreta como Aprobado ni como alcance cerrado hasta el cierre formal de la oleada de auditoría.
 
@@ -77,11 +77,11 @@ La aprobación de una propuesta se registra en su fila correspondiente del histo
 | **EE-AUDIT-Rules_Emerging / Progress Register** | Inventario y estado de los hallazgos, incluidos PN-021 y PN-030          | Los hallazgos no se cierran sin evidencia verificable                                                  |
 | Scripts, tests y CI                             | Implementación del contrato aprobado                                     | No sustituyen la decisión normativa ni se modifican antes de la aprobación exigida                     |
 
-### 02.6. Ampliación propuesta — flujo de trabajo colaborativo
+### 02.6. Ampliación aprobada individualmente — flujo de trabajo colaborativo
 
-Se incorpora a este RFC, que permanece abierto durante la oleada de auditoría, la formalización propuesta del flujo de colaboración entre responsable humano y asistente de ingeniería. Se autorizó preparar las enmiendas documentales en esta rama dedicada; esa autorización de preparación **no equivale por sí sola a la aprobación normativa final** ni autoriza cambios directos en `main`. Las versiones de DOC-005, DOC-007 y DOC-001 permanecen en revisión hasta completar el proceso gobernado.
+Este RFC permanece abierto durante la oleada de auditoría. Las enmiendas documentales de EE-DOC-005 y EE-DOC-007 en esta rama recibieron aprobación individual; su integración requiere el merge autorizado. Esta aprobación no modifica EE-DOC-001 ni autoriza cambios directos en `main` fuera del proceso gobernado.
 
-La necesidad surge de hacer explícitos los límites de responsabilidad y el ciclo de integración documental/técnica: una rama por cambio coherente, separación de responsabilidades entre código y documentación, revisión mediante PR y evidencia de validación. La ampliación no modifica por sí sola la configuración de GitHub ni afirma que sus controles actuales ya soporten todo el flujo propuesto.
+La necesidad surge de hacer explícitos los límites de responsabilidad y el ciclo de integración documental/técnica: una rama por cambio coherente, separación de responsabilidades entre código y documentación, revisión mediante PR y evidencia de validación. La ampliación no modifica por sí sola la configuración de GitHub ni afirma que sus controles actuales ya soporten todo el flujo aprobado.
 
 ### 02.7. Delimitación frente a alternativas de ubicación o alcance
 
@@ -119,7 +119,7 @@ CODEOWNERS mantiene la responsabilidad técnica sobre las áreas del monorepo. S
 
 La primera fase de PN-017 consiste en un inspector de evidencia de Pull Requests, integrado como job consultivo independiente de los Quality Gates obligatorios. Su ejecución no autoriza la integración, no sustituye CODEOWNERS y no certifica el cumplimiento del régimen reforzado de aprobaciones.
 
-La clasificación automatizada identifica rutas potencialmente críticas mediante indicadores conservadores. La ausencia de indicadores no constituye una clasificación afirmativa como cambio ordinario; permanece obligatoria la evaluación de impacto por los responsables autorizados.
+La clasificación por indicadores identifica automáticamente cambios `CRITICAL`. Cuando la evidencia de rutas del HEAD está completa y no aparece ningún indicador crítico, la clasificación es `ORDINARY` sin intervención de Arquitectura por cada Pull Request. La evidencia ausente, incompleta o disputada produce `PENDING_REVIEW` y no puede generar una decisión favorable.
 
 El cómputo automatizado de aprobaciones constituye evidencia numérica de revisiones independientes, no una certificación de elegibilidad de revisores, ownership, cumplimiento integral de rulesets ni vigencia de las condiciones al momento del merge.
 
@@ -146,18 +146,20 @@ La evaluación y el enforcement de PN-017 deberán respetar este orden para el H
 
 La clasificación de impacto y la aprobación del código son evidencias independientes:
 
-1. Los indicadores críticos determinan `CRITICAL` y prevalecen sobre toda declaración `ORDINARY`.
-2. La ausencia de indicadores críticos no determina `ORDINARY`; sin una declaración autorizada, la clasificación es `PENDING_REVIEW`.
-3. Una persona distinta del autor y no identificada como bot, con permiso efectivo de escritura en el repositorio y membresía activa en el Equipo de Arquitectura, podrá declarar `ORDINARY` mediante un comentario de conversación del Pull Request con este cuerpo exacto y el SHA vigente:
+1. Los indicadores críticos definidos por la política determinan `CRITICAL` automáticamente y no pueden degradarse mediante una declaración humana.
+2. Si la evidencia de rutas del HEAD está completa y no hay indicador crítico, la clasificación predeterminada es `ORDINARY`. Este caso no requiere una intervención de Arquitectura por cada Pull Request.
+3. Evidencia ausente, incompleta o disputada produce `PENDING_REVIEW`, que no puede producir conformidad.
+4. Una persona distinta del autor y no identificada como bot, con permiso efectivo de escritura en el repositorio y membresía activa en el Equipo de Arquitectura, podrá escalar una clasificación a `CRITICAL` mediante un comentario de conversación que identifique el HEAD vigente y justifique la decisión:
 
    ```text
-   EE-LABS-IMPACT: ORDINARY
+   EE-LABS-IMPACT: CRITICAL
    HEAD: <SHA actual de 40 caracteres hexadecimales>
+   RATIONALE: <justificación no vacía>
    ```
 
-4. La declaración de impacto no es una aprobación de código y no cuenta para el umbral. La revisión de código se registra mediante el mecanismo normal de GitHub y no requiere texto especial.
-5. Un cambio de HEAD invalida una declaración ligada al SHA anterior. La edición o eliminación del comentario, la pérdida de permisos o la salida del equipo autorizado también impiden usar la evidencia como vigente. El sistema reevaluará el estado con la evidencia actual.
-6. `ORDINARY` requiere al menos una aprobación independiente y calificada; `CRITICAL` requiere al menos dos. `PENDING_REVIEW`, evidencia incompleta o errores operativos no pueden producir conformidad.
+5. La clasificación no es una aprobación de código y no cuenta para el umbral. La revisión de código se registra mediante el mecanismo normal de GitHub y no requiere texto especial.
+6. Un cambio de HEAD invalida la evidencia ligada al SHA anterior. La edición o eliminación del comentario, la pérdida de permisos o la salida del equipo autorizado también impiden usar el escalamiento como vigente. El sistema reevaluará el estado con la evidencia actual.
+7. `ORDINARY` requiere al menos una aprobación independiente y calificada; `CRITICAL` requiere al menos dos. Los errores operativos nunca producen conformidad y deben emitir diagnósticos estructurados y seguros (`fase`, código interno y estado HTTP si aplica), sin registrar mensajes externos, respuestas completas ni secretos.
 
 El workflow deberá reevaluar tras completarse `Validate` y ante comentarios de clasificación creados, editados o eliminados. Los eventos de revisión deberán provocar una nueva ejecución de `Validate` antes de volver a emitir `PR Governance`. Esta secuencia no convierte la ejecución de CI en evidencia de clasificación o aprobación.
 
@@ -326,18 +328,23 @@ La clasificación deberá respetar los criterios de criticidad definidos en EE-D
 
 ##### Autoridad para clasificar impacto
 
-La confirmación explícita de un cambio `ORDINARY` corresponde al **Equipo de Arquitectura**, manteniendo la responsabilidad de revisión técnica de los equipos definidos por `CODEOWNERS`.
-
 La clasificación deberá cumplir las siguientes reglas:
 
-1. Los indicadores críticos prevalecen sobre cualquier declaración de impacto ordinario. Un cambio identificado como `CRITICAL` no podrá reclasificarse como `ORDINARY` mediante una declaración del revisor.
-2. La ausencia de indicadores críticos no acredita automáticamente que el cambio sea ordinario. En ausencia de una clasificación autorizada, el estado será `PENDING_REVIEW`.
-3. La clasificación `ORDINARY` requerirá una declaración explícita de un revisor autorizado, independiente del autor del Pull Request y asociada a una aprobación vigente respecto del HEAD evaluado.
-4. La autoridad del revisor deberá acreditarse mediante evidencia confiable de permisos efectivos y membresía activa en el Equipo de Arquitectura. No podrá inferirse exclusivamente del nombre de usuario, permisos administrativos, comentarios, etiquetas o declaraciones del autor.
-5. La clasificación del impacto deberá evaluarse sobre el conjunto de cambios del Pull Request, sin sustituir la responsabilidad técnica de los propietarios de cada área afectada.
-6. La confirmación de una clasificación `ORDINARY` no sustituirá las aprobaciones independientes exigibles, la participación de CODEOWNERS ni los Quality Gates aplicables.
+1. Los indicadores críticos determinan `CRITICAL` y no pueden degradarse mediante una declaración humana.
+2. Si la evidencia de rutas del HEAD actual está completa y no hay indicador crítico, la clasificación predeterminada es `ORDINARY`; no requiere intervención de Arquitectura por cada Pull Request.
+3. La evidencia de rutas ausente, incompleta o disputada produce `PENDING_REVIEW`, que no puede generar un resultado favorable.
+4. Una persona distinta del autor y no identificada como bot, con permiso efectivo de escritura y membresía activa en el Equipo de Arquitectura, podrá escalar a `CRITICAL` un cambio sin indicador automático mediante un comentario de conversación ligado al HEAD y con una justificación no vacía:
 
-Los cambios críticos requerirán al menos **dos aprobaciones independientes y calificadas**, mientras que los cambios ordinarios requerirán al menos **una aprobación independiente y calificada**, conforme a EE-DOC-005 y EE-DOC-007.
+   ```text
+   EE-LABS-IMPACT: CRITICAL
+   HEAD: <SHA actual de 40 caracteres hexadecimales>
+   RATIONALE: <justificación>
+   ```
+
+5. La autoridad para escalar deberá acreditarse con evidencia confiable de permisos efectivos y membresía activa. No se inferirá exclusivamente del nombre de usuario, permisos administrativos, comentario, etiqueta o declaración del autor.
+6. La clasificación se evalúa sobre el conjunto completo de cambios del Pull Request y no sustituye la responsabilidad técnica de CODEOWNERS.
+7. La clasificación no es una aprobación de código. `ORDINARY` requiere al menos una aprobación independiente y calificada; `CRITICAL`, dos. `PENDING_REVIEW`, evidencia incompleta o errores operativos no pueden producir conformidad.
+8. Un cambio de HEAD, edición o eliminación del comentario, o pérdida de permisos/membresía invalida la escalación; la evidencia vigente debe verificarse de nuevo antes de emitir el resultado.
 
 El cumplimiento numérico del umbral no constituirá por sí solo evidencia de elegibilidad del revisor ni autorización de integración.
 
@@ -481,11 +488,11 @@ Esta ampliación se gestiona en RFC-003 como parte de la oleada de auditoría. L
 
 ### 03.3. Superficie C — EE-DOC-005 y EE-DOC-007 (enmienda preparada en rama; RFC general abierto)
 
-| Documento                                   | Cambio propuesto                                                                                                                                                                                                                                                                               | Límite                                                                                                                                                     |
-| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **EE-DOC-005 — Development Workflow**       | Formalizar una rama por cambio coherente (no por archivo); commits acotados; revisión y validación antes de integrar; responsabilidades explícitas: el usuario implementa código y el asistente puede preparar documentación; documentación alineada con la implementación y la evidencia real | En esta rama se prepara v1.5.0 en revisión; la versión normativa vigente en main no cambia hasta aprobación y merge autorizados                            |
-| **EE-DOC-007 — GitHub Governance**          | Aclarar la aplicación del flujo mediante GitHub: rama de trabajo acordada, PR creado por el usuario, revisión y merge autorizado; separar cambios documentales de cambios de configuración                                                                                                     | En esta rama se prepara v1.2.0 en revisión; no duplicar el workflow de 005 ni afirmar controles no verificados                                             |
-| **EE-DOC-001 — Master Documentation Index** | Tras la decisión, sincronizar el registro del RFC, referencias y el historial/estado que corresponda                                                                                                                                                                                           | La sincronización del índice registra las versiones propuestas y su estado de revisión; el RFC general sigue Propuesto hasta el cierre formal de la oleada |
+| Documento                                   | Cambio / acción                                                                                                                                                                                                                                                                                | Límite                                                                                                                              |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **EE-DOC-005 — Development Workflow**       | Formalizar una rama por cambio coherente (no por archivo); commits acotados; revisión y validación antes de integrar; responsabilidades explícitas: el usuario implementa código y el asistente puede preparar documentación; documentación alineada con la implementación y la evidencia real | Los cambios documentales de esta rama están aprobados individualmente; su integración requiere el merge autorizado                  |
+| **EE-DOC-007 — GitHub Governance**          | Aclarar la aplicación del flujo mediante GitHub: rama de trabajo acordada, PR creado por el usuario, revisión y merge autorizado; separar cambios documentales de cambios de configuración                                                                                                     | Los cambios documentales de esta rama están aprobados individualmente; la configuración remota conserva sus requisitos de evidencia |
+| **EE-DOC-001 — Master Documentation Index** | Tras la decisión, sincronizar el registro del RFC, referencias y el historial/estado que corresponda                                                                                                                                                                                           | DOC-001 permanece sin cambios en esta rama; el RFC general sigue Propuesto hasta el cierre formal de la oleada                      |
 
 ### 03.4. Trazabilidad de reglas emergentes de colaboración
 
@@ -604,6 +611,31 @@ Tampoco cambia automáticamente la configuración real de GitHub, secrets, envir
 
 PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La inclusión de este alcance en RFC-003 no equivale a aprobación normativa ni autoriza cambios de implementación anticipados.
 
+### 03.10. Superficie E — Convenciones de repositorio, datos, APIs y PN-017
+
+Esta enmienda reúne catorce reglas para que las convenciones de artefactos, arquitectura, datos, APIs y gobernanza sean consistentes entre documentación y automatización. La autoridad y materialización normativa se asigna así: EE-DOC-002 gobierna nombres y formato documental; EE-DOC-004, límites arquitectónicos y contratos futuros de DB/API; EE-DOC-005, ramas, commits, revisiones y secretos; EE-DOC-006, estructura y rutas; EE-DOC-007, ownership y controles de GitHub; EE-DOC-010, quality gates. **EE-DOC-001 queda fuera de los cambios de esta propuesta** y no se modifica en esta rama.
+
+| N.º | Regla propuesta                                                                                                                                                                                          | Materialización / límite                                                                                                                           |
+| --: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   1 | Directorios y archivos nuevos usan `kebab-case`, con excepciones exigidas por lenguajes, frameworks, herramientas y nombres normativos del ecosistema.                                                   | DOC-002; el gate revisa rutas nuevas o modificadas y conserva excepciones explícitas.                                                              |
+|   2 | Componentes/clases/tipos usan `PascalCase`; variables, funciones, parámetros y campos usan `camelCase`; constantes literales de módulo usan `UPPER_SNAKE_CASE`.                                          | DOC-002; ESLint compartido verifica símbolos y admite `camelCase` para fixtures de pruebas.                                                        |
+|   3 | Módulos y scripts usan nombres consistentes con el dominio y `kebab-case` para archivos; se evita mezclar esquemas en el mismo dominio.                                                                  | DOC-002 y gate de nombres.                                                                                                                         |
+|   4 | Las pruebas nuevas declaran tipo mediante sufijos `.unit.test`, `.int.test`, `.component.test` o `.e2e.spec`; los nombres históricos migran gradualmente.                                                | DOC-002 y `QG-NAM-001`; no se exige renombre sin cambio funcional.                                                                                 |
+|   5 | Identificadores de base de datos relacional, esquemas, tablas, columnas y restricciones usan `snake_case` minúsculo.                                                                                     | DOC-004 §12.4; regla futura, sin prescribir motor u ORM.                                                                                           |
+|   6 | Las tablas usan sustantivos plurales, las columnas nombres singulares, la PK `id` y la FK `[tabla_singular]_id`.                                                                                         | DOC-004 §12.4.                                                                                                                                     |
+|   7 | Índices, restricciones únicas y claves foráneas usan prefijos `idx_`, `uq_` y `fk_`, seguidos por tabla y columnas/referencia.                                                                           | DOC-004 §12.4.                                                                                                                                     |
+|   8 | Las ramas usan `<tipo>/<descripción-kebab-case>`; `release/vX.Y.Z` es la excepción versionada.                                                                                                           | DOC-005; `QG-BRANCH-001`.                                                                                                                          |
+|   9 | Los commits usan Conventional Commits (`type(scope): description`) con tipos permitidos por el workflow.                                                                                                 | DOC-005; `QG-COMMIT-001`.                                                                                                                          |
+|  10 | `main` se protege mediante Pull Request, reviews y status checks configurados; la protección efectiva requiere evidencia de la configuración GitHub.                                                     | DOC-005/DOC-007; el gate local no afirma ni reemplaza rulesets remotos.                                                                            |
+|  11 | Las dependencias entre capas siguen la arquitectura aprobada; dominio y lógica central no dependen de infraestructura externa.                                                                           | DOC-004; `QG-ARCH-001` valida top-level, manifests, ciclos e imports entre workspaces bajo `src/`; aliases/configuración/composición quedan fuera. |
+|  12 | Cada política técnica tiene una única SSOT normativa; otros documentos la referencian.                                                                                                                   | Jerarquía y SSOT existentes; esta enmienda no replica ni edita DOC-001.                                                                            |
+|  13 | Futuras rutas REST usan versión, recurso plural en `kebab-case` y parámetros consistentes; payloads JSON usan `camelCase` de forma uniforme.                                                             | DOC-004 §12.3; no crea endpoints en este cambio.                                                                                                   |
+|  14 | Lint, formato y suites unitarias/de integración se aplican por quality gates; hooks locales ofrecen validación temprana; secretos usan almacenes protegidos y `.env.example` solo contiene placeholders. | DOC-005 §09.3 y DOC-010. CI es el control verificable; los hooks son opt-in.                                                                       |
+
+La clasificación PN-017 y los diagnósticos seguros forman parte de la misma superficie transversal: `ORDINARY` resulta de evidencia completa sin indicador crítico; Arquitectura puede escalar a `CRITICAL` con evidencia vigente y justificación; la aprobación de código se evalúa después y por separado. Los resultados operativos permanecen fail-closed y sus logs exponen códigos internos sanitizados, nunca secretos o mensajes externos.
+
+Los cambios documentales de esta rama están aprobados individualmente; su integración aún requiere el merge autorizado. Esta aprobación no cierra EE-RFC-003, no activa reglas remotas ni cierra PN-017. EE-DOC-001 no se altera.
+
 ## 04. Alternativas consideradas
 
 | ID  | Alternativa                                                                                                         | Dictamen                                                                    | Motivo                                                                                                                                         |
@@ -623,16 +655,17 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 
 ## 05. Impacto
 
-| Ámbito                            | Impacto                                                                                                                                                                                                                                                                       |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Documentos normativos**         | El RFC conserva la regularización de EE-DOC-002/EE-DOC-001 y amplía explícitamente el seguimiento a EE-DOC-005, EE-DOC-007 y EE-DOC-011 según los hallazgos incorporados                                                                                                      |
-| **Release y versionado**          | Se exige preservar la procedencia verificable y la integridad independiente del plan de release, manteniendo preparación revisable por PR, publicación post-merge, tag final y recuperación segura; la política de elegibilidad debe sincronizarse y validarse operativamente |
-| **Implementación y verificación** | La materialización del contrato requiere implementación y evidencia independientes, sujetas a revisión de conformidad; su existencia no implica aprobación normativa                                                                                                          |
-| **CI y seguridad**                | Se requiere un job post-merge separado, permisos mínimos y evaluación independiente de protección de tags; OIDC es preferible si está soportado y configurado                                                                                                                 |
-| **Publicación npm**               | La separación entre versionado del ecosistema y distribución npm exige resolver explícitamente la política de releases sin paquetes públicos elegibles                                                                                                                        |
-| **Gobernanza**                    | PN-021 y PN-030 permanecen abiertos hasta alinear norma, implementación y evidencia verificable                                                                                                                                                                               |
-| **Compatibilidad**                | Cambia el contrato operativo del release; los documentos, scripts, tests y workflow deben sincronizarse después de la aprobación correspondiente                                                                                                                              |
-| **Estado de validación**          | Esta revisión documental no implica que se hayan ejecutado tests, gates, builds ni cambios en GitHub                                                                                                                                                                          |
+| Ámbito                                      | Impacto                                                                                                                                                                                                                                                                       |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Documentos normativos**                   | El RFC conserva la regularización de EE-DOC-002/EE-DOC-001 y amplía explícitamente el seguimiento a EE-DOC-005, EE-DOC-007 y EE-DOC-011 según los hallazgos incorporados                                                                                                      |
+| **Release y versionado**                    | Se exige preservar la procedencia verificable y la integridad independiente del plan de release, manteniendo preparación revisable por PR, publicación post-merge, tag final y recuperación segura; la política de elegibilidad debe sincronizarse y validarse operativamente |
+| **Implementación y verificación**           | La materialización del contrato requiere implementación y evidencia independientes, sujetas a revisión de conformidad; su existencia no implica aprobación normativa                                                                                                          |
+| **CI y seguridad**                          | Se requiere un job post-merge separado, permisos mínimos y evaluación independiente de protección de tags; OIDC es preferible si está soportado y configurado                                                                                                                 |
+| **Publicación npm**                         | La separación entre versionado del ecosistema y distribución npm exige resolver explícitamente la política de releases sin paquetes públicos elegibles                                                                                                                        |
+| **Gobernanza**                              | PN-021 y PN-030 permanecen abiertos hasta alinear norma, implementación y evidencia verificable                                                                                                                                                                               |
+| **Compatibilidad**                          | Cambia el contrato operativo del release; los documentos, scripts, tests y workflow deben sincronizarse después de la aprobación correspondiente                                                                                                                              |
+| **Estado de validación**                    | Esta revisión documental no implica que se hayan ejecutado tests, gates, builds ni cambios en GitHub                                                                                                                                                                          |
+| **Estándares de repositorio, datos y APIs** | Se documentan en DOC-002/004/005/006/007/010; los contratos de DB/API son futuros y no añaden servicios ni endpoints en esta enmienda                                                                                                                                         |
 
 ## 06. ADR
 
@@ -650,7 +683,7 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 | 3   | AR registradas de plantilla/metadatos volcadas a **002** (v1.10.0+) o justificadas                                                                                                                                                             |
 | 4   | Sin discrepancia SSOT 002 §18.6 ↔ 001 §09.4 (VAL/WAIVE)                                                                                                                                                                                        |
 | 5   | Al **cerrar** la oleada: estado **Aprobado** → **Implementado (documentación)** y dejar de acumular alcance sin nueva versión del RFC                                                                                                          |
-| 6   | La decisión de continuar con la enmienda colaborativa queda registrada; las versiones propuestas de 005/007/001 permanecen en revisión hasta aprobación normativa y merge                                                                      |
+| 6   | La enmienda colaborativa está aprobada individualmente para EE-DOC-005 y EE-DOC-007; su integración requiere merge. EE-DOC-001 permanece sin cambios en esta rama                                                                              |
 | 7   | No se declara modificada la configuración GitHub sin cambio y evidencia verificables                                                                                                                                                           |
 | 8   | La aprobación de este RFC no modifica por sí sola código fuente ni configuración; la implementación posterior requiere un cambio separado, autorizado y validado                                                                               |
 | 9   | Los hallazgos transversales derivados de la auditoría se incorporan explícitamente a RFC-003 con alcance, referencias y estado trazables                                                                                                       |
@@ -661,9 +694,16 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 | 14  | El estado observado de los 26 workspaces con `private: true` queda registrado sin cambiar su privacidad como parte de esta propuesta                                                                                                           |
 | 15  | El tag anotado se crea únicamente después de cumplir las condiciones de finalización aprobadas, incluida la política expresa para releases sin paquetes públicos elegibles                                                                     |
 | 16  | Los reintentos verifican el estado remoto y completan operaciones pendientes sin sobrescribir versiones ni mover tags existentes                                                                                                               |
-| 17  | `contents: write` se limita al job que crea el tag; OIDC se utiliza para npm cuando esté soportado y configurado                                                                                                                               |
-| 18  | La protección de tags `v*` se evalúa separadamente y no se declara activa sin evidencia verificable                                                                                                                                            |
-| 19  | Los tests de release se ejecutan en `pnpm test:scripts` y CI y simulan Git/npm sin publicar paquetes ni crear tags reales                                                                                                                      |
+| 17  | Las 14 convenciones de repositorio, arquitectura, DB/API, revisión, quality gates y secretos quedan asignadas a su SSOT en §03.10; DOC-001 permanece intacto                                                                                   |
+| 18  | Los hooks locales son opt-in, instalables mediante `pnpm run hooks:install`, y no reemplazan la validación obligatoria de CI                                                                                                                   |
+| 19  | `ORDINARY` se deriva de evidencia completa sin indicadores críticos; Arquitectura puede escalar a `CRITICAL` con evidencia actual del HEAD y justificación                                                                                     |
+| 20  | Clasificación y aprobación de código son evidencias separadas; umbrales 1/2 permanecen y clasificación ausente/incompleta/disputada bloquea                                                                                                    |
+| 21  | Los errores de PN-017 generan diagnóstico estructurado seguro sin registrar mensajes externos, payloads completos ni secretos                                                                                                                  |
+| 22  | El orden PN-017 exige `Validate` satisfactorio para el HEAD antes de evaluación/publicación de governance                                                                                                                                      |
+| 23  | `QG-NAM-001`, `QG-BRANCH-001`, `QG-COMMIT-001` y la extensión acotada de `QG-ARCH-001` quedan integrados en `validate`; las pruebas de scripts y los validadores locales pasan. La evidencia de CI se confirma en el Pull Request.             |
+| 24  | `contents: write` se limita al job que crea el tag; OIDC se utiliza para npm cuando esté soportado y configurado                                                                                                                               |
+| 25  | La protección de tags `v*` se evalúa separadamente y no se declara activa sin evidencia verificable                                                                                                                                            |
+| 26  | Los tests de release se ejecutan en `pnpm test:scripts` y CI y simulan Git/npm sin publicar paquetes ni crear tags reales                                                                                                                      |
 | 20  | EE-DOC-005, EE-DOC-007, EE-DOC-011, `scripts/README.md`, el script y CI se sincronizan con el contrato aprobado                                                                                                                                |
 | 21  | Los gates y pruebas se registran con resultados reales; no se declara cerrada una validación no ejecutada o fallida                                                                                                                            |
 | 22  | El contrato aprobado exige procedencia verificable del release y comprobación independiente de la integridad del plan autorizado antes de publicar                                                                                             |
@@ -678,7 +718,7 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 | ----: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
 |     1 | Mantener RFC-003 Propuesto y abierto durante la oleada de auditoría                                                                                                                                                                                                   | Arquitectura                                     |
 |     2 | Revisar los hallazgos incorporados y aprobar cada paquete de trabajo conforme al proceso gobernado aplicable, sin presumir aprobación por su mera inclusión                                                                                                           | Equipo de Arquitectura                           |
-|     3 | Sincronizar EE-DOC-001 §09.2/§14/§15 con el estado real del RFC y los hallazgos, respetando el orden de actualización establecido                                                                                                                                     | Arquitectura                                     |
+|     3 | Mantener EE-DOC-001 sin cambios en esta enmienda; cualquier sincronización global al cierre de la oleada se evaluará por separado y conforme a su proceso                                                                                                             | Arquitectura                                     |
 |     4 | Ejecutar las migraciones documentales `PC-*` / `PN-*` por documento auditado y mantener sus referencias de trazabilidad                                                                                                                                               | Equipo de auditoría                              |
 |     5 | Al cierre formal de la oleada, actualizar el estado del RFC conforme a los criterios de cierre; las nuevas enmiendas de alcance requieren nueva versión de trabajo                                                                                                    | Arquitectura                                     |
 |     6 | Preparar las enmiendas de EE-DOC-005, EE-DOC-007 y EE-DOC-011 en una rama dedicada y registrar su estado de revisión sin afirmar aprobación normativa anticipada                                                                                                      | Equipo de Arquitectura                           |
@@ -688,6 +728,7 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 |    10 | Sincronizar `scripts/README.md` con el contrato aprobado y la implementación real                                                                                                                                                                                     | Ingeniería / Documentación                       |
 |    11 | Ejecutar y registrar quality gates, build y pruebas de release aplicables; corregir los fallos antes del cierre                                                                                                                                                       | Ingeniería / QA                                  |
 |    12 | Cerrar PN-021 y PN-030 únicamente cuando los criterios de aceptación estén respaldados por evidencia verificable                                                                                                                                                      | Equipo de auditoría / Arquitectura               |
+|    13 | Validar los gates y la implementación PN-017; después sincronizar IMP/TEC con evidencia observada, sin declarar activa una capacidad pendiente ni modificar EE-DOC-001                                                                                                | Ingeniería / QA / Arquitectura                   |
 
 ## 09. Riesgos y mitigaciones
 
@@ -709,9 +750,11 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 | --------------------------- | ---------------------------------------------------------------------------------------- |
 | **EE-DOC-001**              | R2, R7, §08.1, §09.4                                                                     |
 | **EE-DOC-002**              | Estándar de forma; v1.7.0–v1.10.0+                                                       |
+| **EE-DOC-004**              | Arquitectura; convenciones futuras DB/API y límites de capas                             |
 | **EE-DOC-005**              | Workflow normativo; clasificación Tipo D §04.2 y ciclo de cambios gobernados             |
+| **EE-DOC-006**              | Estructura física y matriz de dependencias de workspaces                                 |
 | **EE-DOC-007**              | Gobernanza de GitHub; controles operativos que implementan el workflow                   |
-| **EE-DOC-010**              | WAIVED §04.6.1                                                                           |
+| **EE-DOC-010**              | Quality Gates; disponibilidad y ejecución verificable                                    |
 | **EE-DOC-015**              | Validación; padre VAL                                                                    |
 | **EE-TEC-002**              | Evidencia consolidada de configuración GitHub; solo se modifica si cambia el estado real |
 | **EE-IMP-010-P03**          | Evidencia de gates/seguridad/arquitectura, si el cambio operativo afecta su alcance      |
@@ -734,15 +777,15 @@ PN-021 y PN-030 permanecen abiertos hasta satisfacer sus criterios de cierre. La
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                              | Cambios                                                                                                                                                               | Estado       |
-| ---------- | ---------- | ---------------------- | ---------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura | —                      | C-01 auditoría 002                  | Creación RFC Tipo D retroactivo                                                                                                                                       | Propuesto    |
-| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Vehículo abierto auditoría          | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                               | **Aprobado** |
-| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Conformidad §18.5                   | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado             | **Aprobado** |
-| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación pre-main              | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                                       | **Aprobado** |
-| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría transversal de releases   | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.                   | **Aprobado** |
-| **v0.6.0** | 2026-10-31 | Equipo de Arquitectura | Equipo de Arquitectura | PN-017 Actions-only P0              | Consolida §02.8: Actions-only, seguridad de triggers y límites de consistencia; CAS durable, servicio HTTP y leases diferidos.                                        | **Aprobado** |
-| **v0.7.0** | 2026-11-01 | Equipo de Arquitectura | Equipo de Arquitectura | PN-017 orden y evidencias separadas | Establece `Validate` exitoso para el HEAD antes de evaluar governance; separa evidencia `ORDINARY` de las aprobaciones; conserva umbrales y estado abierto de PN-017. | **Aprobado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                              | Cambios                                                                                                                                                                                                                                                                                                       | Estado       |
+| ---------- | ---------- | ---------------------- | ---------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura | —                      | C-01 auditoría 002                  | Creación RFC Tipo D retroactivo                                                                                                                                                                                                                                                                               | Propuesto    |
+| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Vehículo abierto auditoría          | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                                                                                                                                                                       | **Aprobado** |
+| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Conformidad §18.5                   | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado                                                                                                                                                     | **Aprobado** |
+| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación pre-main              | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                                                                                                                                                                               | **Aprobado** |
+| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría transversal de releases   | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.                                                                                                                                                           | **Aprobado** |
+| **v0.6.0** | 2026-10-31 | Equipo de Arquitectura | Equipo de Arquitectura | PN-017 Actions-only P0              | Consolida §02.8: Actions-only, seguridad de triggers y límites de consistencia; CAS durable, servicio HTTP y leases diferidos.                                                                                                                                                                                | **Aprobado** |
+| **v0.7.0** | 2026-11-01 | Equipo de Arquitectura | Equipo de Arquitectura | PN-017 y convenciones transversales | Establece `Validate` exitoso para el HEAD antes de evaluar governance; separa clasificación `ORDINARY` de approvals; añade §03.10 con 14 reglas de repositorio/DB/API, escalamiento a `CRITICAL`, diagnósticos seguros y gates de símbolos/imports workspace; conserva abierto RFC-003 y no modifica DOC-001. | **Aprobado** |
 
 ---
 

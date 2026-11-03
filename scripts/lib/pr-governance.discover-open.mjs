@@ -1,3 +1,5 @@
+import { createGitHubHttpError } from './pr-governance.github-error.mjs';
+
 const REPOSITORY_PART = /^[a-z\d_.-]+$/i;
 
 export async function discoverOpenGovernancePrs({ owner, repo, token, fetchImpl = fetch }) {
@@ -33,7 +35,7 @@ export async function discoverOpenGovernancePrs({ owner, repo, token, fetchImpl 
     });
 
     if (!response.ok || response.status !== 200) {
-      throw new Error(`Governance PR discovery returned HTTP ${response.status}`);
+      throw createGitHubHttpError(response, 'Governance PR discovery');
     }
 
     const prs = await response.json();

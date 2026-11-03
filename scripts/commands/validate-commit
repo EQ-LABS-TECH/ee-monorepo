@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+import { readFileSync } from 'node:fs';
+import {
+  getPullRequestCommitMessages,
+  validateCommitMessages,
+} from '../lib/repository-conventions.mjs';
+
+try {
+  const messageFileIndex = process.argv.indexOf('--message-file');
+  const messages =
+    messageFileIndex >= 0
+      ? [readFileSync(process.argv[messageFileIndex + 1], 'utf8').split(/\r?\n/, 1)[0]]
+      : getPullRequestCommitMessages();
+  const violations = validateCommitMessages(messages);
+  for (const violation of violations) console.error(`${violation.code}: ${violation.message}`);
+  const status = violations.length ? 'FAIL' : 'PASS';
+  console.log(
+    `QG_RESULT ${JSON.stringify({ gateId: 'QG-COMMIT-001', status, exitCode: violations.length ? 1 : 0 })}`,
+  );
+  process.exitCode = violations.length ? 1 : 0;
+} catch (error) {
+  console.error(`QG-COMMIT-001: ${error.name}`);
+  console.log(
+    `QG_RESULT ${JSON.stringify({ gateId: 'QG-COMMIT-001', status: 'ERROR', exitCode: 1 })}`,
+  );
+  process.exitCode = 1;
+}

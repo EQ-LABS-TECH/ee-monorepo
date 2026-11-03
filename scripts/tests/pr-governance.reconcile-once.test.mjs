@@ -88,7 +88,10 @@ test('continues after an individual failure and logs sanitized execution details
   assert.equal(logs[0][0], 'PN-017 reconciliation PR failure:');
   assert.deepEqual(JSON.parse(logs[0][1]), {
     number: 10,
+    status: 'ERROR',
+    headSha: sha,
     phase: 'execute',
+    code: 'github-http-error',
     kind: 'Error',
     httpStatus: 403,
   });
@@ -112,11 +115,42 @@ test('logs resolution failures without external error messages', async (t) => {
   assert.equal(result.status, 'INCOMPLETE');
   assert.deepEqual(JSON.parse(logs[0][1]), {
     number: 10,
+    status: 'ERROR',
     phase: 'resolve',
+    code: 'github-http-error',
     kind: 'TypeError',
     httpStatus: 404,
   });
   assert.equal(JSON.stringify(logs).includes('private details'), false);
+});
+
+test('preserves sanitized orchestration phase and stable error code', async (t) => {
+  const logs = [];
+  t.mock.method(console, 'error', (...args) => logs.push(args));
+
+  const { context } = fixture({
+    discover: async () => [10],
+    run: async () => {
+      const error = new Error('Private response text must not be logged');
+      error.pn017Diagnostic = { phase: 'publication', code: 'check-run-conflict' };
+      error.pn017RequestId = 'ABCD:5678';
+      throw error;
+    },
+  });
+
+  const result = await reconcileOpenGovernancePrs(context);
+
+  assert.equal(result.status, 'INCOMPLETE');
+  assert.deepEqual(JSON.parse(logs[0][1]), {
+    number: 10,
+    status: 'ERROR',
+    headSha: sha,
+    requestId: 'ABCD:5678',
+    phase: 'publication',
+    code: 'check-run-conflict',
+    kind: 'Error',
+  });
+  assert.equal(JSON.stringify(logs).includes('Private response text'), false);
 });
 
 test('extracts HTTP status from AggregateError causes without logging messages', async (t) => {
@@ -139,7 +173,10 @@ test('extracts HTTP status from AggregateError causes without logging messages',
   assert.equal(result.status, 'INCOMPLETE');
   assert.deepEqual(JSON.parse(logs[0][1]), {
     number: 10,
+    status: 'ERROR',
+    headSha: sha,
     phase: 'execute',
+    code: 'github-http-error',
     kind: 'AggregateError',
     httpStatus: 403,
   });
@@ -193,7 +230,9 @@ test('rejects an unexpected target branch and records it as a resolution error',
   assert.equal(result.results[0].status, 'ERROR');
   assert.deepEqual(JSON.parse(logs[0][1]), {
     number: 10,
+    status: 'ERROR',
     phase: 'resolve',
+    code: 'unexpected-operation-error',
     kind: 'Error',
   });
 });

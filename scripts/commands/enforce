@@ -7,6 +7,29 @@ try {
     env: process.env,
   });
 } catch (error) {
-  console.error('PN-017 enforcement failed:', error.name);
+  const diagnostic = error?.pn017Diagnostic ?? {};
+  const httpStatus =
+    diagnostic.httpStatus ??
+    (error instanceof Error ? /\bHTTP ([1-5]\d{2})\b/.exec(error.message)?.[1] : undefined);
+  console.error(
+    'PN-017 enforcement error:',
+    JSON.stringify({
+      status: 'ERROR',
+      ...(Number.isSafeInteger(diagnostic.number) ? { number: diagnostic.number } : {}),
+      ...(typeof diagnostic.headSha === 'string' && /^[0-9a-f]{40}$/i.test(diagnostic.headSha)
+        ? { headSha: diagnostic.headSha.toLowerCase() }
+        : {}),
+      ...(typeof diagnostic.requestId === 'string' &&
+      /^[a-z\d:._-]{1,128}$/i.test(diagnostic.requestId)
+        ? { requestId: diagnostic.requestId }
+        : {}),
+      phase: diagnostic.phase ?? 'command',
+      code:
+        diagnostic.code ??
+        (error instanceof TypeError ? 'invalid-input-or-evidence' : 'unexpected-operation-error'),
+      kind: error instanceof AggregateError ? 'AggregateError' : (error?.name ?? 'Error'),
+      ...(httpStatus ? { httpStatus: Number(httpStatus) } : {}),
+    }),
+  );
   process.exitCode = 1;
 }

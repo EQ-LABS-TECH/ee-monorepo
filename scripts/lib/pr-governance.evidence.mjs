@@ -2,6 +2,8 @@
  * Read-only GitHub REST adapter for PN-017.
  * Provides evidence only: classification and merge authorization remain separate.
  */
+import { createGitHubHttpError } from './pr-governance.github-error.mjs';
+
 const SHA = /^[0-9a-f]{40}$/i;
 const LOGIN = /^[a-z\d](?:[a-z\d-]{0,38}[a-z\d])?$/i;
 const PR_AUTHOR_LOGIN = /^[a-z\d](?:[a-z\d-]{0,38}[a-z\d])?(?:\[bot\])?$/i;
@@ -32,7 +34,7 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
 
   async function getJson(url) {
     const response = await fetchImpl(url, { method: 'GET', headers });
-    if (!response.ok) throw new Error(`GitHub API returned HTTP ${response.status}`);
+    if (!response.ok) throw createGitHubHttpError(response, 'GitHub API');
     return response.json();
   }
 
@@ -225,7 +227,7 @@ export async function readReviewerRepositoryPermission({
   });
 
   if (!response.ok) {
-    throw new Error(`GitHub reviewer permission request returned HTTP ${response.status}`);
+    throw createGitHubHttpError(response, 'GitHub reviewer permission request');
   }
 
   const result = await response.json();
@@ -293,7 +295,7 @@ export async function readReviewerTeamMembership({
   }
 
   if (!response.ok) {
-    throw new Error(`GitHub team membership request returned HTTP ${response.status}`);
+    throw createGitHubHttpError(response, 'GitHub team membership request');
   }
 
   const result = await response.json();
@@ -344,7 +346,7 @@ export async function readCodeownerTeamPermission({
   });
 
   if (!response.ok) {
-    throw new Error(`GitHub CODEOWNERS team permission request returned HTTP ${response.status}`);
+    throw createGitHubHttpError(response, 'GitHub CODEOWNERS team permission request');
   }
 
   if (response.status !== 200) {
@@ -390,7 +392,7 @@ export async function readCodeownerTeamVisibility({ owner, teamSlug, token, fetc
   });
 
   if (!response.ok || response.status !== 200) {
-    throw new Error(`GitHub CODEOWNERS team visibility request returned HTTP ${response.status}`);
+    throw createGitHubHttpError(response, 'GitHub CODEOWNERS team visibility request');
   }
 
   const result = await response.json();

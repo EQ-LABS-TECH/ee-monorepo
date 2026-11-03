@@ -148,7 +148,10 @@ test('rejects unsupported event before privileged execution', () => {
   });
 
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /PN-017 reconciliation failed: Error/);
+  assert.match(
+    result.stderr,
+    /PN-017 reconciliation error: \{"phase":"reconciliation","code":"unexpected-operation-error","kind":"Error"\}/,
+  );
 });
 
 test('rejects missing GitHub event path', () => {
@@ -158,7 +161,10 @@ test('rejects missing GitHub event path', () => {
   });
 
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /PN-017 reconciliation failed: Error/);
+  assert.match(
+    result.stderr,
+    /PN-017 reconciliation error: \{"phase":"reconciliation","code":"unexpected-operation-error","kind":"Error"\}/,
+  );
 });
 
 test('rejects scheduled reconciliation outside main', () => {
@@ -169,7 +175,10 @@ test('rejects scheduled reconciliation outside main', () => {
   });
 
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /PN-017 reconciliation failed: TypeError/);
+  assert.match(
+    result.stderr,
+    /PN-017 reconciliation error: \{"phase":"reconciliation","code":"invalid-input-or-evidence","kind":"TypeError"\}/,
+  );
 });
 
 test('rejects an unexpected source workflow', () => {
@@ -184,7 +193,10 @@ test('rejects an unexpected source workflow', () => {
     });
 
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /PN-017 reconciliation failed: Error/);
+    assert.match(
+      result.stderr,
+      /PN-017 reconciliation error: \{"phase":"reconciliation","code":"unexpected-operation-error","kind":"Error"\}/,
+    );
   });
 });
 

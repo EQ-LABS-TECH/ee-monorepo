@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+pnpm run lint
+pnpm exec prettier --check .
+node scripts/commands/validate-names
+node scripts/commands/validate-branch

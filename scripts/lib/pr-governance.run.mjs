@@ -1,6 +1,43 @@
 import { evaluatePrGovernance } from './pr-governance.evaluate.mjs';
 import { startPrGovernanceCheck, completePrGovernanceCheck } from './pr-governance.publish.mjs';
 import { readValidateReadiness } from './pr-governance.ci.mjs';
+import { getGitHubRequestId } from './pr-governance.github-error.mjs';
+
+function diagnosticFor(error, phase, { number, expectedHeadSha }) {
+  const httpStatus = getHttpStatus(error);
+  const requestId = getGitHubRequestId(error);
+  return {
+    ...(Number.isSafeInteger(number) && number > 0 ? { number } : {}),
+    ...(typeof expectedHeadSha === 'string' && /^[0-9a-f]{40}$/i.test(expectedHeadSha)
+      ? { headSha: expectedHeadSha.toLowerCase() }
+      : {}),
+    ...(requestId ? { requestId } : {}),
+    phase,
+    code:
+      error instanceof AggregateError
+        ? 'aggregate-operation-failed'
+        : httpStatus !== undefined
+          ? 'github-http-error'
+          : error instanceof TypeError
+            ? 'invalid-evidence-or-input'
+            : 'unexpected-operation-error',
+    ...(httpStatus !== undefined ? { httpStatus } : {}),
+  };
+}
+
+function getHttpStatus(error, seen = new Set()) {
+  if (!(error instanceof Error) || seen.has(error)) return undefined;
+  seen.add(error);
+  const match = /\bHTTP ([1-5]\d{2})\b/.exec(error.message);
+  if (match) return Number(match[1]);
+  if (error instanceof AggregateError) {
+    for (const nestedError of error.errors) {
+      const status = getHttpStatus(nestedError, seen);
+      if (status !== undefined) return status;
+    }
+  }
+  return undefined;
+}
 
 /**
  * Trusted orchestration only.
@@ -42,13 +79,24 @@ export async function runPrGovernance({
     fetchImpl,
   };
 
-  const validation = await readValidateReadiness({
-    owner,
-    repo,
-    headSha: expectedHeadSha,
-    token,
-    fetchImpl,
-  });
+  let phase = 'validate-readiness';
+  let started;
+
+  let validation;
+  try {
+    validation = await readValidateReadiness({
+      owner,
+      repo,
+      headSha: expectedHeadSha,
+      token,
+      fetchImpl,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+    }
+    throw error;
+  }
 
   if (validation.status !== 'READY') {
     return {
@@ -58,9 +106,18 @@ export async function runPrGovernance({
     };
   }
 
-  const started = await startPrGovernanceCheck(publication);
+  phase = 'check-start';
+  try {
+    started = await startPrGovernanceCheck(publication);
+  } catch (error) {
+    if (error instanceof Error) {
+      error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+    }
+    throw error;
+  }
 
   try {
+    phase = 'evaluation';
     const evaluate = () =>
       evaluatePrGovernance({
         owner,
@@ -79,6 +136,7 @@ export async function runPrGovernance({
       evaluation = await evaluate();
     }
 
+    phase = 'publication';
     const completed = await completePrGovernanceCheck({
       ...publication,
       checkId: started.checkId,
@@ -93,6 +151,8 @@ export async function runPrGovernance({
       ...completed,
     };
   } catch (error) {
+    const diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+    if (error instanceof Error) error.pn017Diagnostic = diagnostic;
     // Never turn an unsuccessful evaluation into a successful check.
     // If completion already failed, the fallback may also fail.
     try {
@@ -103,10 +163,12 @@ export async function runPrGovernance({
         failureReason: 'evaluation-error',
       });
     } catch (completionError) {
-      throw new AggregateError(
+      const aggregate = new AggregateError(
         [error, completionError],
         'PR governance execution and failure completion were unsuccessful',
       );
+      aggregate.pn017Diagnostic = { ...diagnostic, code: 'failure-publication-failed' };
+      throw aggregate;
     }
 
     throw error;

@@ -15,7 +15,7 @@ Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (
 | **Clasificación**     | Fundacional                            |
 | **Nivel**             | Estratégico                            |
 | **Normativo**         | Sí                                     |
-| **Versión**           | v1.12.0                                |
+| **Versión**           | v1.13.0                                |
 | **Estado**            | Congelado                              |
 | **Propietario**       | Equipo de Arquitectura                 |
 | **Documento padre**   | EE-DOC-001                             |
@@ -23,7 +23,7 @@ Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (
 | **Aprobado por**      | Equipo de Arquitectura                 |
 | **Audiencia**         | Arquitectura, Desarrollo, IA           |
 | **Fecha de creación** | 2026-08-02                             |
-| **Última revisión**   | 2026-10-23                             |
+| **Última revisión**   | 2026-11-02                             |
 | **Próxima revisión**  | No aplica — Documento Congelado        |
 
 ---
@@ -146,6 +146,8 @@ Todos los documentos deben incluir la siguiente tabla de metadatos al inicio:
 > | **EE-VAL / EE-WAIVE** | Ver §18.6; `Normativo` = No                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
 > **Regla de Inmutabilidad:** Los campos **ID**, **Código corto** y **Fecha de creación** son inmutables una vez que el documento ha sido aprobado. No pueden modificarse bajo ninguna circunstancia.
+>
+> **Metadatos de una nueva versión de documento congelado:** Al preparar una nueva versión mediante el mecanismo gobernado, solo se modifican en la tabla de metadatos los campos **Versión** y **Última revisión**. Los demás campos conservan sus valores.
 >
 > **Ubicación de la versión (AR-2026-007):** el número de versión del documento solo es normativo en: (1) metadatos **Versión**, (2) **Historial de Cambios**, (3) citas de trazabilidad a otra versión concreta. No esparcir el número de versión en el cuerpo como texto normativo.
 
@@ -273,6 +275,8 @@ flowchart TD
 | v1.0.0  | YYYY-MM-DD | Equipo | Equipo       | Creación | Versión inicial | Estado documental vigente |
 
 > **Nota:** Cada entrada del historial representa una versión documental identificable. Una versión que haya alcanzado el estado Congelado deberá conservarse como referencia histórica y no podrá ser modificada directamente.
+>
+> **Campos de una fila nueva:** Al crear una fila para una nueva versión, los campos **Autor**, **Aprobado por** y **Estado** no se modifican; los demás campos de esa fila pueden completarse o ajustarse. Esta regla aplica a la fila nueva y no autoriza modificar filas históricas existentes.
 
 > **Longitud Motivo + Cambios (AR-2026-018):** la **suma** de caracteres de las celdas **Motivo** y **Cambios** no debe superar **230** (texto visible, sin markup de tabla). Detalle extenso → cuerpo del documento o RFC/ADR asociado.
 
@@ -389,24 +393,28 @@ El ciclo de **implementación por fases**, validación y documentación técnica
 
 ## 16. Convenciones de Nomenclatura
 
-| Elemento                         | Formato                                                                                                  | Ejemplo                                                                       |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| **IDs**                          | `EE-DOC-XXX` / `EE-ADR-XXX` / `EE-IMP-XXX-PXX` / `EE-TEC-XXX` / `EE-RFC-XXX` / `EE-VAL-*` / `EE-WAIVE-*` | `EE-DOC-001`, `EE-IMP-006-P01`, `EE-VAL-…`, `EE-WAIVE-…`                      |
-| **Documentos** (título)          | Title Case                                                                                               | `Engineering Ecosystem Constitution`                                          |
-| **Código Corto**                 | Sin el prefijo `EE`                                                                                      | `DOC-001`, `ADR-001`, `IMP-006-P01`, `TEC-001`, `RFC-001`, `VAL-…`, `WAIVE-…` |
-| **Archivos de documentos EE-\*** | `{ID}_{Nombre}.md` (general); VAL/WAIVE: `{ID}_{Nombre}_{fecha}.md`                                      | `EE-DOC-001_Master_Documentation_Index.md`                                    |
-| **Archivos de pruebas**          | `<módulo>[.<responsabilidad>].test.<extensión>` o `<módulo>[.<responsabilidad>].spec.<extensión>`        | `pr-governance.approvals.test.mjs`                                            |
-| **Archivos genéricos (código)**  | kebab-case                                                                                               | `knowledge-engine.ts`                                                         |
-| **Roles**                        | Title Case                                                                                               | `Arquitecto`                                                                  |
-| **Herramientas**                 | Capitalizado                                                                                             | `VSCode`, `Windsurf`                                                          |
-| **Paquetes npm**                 | `@eq-labs/<categoría>-<nombre>`                                                                          | `@eq-labs/foundation-kernel`                                                  |
-| **Repositorios**                 | kebab-case                                                                                               | `ee-monorepo`                                                                 |
-| **Carpetas**                     | kebab-case                                                                                               | `packages/foundation/`                                                        |
-| **Variables**                    | camelCase                                                                                                | `knowledgeEngine`                                                             |
-| **Tipos**                        | PascalCase                                                                                               | `KnowledgeEngine`                                                             |
-| **Interfaces**                   | PascalCase                                                                                               | `IKnowledgeEngine`                                                            |
-| **Enums**                        | PascalCase                                                                                               | `KnowledgeStatus`                                                             |
-| **Constantes**                   | UPPER_SNAKE_CASE                                                                                         | `MAX_RETRY_COUNT`                                                             |
+| Elemento                             | Formato                                                                                                  | Ejemplo                                                                       |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **IDs**                              | `EE-DOC-XXX` / `EE-ADR-XXX` / `EE-IMP-XXX-PXX` / `EE-TEC-XXX` / `EE-RFC-XXX` / `EE-VAL-*` / `EE-WAIVE-*` | `EE-DOC-001`, `EE-IMP-006-P01`, `EE-VAL-…`, `EE-WAIVE-…`                      |
+| **Documentos** (título)              | Title Case                                                                                               | `Engineering Ecosystem Constitution`                                          |
+| **Código Corto**                     | Sin el prefijo `EE`                                                                                      | `DOC-001`, `ADR-001`, `IMP-006-P01`, `TEC-001`, `RFC-001`, `VAL-…`, `WAIVE-…` |
+| **Archivos de documentos EE-\***     | `{ID}_{Nombre}.md` (general); VAL/WAIVE: `{ID}_{Nombre}_{fecha}.md`                                      | `EE-DOC-001_Master_Documentation_Index.md`                                    |
+| **Archivos de pruebas**              | `<módulo>[.<responsabilidad>].<tipo>.test.<extensión>` / `.spec.<extensión>`                             | `pr-governance.approvals.unit.test.mjs`                                       |
+| **Archivos y directorios de código** | `kebab-case`, salvo restricciones obligatorias de lenguaje, framework o herramienta                      | `knowledge-engine.ts`, `artifact-generator/`                                  |
+| **Componentes y clases**             | `PascalCase`, conforme al lenguaje y framework                                                           | `DashboardPanel`, `KnowledgeEngine`                                           |
+| **Módulos y scripts**                | Archivos en `kebab-case`; funciones y variables siguen la convención del lenguaje                        | `pr-governance-evaluate.mjs`, `evaluateGovernance`                            |
+| **Roles**                            | Title Case                                                                                               | `Arquitecto`                                                                  |
+| **Herramientas**                     | Capitalizado                                                                                             | `VSCode`, `Windsurf`                                                          |
+| **Paquetes npm**                     | `@eq-labs/<categoría>-<nombre>`                                                                          | `@eq-labs/foundation-kernel`                                                  |
+| **Repositorios**                     | kebab-case                                                                                               | `ee-monorepo`                                                                 |
+| **Carpetas**                         | kebab-case                                                                                               | `packages/foundation/`                                                        |
+| **Variables**                        | camelCase                                                                                                | `knowledgeEngine`                                                             |
+| **Tipos**                            | PascalCase                                                                                               | `KnowledgeEngine`                                                             |
+| **Interfaces**                       | PascalCase                                                                                               | `IKnowledgeEngine`                                                            |
+| **Enums**                            | PascalCase                                                                                               | `KnowledgeStatus`                                                             |
+| **Constantes**                       | UPPER_SNAKE_CASE                                                                                         | `MAX_RETRY_COUNT`                                                             |
+
+El ESLint compartido verifica nombres de clases, componentes, tipos, funciones, parámetros, campos de clases/interfaces y constantes literales de módulo. Las variables usan `camelCase`; los componentes que contienen JSX y las expresiones de clase usan `PascalCase`. Los nombres locales de fixtures en archivos de pruebas admiten `camelCase`.
 
 > **Prefijo `EE-` en archivos (AR-2026-019):**\
 > Todo documento de **gobernanza y proceso** bajo `docs/` debe tener nombre de archivo con prefijo `EE-` (familias DOC, ADR, RFC, IMP, TEC, VAL, WAIVE, AUDIT). Formato `{ID}_{Nombre}.md` (VAL/WAIVE con fecha).
@@ -416,6 +424,8 @@ El ciclo de **implementación por fases**, validación y documentación técnica
 
 > **Regla complementaria:**\
 > Todo archivo de pruebas deberá comenzar con un identificador breve y estable del módulo evaluado. La responsabilidad específica será opcional y no deberá repetir conceptos ya presentes en el identificador del módulo. Los nombres utilizarán inglés y segmentos en `kebab-case`. La extensión y el sufijo deberán corresponder al framework y al tipo de prueba aplicables.
+
+> **Adopción de sufijos de prueba:** las pruebas nuevas deberán declarar el tipo cuando sea identificable: `.unit.test`, `.int.test`, `.component.test` o `.e2e.spec`. Los nombres históricos genéricos `.test` / `.spec` se migran gradualmente; no se requiere renombrar pruebas sin cambio funcional únicamente por esta convención. La SSOT de las reglas de base de datos y APIs es EE-DOC-004 §12.3–§12.4.
 
 ### 16.1. Política de Idioma por Tipo de Artefacto (Normativo)
 
@@ -1620,6 +1630,7 @@ Todo documento nuevo deberá cumplir este estándar.
 | **v1.10.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — volcar AR auditoría                            | AR-001 ya en §06; AR-003/004/005 §18; AR-006/018 §11; AR-007 §05; AR-017 §15; AR-019 §16; AR-020 §05 Dependencias                                                         | **Congelado** |
 | **v1.11.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — §18 meta + AR-017/022                            | Meta §18.1–18.6; nota §05 RFC=18.5; plantilla→corpus; pre-main                                                                                                            | **Congelado** |
 | v1.12.0     | 2026-10-23 | Equipo de Arquitectura | Equipo de Arquitectura | Ampliación de aplicabilidad VAL/WAIVE                     | Incorpora la resolución del waiver, exige evidencia de cierre, distingue el estado documental de la resolución y renumera las secciones posteriores.                      | **Congelado** |
+| **v1.13.0** | 2026-11-02 | Equipo de Arquitectura | Equipo de Arquitectura | Nomenclatura, pruebas y documentos congelados             | §05 limita metadatos; §11 define campos de filas nuevas; §16 precisa kebab-case, excepciones y sufijos; ESLint valida nombres; DOC-004 rige DB/API.                       | **Congelado** |
 
 ---
 

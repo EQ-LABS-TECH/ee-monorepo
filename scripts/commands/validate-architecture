@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+import {
+  loadWorkspacePackages,
+  loadWorkspaceSourceImports,
+  validateWorkspaceArchitecture,
+  validateWorkspaceSourceImports,
+} from '../lib/architecture-dependencies.mjs';
+
+try {
+  const workspaces = loadWorkspacePackages();
+  const violations = [
+    ...validateWorkspaceArchitecture(workspaces),
+    ...validateWorkspaceSourceImports(workspaces, loadWorkspaceSourceImports(workspaces)),
+  ];
+  for (const violation of violations) console.error(JSON.stringify(violation));
+  const status = violations.length ? 'FAIL' : 'PASS';
+  console.log(
+    `QG_RESULT ${JSON.stringify({ gateId: 'QG-ARCH-001', status, exitCode: violations.length ? 1 : 0 })}`,
+  );
+  process.exitCode = violations.length ? 1 : 0;
+} catch (error) {
+  console.error(`QG-ARCH-001: ${error.name}`);
+  console.log(
+    `QG_RESULT ${JSON.stringify({ gateId: 'QG-ARCH-001', status: 'ERROR', exitCode: 1 })}`,
+  );
+  process.exitCode = 1;
+}

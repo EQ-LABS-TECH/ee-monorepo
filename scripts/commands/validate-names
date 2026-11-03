@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+import {
+  validateRepositoryFileNames,
+  getChangedRepositoryPaths,
+} from '../lib/repository-conventions.mjs';
+
+const violations = validateRepositoryFileNames(getChangedRepositoryPaths());
+for (const violation of violations) console.error(`${violation.code}: ${violation.path}`);
+const status = violations.length ? 'FAIL' : 'PASS';
+console.log(
+  `QG_RESULT ${JSON.stringify({ gateId: 'QG-NAM-001', status, exitCode: status === 'PASS' ? 0 : 1 })}`,
+);
+process.exitCode = status === 'PASS' ? 0 : 1;

@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**     | Fundacional                                                    |
 | **Nivel**             | Estratégico                                                    |
 | **Normativo**         | Sí                                                             |
-| **Versión**           | v1.2.0                                                         |
+| **Versión**           | v1.3.0                                                         |
 | **Estado**            | Congelado                                                      |
 | **Propietario**       | Equipo de Arquitectura                                         |
 | **Documento padre**   | EE-DOC-003                                                     |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**      | Equipo de Arquitectura                                         |
 | **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección                        |
 | **Fecha de creación** | 2026-08-02                                                     |
-| **Última revisión**   | 2026-10-18                                                     |
+| **Última revisión**   | 2026-11-02                                                     |
 | **Próxima revisión**  | No aplica — Documento Congelado                                |
 
 ---
@@ -530,6 +530,24 @@ flowchart TD
 
 > **Nota — Vendor Agnostic:** los servicios listados en §12.2 (GitHub, Docker, Kubernetes, Obsidian, NotebookLM, MCP, A2A, etc.) son **implementaciones de referencia**; el contrato se define por **adaptador**. Obsidian puede no tener conector dedicado en `connectors/official/` (vía MCP u otro adaptador según implementación). La política de interfaces abiertas remite a **EE-DOC-003** (licenciamiento / IP).
 
+### 12.3. Contratos de APIs REST y JSON
+
+Los contratos HTTP de APIs del ecosistema deberán ser versionados en la ruta (`/api/v1/`), usar recursos en plural con `kebab-case` y representar parámetros de ruta con `snake_case` (`GET /api/v1/user-accounts/{user_id}`). Las claves de objetos JSON usarán `camelCase` de forma uniforme (`userId`, `createdAt`).
+
+Las interfaces deberán definirse primero como contratos verificables (por ejemplo, OpenAPI y JSON Schema) y residir junto al paquete propietario del contrato, bajo las rutas de contratos autorizadas por EE-DOC-006. Los adaptadores externos preservarán el contrato interno y realizarán las transformaciones necesarias en el límite de integración. No se introducen endpoints ni artefactos OpenAPI en este cambio.
+
+### 12.4. Convenciones de bases de datos
+
+Cuando el ecosistema incorpore bases de datos relacionales, los nombres de bases, esquemas, tablas, columnas e identificadores de restricciones usarán `snake_case` en minúsculas. Las tablas usarán sustantivos plurales; las columnas, nombres singulares. La clave primaria se llamará `id` y utilizará un generador de identidad o UUID según la decisión del sistema consumidor; una clave foránea usará `[tabla_singular]_id`.
+
+Los nombres de índices usarán `idx_[tabla]_[columna(s)]`, las restricciones únicas `uq_[tabla]_[columna(s)]` y las claves foráneas `fk_[tabla]_[referencia]`. Esta norma define la convención futura; no presupone motor, ORM, esquema ni migración.
+
+### 12.5. Organización interna por capas
+
+Cuando un paquete o bounded context requiera separación interna, organizará sus responsabilidades en `domain/`, `application/` e `infrastructure/`: el dominio mantiene reglas puras y no depende de frameworks, bases de datos ni APIs externas; aplicación orquesta casos de uso mediante contratos; infraestructura implementa adaptadores concretos. Esta organización se aplica dentro de workspaces autorizados por EE-DOC-006 y no crea directorios top-level ni obliga a reestructurar masivamente los paquetes existentes.
+
+La matriz física de dependencias de EE-DOC-006 y la matriz arquitectónica de este documento conservan sus ámbitos. QG-ARCH-001 valida dependencias workspace declaradas, ciclos e imports entre workspaces bajo `src/`, conforme al alcance y límites de EE-DOC-006 §13.2 y EE-DOC-010 §05.8. No afirma análisis de reglas internas de `domain/`, `application/` o `infrastructure/`, ni conformidad de contratos de API.
+
 ---
 
 ## 13. Evolución Arquitectónica
@@ -567,12 +585,12 @@ flowchart TD
 
 ### 14.1. Mecanismos de Verificación
 
-| Mecanismo                          | Descripción                                                                                                                              | Frecuencia                | Responsable             |
-| :--------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :------------------------ | :---------------------- |
-| **Revisiones Arquitectónicas**     | Verificación de alineación con la arquitectura.                                                                                          | Por cambio significativo. | Equipo de Arquitectura  |
-| **Auditorías**                     | Revisión periódica del cumplimiento arquitectónico.                                                                                      | Trimestral.               | Equipo de Arquitectura  |
-| **Validación Automática**          | **PENDING** (EE-DOC-005 §10.4 / EE-DOC-010 §05.8): QG-ARCH actual no valida capas/ciclos completos. No declarar enforcement inexistente. | Continua (cuando exista)  | Automatización / DevOps |
-| **Architecture Compliance Checks** | Análisis de top-level (QG-ARCH-001). Capas/ciclos: **PENDING** (V-ARCH-LAYERS / 015 §05.2; 010 §05.8).                                   | Por cambio (parcial hoy)  | Automatización / DevOps |
+| Mecanismo                          | Descripción                                                                                                                                                                                                                                        | Frecuencia                | Responsable             |
+| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------ | :---------------------- |
+| **Revisiones Arquitectónicas**     | Verificación de alineación con la arquitectura.                                                                                                                                                                                                    | Por cambio significativo. | Equipo de Arquitectura  |
+| **Auditorías**                     | Revisión periódica del cumplimiento arquitectónico.                                                                                                                                                                                                | Trimestral.               | Equipo de Arquitectura  |
+| **Validación Automática**          | **Parcialmente ACTIVE**: QG-ARCH-001 valida top-level, dependencias/ciclos declarados y referencias entre workspaces en imports del código bajo `src/`.                                                                                            | Por cambio                | Automatización / DevOps |
+| **Architecture Compliance Checks** | QG-ARCH-001 contrasta imports estáticos/dinámicos literales y `require` en `src/` con la matriz y dependencias declaradas. Configuración, pruebas, aliases de `tsconfig` y composición implícita conservan revisión arquitectónica complementaria. | Por cambio                | Automatización / DevOps |
 
 ### 14.2. Consecuencias del Incumplimiento
 
@@ -594,7 +612,7 @@ flowchart TD
 | **EE-DOC-003** | Engineering Ecosystem Constitution     | Constitución; Documentation First §08; licenciamiento                  |
 | **EE-DOC-005** | Development Workflow                   | Cambio gobernado; PENDING §10.4                                        |
 | **EE-DOC-006** | Repository Structure                   | Árbol físico; packages/; connectors/                                   |
-| **EE-DOC-010** | Quality Gates                          | QG-ARCH; PENDING capas §05.8                                           |
+| **EE-DOC-010** | Quality Gates                          | Estado y alcance QG-ARCH-001: §05.8                                    |
 | **EE-DOC-013** | AI Ecosystem                           | Mapeo intelligence / providers                                         |
 | **EE-DOC-014** | Knowledge Management                   | Registry ADR/RFC vía docs+git                                          |
 | **EE-DOC-015** | Engineering Ecosystem Validation       | V-ARCH-LAYERS PENDING                                                  |
@@ -612,6 +630,7 @@ flowchart TD
 | **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                | Versión inicial de la arquitectura del Engineering Ecosystem                                                                                                               | **Congelado** |
 | **v1.1.0** | 2026-09-16 | Equipo de Arquitectura | Equipo de Arquitectura | Sync lógica (regularizar: Tipo B + ADR-001/002) | Alineación con EE-ADR-001/002 e inclusión de subcomponentes lógicos (MCP, A2A, Task Orchestrator, Test Engine), depuración de acoplamiento físico y adición de EE-DOC-005. | **Congelado** |
 | **v1.2.0** | 2026-10-12 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo B/C (ADR-005) + regularización v1.1.0      | Auditoría: metadatos, R3 connectors, §06.1 categorías 006, matriz §11.2, PENDING QG, First, títulos Mermaid                                                                | **Congelado** |
+| **v1.3.0** | 2026-11-02 | Equipo de Arquitectura | Equipo de Arquitectura | Capas y contratos futuros de API/datos          | §12.3 define REST/JSON; §12.4 fija convenciones DB; §12.5 establece organización interna sin cambiar top-level ni reestructurar paquetes existentes.                       | **Congelado** |
 
 ---
 

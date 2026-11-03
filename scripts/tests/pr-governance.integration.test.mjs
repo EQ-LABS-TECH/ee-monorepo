@@ -84,7 +84,7 @@ test('ordinary PR: one independent approval meets numerical threshold only', asy
     reviews: [approval('reviewer-a')],
   });
   assert.equal(classification.criticalIndicatorsPresent, false);
-  assert.equal(classification.requiresImpactReview, true);
+  assert.equal(classification.requiresImpactReview, false);
   assert.equal(evidence.advisoryOnly, true);
   const result = evaluate(evidence, false);
   assert.equal(result.status, 'PASS');
@@ -135,13 +135,13 @@ test('GitHub API failure prevents producing any review decision', async () => {
   );
 });
 
-test('impact is unresolved for ordinary-looking paths', async () => {
+test('complete ordinary-looking paths do not require Architecture impact review', async () => {
   const { evidence, classification } = await snapshot({
     paths: ['packages/execution/src/engine.ts'],
     reviews: [approval('reviewer-a')],
   });
   assert.equal(classification.criticalIndicatorsPresent, false);
-  assert.equal(classification.requiresImpactReview, true);
+  assert.equal(classification.requiresImpactReview, false);
   // Do not automatically pass `critical: false` to a production enforcement decision.
   assert.equal(evidence.advisoryOnly, true);
 });
@@ -198,7 +198,7 @@ test('reviewer eligibility evidence does not authorize ordinary impact', async (
     responsibleTeams: ['architecture'],
   });
 
-  assert.equal(classification.status, 'PENDING_REVIEW');
+  assert.equal(classification.status, 'ORDINARY');
   assert.equal(approvals.status, 'PASS');
   assert.equal(authority.status, 'ELIGIBLE_EVIDENCE');
   assert.equal(evidence.advisoryOnly, true);

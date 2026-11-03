@@ -1,4 +1,4 @@
-# Engineering Ecosystem (EE)
+﻿# Engineering Ecosystem (EE)
 
 Engineering Ecosystem (EE) is an open-source engineering platform designed to standardize software engineering practices, automation, governance, quality, knowledge management and AI-assisted development.
 
@@ -111,6 +111,7 @@ pnpm dev
 pnpm test
 pnpm lint
 pnpm format
+pnpm hooks:install
 pnpm typecheck
 pnpm validate
 pnpm doctor

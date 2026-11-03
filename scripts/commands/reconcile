@@ -87,7 +87,15 @@ if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) 
   try {
     await main();
   } catch (error) {
-    console.error('PN-017 reconciliation failed:', error.name);
+    console.error(
+      'PN-017 reconciliation error:',
+      JSON.stringify({
+        phase: 'reconciliation',
+        code:
+          error instanceof TypeError ? 'invalid-input-or-evidence' : 'unexpected-operation-error',
+        kind: error instanceof AggregateError ? 'AggregateError' : (error?.name ?? 'Error'),
+      }),
+    );
     process.exitCode = 1;
   }
 }

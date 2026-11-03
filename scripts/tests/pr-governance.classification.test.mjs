@@ -37,10 +37,12 @@ test('identifies release, public contract and infrastructure surfaces', () => {
   );
 });
 
-test('ordinary paths still require impact review', () => {
+test('complete paths without critical indicators classify as ordinary', () => {
   const result = classifyCriticalChange(['README.md', 'apps/dashboard/src/main.ts']);
   assert.equal(result.criticalIndicatorsPresent, false);
-  assert.equal(result.requiresImpactReview, true);
+  assert.equal(result.status, 'ORDINARY');
+  assert.equal(result.evidenceComplete, true);
+  assert.equal(result.requiresImpactReview, false);
   assert.deepEqual(result.reasons, []);
 });
 
@@ -64,12 +66,18 @@ test('critical indicators produce an explicit CRITICAL status', () => {
   assert.equal(result.requiresImpactReview, true);
 });
 
-test('absence of critical indicators never proves ordinary impact', () => {
+test('empty changed-path evidence remains pending', () => {
+  const result = classifyCriticalChange([]);
+  assert.equal(result.status, 'PENDING_REVIEW');
+  assert.equal(result.evidenceComplete, false);
+});
+
+test('absence of critical indicators classifies complete paths as ordinary', () => {
   const result = classifyCriticalChange(['apps/dashboard/src/main.ts']);
 
-  assert.equal(result.status, 'PENDING_REVIEW');
+  assert.equal(result.status, 'ORDINARY');
   assert.equal(result.criticalIndicatorsPresent, false);
-  assert.equal(result.requiresImpactReview, true);
+  assert.equal(result.requiresImpactReview, false);
 });
 
 test('mixed changes cannot downgrade a critical classification', () => {
