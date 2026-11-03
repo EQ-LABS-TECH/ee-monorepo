@@ -16,7 +16,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                                                         |
 | **Nivel**             | Técnico                                                                |
 | **Normativo**         | No                                                                     |
-| **Versión**           | v0.4.0                                                                 |
+| **Versión**           | v0.7.0                                                                 |
 | **Estado**            | En Elaboración                                                         |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-007 — GitHub Governance                                         |
@@ -24,7 +24,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Aprobado por**      | Equipo de Arquitectura                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps                                       |
 | **Fecha de creación** | 2026-09-22                                                             |
-| **Última revisión**   | 2026-11-02                                                             |
+| **Última revisión**   | 2026-11-03                                                             |
 | **Próxima revisión**  | 2026-11-09                                                             |
 
 ---
@@ -46,12 +46,12 @@ Materializar el archivo **`.github/CODEOWNERS`** con ownership real por áreas d
 
 ### 02.1. Teams disponibles (handles GitHub)
 
-| Team visible     | Handle CODEOWNERS                | Uso en ownership                                       |
-| :--------------- | :------------------------------- | :----------------------------------------------------- |
-| Architecture     | `@EQ-LABS-TECH/architecture`     | Gobernanza, norma, config crítica, docs normativos     |
-| Repository Admin | `@EQ-LABS-TECH/repository-admin` | `.github/`, scripts de plataforma                      |
-| Maintainers      | `@EQ-LABS-TECH/maintainers`      | Código del ecosistema (packages, apps, connectors)     |
-| Contributors     | `@EQ-LABS-TECH/contributors`     | **No** como owner obligatorio en P04 (membresía vacía) |
+| Team visible     | Handle CODEOWNERS                | Uso en ownership                                         |
+| :--------------- | :------------------------------- | :------------------------------------------------------- |
+| Architecture     | `@EQ-LABS-TECH/architecture`     | Gobernanza, norma, config crítica, docs normativos       |
+| Repository Admin | `@EQ-LABS-TECH/repository-admin` | Equipo disponible; no asignado como owner en el mapa P04 |
+| Maintainers      | `@EQ-LABS-TECH/maintainers`      | Código del ecosistema (packages, apps, connectors)       |
+| Contributors     | `@EQ-LABS-TECH/contributors`     | **No** como owner obligatorio en P04 (membresía vacía)   |
 
 > Si el **slug** real del team en GitHub difiere (p.ej. `repository-admin` vs `repository_admin`), ajustar el handle tras verificar en la URL del team. Registrar slug real en §08.
 
@@ -83,29 +83,34 @@ Materializar el archivo **`.github/CODEOWNERS`** con ownership real por áreas d
 
 1. **Team-first** — solo handles de teams de la org.
 2. **Domain ownership** — por área de primer nivel, no un único owner global sin criterio.
-3. **Áreas sensibles** — `.github/`, raíz de orquestación y config compartida con Architecture / Repository Admin.
+3. **Ownership único por patrón** — cada ruta explícita tiene un solo equipo responsable. Architecture es responsable de gobernanza, orquestación, configuración compartida, infraestructura, plantillas y componentes PN-017 que materializan políticas; Maintainers es responsable del código general de paquetes y automatización, incluido `packages/knowledge/`.
 4. **Single-operator** — el operador `edus194` ya está en Architecture, Repository Admin y Maintainers; las menciones de team lo cubren.
 5. **Última coincidencia gana** — en CODEOWNERS de GitHub, el último patrón que coincida tiene prioridad; ordenar de general → específico.
 
 ### 04.2. Mapa ruta → team
 
-| Ruta / patrón                                                         | Owner(s)                                                      | Justificación                      |
-| :-------------------------------------------------------------------- | :------------------------------------------------------------ | :--------------------------------- |
-| `*` (default)                                                         | `@EQ-LABS-TECH/maintainers`                                   | Fallback del código del ecosistema |
-| `.github/`                                                            | `@EQ-LABS-TECH/architecture` `@EQ-LABS-TECH/repository-admin` | Gobernanza de plataforma           |
-| `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `turbo.json` | `@EQ-LABS-TECH/architecture` `@EQ-LABS-TECH/maintainers`      | Orquestación del monorepo          |
-| `.nvmrc`, `.npmrc`, `.editorconfig`, `.gitattributes`, `.gitignore`   | `@EQ-LABS-TECH/architecture`                                  | Config de repo / runtime base      |
-| `packages/config/`                                                    | `@EQ-LABS-TECH/architecture` `@EQ-LABS-TECH/maintainers`      | SSOT de configuración compartida   |
-| `packages/`                                                           | `@EQ-LABS-TECH/maintainers`                                   | Núcleo de paquetes                 |
-| `apps/`                                                               | `@EQ-LABS-TECH/maintainers`                                   | Aplicaciones                       |
-| `connectors/`                                                         | `@EQ-LABS-TECH/maintainers`                                   | Conectores                         |
-| `scripts/`                                                            | `@EQ-LABS-TECH/repository-admin` `@EQ-LABS-TECH/maintainers`  | Automatización de repo             |
-| `docs/`                                                               | `@EQ-LABS-TECH/maintainers`                                   | Documentación ordinaria            |
-| `docs/architecture/`, `docs/adr/`, `docs/rfc/`                        | `@EQ-LABS-TECH/architecture`                                  | Normativa y arquitectura           |
-| `docs/validation/audit/EE-AUDIT-*`                                    | `@EQ-LABS-TECH/architecture`                                  | Auditoría normativa                |
-| `docs/developer/`, `docs/validation/`                                 | `@EQ-LABS-TECH/maintainers`                                   | Implementación y evidencia         |
-| `assets/`, `data/`, `examples/`, `marketplace/`                       | `@EQ-LABS-TECH/maintainers`                                   | Soporte / extensibilidad           |
-| `LICENSE`, `NOTICE`, `CHANGELOG.md`, `README.md`                      | `@EQ-LABS-TECH/architecture`                                  | Artefactos de gobierno del repo    |
+| Ruta / patrón                                                                           | Owner(s)                     | Justificación                                |
+| :-------------------------------------------------------------------------------------- | :--------------------------- | :------------------------------------------- |
+| `*` (default)                                                                           | `@EQ-LABS-TECH/maintainers`  | Fallback del código del ecosistema           |
+| `.github/`                                                                              | `@EQ-LABS-TECH/architecture` | Gobernanza de plataforma                     |
+| `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `turbo.json`                   | `@EQ-LABS-TECH/architecture` | Orquestación del monorepo                    |
+| `.nvmrc`, `.npmrc`, `.editorconfig`, `.gitattributes`, `.gitignore`                     | `@EQ-LABS-TECH/architecture` | Config de repo / runtime base                |
+| `packages/config/`                                                                      | `@EQ-LABS-TECH/architecture` | SSOT de configuración compartida             |
+| `packages/`                                                                             | `@EQ-LABS-TECH/maintainers`  | Núcleo de paquetes                           |
+| `packages/knowledge/`                                                                   | `@EQ-LABS-TECH/maintainers`  | Implementación del dominio knowledge         |
+| `apps/`                                                                                 | `@EQ-LABS-TECH/maintainers`  | Aplicaciones                                 |
+| `connectors/`                                                                           | `@EQ-LABS-TECH/maintainers`  | Conectores                                   |
+| `scripts/`                                                                              | `@EQ-LABS-TECH/maintainers`  | Automatización del repositorio               |
+| `scripts/lib/pr-governance.*`, `scripts/tests/pr-governance.*`                          | `@EQ-LABS-TECH/architecture` | Implementación y pruebas de políticas PN-017 |
+| `scripts/commands/enforce`, `scripts/commands/reconcile`, `scripts/commands/governance` | `@EQ-LABS-TECH/architecture` | Comandos que aplican políticas PN-017        |
+| `docs/`                                                                                 | `@EQ-LABS-TECH/maintainers`  | Documentación ordinaria                      |
+| `docs/architecture/`, `docs/adr/`, `docs/rfc/`                                          | `@EQ-LABS-TECH/architecture` | Normativa y arquitectura                     |
+| `docs/validation/audit/EE-AUDIT-*`                                                      | `@EQ-LABS-TECH/architecture` | Auditoría normativa                          |
+| `docs/developer/`, `docs/validation/`                                                   | `@EQ-LABS-TECH/maintainers`  | Implementación y evidencia                   |
+| `assets/`, `data/`, `examples/`, `marketplace/`                                         | `@EQ-LABS-TECH/maintainers`  | Soporte / extensibilidad                     |
+| `infra/`                                                                                | `@EQ-LABS-TECH/architecture` | Infraestructura de plataforma                |
+| `templates/`                                                                            | `@EQ-LABS-TECH/architecture` | Plantillas gobernadas                        |
+| `LICENSE`, `NOTICE`, `CHANGELOG.md`, `README.md`                                        | `@EQ-LABS-TECH/architecture` | Artefactos de gobierno del repo              |
 
 ---
 
@@ -130,10 +135,10 @@ LICENSE                         @EQ-LABS-TECH/architecture
 NOTICE                          @EQ-LABS-TECH/architecture
 CHANGELOG.md                    @EQ-LABS-TECH/architecture
 README.md                       @EQ-LABS-TECH/architecture
-package.json                    @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-pnpm-workspace.yaml             @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-pnpm-lock.yaml                  @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-turbo.json                      @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+package.json                    @EQ-LABS-TECH/architecture
+pnpm-workspace.yaml             @EQ-LABS-TECH/architecture
+pnpm-lock.yaml                  @EQ-LABS-TECH/architecture
+turbo.json                      @EQ-LABS-TECH/architecture
 .nvmrc                          @EQ-LABS-TECH/architecture
 .npmrc                          @EQ-LABS-TECH/architecture
 .editorconfig                   @EQ-LABS-TECH/architecture
@@ -141,20 +146,37 @@ turbo.json                      @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintai
 .gitignore                      @EQ-LABS-TECH/architecture
 
 # GitHub Governance (high impact)
-.github/                        @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin
+.github/                        @EQ-LABS-TECH/architecture
 
-# Shared config (SSOT)
-packages/config/                @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-
-# Ecosystem packages & applications
+# Ecosystem packages & applications (general first)
 packages/                       @EQ-LABS-TECH/maintainers
 apps/                           @EQ-LABS-TECH/maintainers
 connectors/                     @EQ-LABS-TECH/maintainers
 
-# Automation scripts
-scripts/                        @EQ-LABS-TECH/repository-admin @EQ-LABS-TECH/maintainers
+# Shared config (SSOT) — after packages/ so it wins
+packages/config/                @EQ-LABS-TECH/architecture
 
-# Documentation: routine ownership with normative path overrides
+# Knowledge Layer (EE-DOC-014 / KS-06) — after packages/
+packages/knowledge/             @EQ-LABS-TECH/maintainers
+packages/foundation/src/contracts/knowledge*.ts @EQ-LABS-TECH/architecture
+
+# AI Provider SPI contracts (EE-DOC-013 §11 #12)
+packages/foundation/src/contracts/provider.ts    @EQ-LABS-TECH/architecture
+packages/foundation/src/contracts/inference.ts   @EQ-LABS-TECH/architecture
+packages/foundation/src/contracts/generation.ts  @EQ-LABS-TECH/architecture
+packages/foundation/src/contracts/error.ts       @EQ-LABS-TECH/architecture
+
+# Automation scripts
+scripts/                        @EQ-LABS-TECH/maintainers
+
+# Security and governance policy implementation — after scripts/ so it wins
+scripts/lib/pr-governance.*     @EQ-LABS-TECH/architecture
+scripts/commands/enforce       @EQ-LABS-TECH/architecture
+scripts/commands/reconcile     @EQ-LABS-TECH/architecture
+scripts/commands/governance    @EQ-LABS-TECH/architecture
+scripts/tests/pr-governance.*  @EQ-LABS-TECH/architecture
+
+# Documentation: Maintainers own routine material; Architecture owns normative domains.
 docs/                           @EQ-LABS-TECH/maintainers
 docs/architecture/              @EQ-LABS-TECH/architecture
 docs/adr/                       @EQ-LABS-TECH/architecture
@@ -168,6 +190,12 @@ assets/                         @EQ-LABS-TECH/maintainers
 data/                           @EQ-LABS-TECH/maintainers
 examples/                       @EQ-LABS-TECH/maintainers
 marketplace/                    @EQ-LABS-TECH/maintainers
+
+# Platform infrastructure (EE-DOC-009)
+infra/                          @EQ-LABS-TECH/architecture
+
+# Platform templates (EE-DOC-012)
+templates/                      @EQ-LABS-TECH/architecture
 ```
 
 ---
@@ -261,10 +289,12 @@ Los valores de tamaño y validaciones de esta sección son una captura históric
 
 ### 08.5. Prueba de asignación
 
-| Prueba                                                   | Resultado                     |
-| :------------------------------------------------------- | :---------------------------- |
-| PR que toca `.github/` → Architecture / Repository Admin | Pendiente de PR de validación |
-| PR que toca `packages/` → Maintainers                    | Pendiente de PR de validación |
+| Prueba                                        | Resultado                     |
+| :-------------------------------------------- | :---------------------------- |
+| PR que toca `.github/` → Architecture         | Pendiente de PR de validación |
+| PR que toca `scripts/` → Maintainers          | Pendiente de PR de validación |
+| PR que toca componentes PN-017 → Architecture | Pendiente de PR de validación |
+| PR que toca `packages/` → Maintainers         | Pendiente de PR de validación |
 
 ---
 
@@ -284,7 +314,12 @@ Los valores de tamaño y validaciones de esta sección son una captura históric
 
 - [x] `.github/CODEOWNERS` materializado con patrones de dominio.
 - [x] Solo handles `@EQ-LABS-TECH/<team>` (sin usuarios sueltos).
-- [x] `.github/` bajo Architecture + Repository Admin.
+- [x] `.github/` bajo Architecture.
+- [x] `scripts/` bajo Maintainers, con excepción Architecture para los componentes PN-017 indicados.
+- [x] `infra/` bajo Architecture.
+- [x] `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml` y `turbo.json` bajo Architecture.
+- [x] `packages/config/` bajo Architecture y `packages/knowledge/` bajo Maintainers.
+- [x] `templates/` bajo Architecture.
 - [x] `packages/`, `apps/`, `connectors/` bajo Maintainers.
 - [x] Contributors no usado como owner obligatorio.
 - [x] **Sin ownership hacia teams inexistentes** (A-P04-001 resuelta).
@@ -306,12 +341,14 @@ Los valores de tamaño y validaciones de esta sección son una captura históric
 
 ## 11. Correcciones / Warnings
 
-| ID            | Severidad   | Descripción                                | Tratamiento                                                                   |
-| :------------ | :---------- | :----------------------------------------- | :---------------------------------------------------------------------------- |
-| **W-P04-001** | Informativo | Single-operator: teams con un miembro      | CODEOWNERS por team sigue siendo válido; escala al crecer                     |
-| **W-P04-002** | Informativo | Require Code Owners + bypass bootstrap     | Compatible temporalmente; al quitar bypass, Code Owners exige review del team |
-| **B-P04-001** | Tipo B      | markdownlint/Prettier sobre CODEOWNERS     | Exclusiones en `.vscode/settings.json` y `.prettierignore`                    |
-| **A-P04-001** | Mayor       | `marketplace/` apuntaba a team inexistente | **Resuelta:** `@EQ-LABS-TECH/maintainers`                                     |
+| ID            | Severidad   | Descripción                                                              | Tratamiento                                                                                                                                                                      |
+| :------------ | :---------- | :----------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **W-P04-001** | Informativo | Single-operator: teams con un miembro                                    | CODEOWNERS por team sigue siendo válido; escala al crecer                                                                                                                        |
+| **W-P04-002** | Informativo | Require Code Owners + bypass bootstrap                                   | Compatible temporalmente; al quitar bypass, Code Owners exige review del team                                                                                                    |
+| **B-P04-001** | Tipo B      | markdownlint/Prettier sobre CODEOWNERS                                   | Exclusiones en `.vscode/settings.json` y `.prettierignore`                                                                                                                       |
+| **B-P04-002** | Tipo B      | Patrones CODEOWNERS con equipos alternativos                             | Un único equipo responsable por patrón: Architecture para `.github/`, orquestación, configuración, `infra/` y `templates/`; Maintainers para `scripts/` y `packages/knowledge/`. |
+| **B-P04-003** | Tipo B      | Revisión arquitectónica explícita de PN-017 y regla Knowledge redundante | Architecture revisa los componentes PN-017 indicados; `knowledge*.ts` cubre `knowledge.ts`, por lo que se conserva una sola regla.                                               |
+| **A-P04-001** | Mayor       | `marketplace/` apuntaba a team inexistente                               | **Resuelta:** `@EQ-LABS-TECH/maintainers`                                                                                                                                        |
 
 ---
 
@@ -341,12 +378,15 @@ Los valores de tamaño y validaciones de esta sección son una captura históric
 
 ## 14. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                         | Cambios                                                                                               | Estado                                          |
-| :--------- | :--------- | :----------------------- | :--------------------- | :----------------------------- | :---------------------------------------------------------------------------------------------------- | :---------------------------------------------- |
-| **v0.1.0** | 2026-09-22 | AI Engineering Assistant | —                      | Apertura P04                   | Mapa ownership; contenido CODEOWNERS; plan de ejecución; criterios                                    | En Elaboración                                  |
-| **v0.2.0** | 2026-09-23 | AI Engineering Assistant | —                      | Evidencia as-built             | CODEOWNERS materializado; B-P04-001 tooling; A-P04-001 team marketplace inexistente                   | Implementado — Corrección marketplace pendiente |
-| **v0.3.0** | 2026-09-23 | AI Engineering Assistant | —                      | Cierre P04                     | A-P04-001 corregida; marketplace→maintainers; checklist conforme                                      | **Completado**                                  |
-| **v0.4.0** | 2026-11-02 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership documental escalable | Maintainers como owner de documentación ordinaria; Architecture para dominios normativos y auditoría. | En Elaboración                                  |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                          | Cambios                                                                                                                                                                                            | Estado                                          |
+| :--------- | :--------- | :----------------------- | :--------------------- | :---------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------- |
+| **v0.1.0** | 2026-09-22 | AI Engineering Assistant | —                      | Apertura P04                                    | Mapa ownership; contenido CODEOWNERS; plan de ejecución; criterios                                                                                                                                 | En Elaboración                                  |
+| **v0.2.0** | 2026-09-23 | AI Engineering Assistant | —                      | Evidencia as-built                              | CODEOWNERS materializado; B-P04-001 tooling; A-P04-001 team marketplace inexistente                                                                                                                | Implementado — Corrección marketplace pendiente |
+| **v0.3.0** | 2026-09-23 | AI Engineering Assistant | —                      | Cierre P04                                      | A-P04-001 corregida; marketplace→maintainers; checklist conforme                                                                                                                                   | **Completado**                                  |
+| **v0.4.0** | 2026-11-02 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership documental escalable                  | Maintainers como owner de documentación ordinaria; Architecture para dominios normativos y auditoría.                                                                                              | En Elaboración                                  |
+| **v0.5.0** | 2026-11-03 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership de plataforma sin owners alternativos | Architecture como owner único de `.github/`; Maintainers como owner único de `scripts/`; Repository Admin conserva `infra/`.                                                                       | En Elaboración                                  |
+| **v0.6.0** | 2026-11-03 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership único por área                        | Un equipo responsable por cada patrón explícito de CODEOWNERS; Architecture cubre orquestación, configuración, infraestructura y plantillas; Maintainers cubre `scripts/` y `packages/knowledge/`. | En Elaboración                                  |
+| **v0.7.0** | 2026-11-03 | Equipo de Arquitectura   | Equipo de Arquitectura | Revisión arquitectónica de PN-017               | Architecture como owner de componentes PN-017 en `scripts/`; una sola regla wildcard para contratos Knowledge.                                                                                     | En Elaboración                                  |
 
 ---
 

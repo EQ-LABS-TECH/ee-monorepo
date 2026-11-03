@@ -6,8 +6,13 @@ import { parseCodeowners, resolveCodeowners } from '@eq-labs/governance/pr-gover
 const source = `
 * @EQ-LABS-TECH/maintainers
 README.md @EQ-LABS-TECH/architecture
-.github/ @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin
-scripts/ @EQ-LABS-TECH/repository-admin @EQ-LABS-TECH/maintainers
+.github/ @EQ-LABS-TECH/architecture
+scripts/ @EQ-LABS-TECH/maintainers
+scripts/lib/pr-governance.* @EQ-LABS-TECH/architecture
+scripts/commands/enforce @EQ-LABS-TECH/architecture
+scripts/commands/reconcile @EQ-LABS-TECH/architecture
+scripts/commands/governance @EQ-LABS-TECH/architecture
+scripts/tests/pr-governance.* @EQ-LABS-TECH/architecture
 packages/ @EQ-LABS-TECH/maintainers
 packages/foundation/src/contracts/knowledge*.ts @EQ-LABS-TECH/architecture
 `;
@@ -33,13 +38,31 @@ test('uses last matching CODEOWNERS rule', () => {
   assert.deepEqual(result[0].eligibleTeams, ['architecture']);
 });
 
-test('preserves alternative owners on one rule', () => {
+test('resolves a single accountable team for automation scripts', () => {
   const result = resolveCodeowners({
     rules,
     paths: ['scripts/lib/example.mjs'],
   });
 
-  assert.deepEqual(result[0].eligibleTeams, ['repository-admin', 'maintainers']);
+  assert.deepEqual(result[0].eligibleTeams, ['maintainers']);
+});
+
+test('resolves architectural ownership for PN-017 policy implementation and tests', () => {
+  const result = resolveCodeowners({
+    rules,
+    paths: [
+      'scripts/lib/pr-governance.evaluate.mjs',
+      'scripts/commands/enforce',
+      'scripts/commands/reconcile',
+      'scripts/commands/governance',
+      'scripts/tests/pr-governance.evaluation.test.mjs',
+    ],
+  });
+
+  assert.deepEqual(
+    result.map((entry) => entry.eligibleTeams),
+    [['architecture'], ['architecture'], ['architecture'], ['architecture'], ['architecture']],
+  );
 });
 
 test('resolves mixed ownership independently for each path', () => {
@@ -50,7 +73,7 @@ test('resolves mixed ownership independently for each path', () => {
 
   assert.deepEqual(
     result.map((entry) => entry.eligibleTeams),
-    [['architecture', 'repository-admin'], ['repository-admin', 'maintainers'], ['architecture']],
+    [['architecture'], ['maintainers'], ['architecture']],
   );
 });
 
@@ -118,7 +141,7 @@ test('matches unanchored directory patterns at any depth', () => {
   });
 
   assert.equal(result[0].pattern, 'scripts/');
-  assert.deepEqual(result[0].eligibleTeams, ['repository-admin', 'maintainers']);
+  assert.deepEqual(result[0].eligibleTeams, ['maintainers']);
 });
 
 test('preserves root anchoring for patterns containing directories', () => {
@@ -149,13 +172,25 @@ test('repository CODEOWNERS resolves actual governance boundaries', async () => 
       'apps/dashboard/src/main.ts',
       'README.md',
       'scripts/lib/pr-governance.evaluate.mjs',
+      'scripts/commands/enforce',
+      'scripts/commands/reconcile',
+      'scripts/commands/governance',
+      'scripts/tests/pr-governance.evaluation.test.mjs',
       '.github/workflows/ci.yml',
       'packages/config/src/index.ts',
+      'packages/knowledge/src/index.ts',
+      'package.json',
+      'pnpm-workspace.yaml',
+      'pnpm-lock.yaml',
+      'turbo.json',
       'docs/validation/evidence.md',
       'docs/validation/audit/EE-AUDIT-Rules_Emerging.md',
       'docs/architecture/EE-DOC-007_GitHub_Governance.md',
       'packages/foundation/src/contracts/provider.ts',
+      'packages/foundation/src/contracts/knowledge.ts',
+      'packages/foundation/src/contracts/knowledge-status.ts',
       'infra/terraform/main.tf',
+      'templates/issue/bug-report.yml',
     ],
   });
 
@@ -169,14 +204,26 @@ test('repository CODEOWNERS resolves actual governance boundaries', async () => 
 
   expectOwners('apps/dashboard/src/main.ts', ['maintainers']);
   expectOwners('README.md', ['architecture']);
-  expectOwners('scripts/lib/pr-governance.evaluate.mjs', ['repository-admin', 'maintainers']);
-  expectOwners('.github/workflows/ci.yml', ['architecture', 'repository-admin']);
-  expectOwners('packages/config/src/index.ts', ['architecture', 'maintainers']);
+  expectOwners('scripts/lib/pr-governance.evaluate.mjs', ['architecture']);
+  expectOwners('scripts/commands/enforce', ['architecture']);
+  expectOwners('scripts/commands/reconcile', ['architecture']);
+  expectOwners('scripts/commands/governance', ['architecture']);
+  expectOwners('scripts/tests/pr-governance.evaluation.test.mjs', ['architecture']);
+  expectOwners('.github/workflows/ci.yml', ['architecture']);
+  expectOwners('packages/config/src/index.ts', ['architecture']);
+  expectOwners('packages/knowledge/src/index.ts', ['maintainers']);
+  expectOwners('package.json', ['architecture']);
+  expectOwners('pnpm-workspace.yaml', ['architecture']);
+  expectOwners('pnpm-lock.yaml', ['architecture']);
+  expectOwners('turbo.json', ['architecture']);
   expectOwners('docs/validation/evidence.md', ['maintainers']);
   expectOwners('docs/validation/audit/EE-AUDIT-Rules_Emerging.md', ['architecture']);
   expectOwners('docs/architecture/EE-DOC-007_GitHub_Governance.md', ['architecture']);
   expectOwners('packages/foundation/src/contracts/provider.ts', ['architecture']);
-  expectOwners('infra/terraform/main.tf', ['architecture', 'repository-admin']);
+  expectOwners('packages/foundation/src/contracts/knowledge.ts', ['architecture']);
+  expectOwners('packages/foundation/src/contracts/knowledge-status.ts', ['architecture']);
+  expectOwners('infra/terraform/main.tf', ['architecture']);
+  expectOwners('templates/issue/bug-report.yml', ['architecture']);
 
-  assert.equal(requirements.length, 10);
+  assert.equal(requirements.length, 22);
 });

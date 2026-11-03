@@ -5,15 +5,16 @@ import { readFileSync } from 'node:fs';
 import YAML from 'yaml';
 
 const WORKFLOW_URL = new URL('../../.github/workflows/ci.yml', import.meta.url);
+const CI_MAIN_WORKFLOW_URL = new URL('../../.github/workflows/ci-main.yml', import.meta.url);
 
-function loadWorkflow() {
-  const source = readFileSync(WORKFLOW_URL, 'utf8');
+function loadWorkflow(url = WORKFLOW_URL) {
+  const source = readFileSync(url, 'utf8');
   const document = YAML.parseDocument(source, { uniqueKeys: true });
 
   assert.deepEqual(
     document.errors.map((error) => error.message),
     [],
-    'CI workflow must contain valid YAML without duplicate keys',
+    'Workflow must contain valid YAML without duplicate keys',
   );
 
   return document.toJS();
@@ -36,14 +37,21 @@ function getStep(job, name) {
   return matches[0];
 }
 
-test('CI preserves pull request, main push and manual triggers', () => {
+test('CI and CI Main preserve separated pull request and main triggers', () => {
   const workflow = loadWorkflow();
+  const mainWorkflow = loadWorkflow(CI_MAIN_WORKFLOW_URL);
 
+  assert.equal(workflow.name, 'CI');
   assert.ok(Object.hasOwn(workflow.on, 'pull_request'));
   assert.deepEqual(workflow.on?.pull_request_review?.types, ['submitted', 'edited', 'dismissed']);
-  assert.deepEqual(workflow.on?.push?.branches, ['main']);
-  assert.ok(Object.hasOwn(workflow.on, 'workflow_dispatch'));
+  assert.equal(Object.hasOwn(workflow.on, 'push'), false);
+  assert.equal(Object.hasOwn(workflow.on, 'workflow_dispatch'), false);
   assert.deepEqual(workflow.permissions, { contents: 'read' });
+
+  assert.equal(mainWorkflow.name, 'CI Main');
+  assert.deepEqual(mainWorkflow.on?.push?.branches, ['main']);
+  assert.ok(Object.hasOwn(mainWorkflow.on, 'workflow_dispatch'));
+  assert.equal(mainWorkflow.jobs.validate.name, 'Validate Main');
 });
 
 test('Validate preserves its existing quality gates', () => {

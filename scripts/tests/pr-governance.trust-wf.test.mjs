@@ -5,9 +5,11 @@ import { readFileSync } from 'node:fs';
 import YAML from 'yaml';
 
 const workflowUrl = new URL('../../.github/workflows/governance.yml', import.meta.url);
+const ciWorkflowUrl = new URL('../../.github/workflows/ci.yml', import.meta.url);
+const ciMainWorkflowUrl = new URL('../../.github/workflows/ci-main.yml', import.meta.url);
 
-function readWorkflow() {
-  const document = YAML.parseDocument(readFileSync(workflowUrl, 'utf8'), {
+function readWorkflow(url = workflowUrl) {
+  const document = YAML.parseDocument(readFileSync(url, 'utf8'), {
     uniqueKeys: true,
   });
 
@@ -15,6 +17,31 @@ function readWorkflow() {
 
   return document.toJS();
 }
+
+test('CI and CI Main triggers remain isolated for PR Governance', () => {
+  const ci = readWorkflow(ciWorkflowUrl);
+  const ciMain = readWorkflow(ciMainWorkflowUrl);
+  const governance = readWorkflow();
+
+  assert.equal(ci.name, 'CI');
+  assert.ok(Object.hasOwn(ci.on, 'pull_request'));
+  assert.ok(Object.hasOwn(ci.on, 'pull_request_review'));
+  assert.equal(Object.hasOwn(ci.on, 'push'), false);
+  assert.equal(Object.hasOwn(ci.on, 'workflow_dispatch'), false);
+  assert.equal(ci.jobs.validate.name, 'Validate');
+  assert.equal(ci.on.pull_request?.branches, undefined);
+
+  assert.equal(ciMain.name, 'CI Main');
+  assert.deepEqual(ciMain.on.push.branches, ['main']);
+  assert.ok(Object.hasOwn(ciMain.on, 'workflow_dispatch'));
+  assert.equal(Object.hasOwn(ciMain.on, 'pull_request'), false);
+  assert.equal(Object.hasOwn(ciMain.on, 'pull_request_review'), false);
+  assert.equal(ciMain.jobs.validate.name, 'Validate Main');
+  assert.notEqual(ci.jobs.validate.name, ciMain.jobs.validate.name);
+
+  assert.deepEqual(governance.on.workflow_run.workflows, ['CI']);
+  assert.deepEqual(governance.on.workflow_run.types, ['completed']);
+});
 
 test('governance evaluation waits for completed CI or a PR comment signal', () => {
   const workflow = readWorkflow();

@@ -10,35 +10,34 @@
 *       @EQ-LABS-TECH/maintainers
 
 # Repository root governance & orchestration
-LICENSE                         @EQ-LABS-TECH/architecture
-NOTICE                          @EQ-LABS-TECH/architecture
-CHANGELOG.md                    @EQ-LABS-TECH/architecture
-README.md                       @EQ-LABS-TECH/architecture
-package.json                    @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-pnpm-workspace.yaml             @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-pnpm-lock.yaml                  @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-turbo.json                      @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-.nvmrc                          @EQ-LABS-TECH/architecture
-.npmrc                          @EQ-LABS-TECH/architecture
-.editorconfig                   @EQ-LABS-TECH/architecture
-.gitattributes                  @EQ-LABS-TECH/architecture
-.gitignore                      @EQ-LABS-TECH/architecture
+LICENSE                                          @EQ-LABS-TECH/architecture
+NOTICE                                           @EQ-LABS-TECH/architecture
+CHANGELOG.md                                     @EQ-LABS-TECH/architecture
+README.md                                        @EQ-LABS-TECH/architecture
+package.json                                     @EQ-LABS-TECH/architecture
+pnpm-workspace.yaml                              @EQ-LABS-TECH/architecture
+pnpm-lock.yaml                                   @EQ-LABS-TECH/architecture
+turbo.json                                       @EQ-LABS-TECH/architecture
+.nvmrc                                           @EQ-LABS-TECH/architecture
+.npmrc                                           @EQ-LABS-TECH/architecture
+.editorconfig                                    @EQ-LABS-TECH/architecture
+.gitattributes                                   @EQ-LABS-TECH/architecture
+.gitignore                                       @EQ-LABS-TECH/architecture
 
 # GitHub Governance (high impact)
-.github/                        @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin
+.github/                                         @EQ-LABS-TECH/architecture
 
 # Ecosystem packages & applications (general first)
-packages/                       @EQ-LABS-TECH/maintainers
-apps/                           @EQ-LABS-TECH/maintainers
-connectors/                     @EQ-LABS-TECH/maintainers
+packages/                                        @EQ-LABS-TECH/maintainers
+apps/                                            @EQ-LABS-TECH/maintainers
+connectors/                                      @EQ-LABS-TECH/maintainers
 
 # Shared config (SSOT) — after packages/ so it wins
-packages/config/                @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+packages/config/                                 @EQ-LABS-TECH/architecture
 
 # Knowledge Layer (EE-DOC-014 / KS-06) — after packages/
-packages/knowledge/             @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-packages/foundation/src/contracts/knowledge.ts  @EQ-LABS-TECH/architecture
-packages/foundation/src/contracts/knowledge*.ts @EQ-LABS-TECH/architecture
+packages/knowledge/                              @EQ-LABS-TECH/maintainers
+packages/foundation/src/contracts/knowledge*.ts  @EQ-LABS-TECH/architecture
 
 # AI Provider SPI contracts (EE-DOC-013 §11 #12)
 packages/foundation/src/contracts/provider.ts    @EQ-LABS-TECH/architecture
@@ -47,25 +46,32 @@ packages/foundation/src/contracts/generation.ts  @EQ-LABS-TECH/architecture
 packages/foundation/src/contracts/error.ts       @EQ-LABS-TECH/architecture
 
 # Automation scripts
-scripts/                        @EQ-LABS-TECH/repository-admin @EQ-LABS-TECH/maintainers
+scripts/                                         @EQ-LABS-TECH/maintainers
+
+# Security and governance policy implementation — after scripts/ so it wins
+scripts/lib/pr-governance.*                      @EQ-LABS-TECH/architecture
+scripts/commands/enforce                         @EQ-LABS-TECH/architecture
+scripts/commands/reconcile                       @EQ-LABS-TECH/architecture
+scripts/commands/governance                      @EQ-LABS-TECH/architecture
+scripts/tests/pr-governance.*                    @EQ-LABS-TECH/architecture
 
 # Documentation: Maintainers own routine material; Architecture owns normative domains.
-docs/                           @EQ-LABS-TECH/maintainers
-docs/architecture/              @EQ-LABS-TECH/architecture
-docs/adr/                       @EQ-LABS-TECH/architecture
-docs/rfc/                       @EQ-LABS-TECH/architecture
-docs/developer/                 @EQ-LABS-TECH/maintainers
-docs/validation/                @EQ-LABS-TECH/maintainers
+docs/                                            @EQ-LABS-TECH/maintainers
+docs/architecture/                               @EQ-LABS-TECH/architecture
+docs/adr/                                        @EQ-LABS-TECH/architecture
+docs/rfc/                                        @EQ-LABS-TECH/architecture
+docs/developer/                                  @EQ-LABS-TECH/maintainers
+docs/validation/                                 @EQ-LABS-TECH/maintainers
 docs/validation/audit/EE-AUDIT-* @EQ-LABS-TECH/architecture
 
 # Support / extensibility
-assets/                         @EQ-LABS-TECH/maintainers
-data/                           @EQ-LABS-TECH/maintainers
-examples/                       @EQ-LABS-TECH/maintainers
-marketplace/                    @EQ-LABS-TECH/maintainers
+assets/                                          @EQ-LABS-TECH/maintainers
+data/                                            @EQ-LABS-TECH/maintainers
+examples/                                        @EQ-LABS-TECH/maintainers
+marketplace/                                     @EQ-LABS-TECH/maintainers
 
 # Platform infrastructure (EE-DOC-009)
-infra/                          @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin
+infra/                                           @EQ-LABS-TECH/architecture
 
 # Platform templates (EE-DOC-012)
-templates/                      @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+templates/                                       @EQ-LABS-TECH/architecture
