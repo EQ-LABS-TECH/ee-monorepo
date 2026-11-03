@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { basename, extname } from 'node:path';
 
 const ROOT = process.cwd();
@@ -193,7 +194,16 @@ export function getChangedRepositoryPaths() {
 }
 
 export function getCurrentBranchName() {
-  return process.env.GITHUB_HEAD_REF || git(['branch', '--show-current']);
+  if (process.env.GITHUB_HEAD_REF) return process.env.GITHUB_HEAD_REF;
+
+  if (process.env.GITHUB_EVENT_NAME === 'pull_request_review') {
+    if (!process.env.GITHUB_EVENT_PATH) return '';
+
+    const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+    return event.pull_request?.head?.ref ?? '';
+  }
+
+  return git(['branch', '--show-current']);
 }
 
 export function getPullRequestCommitMessages() {

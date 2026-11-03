@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import {
+  getCurrentBranchName,
   validateBranchName,
   validateCommitMessages,
   validateRepositoryFileNames,
@@ -64,4 +68,48 @@ test('accepts standard branch prefixes with kebab-case descriptions', () => {
 test('validates Conventional Commit headers', () => {
   assert.deepEqual(validateCommitMessages(['feat(auth): add login', 'fix: correct retry']), []);
   assert.equal(validateCommitMessages(['update dependencies'])[0].code, 'commit-message-invalid');
+});
+
+test('resolves the PR source branch during pull_request_review', (t) => {
+  const directory = mkdtempSync(join(tmpdir(), 'ee-pr-review-'));
+  const eventPath = join(directory, 'event.json');
+
+  const keys = ['GITHUB_HEAD_REF', 'GITHUB_EVENT_NAME', 'GITHUB_EVENT_PATH'];
+  const previous = keys.map((key) => [key, process.env[key]]);
+
+  t.after(() => {
+    for (const [key, value] of previous) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+
+    rmSync(directory, { recursive: true, force: true });
+  });
+
+  delete process.env.GITHUB_HEAD_REF;
+  process.env.GITHUB_EVENT_NAME = 'pull_request_review';
+  process.env.GITHUB_EVENT_PATH = eventPath;
+
+  writeFileSync(
+    eventPath,
+    JSON.stringify({
+      pull_request: {
+        head: { ref: 'feat/ee-repository-standards' },
+      },
+    }),
+  );
+
+  assert.equal(getCurrentBranchName(), 'feat/ee-repository-standards');
+  assert.equal(validateBranchName(getCurrentBranchName()), null);
+
+  writeFileSync(
+    eventPath,
+    JSON.stringify({
+      pull_request: {
+        head: { ref: 'feat/Invalid-Branch' },
+      },
+    }),
+  );
+
+  assert.equal(validateBranchName(getCurrentBranchName())?.code, 'branch-name-invalid');
 });
