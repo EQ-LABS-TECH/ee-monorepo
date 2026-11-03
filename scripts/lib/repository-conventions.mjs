@@ -128,9 +128,12 @@ function isExistingTestInBase(path) {
   }
 }
 
-export function validateRepositoryFileNames(paths) {
+export function validateRepositoryFileNames(paths, { isExistingTest = isExistingTestInBase } = {}) {
   if (!Array.isArray(paths) || paths.some((path) => typeof path !== 'string')) {
     throw new TypeError('File paths must be an array of strings');
+  }
+  if (typeof isExistingTest !== 'function') {
+    throw new TypeError('The existing test checker must be a function');
   }
   const violations = [];
   for (const rawPath of paths) {
@@ -158,7 +161,7 @@ export function validateRepositoryFileNames(paths) {
     const stem = basename(file, ext);
     if (isLegacyTestName(file) && !isExplicitTestName(file)) {
       // Existing names remain accepted during gradual adoption; new tests must use a type prefix.
-      if (!isExistingTestInBase(path)) violations.push({ path, code: 'test-type-prefix-required' });
+      if (!isExistingTest(path)) violations.push({ path, code: 'test-type-prefix-required' });
       continue;
     }
     const tokens = stem.split('.');

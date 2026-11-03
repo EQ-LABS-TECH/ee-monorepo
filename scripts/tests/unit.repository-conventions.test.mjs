@@ -82,12 +82,45 @@ test('accepts normative type prefixes for new test files', () => {
 });
 
 test('keeps existing suffix-style test names valid during gradual adoption', () => {
+  const legacyPaths = [
+    'scripts/tests/repository-conventions.unit.test.mjs',
+    'scripts/tests/security-audit.test.mjs',
+  ];
+  const inspectedPaths = [];
   assert.deepEqual(
-    validateRepositoryFileNames([
-      'scripts/tests/repository-conventions.unit.test.mjs',
-      'scripts/tests/security-audit.test.mjs',
-    ]),
+    validateRepositoryFileNames(legacyPaths, {
+      isExistingTest: (path) => {
+        inspectedPaths.push(path);
+        return true;
+      },
+    }),
     [],
+  );
+  assert.deepEqual(inspectedPaths, legacyPaths);
+});
+
+test('rejects removed legacy files as new when no longer present in base', () => {
+  const legacyPath = 'scripts/tests/repository-conventions.unit.test.mjs';
+  assert.deepEqual(validateRepositoryFileNames([legacyPath], { isExistingTest: () => false }), [
+    { path: legacyPath, code: 'test-type-prefix-required' },
+  ]);
+});
+
+test('does not consult base for correctly prefixed test files', () => {
+  assert.deepEqual(
+    validateRepositoryFileNames(['scripts/tests/unit.repository-conventions.test.mjs'], {
+      isExistingTest: () => {
+        throw new Error('Base lookup must not be required for normative names');
+      },
+    }),
+    [],
+  );
+});
+
+test('requires an existing test checker function', () => {
+  assert.throws(
+    () => validateRepositoryFileNames([], { isExistingTest: true }),
+    /The existing test checker must be a function/,
   );
 });
 
