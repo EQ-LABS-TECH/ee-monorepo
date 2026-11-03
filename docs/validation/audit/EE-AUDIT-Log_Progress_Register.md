@@ -57,6 +57,15 @@ Registro de progreso de la auditoría documental del Engineering Ecosystem.
 
 ---
 
+## Auditorías técnicas y artefactos
+
+Registro de auditorías sobre código, skills u otros artefactos del repositorio. No sustituye el Log documental C1–C8 ni copia el contenido de los informes; cada entrada enlaza al informe detallado y a los hallazgos registrados en Rules cuando corresponda.
+
+| Alcance | Base (commit) | Informe | Estado | Hallazgos / reglas | Fecha | Notas |
+| ------- | ------------- | ------- | ------ | ------------------ | ----- | ----- |
+
+---
+
 ## Cierre del ciclo fundacional (EE-DOC-001 · 002 · 003)
 
 | Ítem                                | Resultado                                                                             |

@@ -15,7 +15,7 @@ Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (
 | **Clasificación**     | Fundacional                            |
 | **Nivel**             | Estratégico                            |
 | **Normativo**         | Sí                                     |
-| **Versión**           | v1.13.0                                |
+| **Versión**           | v1.14.0                                |
 | **Estado**            | Congelado                              |
 | **Propietario**       | Equipo de Arquitectura                 |
 | **Documento padre**   | EE-DOC-001                             |
@@ -23,7 +23,7 @@ Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (
 | **Aprobado por**      | Equipo de Arquitectura                 |
 | **Audiencia**         | Arquitectura, Desarrollo, IA           |
 | **Fecha de creación** | 2026-08-02                             |
-| **Última revisión**   | 2026-11-02                             |
+| **Última revisión**   | 2026-11-03                             |
 | **Próxima revisión**  | No aplica — Documento Congelado        |
 
 ---
@@ -393,26 +393,26 @@ El ciclo de **implementación por fases**, validación y documentación técnica
 
 ## 16. Convenciones de Nomenclatura
 
-| Elemento                             | Formato                                                                                                  | Ejemplo                                                                       |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| **IDs**                              | `EE-DOC-XXX` / `EE-ADR-XXX` / `EE-IMP-XXX-PXX` / `EE-TEC-XXX` / `EE-RFC-XXX` / `EE-VAL-*` / `EE-WAIVE-*` | `EE-DOC-001`, `EE-IMP-006-P01`, `EE-VAL-…`, `EE-WAIVE-…`                      |
-| **Documentos** (título)              | Title Case                                                                                               | `Engineering Ecosystem Constitution`                                          |
-| **Código Corto**                     | Sin el prefijo `EE`                                                                                      | `DOC-001`, `ADR-001`, `IMP-006-P01`, `TEC-001`, `RFC-001`, `VAL-…`, `WAIVE-…` |
-| **Archivos de documentos EE-\***     | `{ID}_{Nombre}.md` (general); VAL/WAIVE: `{ID}_{Nombre}_{fecha}.md`                                      | `EE-DOC-001_Master_Documentation_Index.md`                                    |
-| **Archivos de pruebas**              | `<módulo>[.<responsabilidad>].<tipo>.test.<extensión>` / `.spec.<extensión>`                             | `pr-governance.approvals.unit.test.mjs`                                       |
-| **Archivos y directorios de código** | `kebab-case`, salvo restricciones obligatorias de lenguaje, framework o herramienta                      | `knowledge-engine.ts`, `artifact-generator/`                                  |
-| **Componentes y clases**             | `PascalCase`, conforme al lenguaje y framework                                                           | `DashboardPanel`, `KnowledgeEngine`                                           |
-| **Módulos y scripts**                | Archivos en `kebab-case`; funciones y variables siguen la convención del lenguaje                        | `pr-governance-evaluate.mjs`, `evaluateGovernance`                            |
-| **Roles**                            | Title Case                                                                                               | `Arquitecto`                                                                  |
-| **Herramientas**                     | Capitalizado                                                                                             | `VSCode`, `Windsurf`                                                          |
-| **Paquetes npm**                     | `@eq-labs/<categoría>-<nombre>`                                                                          | `@eq-labs/foundation-kernel`                                                  |
-| **Repositorios**                     | kebab-case                                                                                               | `ee-monorepo`                                                                 |
-| **Carpetas**                         | kebab-case                                                                                               | `packages/foundation/`                                                        |
-| **Variables**                        | camelCase                                                                                                | `knowledgeEngine`                                                             |
-| **Tipos**                            | PascalCase                                                                                               | `KnowledgeEngine`                                                             |
-| **Interfaces**                       | PascalCase                                                                                               | `IKnowledgeEngine`                                                            |
-| **Enums**                            | PascalCase                                                                                               | `KnowledgeStatus`                                                             |
-| **Constantes**                       | UPPER_SNAKE_CASE                                                                                         | `MAX_RETRY_COUNT`                                                             |
+| Elemento                             | Formato                                                                                                         | Ejemplo                                                                       |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **IDs**                              | `EE-DOC-XXX` / `EE-ADR-XXX` / `EE-IMP-XXX-PXX` / `EE-TEC-XXX` / `EE-RFC-XXX` / `EE-VAL-*` / `EE-WAIVE-*`        | `EE-DOC-001`, `EE-IMP-006-P01`, `EE-VAL-…`, `EE-WAIVE-…`                      |
+| **Documentos** (título)              | Title Case                                                                                                      | `Engineering Ecosystem Constitution`                                          |
+| **Código Corto**                     | Sin el prefijo `EE`                                                                                             | `DOC-001`, `ADR-001`, `IMP-006-P01`, `TEC-001`, `RFC-001`, `VAL-…`, `WAIVE-…` |
+| **Archivos de documentos EE-\***     | `{ID}_{Nombre}.md` (general); VAL/WAIVE: `{ID}_{Nombre}_{fecha}.md`                                             | `EE-DOC-001_Master_Documentation_Index.md`                                    |
+| **Archivos de pruebas**              | `<tipo>.<módulo>[.<responsabilidad>].test.<extensión>` / `<tipo>.<módulo>[.<responsabilidad>].spec.<extensión>` | `unit.pr-governance.approvals.test.mjs`                                       |
+| **Archivos y directorios de código** | `kebab-case`, salvo restricciones obligatorias de lenguaje, framework o herramienta                             | `knowledge-engine.ts`, `artifact-generator/`                                  |
+| **Componentes y clases**             | `PascalCase`, conforme al lenguaje y framework                                                                  | `DashboardPanel`, `KnowledgeEngine`                                           |
+| **Módulos y scripts**                | Archivos en `kebab-case`; funciones y variables siguen la convención del lenguaje                               | `pr-governance-evaluate.mjs`, `evaluateGovernance`                            |
+| **Roles**                            | Title Case                                                                                                      | `Arquitecto`                                                                  |
+| **Herramientas**                     | Capitalizado                                                                                                    | `VSCode`, `Windsurf`                                                          |
+| **Paquetes npm**                     | `@eq-labs/<categoría>-<nombre>`                                                                                 | `@eq-labs/foundation-kernel`                                                  |
+| **Repositorios**                     | kebab-case                                                                                                      | `ee-monorepo`                                                                 |
+| **Carpetas**                         | kebab-case                                                                                                      | `packages/foundation/`                                                        |
+| **Variables**                        | camelCase                                                                                                       | `knowledgeEngine`                                                             |
+| **Tipos**                            | PascalCase                                                                                                      | `KnowledgeEngine`                                                             |
+| **Interfaces**                       | PascalCase                                                                                                      | `IKnowledgeEngine`                                                            |
+| **Enums**                            | PascalCase                                                                                                      | `KnowledgeStatus`                                                             |
+| **Constantes**                       | UPPER_SNAKE_CASE                                                                                                | `MAX_RETRY_COUNT`                                                             |
 
 El ESLint compartido verifica nombres de clases, componentes, tipos, funciones, parámetros, campos de clases/interfaces y constantes literales de módulo. Las variables usan `camelCase`; los componentes que contienen JSX y las expresiones de clase usan `PascalCase`. Los nombres locales de fixtures en archivos de pruebas admiten `camelCase`.
 
@@ -423,9 +423,11 @@ El ESLint compartido verifica nombres de clases, componentes, tipos, funciones, 
 > Ante conflicto de árbol físico, **EE-DOC-006** manda sobre paths.
 
 > **Regla complementaria:**\
-> Todo archivo de pruebas deberá comenzar con un identificador breve y estable del módulo evaluado. La responsabilidad específica será opcional y no deberá repetir conceptos ya presentes en el identificador del módulo. Los nombres utilizarán inglés y segmentos en `kebab-case`. La extensión y el sufijo deberán corresponder al framework y al tipo de prueba aplicables.
+> Todo archivo de pruebas deberá comenzar con el identificador de tipo (`unit`, `int`, `component` o `e2e`), seguido por un identificador breve y estable del módulo evaluado. La responsabilidad específica será opcional y no deberá repetir conceptos ya presentes en el identificador del módulo. Los nombres utilizarán inglés y segmentos en `kebab-case`. La extensión y el sufijo deberán corresponder al framework y al tipo de prueba aplicables.
 
-> **Adopción de sufijos de prueba:** las pruebas nuevas deberán declarar el tipo cuando sea identificable: `.unit.test`, `.int.test`, `.component.test` o `.e2e.spec`. Los nombres históricos genéricos `.test` / `.spec` se migran gradualmente; no se requiere renombrar pruebas sin cambio funcional únicamente por esta convención. La SSOT de las reglas de base de datos y APIs es EE-DOC-004 §12.3–§12.4.
+> **Prefijos de tipo de prueba:** los archivos nuevos comienzan con `unit.`, `int.`, `component.` o `e2e.`, seguidos por el módulo y, cuando corresponda, su responsabilidad. Unit, Integration y Component usan `.test`; E2E usa `.spec`. Los nombres históricos se migran gradualmente al trabajar en su componente; no se exige un renombrado masivo únicamente por esta convención. La SSOT de las reglas de base de datos y APIs es EE-DOC-004 §12.3–§12.4.
+
+> **Excepción de herramienta:** el archivo de entrada de una skill de Codex conserva el nombre `SKILL.md` únicamente en `marketplace/skills/<skill>/`, conforme al formato requerido por la herramienta.
 
 ### 16.1. Política de Idioma por Tipo de Artefacto (Normativo)
 
@@ -1631,6 +1633,7 @@ Todo documento nuevo deberá cumplir este estándar.
 | **v1.11.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — §18 meta + AR-017/022                            | Meta §18.1–18.6; nota §05 RFC=18.5; plantilla→corpus; pre-main                                                                                                            | **Congelado** |
 | v1.12.0     | 2026-10-23 | Equipo de Arquitectura | Equipo de Arquitectura | Ampliación de aplicabilidad VAL/WAIVE                     | Incorpora la resolución del waiver, exige evidencia de cierre, distingue el estado documental de la resolución y renumera las secciones posteriores.                      | **Congelado** |
 | **v1.13.0** | 2026-11-02 | Equipo de Arquitectura | Equipo de Arquitectura | Nomenclatura, pruebas y documentos congelados             | §05 limita metadatos; §11 define campos de filas nuevas; §16 precisa kebab-case, excepciones y sufijos; ESLint valida nombres; DOC-004 rige DB/API.                       | **Congelado** |
+| **v1.14.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas                   | §16 establece prefijos de tipo para archivos nuevos, adopción gradual de nombres históricos y la excepción del entrypoint `SKILL.md` exigido por Codex.                   | **Congelado** |
 
 ---
 

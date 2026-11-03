@@ -21,6 +21,23 @@ test('accepts kebab-case artifacts and the governed EE document filename excepti
   );
 });
 
+test('accepts the Codex skill entrypoint only at skill roots', () => {
+  assert.deepEqual(
+    validateRepositoryFileNames([
+      'marketplace/skills/ee-example-skill/SKILL.md',
+      'marketplace/skills/ee-example-skill/references/SKILL.md',
+      'marketplace/SKILL.md',
+    ]),
+    [
+      {
+        path: 'marketplace/skills/ee-example-skill/references/SKILL.md',
+        code: 'file-not-kebab-case',
+      },
+      { path: 'marketplace/SKILL.md', code: 'file-not-kebab-case' },
+    ],
+  );
+});
+
 test('rejects non-kebab-case new artifacts and directories', () => {
   const violations = validateRepositoryFileNames(['scripts/lib/MyModule.mjs', 'BadDir/file.mjs']);
   assert.deepEqual(
@@ -29,7 +46,7 @@ test('rejects non-kebab-case new artifacts and directories', () => {
   );
 });
 
-test('requires an explicit type suffix for new test files in any directory', () => {
+test('requires a type prefix for new test files in any directory', () => {
   const violations = validateRepositoryFileNames([
     'packages/new-package/src/engine.test.ts',
     'packages/new-package/src/engine.unit.test.ts',
@@ -38,22 +55,37 @@ test('requires an explicit type suffix for new test files in any directory', () 
     'packages/new-package/src/engine.e2e.spec.ts',
   ]);
   assert.deepEqual(violations, [
-    { path: 'packages/new-package/src/engine.test.ts', code: 'test-type-suffix-required' },
+    { path: 'packages/new-package/src/engine.test.ts', code: 'test-type-prefix-required' },
+    {
+      path: 'packages/new-package/src/engine.unit.test.ts',
+      code: 'test-type-prefix-required',
+    },
     {
       path: 'packages/new-package/src/engine.integration.test.ts',
-      code: 'test-type-suffix-required',
+      code: 'test-type-prefix-required',
     },
-    { path: 'packages/new-package/src/engine.unit.spec.ts', code: 'test-type-suffix-required' },
+    { path: 'packages/new-package/src/engine.unit.spec.ts', code: 'test-type-prefix-required' },
+    { path: 'packages/new-package/src/engine.e2e.spec.ts', code: 'test-type-prefix-required' },
   ]);
 });
 
-test('accepts only the normative test type suffixes for new files', () => {
+test('accepts normative type prefixes for new test files', () => {
   assert.deepEqual(
     validateRepositoryFileNames([
-      'packages/new-package/src/engine.unit.test.ts',
-      'packages/new-package/src/engine.int.test.ts',
-      'packages/new-package/src/engine.component.test.ts',
-      'apps/dashboard/tests/e2e/dashboard.e2e.spec.ts',
+      'packages/new-package/src/unit.engine.test.ts',
+      'packages/new-package/src/int.engine.test.ts',
+      'packages/new-package/src/component.engine.test.ts',
+      'apps/dashboard/tests/e2e/e2e.dashboard.spec.ts',
+    ]),
+    [],
+  );
+});
+
+test('keeps existing suffix-style test names valid during gradual adoption', () => {
+  assert.deepEqual(
+    validateRepositoryFileNames([
+      'scripts/tests/repository-conventions.unit.test.mjs',
+      'scripts/tests/security-audit.test.mjs',
     ]),
     [],
   );

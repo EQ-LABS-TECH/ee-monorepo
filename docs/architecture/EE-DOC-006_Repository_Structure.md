@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**. E
 | **Clasificación**     | Implementable                                                                          |
 | **Nivel**             | Táctico                                                                                |
 | **Normativo**         | Sí                                                                                     |
-| **Versión**           | v1.10.0                                                                                |
+| **Versión**           | v1.11.0                                                                                |
 | **Estado**            | Congelado                                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                                 |
 | **Documento padre**   | EE-DOC-005                                                                             |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**. E
 | **Aprobado por**      | Equipo de Arquitectura                                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps                                                       |
 | **Fecha de creación** | 2026-08-03                                                                             |
-| **Última revisión**   | 2026-11-02                                                                             |
+| **Última revisión**   | 2026-11-03                                                                             |
 | **Próxima revisión**  | No aplica — Documento Congelado                                                        |
 
 ---
@@ -190,6 +190,7 @@ ee-monorepo/                   # Raíz del monorepo Engineering Ecosystem
 │   ├── rfc/                   # Solicitudes de cambio transversal (EE-RFC-*)
 │   └── validation/            # Evidencia de validación y waivers
 │       ├── audit/             # Registro y criterios de auditoría (EE-AUDIT-*)
+│       │   └── reports/       # Informes detallados de cada ejecución de auditoría
 │       ├── evidence/          # Evidencias de validación de ecosistema
 │       ├── reports/           # Informes de validación
 │       └── waivers/           # EE-WAIVE-* (QG-SEC y residuales)
@@ -260,7 +261,7 @@ ee-monorepo/                   # Raíz del monorepo Engineering Ecosystem
 │   │   └── security-audit.mjs # Audit + cruce con EE-WAIVE (QG-SEC-001)
 │   ├── tests/                 # Pruebas de la automatización root
 │   │   ├── architecture-dependencies.unit.test.mjs # Validador de dependencias, ciclos e imports workspace
-│   │   ├── repository-conventions.unit.test.mjs # Naming, branches y commits
+│   │   ├── unit.repository-conventions.test.mjs # Naming, branches y commits
 │   │   └── security-audit.test.mjs # Tests de lógica de waivers / audit
 │   ├── plopfile.mjs           # Definición de generadores Plop
 │   └── README.md              # Documentación de scripts root
@@ -375,8 +376,8 @@ La **política de idioma por tipo de artefacto** se define normativamente en **E
 | **Interfaces**                          | `PascalCase`                                                                                  | Inglés (`en-US`)     | `WorkflowRouter`, `KnowledgeEngine`                   |
 | **Variables, Funciones y Métodos**      | `camelCase`                                                                                   | Inglés (`en-US`)     | `validateArtifact()`, `getKnowledgeById()`            |
 | **Constantes y Enums**                  | `UPPER_SNAKE_CASE` / `PascalCase`                                                             | Inglés (`en-US`)     | `MAX_RETRY_COUNT`, `KnowledgeStatus`                  |
-| **Pruebas Unitarias e Integración**     | Según EE-DOC-002 §16; sufijo explícito por tipo cuando aplique                                | Inglés (`en-US`)     | `pr-governance.approvals.unit.test.mjs`               |
-| **Pruebas End-to-End (E2E)**            | `.e2e.spec.ts`                                                                                | Inglés (`en-US`)     | `knowledge-flow.e2e.spec.ts`                          |
+| **Pruebas Unitarias e Integración**     | Según EE-DOC-002 §16; prefijo explícito por tipo                                              | Inglés (`en-US`)     | `unit.pr-governance.approvals.test.mjs`               |
+| **Pruebas End-to-End (E2E)**            | Prefijo `e2e.` conforme a EE-DOC-002 §16                                                      | Inglés (`en-US`)     | `e2e.knowledge-flow.spec.ts`                          |
 | **Ramas Git**                           | Prefijo del catálogo EE-DOC-005 §06 + descripción `kebab-case`                                | Inglés (`en-US`)     | `feat/add-ai-router`, `fix/governance-parser`         |
 | **Documentos de Gobernanza (`EE-DOC`)** | Prefijo + Código + Nombre                                                                     | Contenido en Español | `EE-DOC-001_Master_Documentation_Index.md`            |
 | **Planes de Implementación (`EE-IMP`)** | Prefijo + Código + Nombre                                                                     | Contenido en Español | `EE-IMP-006-P01_Repository_Bootstrap.md`              |
@@ -924,6 +925,8 @@ Cada unidad de implementación física del monorepo es responsable de materializ
 | **v1.8.1**  | 2026-10-16 | Equipo de Arquitectura  | Equipo de Arquitectura | Tipo B as-built monorepo                         | §05/§12/§13 Apps-Shared; tops assets/examples/marketplace                                                                                                                               |     **Congelado**     |
 | **v1.9.0**  | 2026-10-19 | Equipo de Arquitectura  | Equipo de Arquitectura | **Minor:** ADR-006 aplicado                      | §13.2: eliminadas aristas `Intelligence→Execution` y `Knowledge→Intelligence` (EE-ADR-006); notas de resolución; §07.1 convenciones as-built; §18 referencias actualizadas              |     **Congelado**     |
 | **v1.10.0** | 2026-11-02 | Equipo de Arquitectura  | Equipo de Arquitectura | Nombres, hooks y límites de QG-ARCH-001          | Actualiza sufijos de tests, registra `.githooks`, documenta validación de símbolos y amplía QG-ARCH-001 a imports entre workspaces bajo `src/`, manifests y ciclos.                     |     **Congelado**     |
+| **v1.10.1** | 2026-11-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas          | Alinea §07.1 con EE-DOC-002 y registra el nombre actualizado de la prueba de repository conventions.                                                                                    |     **Congelado**     |
+| **v1.11.0** | 2026-11-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Reportes individuales de auditoría               | Añade `docs/validation/audit/reports/` para conservar reportes detallados por ejecución, separados de los tres registros canónicos.                                                     |     **Congelado**     |
 
 > **Validación incremental:** la Validación Final histórica (§20.1, v1.3.0) permanece como registro de cierre de fase. Las evoluciones v1.4.0 en adelante (esta edición) se consideran **validadas de forma incremental** en auditoría documental + contraste as-built (`scripts/commands`, e2e root, matriz §13, nota PN-008). El gate V-E2E de ecosistema y gates de 010/015 pueden permanecer PENDING sin invalidar el congelamiento estructural de 006. Evidencia operativa recomendada: `pnpm validate` en `main` + SHA.
 

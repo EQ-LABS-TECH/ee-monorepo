@@ -98,14 +98,18 @@ function isEeDocument(file) {
   return /^EE-(?:DOC|ADR|RFC|IMP|TEC|VAL|WAIVE|AUDIT)-.+\.md$/.test(file);
 }
 
+function isCodexSkillEntrypoint(path) {
+  return /^marketplace\/skills\/[a-z0-9]+(?:-[a-z0-9]+)*\/SKILL\.md$/.test(path);
+}
+
 function isLegacyTestName(file) {
   return /\.(?:test|spec)\.[cm]?[jt]sx?$/.test(file);
 }
 
 function isExplicitTestName(file) {
   return (
-    /\.(?:unit|int|component)\.test\.[cm]?[jt]sx?$/.test(file) ||
-    /\.e2e\.spec\.[cm]?[jt]sx?$/.test(file)
+    /^(?:unit|int|component)\..+\.test\.[cm]?[jt]sx?$/.test(basename(file)) ||
+    /^e2e\..+\.spec\.[cm]?[jt]sx?$/.test(basename(file))
   );
 }
 
@@ -137,7 +141,8 @@ export function validateRepositoryFileNames(paths) {
       violations.push({ path, code: 'directory-not-kebab-case' });
       continue;
     }
-    if (ROOT_FILE_EXCEPTIONS.has(file) || isEeDocument(file)) continue;
+    if (ROOT_FILE_EXCEPTIONS.has(file) || isEeDocument(file) || isCodexSkillEntrypoint(path))
+      continue;
     if (file.startsWith('.')) {
       if (
         file
@@ -152,8 +157,8 @@ export function validateRepositoryFileNames(paths) {
     const ext = extname(file);
     const stem = basename(file, ext);
     if (isLegacyTestName(file) && !isExplicitTestName(file)) {
-      // Existing tests remain accepted during gradual adoption; new tests must be explicit.
-      if (!isExistingTestInBase(path)) violations.push({ path, code: 'test-type-suffix-required' });
+      // Existing names remain accepted during gradual adoption; new tests must use a type prefix.
+      if (!isExistingTestInBase(path)) violations.push({ path, code: 'test-type-prefix-required' });
       continue;
     }
     const tokens = stem.split('.');

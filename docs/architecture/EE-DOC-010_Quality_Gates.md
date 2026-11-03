@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Especializado                                                                                                                                  |
 | **Nivel**             | Especializado                                                                                                                                  |
 | **Normativo**         | Sí                                                                                                                                             |
-| **Versión**           | v1.7.0                                                                                                                                         |
+| **Versión**           | v1.8.0                                                                                                                                         |
 | **Estado**            | Congelado                                                                                                                                      |
 | **Propietario**       | Equipo de Arquitectura                                                                                                                         |
 | **Documento padre**   | EE-DOC-006 — Repository Structure                                                                                                              |
@@ -263,19 +263,19 @@ PENDING y DEPRECATED **no** entran en la agregación de bloqueo del merge (no ha
 
 ### 05.2. Mapeo baseline y required check
 
-| Gate          | Materialización actual                                | Notas                                                                   |
-| :------------ | :---------------------------------------------------- | :---------------------------------------------------------------------- |
-| QG-TYPE-001   | `pnpm run typecheck`                                  | ACTIVE                                                                  |
-| QG-LINT-001   | `pnpm run lint`                                       | ACTIVE                                                                  |
-| QG-FMT-001    | Prettier **`--check`** dentro de `pnpm run validate`  | ACTIVE; `pnpm run format` = **write**, no es el gate                    |
-| QG-SEC-001    | `pnpm audit` vía validate                             | ACTIVE; umbral §05.8                                                    |
-| QG-REPO-001   | checks de estructura en validate/doctor               | ACTIVE                                                                  |
-| QG-TEST-001   | `pnpm run test` + CI; 0 tasks → SKIPPED               | **ACTIVE**                                                              |
-| QG-BUILD-001  | `pnpm run build` en validate + CI step Build          | **ACTIVE**                                                              |
-| QG-NAM-001    | ESLint compartido + `scripts/commands/validate-names` | ACTIVE; valida símbolos, rutas cambiadas, excepciones y sufijos de test |
-| QG-BRANCH-001 | `scripts/commands/validate-branch` en `validate`      | ACTIVE; valida rama del Pull Request                                    |
-| QG-COMMIT-001 | `scripts/commands/validate-commit` en `validate`      | ACTIVE; valida commits de trabajo del Pull Request                      |
-| QG-ARCH-001   | Top-level y `validate-architecture` en `validate`     | ACTIVE; matriz de manifests, ciclos e imports workspace en `src/`       |
+| Gate          | Materialización actual                                | Notas                                                                                                                          |
+| :------------ | :---------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| QG-TYPE-001   | `pnpm run typecheck`                                  | ACTIVE                                                                                                                         |
+| QG-LINT-001   | `pnpm run lint`                                       | ACTIVE                                                                                                                         |
+| QG-FMT-001    | Prettier **`--check`** dentro de `pnpm run validate`  | ACTIVE; `pnpm run format` = **write**, no es el gate                                                                           |
+| QG-SEC-001    | `pnpm audit` vía validate                             | ACTIVE; umbral §05.8                                                                                                           |
+| QG-REPO-001   | checks de estructura en validate/doctor               | ACTIVE                                                                                                                         |
+| QG-TEST-001   | `pnpm run test` + CI; 0 tasks → SKIPPED               | **ACTIVE**                                                                                                                     |
+| QG-BUILD-001  | `pnpm run build` en validate + CI step Build          | **ACTIVE**                                                                                                                     |
+| QG-NAM-001    | ESLint compartido + `scripts/commands/validate-names` | ACTIVE; valida símbolos, rutas cambiadas, excepciones y prefijos de tipo de test; conserva gradualmente los nombres existentes |
+| QG-BRANCH-001 | `scripts/commands/validate-branch` en `validate`      | ACTIVE; valida rama del Pull Request                                                                                           |
+| QG-COMMIT-001 | `scripts/commands/validate-commit` en `validate`      | ACTIVE; valida commits de trabajo del Pull Request                                                                             |
+| QG-ARCH-001   | Top-level y `validate-architecture` en `validate`     | ACTIVE; matriz de manifests, ciclos e imports workspace en `src/`                                                              |
 
 **Required status check (EE-DOC-007):** nombre de plataforma **`Validate`**.
 
@@ -387,7 +387,7 @@ Los tres gates son bloqueantes y están integrados en `validate`. En Pull Reques
 
 | Gate              | Criterio de conformidad                                                                                                                                                                                                                                                                                                                                      | Alcance propuesto                                                         |
 | :---------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
-| **QG-NAM-001**    | Rutas nuevas/modificadas cumplen `kebab-case`; clases, tipos y componentes usan `PascalCase`; símbolos restantes siguen las reglas ESLint compartidas. Tests nuevos declaran tipo.                                                                                                                                                                           | Rutas afectadas y código lintado; fixtures de tests admiten `camelCase`.  |
+| **QG-NAM-001**    | Rutas nuevas/modificadas cumplen `kebab-case`; clases, tipos y componentes usan `PascalCase`; símbolos restantes siguen las reglas ESLint compartidas. Tests nuevos comienzan con prefijo de tipo conforme a EE-DOC-002 §16; los nombres existentes se migran gradualmente.                                                                                  | Rutas afectadas y código lintado; fixtures de tests admiten `camelCase`.  |
 | **QG-BRANCH-001** | Rama con prefijo registrado en EE-DOC-005 §06.2 y descripción kebab-case; `release/vX.Y.Z` se valida como versión. La excepción Dependabot se limita a grupos de `.github/dependabot.yml` y exige autor `dependabot[bot]`, rama coincidente con el payload y repositorios `head`/`base` iguales a `GITHUB_REPOSITORY`; contexto ausente o discordante falla. | Rama de Pull Request evaluada.                                            |
 | **QG-COMMIT-001** | Commits de trabajo siguen el patrón Conventional Commits y uno de los tipos permitidos por EE-DOC-005 §07.2.                                                                                                                                                                                                                                                 | Commits del PR; commits de merge generados por la plataforma se excluyen. |
 
@@ -657,6 +657,7 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 | **v1.5.3**        | 2026-10-23    | Equipo de Arquitectura | Equipo de Arquitectura | Integridad de quality gates (Fase 2)          | Contratos explícitos de resultados; evidencia de ejecución; prevención de falsos PASS; agregación de gates; regresiones para cero tareas, evidencia no disponible y fallos de ejecución.                                                                                             | **Congelado**              |
 | **v1.6.0**        | 2026-11-02    | Equipo de Arquitectura | Equipo de Arquitectura | Gates de convenciones y arquitectura          | Integra validación ESLint de símbolos, QG-NAM-001, QG-BRANCH-001, QG-COMMIT-001 y análisis de imports workspace bajo `src/` en `validate`; registra límites restantes de QG-ARCH-001.                                                                                                | **Congelado**              |
 | **v1.7.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Procedencia de ramas Dependabot               | QG-BRANCH-001 verifica grupos autorizados, identidad del bot, repositorios y coincidencia con el payload; falla ante contexto incompleto.                                                                                                                                            | **Congelado**              |
+| **v1.8.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas       | QG-NAM-001 exige prefijos de tipo para tests nuevos y admite la migración gradual de nombres existentes, conforme a EE-DOC-002 §16.                                                                                                                                                  | **Congelado**              |
 
 ---
 
