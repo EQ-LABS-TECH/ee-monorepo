@@ -1,7 +1,8 @@
-const ORDINARY_DECLARATION = /^EE-LABS-IMPACT: ORDINARY\r?\nHEAD: ([a-f0-9]{40})$/i;
+const CRITICAL_ESCALATION =
+  /^EE-LABS-IMPACT: CRITICAL\r?\nHEAD: ([a-f0-9]{40})\r?\nRATIONALE: (.+)$/i;
 const ARCHITECTURE_TEAM = 'architecture';
 
-function normalizedOrdinaryComment(comment, { headSha, author }) {
+function normalizedCriticalEscalation(comment, { headSha, author }) {
   if (
     !comment ||
     typeof comment.login !== 'string' ||
@@ -11,16 +12,18 @@ function normalizedOrdinaryComment(comment, { headSha, author }) {
     return null;
   }
 
-  const declaration = ORDINARY_DECLARATION.exec(comment.body.trim());
+  const declaration = CRITICAL_ESCALATION.exec(comment.body.trim());
   if (!declaration || declaration[1].toLowerCase() !== headSha.toLowerCase()) return null;
+  const rationale = declaration[2].trim();
+  if (!rationale) return null;
 
   const reviewer = comment.login.toLowerCase();
   if (reviewer === author.toLowerCase() || reviewer.endsWith('[bot]')) return null;
 
-  return reviewer;
+  return { reviewer, rationale };
 }
 
-export function ordinaryClassificationCandidates({ classificationComments, headSha, author }) {
+export function criticalEscalationCandidates({ classificationComments, headSha, author }) {
   if (
     !Array.isArray(classificationComments) ||
     typeof headSha !== 'string' ||
@@ -31,18 +34,16 @@ export function ordinaryClassificationCandidates({ classificationComments, headS
     throw new TypeError('Invalid PR impact classification evidence');
   }
 
-  return [
-    ...new Set(
-      classificationComments
-        .map((comment) => normalizedOrdinaryComment(comment, { headSha, author }))
-        .filter(Boolean),
-    ),
-  ];
+  const candidates = classificationComments
+    .map((comment) => normalizedCriticalEscalation(comment, { headSha, author }))
+    .filter(Boolean);
+  return [...new Map(candidates.map((candidate) => [candidate.reviewer, candidate])).values()];
 }
 
 /** Resolves classification independently from code review approval evidence. */
 export function resolvePrGovernanceClassification({
   criticalIndicatorsPresent,
+  impactEvidenceComplete,
   classificationComments,
   author,
   headSha,
@@ -51,42 +52,44 @@ export function resolvePrGovernanceClassification({
 }) {
   if (
     typeof criticalIndicatorsPresent !== 'boolean' ||
+    typeof impactEvidenceComplete !== 'boolean' ||
     !Array.isArray(permissions) ||
     !Array.isArray(memberships)
   ) {
     throw new TypeError('Invalid PR classification authority evidence');
   }
 
-  const candidates = ordinaryClassificationCandidates({
+  const candidates = criticalEscalationCandidates({
     classificationComments,
     headSha,
     author,
   });
-  const authorizedClassifiers = criticalIndicatorsPresent
-    ? []
-    : candidates.filter((reviewer) => {
-        const permission = permissions.find((entry) => entry.reviewer === reviewer);
+  const authorizedEscalators =
+    criticalIndicatorsPresent || !impactEvidenceComplete
+      ? []
+      : candidates.filter(({ reviewer }) => {
+          const permission = permissions.find((entry) => entry.reviewer.toLowerCase() === reviewer);
 
-        return (
-          permission?.hasWriteAccess === true &&
-          memberships.some(
-            (membership) =>
-              membership.reviewer === reviewer &&
-              membership.teamSlug === ARCHITECTURE_TEAM &&
-              membership.active,
-          )
-        );
-      });
+          return (
+            permission?.hasWriteAccess === true &&
+            memberships.some(
+              (membership) =>
+                membership.reviewer.toLowerCase() === reviewer &&
+                membership.teamSlug === ARCHITECTURE_TEAM &&
+                membership.active,
+            )
+          );
+        });
 
-  const classification = criticalIndicatorsPresent
-    ? 'CRITICAL'
-    : authorizedClassifiers.length > 0
-      ? 'ORDINARY'
-      : 'PENDING_REVIEW';
+  const classification = !impactEvidenceComplete
+    ? 'PENDING_REVIEW'
+    : criticalIndicatorsPresent || authorizedEscalators.length > 0
+      ? 'CRITICAL'
+      : 'ORDINARY';
 
   return {
     classification,
-    classificationAuthorized: classification === 'CRITICAL' || authorizedClassifiers.length > 0,
-    authorizedClassifiers,
+    classificationAuthorized: classification !== 'PENDING_REVIEW',
+    authorizedEscalators,
   };
 }

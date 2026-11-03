@@ -155,7 +155,7 @@ test('ordinary classification passes with authorized architecture reviewer', asy
   assert.equal(result.decision.requiredCount, 1);
 });
 
-test('ordinary-looking change remains pending without architecture declaration', async () => {
+test('ordinary-looking change passes without Architecture declaration', async () => {
   const result = await evaluatePrGovernance({
     ...options,
     fetchImpl: fixture({
@@ -164,8 +164,8 @@ test('ordinary-looking change remains pending without architecture declaration',
     }),
   });
 
-  assert.equal(result.classification, 'PENDING_REVIEW');
-  assert.equal(result.decision.status, 'BLOCKED');
+  assert.equal(result.classification, 'ORDINARY');
+  assert.equal(result.decision.status, 'PASS');
 });
 
 test('critical change with one qualified reviewer is blocked', async () => {

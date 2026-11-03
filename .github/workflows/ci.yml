@@ -40,6 +40,9 @@ jobs:
           CHECKSUMS="gitleaks_${GITLEAKS_VERSION}_checksums.txt"
           BASE_URL="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}"
 
+          GITLEAKS_DIR="$(mktemp -d "${RUNNER_TEMP}/gitleaks.XXXXXX")"
+          cd "$GITLEAKS_DIR"
+
           # Descargar binario y archivo de checksums
           curl -sSL -o "$TARBALL" "${BASE_URL}/${TARBALL}"
           curl -sSL -o "$CHECKSUMS" "${BASE_URL}/${CHECKSUMS}"
@@ -49,7 +52,7 @@ jobs:
 
           # Descomprimir y ejecutar
           tar -xzf "$TARBALL" gitleaks
-          ./gitleaks detect --source . --verbose --exit-code 1
+          ./gitleaks detect --source "$GITHUB_WORKSPACE" --verbose --exit-code 1
 
       - name: Setup pnpm
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0

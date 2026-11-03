@@ -1,3 +1,5 @@
+import { createGitHubHttpError } from './pr-governance.github-error.mjs';
+
 const SHA = /^[0-9a-f]{40}$/i;
 const REPOSITORY_PART = /^[a-z\d_.-]+$/i;
 const VALIDATE_CHECK = 'Validate';
@@ -37,7 +39,7 @@ export async function readValidateReadiness({ owner, repo, headSha, token, fetch
     });
 
     if (!response.ok || response.status !== 200) {
-      throw new Error(`Governance validation lookup returned HTTP ${response.status}`);
+      throw createGitHubHttpError(response, 'Governance validation lookup');
     }
 
     const result = await response.json();

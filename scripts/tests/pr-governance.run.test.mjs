@@ -16,7 +16,12 @@ const options = {
   publisherToken: 'publisher-token',
 };
 
-function fixture({ startStatus = 201, patchStatus = 200, validateConclusion = 'success' } = {}) {
+function fixture({
+  startStatus = 201,
+  startRequestId,
+  patchStatus = 200,
+  validateConclusion = 'success',
+} = {}) {
   const calls = [];
 
   const fetchImpl = async (url, init) => {
@@ -74,6 +79,9 @@ function fixture({ startStatus = 201, patchStatus = 200, validateConclusion = 's
       return {
         ok: startStatus === 201,
         status: startStatus,
+        headers: {
+          get: (name) => (name === 'x-github-request-id' ? (startRequestId ?? null) : null),
+        },
         json: async () => ({
           id: 456,
           app: { id: 789 },
@@ -145,20 +153,55 @@ test('evaluation error completes the same check as failure', async () => {
   assert.equal(patch.body.output.title, 'PN-017 governance evaluation failed');
 });
 
-test('check start error prevents evaluation and completion', async () => {
-  const mock = fixture({ startStatus: 403 });
+test('check start error includes safe GitHub request context', async () => {
+  const mock = fixture({ startStatus: 403, startRequestId: 'ABCD:1234' });
 
   await assert.rejects(
     runPrGovernance({
       ...options,
       fetchImpl: mock.fetchImpl,
     }),
-    /check start returned HTTP 403/,
+    (error) => {
+      assert.match(error.message, /check start returned HTTP 403/);
+      assert.deepEqual(error.pn017Diagnostic, {
+        number: 42,
+        headSha,
+        phase: 'check-start',
+        code: 'github-http-error',
+        httpStatus: 403,
+        requestId: 'ABCD:1234',
+      });
+      return true;
+    },
   );
 
   assert.deepEqual(
     mock.calls.map(({ method }) => method),
     ['GET', 'GET', 'POST'],
+  );
+});
+
+test('Validate lookup errors carry a sanitized readiness diagnostic', async () => {
+  await assert.rejects(
+    runPrGovernance({
+      ...options,
+      fetchImpl: async () => ({
+        ok: false,
+        status: 403,
+        json: async () => ({ message: 'private response content' }),
+      }),
+    }),
+    (error) => {
+      assert.deepEqual(error.pn017Diagnostic, {
+        number: 42,
+        headSha,
+        phase: 'validate-readiness',
+        code: 'github-http-error',
+        httpStatus: 403,
+      });
+      assert.equal(JSON.stringify(error.pn017Diagnostic).includes('private response'), false);
+      return true;
+    },
   );
 });
 
@@ -214,13 +257,7 @@ function successfulFixture({
     },
   ];
   const classificationComments = [
-    {
-      id: 900,
-      user: { login: 'architect' },
-      body: `EE-LABS-IMPACT: ORDINARY\nHEAD: ${headSha}`,
-      created_at: '2026-10-29T00:00:00Z',
-      updated_at: '2026-10-29T00:00:00Z',
-    },
+    // Ordinary classification comes from complete changed-path evidence.
   ];
 
   let reviewReadCount = 0;

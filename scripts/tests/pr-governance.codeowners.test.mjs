@@ -152,6 +152,8 @@ test('repository CODEOWNERS resolves actual governance boundaries', async () => 
       '.github/workflows/ci.yml',
       'packages/config/src/index.ts',
       'docs/validation/evidence.md',
+      'docs/validation/audit/EE-AUDIT-Rules_Emerging.md',
+      'docs/architecture/EE-DOC-007_GitHub_Governance.md',
       'packages/foundation/src/contracts/provider.ts',
       'infra/terraform/main.tf',
     ],
@@ -170,9 +172,11 @@ test('repository CODEOWNERS resolves actual governance boundaries', async () => 
   expectOwners('scripts/lib/pr-governance.evaluate.mjs', ['repository-admin', 'maintainers']);
   expectOwners('.github/workflows/ci.yml', ['architecture', 'repository-admin']);
   expectOwners('packages/config/src/index.ts', ['architecture', 'maintainers']);
-  expectOwners('docs/validation/evidence.md', ['architecture']);
+  expectOwners('docs/validation/evidence.md', ['maintainers']);
+  expectOwners('docs/validation/audit/EE-AUDIT-Rules_Emerging.md', ['architecture']);
+  expectOwners('docs/architecture/EE-DOC-007_GitHub_Governance.md', ['architecture']);
   expectOwners('packages/foundation/src/contracts/provider.ts', ['architecture']);
   expectOwners('infra/terraform/main.tf', ['architecture', 'repository-admin']);
 
-  assert.equal(requirements.length, 8);
+  assert.equal(requirements.length, 10);
 });

@@ -1,7 +1,7 @@
 /**
  * Conservative, path-based critical-change indicators for EE-DOC-005 §08.3.
- * A noncritical result DOES NOT prove that a PR is noncritical: impact-based
- * changes (security, production data, public contracts) require human review.
+ * A complete path set without a critical indicator is ORDINARY. Missing or
+ * incomplete path evidence is handled as PENDING_REVIEW by the caller.
  * Pure and dependency-free so the classification can be tested independently.
  */
 const RULES = Object.freeze([
@@ -38,6 +38,15 @@ function normalizePath(path) {
 
 export function classifyCriticalChange(paths) {
   if (!Array.isArray(paths)) throw new TypeError('paths must be an array');
+  if (paths.length === 0) {
+    return {
+      status: 'PENDING_REVIEW',
+      criticalIndicatorsPresent: false,
+      evidenceComplete: false,
+      requiresImpactReview: true,
+      reasons: [],
+    };
+  }
   const reasons = [];
   const seen = new Set();
   for (const raw of paths) {
@@ -50,9 +59,10 @@ export function classifyCriticalChange(paths) {
     }
   }
   return {
-    status: reasons.length > 0 ? 'CRITICAL' : 'PENDING_REVIEW',
+    status: reasons.length > 0 ? 'CRITICAL' : 'ORDINARY',
     criticalIndicatorsPresent: reasons.length > 0,
-    requiresImpactReview: true,
+    evidenceComplete: true,
+    requiresImpactReview: reasons.length > 0,
     reasons,
   };
 }

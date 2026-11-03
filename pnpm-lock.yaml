@@ -28,6 +28,9 @@ importers:
       '@eq-labs/governance':
         specifier: workspace:*
         version: link:packages/governance
+      '@typescript-eslint/typescript-estree':
+        specifier: 8.72.1
+        version: 8.72.1(typescript@5.9.3)
       ajv:
         specifier: 8.20.0
         version: 8.20.0

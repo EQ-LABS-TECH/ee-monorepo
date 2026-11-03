@@ -2,6 +2,7 @@ import {
   createPrGovernanceCheckPayload,
   PR_GOVERNANCE_CHECK_NAME,
 } from '@eq-labs/governance/pr-governance/check';
+import { createGitHubHttpError } from './pr-governance.github-error.mjs';
 
 const SHA = /^[0-9a-f]{40}$/i;
 const OWNER = /^[a-z\d](?:[a-z\d-]{0,38}[a-z\d])?$/i;
@@ -50,7 +51,7 @@ export async function publishPrGovernanceCheck({
   });
 
   if (!currentResponse.ok || currentResponse.status !== 200) {
-    throw new Error(`GitHub PR publication verification returned HTTP ${currentResponse.status}`);
+    throw createGitHubHttpError(currentResponse, 'GitHub PR publication verification');
   }
 
   const currentPr = await currentResponse.json();
@@ -71,7 +72,7 @@ export async function publishPrGovernanceCheck({
   });
 
   if (!response.ok || response.status !== 201) {
-    throw new Error(`GitHub governance check publication returned HTTP ${response.status}`);
+    throw createGitHubHttpError(response, 'GitHub governance check publication');
   }
 
   const result = await response.json();
@@ -132,7 +133,7 @@ export async function startPrGovernanceCheck({
   });
 
   if (!currentResponse.ok || currentResponse.status !== 200) {
-    throw new Error(`GitHub PR check start verification returned HTTP ${currentResponse.status}`);
+    throw createGitHubHttpError(currentResponse, 'GitHub PR check start verification');
   }
 
   const currentPr = await currentResponse.json();
@@ -164,7 +165,7 @@ export async function startPrGovernanceCheck({
   });
 
   if (!response.ok || response.status !== 201) {
-    throw new Error(`GitHub governance check start returned HTTP ${response.status}`);
+    throw createGitHubHttpError(response, 'GitHub governance check start');
   }
 
   const result = await response.json();
@@ -261,7 +262,7 @@ export async function completePrGovernanceCheck({
     });
 
     if (!response.ok || response.status !== 200) {
-      throw new Error(`${context} returned HTTP ${response.status}`);
+      throw createGitHubHttpError(response, context);
     }
 
     return response.json();
@@ -356,7 +357,7 @@ export async function completePrGovernanceCheck({
   });
 
   if (!response.ok || response.status !== 200) {
-    throw new Error(`GitHub governance check completion returned HTTP ${response.status}`);
+    throw createGitHubHttpError(response, 'GitHub governance check completion');
   }
 
   const result = await response.json();

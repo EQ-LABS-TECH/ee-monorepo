@@ -1,4 +1,4 @@
-﻿# EE-DOC-010 — Quality Gates
+# EE-DOC-010 — Quality Gates
 
 Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y se desarrolla conforme al ciclo documental definido por **EE-DOC-005 — Development Workflow**.
 
@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Especializado                                                                                                                                  |
 | **Nivel**             | Especializado                                                                                                                                  |
 | **Normativo**         | Sí                                                                                                                                             |
-| **Versión**           | v1.5.3                                                                                                                                         |
+| **Versión**           | v1.6.0                                                                                                                                         |
 | **Estado**            | Congelado                                                                                                                                      |
 | **Propietario**       | Equipo de Arquitectura                                                                                                                         |
 | **Documento padre**   | EE-DOC-006 — Repository Structure                                                                                                              |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                                                                                         |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                       |
 | **Fecha de creación** | 2026-09-26                                                                                                                                     |
-| **Última revisión**   | 2026-10-23                                                                                                                                     |
+| **Última revisión**   | 2026-11-02                                                                                                                                     |
 | **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                |
 
 ---
@@ -233,48 +233,55 @@ PENDING y DEPRECATED **no** entran en la agregación de bloqueo del merge (no ha
 
 ### 05.1. Matriz
 
-| ID               | Gate                                                                |             Mandatory (005 §10)              | Severity | Availability           |
-| :--------------- | :------------------------------------------------------------------ | :------------------------------------------: | :------- | :--------------------- |
-| **QG-TYPE-001**  | Typecheck                                                           |           (soporte de integridad)            | BLOCKING | ACTIVE                 |
-| **QG-LINT-001**  | Lint                                                                |                    **Sí**                    | BLOCKING | ACTIVE                 |
-| **QG-FMT-001**   | Format check                                                        |                    **Sí**                    | BLOCKING | ACTIVE                 |
-| **QG-TEST-001**  | Tests (unit / integration / component; E2E bajo §10.4 de 005)       |                    **Sí**                    | BLOCKING | **ACTIVE**             |
-| **QG-BUILD-001** | Build                                                               |                    **Sí**                    | BLOCKING | **ACTIVE**             |
-| **QG-SEC-001**   | Dependency Audit                                                    |             (seguridad de deps)              | BLOCKING | ACTIVE                 |
-| **QG-SEC-002**   | Secret Detection                                                    |           **Sí** (Secret Scanning)           | BLOCKING | **ACTIVE**             |
-| **QG-SEC-003**   | Static Security Analysis                                            |            Condicional 005 §10.2             | BLOCKING | PENDING_IMPLEMENTATION |
-| **QG-ARCH-001**  | Architecture Boundaries (top-level; capas/ciclos bajo §10.4 de 005) |      **Sí** (Architecture & Structure)       | BLOCKING | **ACTIVE**             |
-| **QG-DOC-001**   | Documentation Structure                                             |      **Sí** (Documentation Validation)       | BLOCKING | **ACTIVE**             |
-| **QG-DOC-002**   | Documentation Consistency                                           |      **Sí** (Documentation Validation)       | BLOCKING | **ACTIVE**             |
-| **QG-REPO-001**  | Repository Integrity                                                | **Sí** (Architecture & Structure / validate) | BLOCKING | ACTIVE                 |
-| **QG-INFRA-001** | Infrastructure Security                                             |                 Dominio 009                  | BLOCKING | **ACTIVE**             |
-| **QG-PERF-001**  | Performance                                                         |            Condicional 005 §10.2             | WARNING  | PENDING_IMPLEMENTATION |
-| **QG-COV-001**   | Coverage                                                            |            Condicional 005 §10.2             | WARNING  | PENDING_IMPLEMENTATION |
+| ID                | Gate                                                                       |             Mandatory (005 §10)              | Severity | Availability           |
+| :---------------- | :------------------------------------------------------------------------- | :------------------------------------------: | :------- | :--------------------- |
+| **QG-TYPE-001**   | Typecheck                                                                  |           (soporte de integridad)            | BLOCKING | ACTIVE                 |
+| **QG-LINT-001**   | Lint                                                                       |                    **Sí**                    | BLOCKING | ACTIVE                 |
+| **QG-FMT-001**    | Format check                                                               |                    **Sí**                    | BLOCKING | ACTIVE                 |
+| **QG-TEST-001**   | Tests (unit / integration / component; E2E bajo §10.4 de 005)              |                    **Sí**                    | BLOCKING | **ACTIVE**             |
+| **QG-BUILD-001**  | Build                                                                      |                    **Sí**                    | BLOCKING | **ACTIVE**             |
+| **QG-SEC-001**    | Dependency Audit                                                           |             (seguridad de deps)              | BLOCKING | ACTIVE                 |
+| **QG-SEC-002**    | Secret Detection                                                           |           **Sí** (Secret Scanning)           | BLOCKING | **ACTIVE**             |
+| **QG-SEC-003**    | Static Security Analysis                                                   |            Condicional 005 §10.2             | BLOCKING | PENDING_IMPLEMENTATION |
+| **QG-ARCH-001**   | Architecture Boundaries (top-level, manifests, ciclos e imports workspace) |      **Sí** (Architecture & Structure)       | BLOCKING | **ACTIVE**             |
+| **QG-NAM-001**    | Repository naming (rutas, símbolos y excepciones normativas/técnicas)      |                    **Sí**                    | BLOCKING | **ACTIVE**             |
+| **QG-BRANCH-001** | Branch naming                                                              |                    **Sí**                    | BLOCKING | **ACTIVE**             |
+| **QG-COMMIT-001** | Conventional Commit headers                                                |                    **Sí**                    | BLOCKING | **ACTIVE**             |
+| **QG-DOC-001**    | Documentation Structure                                                    |      **Sí** (Documentation Validation)       | BLOCKING | **ACTIVE**             |
+| **QG-DOC-002**    | Documentation Consistency                                                  |      **Sí** (Documentation Validation)       | BLOCKING | **ACTIVE**             |
+| **QG-REPO-001**   | Repository Integrity                                                       | **Sí** (Architecture & Structure / validate) | BLOCKING | ACTIVE                 |
+| **QG-INFRA-001**  | Infrastructure Security                                                    |                 Dominio 009                  | BLOCKING | **ACTIVE**             |
+| **QG-PERF-001**   | Performance                                                                |            Condicional 005 §10.2             | WARNING  | PENDING_IMPLEMENTATION |
+| **QG-COV-001**    | Coverage                                                                   |            Condicional 005 §10.2             | WARNING  | PENDING_IMPLEMENTATION |
 
 > **Mandatory (005)** = obligación normativa del workflow. **Availability (010)** = estado de materialización. Un gate puede ser Mandatory **y** PENDING a la vez (**EE-ADR-004**).  
 > **PENDING** = falta de implementación/enforcement del **mecanismo del gate**, no “ausencia de tests/comando” ni “gate opcional”.  
 > **QG-TEST-001 ACTIVE (EE-IMP-010-P02):** `pnpm run test` + paso CI; **0 tasks → SKIPPED** (no PASS).  
 > **QG-BUILD-001 ACTIVE (EE-IMP-010-P02):** `pnpm run build` en `validate` y step **Build** en job `Validate`.  
-> **Alcance ACTIVE (EE-IMP-010-P05):** TEST-001 cubre unit/integration/component; E2E y la verificación de ciclos/capas de ARCH-001 permanecen PENDING bajo régimen transitorio (EE-IMP-010-P05 §06).  
+> **Alcance ACTIVE (EE-IMP-010-P05):** TEST-001 cubre unit/integration/component; E2E permanece PENDING. ARCH-001 valida top-level, dependencias/ciclos declarados e imports workspace detectables bajo `src/`; aliases de `tsconfig`, configuración, pruebas y composición implícita no están cubiertos.
 > Gates Mandatory + PENDING: régimen transitorio **EE-DOC-005 §10.4** (plan Arquitectura + IMP-010), no PASS simulado.
 
 ### 05.2. Mapeo baseline y required check
 
-| Gate         | Materialización actual                               | Notas                                                |
-| :----------- | :--------------------------------------------------- | :--------------------------------------------------- |
-| QG-TYPE-001  | `pnpm run typecheck`                                 | ACTIVE                                               |
-| QG-LINT-001  | `pnpm run lint`                                      | ACTIVE                                               |
-| QG-FMT-001   | Prettier **`--check`** dentro de `pnpm run validate` | ACTIVE; `pnpm run format` = **write**, no es el gate |
-| QG-SEC-001   | `pnpm audit` vía validate                            | ACTIVE; umbral §05.8                                 |
-| QG-REPO-001  | checks de estructura en validate/doctor              | ACTIVE                                               |
-| QG-TEST-001  | `pnpm run test` + CI; 0 tasks → SKIPPED              | **ACTIVE**                                           |
-| QG-BUILD-001 | `pnpm run build` en validate + CI step Build         | **ACTIVE**                                           |
+| Gate          | Materialización actual                                | Notas                                                                   |
+| :------------ | :---------------------------------------------------- | :---------------------------------------------------------------------- |
+| QG-TYPE-001   | `pnpm run typecheck`                                  | ACTIVE                                                                  |
+| QG-LINT-001   | `pnpm run lint`                                       | ACTIVE                                                                  |
+| QG-FMT-001    | Prettier **`--check`** dentro de `pnpm run validate`  | ACTIVE; `pnpm run format` = **write**, no es el gate                    |
+| QG-SEC-001    | `pnpm audit` vía validate                             | ACTIVE; umbral §05.8                                                    |
+| QG-REPO-001   | checks de estructura en validate/doctor               | ACTIVE                                                                  |
+| QG-TEST-001   | `pnpm run test` + CI; 0 tasks → SKIPPED               | **ACTIVE**                                                              |
+| QG-BUILD-001  | `pnpm run build` en validate + CI step Build          | **ACTIVE**                                                              |
+| QG-NAM-001    | ESLint compartido + `scripts/commands/validate-names` | ACTIVE; valida símbolos, rutas cambiadas, excepciones y sufijos de test |
+| QG-BRANCH-001 | `scripts/commands/validate-branch` en `validate`      | ACTIVE; valida rama del Pull Request                                    |
+| QG-COMMIT-001 | `scripts/commands/validate-commit` en `validate`      | ACTIVE; valida commits de trabajo del Pull Request                      |
+| QG-ARCH-001   | Top-level y `validate-architecture` en `validate`     | ACTIVE; matriz de manifests, ciclos e imports workspace en `src/`       |
 
 **Required status check (EE-DOC-007):** nombre de plataforma **`Validate`**.
 
-| Required check | Rol          | Gates que debe garantizar (Minimum Merge Set ACTIVE)                                                              |
-| :------------- | :----------- | :---------------------------------------------------------------------------------------------------------------- |
-| **`Validate`** | Agregador CI | todos los gates ACTIVE del §05.1 (TYPE, LINT, FMT, SEC-001, SEC-002, REPO, TEST, BUILD, ARCH, DOC-001/002, INFRA) |
+| Required check | Rol          | Gates que debe garantizar (Minimum Merge Set ACTIVE)                                                                              |
+| :------------- | :----------- | :-------------------------------------------------------------------------------------------------------------------------------- |
+| **`Validate`** | Agregador CI | todos los gates ACTIVE del §05.1 (TYPE, LINT, FMT, NAM, BRANCH, COMMIT, SEC-001/002, REPO, TEST, BUILD, ARCH, DOC-001/002, INFRA) |
 
 Contrato de comandos root: **EE-DOC-006**.  
 **Format check:** hoy materializado **dentro** de `validate`; un comando root aislado `format:check` es especialización Type B opcional (no bloquea la norma del gate).
@@ -285,13 +292,14 @@ Contrato de comandos root: **EE-DOC-006**.
 > Este conjunto es el de gates **ACTIVE** que participan en la agregación y en el required check **`Validate`**.  
 > **No** redefine el catálogo Mandatory de EE-DOC-005 §10.1: los gates Mandatory aún PENDING siguen obligatorios en norma y bajo régimen §10.4 de 005.
 
-| Etapa                                | Gates ACTIVE en enforcement de merge                        |
-| :----------------------------------- | :---------------------------------------------------------- |
-| **Baseline P01**                     | TYPE, LINT, FMT, SEC-001, REPO                              |
-| **Tras P02**                         | + QG-TEST-001, QG-BUILD-001                                 |
-| **Tras P03**                         | + QG-SEC-002, QG-ARCH-001                                   |
-| **Tras P04**                         | + QG-DOC-001, QG-DOC-002, QG-INFRA-001                      |
-| **Pendiente (régimen §10.4 de 005)** | QG-SEC-003, QG-PERF-001, QG-COV-001; E2E; ARCH capas/ciclos |
+| Etapa                                | Gates ACTIVE en enforcement de merge                                                                              |
+| :----------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
+| **Baseline P01**                     | TYPE, LINT, FMT, SEC-001, REPO                                                                                    |
+| **Tras P02**                         | + QG-TEST-001, QG-BUILD-001                                                                                       |
+| **Tras P03**                         | + QG-SEC-002, QG-ARCH-001                                                                                         |
+| **Tras P04**                         | + QG-DOC-001, QG-DOC-002, QG-INFRA-001                                                                            |
+| **Integración de convenciones**      | QG-NAM-001, QG-BRANCH-001, QG-COMMIT-001 y análisis de imports workspace en QG-ARCH-001 integrados en `validate`. |
+| **Pendiente (régimen §10.4 de 005)** | QG-SEC-003, QG-PERF-001, QG-COV-001; E2E; aliases, configuración y composición fuera del alcance ARCH.            |
 
 La columna de fases describe **materialización**, no “cuando el gate pasa a ser obligatorio”.
 
@@ -351,9 +359,11 @@ La columna de fases describe **materialización**, no “cuando el gate pasa a s
 
 ### 05.8. QG-ARCH-001
 
-**Contrato ACTIVE:** directorios requeridos + allowlist/forbidden de directorios top-level (EE-DOC-006 / EE-RFC-001), en `scripts/validate`.
+**Contrato ACTIVE:** directorios requeridos y allowlist top-level en `scripts/commands/validate`, además de la matriz workspace declarada, detección de ciclos y análisis de imports entre workspaces mediante `scripts/commands/validate-architecture`, invocado por `validate`.
 
-**PENDING (régimen §10.4 de 005):** dependencias circulares, dependencias prohibidas entre capas (EE-DOC-006 §13.2) y fronteras apps / packages / connectors. Fuera de gate: design review / ADR narrativo.
+El analizador contrasta dependencias workspace de `dependencies`, `optionalDependencies` y `peerDependencies` declaradas en manifests con EE-DOC-006 §13.2 y detecta ciclos. En archivos bajo `src/`, contrasta imports estáticos, dinámicos con literal, imports de tipos TypeScript y `require` con la matriz y las dependencias declaradas. Los imports dinámicos no literales y referencias `@eq-labs/*` no resueltas generan error. Configuración fuera de `src/`, pruebas y aliases de `tsconfig` quedan fuera del análisis.
+
+La revisión arquitectónica de contratos, aliases, configuración fuera de `src/` y composición permanece complementaria y no se certifica mediante este analizador.
 
 ### 05.9. QG-DOC-001 / QG-DOC-002
 
@@ -370,6 +380,18 @@ ACTIVE. Integridad EE-DOC-006.
 ### 05.12. QG-PERF-001 / QG-COV-001
 
 **Severity: WARNING.** PENDING hasta política de umbrales publicada vía actualización de este documento.
+
+### 05.13. QG-NAM-001 / QG-BRANCH-001 / QG-COMMIT-001
+
+Los tres gates son bloqueantes y están integrados en `validate`. En Pull Requests, `validate-branch` y `validate-commit` evalúan la rama y commits de trabajo; `validate-names` evalúa rutas cambiadas y ESLint aplica la convención de símbolos compartida.
+
+| Gate              | Criterio de conformidad                                                                                                                                                            | Alcance propuesto                                                         |
+| :---------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
+| **QG-NAM-001**    | Rutas nuevas/modificadas cumplen `kebab-case`; clases, tipos y componentes usan `PascalCase`; símbolos restantes siguen las reglas ESLint compartidas. Tests nuevos declaran tipo. | Rutas afectadas y código lintado; fixtures de tests admiten `camelCase`.  |
+| **QG-BRANCH-001** | Rama con prefijo registrado en EE-DOC-005 §06.2 y descripción kebab-case; `release/vX.Y.Z` se valida como versión.                                                                 | Rama de Pull Request evaluada.                                            |
+| **QG-COMMIT-001** | Commits de trabajo siguen el patrón Conventional Commits y uno de los tipos permitidos por EE-DOC-005 §07.2.                                                                       | Commits del PR; commits de merge generados por la plataforma se excluyen. |
+
+Los hooks `.githooks/` son opcionales y ejecutan controles tempranos. Su instalación local no altera el estado de Availability ni sustituye CI.
 
 ---
 
@@ -459,33 +481,36 @@ Preferir `pnpm` / `pnpm exec` / Turbo del workspace. La ausencia de un binario g
 
 ### 07.1. Baseline ACTIVE (enforcement efectivo)
 
-| Gate         | Materialización                                                        | Entorno         |
-| :----------- | :--------------------------------------------------------------------- | :-------------- |
-| QG-TYPE-001  | `pnpm run typecheck`                                                   | Local + CI      |
-| QG-LINT-001  | `pnpm run lint`                                                        | Local + CI      |
-| QG-FMT-001   | Prettier `--check` vía `pnpm run validate`                             | Local + CI      |
-| QG-SEC-001   | `pnpm audit --audit-level high` vía `validate` (incl. devDependencies) | Local + CI      |
-| QG-REPO-001  | Checks de estructura en `validate` / `doctor`                          | Local + CI      |
-| QG-TEST-001  | `pnpm run test` (0 tasks → SKIPPED)                                    | Local + CI      |
-| QG-BUILD-001 | `pnpm run build` / fase Build en validate + CI                         | Local + CI      |
-| QG-SEC-002   | GitHub secret scanning + push protection; Gitleaks CLI en CI           | Plataforma + CI |
-| QG-ARCH-001  | required dirs + top-level allowlist en `scripts/validate`              | Local + CI      |
-| QG-DOC-001   | README, LICENSE, NOTICE, CHANGELOG en validate                         | Local + CI      |
-| QG-DOC-002   | package.json name/engines ↔ `.nvmrc` en validate                       | Local + CI      |
-| QG-INFRA-001 | infra/{containers,orchestration,secrets} + secrets/.gitignore          | Local + CI      |
-| Agregador    | Job **`Validate`** (EE-DOC-007)                                        | CI              |
+| Gate          | Materialización                                                         | Entorno         |
+| :------------ | :---------------------------------------------------------------------- | :-------------- |
+| QG-TYPE-001   | `pnpm run typecheck`                                                    | Local + CI      |
+| QG-LINT-001   | `pnpm run lint`                                                         | Local + CI      |
+| QG-FMT-001    | Prettier `--check` vía `pnpm run validate`                              | Local + CI      |
+| QG-SEC-001    | `pnpm audit --audit-level high` vía `validate` (incl. devDependencies)  | Local + CI      |
+| QG-REPO-001   | Checks de estructura en `validate` / `doctor`                           | Local + CI      |
+| QG-TEST-001   | `pnpm run test` (0 tasks → SKIPPED)                                     | Local + CI      |
+| QG-BUILD-001  | `pnpm run build` / fase Build en validate + CI                          | Local + CI      |
+| QG-SEC-002    | GitHub secret scanning + push protection; Gitleaks CLI en CI            | Plataforma + CI |
+| QG-ARCH-001   | Required dirs, top-level, matriz/ciclos e imports workspace bajo `src/` | Local + CI      |
+| QG-NAM-001    | ESLint de símbolos + `validate-names` vía `validate`                    | Local + CI      |
+| QG-BRANCH-001 | `scripts/commands/validate-branch` vía `validate`                       | Local + CI      |
+| QG-COMMIT-001 | `scripts/commands/validate-commit` vía `validate`                       | Local + CI      |
+| QG-DOC-001    | README, LICENSE, NOTICE, CHANGELOG en validate                          | Local + CI      |
+| QG-DOC-002    | package.json name/engines ↔ `.nvmrc` en validate                        | Local + CI      |
+| QG-INFRA-001  | infra/{containers,orchestration,secrets} + secrets/.gitignore           | Local + CI      |
+| Agregador     | Job **`Validate`** (EE-DOC-007)                                         | CI              |
 
 Runtime y estándares de apoyo: Node ≥ 24 (EE-ADR-003), Vitest/Playwright (EE-ADR-002), versiones exactas (EE-DOC-006).
 
 ### 07.2. Gaps (PENDING_IMPLEMENTATION)
 
-| Gate                       | Motivo de PENDING                                                                        | Unidad IMP prevista                   |
-| :------------------------- | :--------------------------------------------------------------------------------------- | :------------------------------------ |
-| QG-SEC-003                 | SAST no materializado (sin CodeQL/Semgrep cableado)                                      | EE-IMP-010-P03 (diferido) / posterior |
-| QG-PERF-001 / QG-COV-001   | Sin política de umbrales publicada                                                       | Posterior a umbral normativo en 010   |
-| QG-TEST-001 (E2E)          | Tarea Turbo `test:e2e` disponible; sin invocación root en `validate` ni step CI dedicado | Régimen §10.4 — EE-IMP-010-P05 §06    |
-| QG-ARCH-001 (capas/ciclos) | Validador no implementado                                                                | Régimen §10.4 — EE-IMP-010-P05 §06    |
-| Evidencia por gate (§06.2) | `validate` sin reporte estructurado                                                      | Observación D6 — EE-IMP-010-P05 §06   |
+| Gate                              | Motivo de PENDING                                                                        | Unidad IMP prevista                   |
+| :-------------------------------- | :--------------------------------------------------------------------------------------- | :------------------------------------ |
+| QG-SEC-003                        | SAST no materializado (sin CodeQL/Semgrep cableado)                                      | EE-IMP-010-P03 (diferido) / posterior |
+| QG-PERF-001 / QG-COV-001          | Sin política de umbrales publicada                                                       | Posterior a umbral normativo en 010   |
+| QG-TEST-001 (E2E)                 | Tarea Turbo `test:e2e` disponible; sin invocación root en `validate` ni step CI dedicado | Régimen §10.4 — EE-IMP-010-P05 §06    |
+| QG-ARCH-001 (aliases/composición) | Aliases de `tsconfig`, configuración y composición implícita no están analizados         | Evolución posterior                   |
+| Evidencia por gate (§06.2)        | `validate` sin reporte estructurado                                                      | Observación D6 — EE-IMP-010-P05 §06   |
 
 Los gaps **Mandatory** (005 §10.1) permanecen bajo régimen transitorio **EE-DOC-005 §10.4**.
 
@@ -630,6 +655,7 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 | **v1.5.1**        | 2026-10-06    | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A frontera 015                           | §02.6: solo WAIVED vigentes → DEGRADED en 015; high sin WAIVE no DEGRADED                                                                                                                                                                                                            | **Congelado**              |
 | **v1.5.2**        | 2026-10-18    | Equipo de Arquitectura | Equipo de Arquitectura | Fix aclaración E2E                            | §05.4 aclara que el comando root e2e existe pero el gate sigue PENDING                                                                                                                                                                                                               | Congelado                  |
 | **v1.5.3**        | 2026-10-23    | Equipo de Arquitectura | Equipo de Arquitectura | Integridad de quality gates (Fase 2)          | Contratos explícitos de resultados; evidencia de ejecución; prevención de falsos PASS; agregación de gates; regresiones para cero tareas, evidencia no disponible y fallos de ejecución.                                                                                             | **Congelado**              |
+| **v1.6.0**        | 2026-11-02    | Equipo de Arquitectura | Equipo de Arquitectura | Gates de convenciones y arquitectura          | Integra validación ESLint de símbolos, QG-NAM-001, QG-BRANCH-001, QG-COMMIT-001 y análisis de imports workspace bajo `src/` en `validate`; registra límites restantes de QG-ARCH-001.                                                                                                | **Congelado**              |
 
 ---
 
@@ -647,7 +673,7 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 
 ### 14.2. Dictamen de Cierre
 
-**Aprobado para congelación.** El catálogo de Quality Gates está implementado en el alcance ACTIVE (12/15 gates), con régimen transitorio explícito (EE-DOC-005 §10.4 / EE-ADR-004) para QG-SEC-003, QG-PERF-001 y QG-COV-001. No hay desviaciones silenciosas; los descubrimientos D1–D6 están adoptados, aclarados o diferidos con trazabilidad en EE-IMP-010-P05 y EE-TEC-005.
+**Esta versión está aprobada.** Los 15 gates obligatorios del baseline están materializados en `validate`; QG-SEC-003, QG-PERF-001 y QG-COV-001 permanecen pendientes conforme a su régimen condicional/transitorio. QG-ARCH-001 analiza imports entre workspaces en `src/` con el alcance limitado de §05.8; E2E de ecosistema permanece fuera del alcance activo.
 
 ### 14.3. Estado Final
 

@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+
+node scripts/commands/validate-commit --message-file "$1"

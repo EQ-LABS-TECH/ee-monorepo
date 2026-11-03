@@ -1,7 +1,10 @@
 import { classifyCriticalChange } from '@eq-labs/governance/pr-governance/classification';
 import { evaluatePrApprovals } from '@eq-labs/governance/pr-governance/approvals';
 import { composePrGovernanceEvaluation } from '@eq-labs/governance/pr-governance/evaluation';
-import { ordinaryClassificationCandidates } from '@eq-labs/governance/pr-governance/authority';
+import {
+  criticalEscalationCandidates,
+  resolvePrGovernanceClassification,
+} from '@eq-labs/governance/pr-governance/authority';
 import { readCodeownersEvidence } from './pr-governance.owners-api.mjs';
 import { evaluatePrOwnership } from '@eq-labs/governance/pr-governance/ownership';
 import {
@@ -122,7 +125,7 @@ export async function evaluatePrGovernance({
 
   const indicators = classifyCriticalChange(evidence.paths);
 
-  const approvals = evaluatePrApprovals({
+  const initialApprovals = evaluatePrApprovals({
     author: evidence.author,
     headSha: evidence.headSha,
     reviews: evidence.reviews,
@@ -161,19 +164,21 @@ export async function evaluatePrGovernance({
     eligibleTeams: entry.eligibleTeams.filter((team) => writableTeams.has(team.toLowerCase())),
   }));
 
-  const approvedReviewers = approvals.approvedReviewers;
-  const classificationCandidates = indicators.criticalIndicatorsPresent
-    ? []
-    : ordinaryClassificationCandidates({
-        classificationComments: evidence.classificationComments,
-        headSha: evidence.headSha,
-        author: evidence.author,
-      });
-  const authorityReviewers = [...new Set([...approvedReviewers, ...classificationCandidates])];
+  const approvedReviewers = initialApprovals.approvedReviewers;
+  const classificationCandidates =
+    indicators.criticalIndicatorsPresent || !indicators.evidenceComplete
+      ? []
+      : criticalEscalationCandidates({
+          classificationComments: evidence.classificationComments,
+          headSha: evidence.headSha,
+          author: evidence.author,
+        });
+  const escalationReviewers = classificationCandidates.map(({ reviewer }) => reviewer);
+  const authorityReviewers = [...new Set([...approvedReviewers, ...escalationReviewers])];
 
   const teams = new Set(ownershipRequirements.flatMap((requirement) => requirement.eligibleTeams));
 
-  if (!indicators.criticalIndicatorsPresent) {
+  if (escalationReviewers.length > 0) {
     teams.add(ARCHITECTURE_TEAM);
   }
 
@@ -189,6 +194,23 @@ export async function evaluatePrGovernance({
 
   const authorityEvidence = await readAuthorityEvidence(authorityQuery);
   const { permissions, memberships } = authorityEvidence;
+
+  const classification = resolvePrGovernanceClassification({
+    criticalIndicatorsPresent: indicators.criticalIndicatorsPresent,
+    impactEvidenceComplete: indicators.evidenceComplete,
+    classificationComments: evidence.classificationComments,
+    author: evidence.author,
+    headSha: evidence.headSha,
+    permissions,
+    memberships,
+  });
+
+  const approvals = evaluatePrApprovals({
+    author: evidence.author,
+    headSha: evidence.headSha,
+    reviews: evidence.reviews,
+    critical: classification.classification === 'CRITICAL',
+  });
 
   const ownership = ownershipRequirements.some(
     (requirement) => requirement.eligibleTeams.length === 0,

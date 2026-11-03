@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+import { getCurrentBranchName, validateBranchName } from '../lib/repository-conventions.mjs';
+
+const branch = getCurrentBranchName();
+const violation = validateBranchName(branch);
+if (violation) console.error(`${violation.code}: ${violation.branch}`);
+const status = violation ? 'FAIL' : 'PASS';
+console.log(
+  `QG_RESULT ${JSON.stringify({ gateId: 'QG-BRANCH-001', status, exitCode: violation ? 1 : 0 })}`,
+);
+process.exitCode = violation ? 1 : 0;

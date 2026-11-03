@@ -1,4 +1,4 @@
-import test from 'node:test';
+﻿import test from 'node:test';
 import assert from 'node:assert/strict';
 import { inspectPrGovernance } from '../lib/pr-governance.inspect.mjs';
 
@@ -27,7 +27,7 @@ const review = {
 const options = { owner: 'EQ-LABS-TECH', repo: 'ee-monorepo', number: 7, token: 'fake' };
 function classificationComment(
   login = 'reviewer',
-  body = `EE-LABS-IMPACT: ORDINARY\nHEAD: ${sha}`,
+  body = `EE-LABS-IMPACT: CRITICAL\nHEAD: ${sha}\nRATIONALE: Public contract impact`,
 ) {
   return {
     id: 123,
@@ -77,11 +77,12 @@ test('critical one-approval evidence remains PENDING', async () => {
   assert.equal(report.approvalEvidence.status, 'BLOCKED');
 });
 
-test('ordinary-looking path with one approval remains PENDING', async () => {
+test('ordinary-looking path with one approval is ORDINARY without Architecture review', async () => {
   const report = await inspectPrGovernance({ ...options, fetchImpl: fixture(['README.md']) });
   assert.equal(report.status, 'PENDING');
   assert.equal(report.approvalEvidence.status, 'PASS');
-  assert.equal(report.classification.requiresImpactReview, true);
+  assert.equal(report.classification.status, 'ORDINARY');
+  assert.equal(report.classification.requiresImpactReview, false);
 });
 
 test('two approvals on critical path still cannot certify merge', async () => {
@@ -103,7 +104,7 @@ test('unavailable API fails closed', async () => {
   );
 });
 
-test('ordinary impact declaration is evidence, not authorization', async () => {
+test('unauthorized critical escalation leaves the complete noncritical change ordinary', async () => {
   const report = await inspectPrGovernance({
     ...options,
     fetchImpl: async (url, init) => {
@@ -113,9 +114,9 @@ test('ordinary impact declaration is evidence, not authorization', async () => {
     },
   });
 
-  assert.equal(report.classification.status, 'PENDING_REVIEW');
-  assert.equal(report.ordinaryClassificationEvidence.status, 'UNVERIFIED');
-  assert.deepEqual(report.ordinaryClassificationEvidence.candidates, [
+  assert.equal(report.classification.status, 'ORDINARY');
+  assert.equal(report.criticalEscalationEvidence.status, 'UNVERIFIED');
+  assert.deepEqual(report.criticalEscalationEvidence.candidates, [
     {
       reviewer: 'reviewer',
       headSha: sha,
@@ -125,9 +126,9 @@ test('ordinary impact declaration is evidence, not authorization', async () => {
     },
   ]);
 
-  assert.equal(report.ordinaryClassificationEvidence.reason, 'reviewer-authority-not-yet-verified');
-  assert.deepEqual(report.ordinaryClassificationEvidence.authorizedReviewers, []);
-  assert.equal(report.classification.status, 'PENDING_REVIEW');
+  assert.equal(report.criticalEscalationEvidence.reason, 'architecture-escalation-not-verified');
+  assert.deepEqual(report.criticalEscalationEvidence.authorizedReviewers, []);
+  assert.equal(report.classification.status, 'ORDINARY');
   assert.equal(report.mode, 'ADVISORY');
   assert.equal(report.status, 'PENDING');
 });
@@ -139,10 +140,10 @@ test('critical path cannot be downgraded by impact declaration', async () => {
   });
 
   assert.equal(report.classification.status, 'CRITICAL');
-  assert.deepEqual(report.ordinaryClassificationEvidence.candidates, []);
+  assert.deepEqual(report.criticalEscalationEvidence.candidates, []);
 });
 
-test('author declaration cannot establish ordinary impact', async () => {
+test('author declaration cannot escalate a complete noncritical change', async () => {
   const report = await inspectPrGovernance({
     ...options,
     fetchImpl: fixture(
@@ -157,10 +158,10 @@ test('author declaration cannot establish ordinary impact', async () => {
     ),
   });
 
-  assert.deepEqual(report.ordinaryClassificationEvidence.candidates, []);
+  assert.deepEqual(report.criticalEscalationEvidence.candidates, []);
 });
 
-test('stale declaration does not count as current evidence', async () => {
+test('stale escalation does not count as current evidence', async () => {
   const report = await inspectPrGovernance({
     ...options,
     fetchImpl: fixture(
@@ -174,7 +175,7 @@ test('stale declaration does not count as current evidence', async () => {
     ),
   });
 
-  assert.deepEqual(report.ordinaryClassificationEvidence.candidates, []);
+  assert.deepEqual(report.criticalEscalationEvidence.candidates, []);
 });
 
 test('approval review text alone cannot classify impact', async () => {
@@ -184,12 +185,12 @@ test('approval review text alone cannot classify impact', async () => {
   });
 
   assert.equal(report.approvalEvidence.status, 'PASS');
-  assert.deepEqual(report.ordinaryClassificationEvidence.candidates, []);
-  assert.equal(report.classification.status, 'PENDING_REVIEW');
+  assert.deepEqual(report.criticalEscalationEvidence.candidates, []);
+  assert.equal(report.classification.status, 'ORDINARY');
   assert.equal(report.status, 'PENDING');
 });
 
-test('read-only reviewer cannot authorize ordinary classification', async () => {
+test('read-only reviewer cannot escalate an ordinary classification', async () => {
   const baseFetch = fixture(['README.md'], [review], [classificationComment()]);
 
   const report = await inspectPrGovernance({
@@ -211,13 +212,13 @@ test('read-only reviewer cannot authorize ordinary classification', async () => 
     },
   });
 
-  assert.equal(report.classification.status, 'PENDING_REVIEW');
-  assert.equal(report.ordinaryClassificationEvidence.status, 'UNVERIFIED');
-  assert.deepEqual(report.ordinaryClassificationEvidence.candidates, []);
+  assert.equal(report.classification.status, 'ORDINARY');
+  assert.equal(report.criticalEscalationEvidence.status, 'UNVERIFIED');
+  assert.deepEqual(report.criticalEscalationEvidence.candidates, []);
   assert.equal(report.status, 'PENDING');
 });
 
-test('only reviewers with write access remain ordinary candidates', async () => {
+test('only reviewers with write access remain escalation candidates', async () => {
   const baseFetch = fixture(
     ['README.md'],
     [
@@ -251,12 +252,12 @@ test('only reviewers with write access remain ordinary candidates', async () => 
     },
   });
 
-  assert.equal(report.ordinaryClassificationEvidence.status, 'UNVERIFIED');
+  assert.equal(report.criticalEscalationEvidence.status, 'UNVERIFIED');
   assert.deepEqual(
-    report.ordinaryClassificationEvidence.candidates.map((candidate) => candidate.reviewer),
+    report.criticalEscalationEvidence.candidates.map((candidate) => candidate.reviewer),
     ['reviewer'],
   );
-  assert.equal(report.classification.status, 'PENDING_REVIEW');
+  assert.equal(report.classification.status, 'ORDINARY');
   assert.equal(report.status, 'PENDING');
 });
 
@@ -290,7 +291,7 @@ test('critical changes do not query permissions to downgrade impact', async () =
   });
 
   assert.equal(report.classification.status, 'CRITICAL');
-  assert.deepEqual(report.ordinaryClassificationEvidence.candidates, []);
+  assert.deepEqual(report.criticalEscalationEvidence.candidates, []);
   assert.equal(report.status, 'PENDING');
 });
 
@@ -309,11 +310,11 @@ test('quoted ordinary declarations are not accepted as evidence', async () => {
     ),
   });
 
-  assert.deepEqual(report.ordinaryClassificationEvidence.candidates, []);
-  assert.equal(report.classification.status, 'PENDING_REVIEW');
+  assert.deepEqual(report.criticalEscalationEvidence.candidates, []);
+  assert.equal(report.classification.status, 'ORDINARY');
 });
 
-test('ordinary declaration embedded in review prose is not accepted', async () => {
+test('critical escalation embedded in review prose is not accepted', async () => {
   const report = await inspectPrGovernance({
     ...options,
     fetchImpl: fixture(
@@ -328,11 +329,11 @@ test('ordinary declaration embedded in review prose is not accepted', async () =
     ),
   });
 
-  assert.deepEqual(report.ordinaryClassificationEvidence.candidates, []);
+  assert.deepEqual(report.criticalEscalationEvidence.candidates, []);
   assert.equal(report.status, 'PENDING');
 });
 
-test('ordinary declaration tolerates surrounding whitespace', async () => {
+test('critical escalation tolerates surrounding whitespace', async () => {
   const report = await inspectPrGovernance({
     ...options,
     fetchImpl: fixture(
@@ -343,16 +344,21 @@ test('ordinary declaration tolerates surrounding whitespace', async () => {
           body: 'regular review text',
         },
       ],
-      [classificationComment('reviewer', `  \nEE-LABS-IMPACT: ORDINARY\nHEAD: ${sha}\n  `)],
+      [
+        classificationComment(
+          'reviewer',
+          `  \nEE-LABS-IMPACT: CRITICAL\nHEAD: ${sha}\nRATIONALE: Public contract impact\n  `,
+        ),
+      ],
     ),
   });
 
-  assert.equal(report.ordinaryClassificationEvidence.candidates.length, 1);
-  assert.equal(report.ordinaryClassificationEvidence.status, 'UNVERIFIED');
+  assert.equal(report.criticalEscalationEvidence.candidates.length, 1);
+  assert.equal(report.criticalEscalationEvidence.status, 'UNVERIFIED');
   assert.equal(report.status, 'PENDING');
 });
 
-test('rejects ordinary evidence changed during permission verification', async () => {
+test('rejects escalation evidence changed during permission verification', async () => {
   let commentReads = 0;
 
   const baseFetch = fixture(['README.md'], [review], [classificationComment()]);
@@ -394,7 +400,7 @@ test('rejects ordinary evidence changed during permission verification', async (
   assert.equal(commentReads, 4);
 });
 
-test('active architecture reviewer establishes ordinary impact evidence', async () => {
+test('active architecture reviewer can escalate to critical', async () => {
   const baseFetch = fixture(['README.md'], [review], [classificationComment()]);
 
   const report = await inspectPrGovernance({
@@ -418,14 +424,16 @@ test('active architecture reviewer establishes ordinary impact evidence', async 
     },
   });
 
-  assert.equal(report.classification.status, 'ORDINARY');
-  assert.equal(report.ordinaryClassificationEvidence.status, 'VERIFIED');
-  assert.deepEqual(report.ordinaryClassificationEvidence.authorizedReviewers, ['reviewer']);
+  assert.equal(report.classification.status, 'CRITICAL');
+  assert.equal(report.criticalEscalationEvidence.status, 'VERIFIED');
+  assert.deepEqual(report.criticalEscalationEvidence.authorizedReviewers, ['reviewer']);
+  assert.equal(report.approvalEvidence.requiredCount, 2);
+  assert.equal(report.approvalEvidence.status, 'BLOCKED');
   assert.equal(report.mode, 'ADVISORY');
   assert.equal(report.status, 'PENDING');
 });
 
-test('inactive architecture membership cannot establish ordinary impact', async () => {
+test('inactive architecture membership cannot escalate impact', async () => {
   const baseFetch = fixture(['README.md'], [review], [classificationComment()]);
 
   const report = await inspectPrGovernance({
@@ -447,9 +455,9 @@ test('inactive architecture membership cannot establish ordinary impact', async 
     },
   });
 
-  assert.equal(report.classification.status, 'PENDING_REVIEW');
-  assert.equal(report.ordinaryClassificationEvidence.status, 'UNVERIFIED');
-  assert.deepEqual(report.ordinaryClassificationEvidence.authorizedReviewers, []);
+  assert.equal(report.classification.status, 'ORDINARY');
+  assert.equal(report.criticalEscalationEvidence.status, 'UNVERIFIED');
+  assert.deepEqual(report.criticalEscalationEvidence.authorizedReviewers, []);
   assert.equal(report.status, 'PENDING');
 });
 

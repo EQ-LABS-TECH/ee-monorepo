@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Gobernanza                                                             |
 | **Nivel**             | Especializado                                                          |
 | **Normativo**         | Sí                                                                     |
-| **Versión**           | v1.4.0                                                                 |
+| **Versión**           | v1.5.0                                                                 |
 | **Estado**            | Congelado                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-006                                                             |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                   |
 | **Fecha de creación** | 2026-09-21                                                             |
-| **Última revisión**   | 2026-11-01                                                             |
+| **Última revisión**   | 2026-11-02                                                             |
 | **Próxima revisión**  | No aplica — Documento Congelado (cambio solo vía RFC)                  |
 
 ---
@@ -857,16 +857,15 @@ La materialización operativa del régimen de aprobaciones reforzadas utilizará
 - **PENDING_REVIEW:** impedirá emitir un resultado favorable.
 - **Quality Gates:** mantendrán el required check `Validate` y los contratos definidos por EE-DOC-010.
 
-La clasificación `ORDINARY` estará sujeta a la autoridad definida por EE-DOC-005 y la decisión gobernada en EE-RFC-003. La falta de indicadores críticos no implicará una clasificación ordinaria automática.
+La política normativa de clasificación está definida en **EE-DOC-005 §08.3.1**. Esta sección materializa la evidencia en GitHub para el HEAD actual y no redefine los criterios de impacto.
 
 **Evidencia independiente de clasificación.**
 
 - Los indicadores críticos determinan `CRITICAL` y no pueden ser anulados por una declaración ordinaria.
-- Sin indicadores críticos, `ORDINARY` requiere un comentario de conversación del Pull Request cuyo cuerpo sea `EE-LABS-IMPACT: ORDINARY`, seguido de `HEAD: <SHA actual de 40 caracteres>` en la línea siguiente.
-- La declaración solo es válida si la emite una persona distinta del autor, con permiso efectivo de escritura y membresía activa en el Equipo de Arquitectura. Un comentario del autor, bot, usuario sin permiso o miembro inactivo no clasifica el Pull Request.
-- Esta declaración clasifica impacto; no es una aprobación y no cuenta para el umbral de revisión. Las aprobaciones se obtienen exclusivamente de revisiones aprobadas vigentes de GitHub, sin texto especial.
-- Un SHA distinto, edición o eliminación del comentario, revocación de permisos o cambio de membresía invalida la evidencia correspondiente y requiere reevaluar el Pull Request.
-- Si no existe evidencia autorizada, la clasificación es `PENDING_REVIEW` y el check no puede ser favorable.
+- Un miembro activo de Arquitectura con permiso efectivo de escritura, distinto del autor y de cualquier bot, puede escalar un caso sin indicador automático mediante comentario ligado al HEAD: `EE-LABS-IMPACT: CRITICAL`, `HEAD: <SHA actual>` y `RATIONALE: <motivo>` en líneas consecutivas.
+- El comentario de escalamiento es evidencia de clasificación, no una aprobación; requiere motivo no vacío y verificación de identidad, permisos, membresía y SHA vigente. Un comentario no autorizado no puede reducir una clasificación automática `CRITICAL`.
+- La clasificación no cuenta como code review. `ORDINARY` requiere una aprobación independiente calificada; `CRITICAL` requiere dos. Las aprobaciones se obtienen de revisiones aprobadas vigentes de GitHub, sin texto especial.
+- Cambios de HEAD, edición o eliminación del comentario o revocación de permisos/membresía invalidan el escalamiento y provocan reevaluación. Sin indicador y con evidencia completa, el valor por defecto es `ORDINARY`; `PENDING_REVIEW` se reserva para evidencia ausente, incompleta o disputada.
 
 **Ejecución e identidad confiables.**
 
@@ -877,6 +876,8 @@ La secuencia de enforcement exigirá que `Validate` complete con conclusión sat
 La GitHub App de gobernanza tendrá una identidad independiente de la automatización de releases, permisos mínimos y vinculación explícita como emisor autorizado del required check.
 
 El resultado se asociará al HEAD evaluado y verificará clasificación, aprobaciones, elegibilidad de revisores, CODEOWNERS y evidencias vigentes. Ante errores o evidencia insuficiente no se emitirá conformidad.
+
+Los errores operativos emitirán diagnósticos estructurados con fase, código interno estable y estado HTTP cuando exista. Los logs no incluirán mensajes externos, respuestas completas de API, tokens ni secretos. La distinción entre bloqueo de política y error operativo deberá conservarse en el resultado de reconciliación.
 
 **Eventos, invalidación y reconciliación.**
 
@@ -1220,7 +1221,9 @@ La asignación concreta deberá respetar la separación entre:
 
 Cuando la documentación normativa o los ADRs residan bajo rutas específicas (por ejemplo `docs/architecture/`, `docs/adr/`), el ownership deberá mapearse a esas rutas reales de la estructura física vigente (**EE-DOC-006**), sin crear ownership ficticio sobre rutas inexistentes.
 
-La asignación concreta de equipos a cada categoría queda pendiente de la implementación de `EE-DOC-007`.
+La regla por defecto asigna documentación ordinaria a Maintainers. Arquitectura conserva ownership de `docs/architecture/`, `docs/adr/`, `docs/rfc/` y los artefactos de auditoría normativa `docs/validation/audit/EE-AUDIT-*`. La documentación de implementación, evidencia y validación rutinaria bajo `docs/developer/` y `docs/validation/` corresponde a Maintainers. Los patrones más específicos prevalecen según el orden de `.github/CODEOWNERS`.
+
+La configuración de `.github/CODEOWNERS` es evidencia as-built; no cambia por sí sola permisos efectivos, rulesets ni cantidad de aprobaciones exigidas.
 
 ### 08.8. Código del Ecosistema
 
@@ -5548,6 +5551,7 @@ La implementación concreta de herramientas, automatizaciones o políticas que e
 | **v1.2.0** | 2026-10-22 | Equipo de Arquitectura                            | Equipo de Arquitectura | Alineación del workflow colaborativo       | Aclara aplicación en GitHub de rama por cambio coherente, PR creado por el usuario, revisión/merge autorizado, separación entre documentación y configuración.                                                             | **Congelado**      |
 | **v1.3.0** | 2026-10-31 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 Actions-only                        | EE-RFC-003: define aprobaciones dinámicas, identidad del check, límites operativos y activación gobernada.                                                                                                                 | **Congelado**      |
 | **v1.4.0** | 2026-11-01 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 orden y clasificación independiente | EE-RFC-003 gate de `Validate` sobre HEAD actual; clasificación `ORDINARY` separada de aprobaciones; reevaluación de señales confiables.                                                                                    | **Congelado**      |
+| **v1.5.0** | 2026-11-02 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 y ownership documental escalables   | `ORDINARY` por evidencia completa; escalamiento autorizado a `CRITICAL`; diagnósticos seguros; CODEOWNERS para documentación rutinaria y normativa.                                                                        | **Congelado**      |
 
 ---
 

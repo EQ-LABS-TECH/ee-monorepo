@@ -99,6 +99,7 @@ export async function executeGovernanceCommand({ env, run = runPrGovernance, log
       classification: result.classification,
       status: result.decision.status,
       conclusion: result.conclusion,
+      reasonCodes: result.decision.reasons,
     }),
   );
 

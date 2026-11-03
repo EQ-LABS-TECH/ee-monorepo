@@ -1,4 +1,5 @@
 import { parseCodeowners, resolveCodeowners } from '@eq-labs/governance/pr-governance/codeowners';
+import { createGitHubHttpError } from './pr-governance.github-error.mjs';
 
 const SHA = /^[0-9a-f]{40}$/i;
 const OWNER = /^[a-z\d-]+$/i;
@@ -40,7 +41,7 @@ export async function readCodeownersEvidence({
     });
 
     if (!response.ok) {
-      throw new Error(`GitHub CODEOWNERS request returned HTTP ${response.status}`);
+      throw createGitHubHttpError(response, 'GitHub CODEOWNERS request');
     }
 
     return response.json();

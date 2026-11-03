@@ -1,6 +1,7 @@
 import { discoverOpenGovernancePrs } from './pr-governance.discover-open.mjs';
 import { resolvePrGovernanceRoute } from './pr-governance.resolve.mjs';
 import { runPrGovernance } from './pr-governance.run.mjs';
+import { getGitHubRequestId } from './pr-governance.github-error.mjs';
 
 function getHttpStatus(error, seen = new Set()) {
   if (!(error instanceof Error) || seen.has(error)) return undefined;
@@ -86,6 +87,7 @@ export async function reconcileOpenGovernancePrs({
   // within this invocation.
   for (const number of numbers) {
     let phase = 'resolve';
+    let expectedHeadSha;
 
     try {
       const resolved = await resolve({
@@ -109,6 +111,7 @@ export async function reconcileOpenGovernancePrs({
       ) {
         throw new Error('Invalid resolved governance PR identity');
       }
+      expectedHeadSha = resolved.expectedHeadSha.toLowerCase();
 
       phase = 'execute';
 
@@ -151,14 +154,28 @@ export async function reconcileOpenGovernancePrs({
     } catch (error) {
       // Do not expose API responses or credentials in logs.
       const httpStatus = getHttpStatus(error);
+      const diagnosticHttpStatus = error?.pn017Diagnostic?.httpStatus ?? httpStatus;
+      const requestId = getGitHubRequestId(error);
 
       console.error(
         'PN-017 reconciliation PR failure:',
         JSON.stringify({
           number,
-          phase,
+          status: 'ERROR',
+          ...(expectedHeadSha ? { headSha: expectedHeadSha } : {}),
+          ...(requestId ? { requestId } : {}),
+          phase: error?.pn017Diagnostic?.phase ?? phase,
+          code: /^[a-z0-9-]+$/.test(error?.pn017Diagnostic?.code ?? '')
+            ? error.pn017Diagnostic.code
+            : httpStatus !== undefined
+              ? 'github-http-error'
+              : error instanceof TypeError
+                ? 'invalid-evidence-or-input'
+                : error instanceof AggregateError
+                  ? 'aggregate-operation-failed'
+                  : 'unexpected-operation-error',
           kind: getErrorKind(error),
-          ...(httpStatus !== undefined ? { httpStatus } : {}),
+          ...(diagnosticHttpStatus !== undefined ? { httpStatus: diagnosticHttpStatus } : {}),
         }),
       );
 

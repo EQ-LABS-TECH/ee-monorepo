@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**     | Fundacional                                                                |
 | **Nivel**             | Estratégico                                                                |
 | **Normativo**         | Sí                                                                         |
-| **Versión**           | v1.5.0                                                                     |
+| **Versión**           | v1.6.0                                                                     |
 | **Estado**            | Congelado                                                                  |
 | **Propietario**       | Equipo de Arquitectura                                                     |
 | **Documento padre**   | EE-DOC-004                                                                 |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**      | Equipo de Arquitectura                                                     |
 | **Audiencia**         | Arquitectura, Desarrollo, IA, DevOps                                       |
 | **Fecha de creación** | 2026-08-02                                                                 |
-| **Última revisión**   | 2026-10-22                                                                 |
+| **Última revisión**   | 2026-11-02                                                                 |
 | **Próxima revisión**  | No aplica — Documento Congelado                                            |
 
 ---
@@ -106,7 +106,7 @@ Un documento normativo aprobado constituye la referencia normativa vigente duran
 6. Si el descubrimiento es Rechazado, no se incorpora a la implementación ni modifica el documento normativo.
 7. Si el descubrimiento es Diferido, se registra como trabajo futuro mediante un Issue o mecanismo equivalente de seguimiento definido por el proyecto. El descubrimiento diferido no modifica la especificación normativa vigente ni bloquea la continuación de la implementación actual.
 8. Si el descubrimiento es Adoptado, debe clasificarse como Aclaración, Especialización Técnica, Decisión Arquitectónica o Cambio Significativo / Transversal.
-9. Cuando el descubrimiento adoptado requiera modificar o complementar el contenido normativo del documento aplicable, deberá iniciarse el proceso de actualización documental correspondiente. La modificación no será normativa ni exigible como especificación vigente hasta que la nueva versión haya sido aprobada y emitida conforme al ciclo documental definido en EE-DOC-002. La implementación deberá alinearse con la nueva versión antes de considerarse conforme.
+9. Cuando el descubrimiento adoptado requiera modificar o complementar el contenido normativo del documento aplicable, deberá iniciarse el proceso de actualización documental correspondiente. La modificación no será normativa ni exigible como especificación vigente hasta que la nueva versión haya sido aprobada y emitida conforme al ciclo documental definido en EE-DOC-002. La edición de metadatos e historial respetará las reglas de EE-DOC-002 §05 y §11. La implementación deberá alinearse con la nueva versión antes de considerarse conforme.
 10. Cuando corresponda, deben generarse y aprobarse los ADR o RFC asociados.
 11. La implementación debe continuar utilizando exclusivamente la especificación normativa vigente resultante del proceso de cambio aprobado y emitido.
 12. El documento no podrá ser congelado mientras existan desviaciones conocidas respecto de la especificación que no hayan sido resueltas, formalmente aceptadas mediante el mecanismo de gobernanza aplicable o incorporadas a la versión normativa correspondiente. La congelación solo podrá producirse después de completar todas las fases de Implementación, sus Validaciones correspondientes, la consolidación y validación de la Documentación Técnica y la Validación Final.
@@ -1077,30 +1077,35 @@ El Engineering Ecosystem soporta dos modelos de branching, dependiendo de la com
 
 ### 06.2. Tipos de Ramas
 
-| Tipo de Rama    | Propósito                                | Ciclo de Vida                                                                                                                    | Ejemplo                       |
-| :-------------- | :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------- | :---------------------------- |
-| **main**        | Rama principal de producción.            | Permanente. Protegida.                                                                                                           | `main`                        |
-| **develop**     | Rama de integración continua (opcional). | Permanente (si se usa). Protegida.                                                                                               | `develop`                     |
-| **feature/**    | Nueva funcionalidad.                     | Nace de `main` o `develop`. Muere en `main` o `develop`.                                                                         | `feature/user-authentication` |
-| **bugfix/**     | Corrección de errores no críticos.       | Nace de `main` o `develop`. Muere en `main` o `develop`.                                                                         | `bugfix/login-error`          |
-| **hotfix/**     | Corrección urgente en producción.        | Nace de `main`. Muere en `main` y `develop`.                                                                                     | `hotfix/security-patch`       |
-| **release/**    | Preparación de una nueva versión.        | En Main-oriented nace de `main` y se integra en `main`; en Main + Develop sigue el flujo de release definido por esa estrategia. | `release/v1.2.0`              |
-| **spike/**      | Investigación o prototipo.               | Nace de `main` o `develop`. Se descarta o se fusiona.                                                                            | `spike/new-auth-flow`         |
-| **docs/**       | Documentación exclusivamente.            | Nace de `main`. Muere en `main`.                                                                                                 | `docs/api-reference`          |
-| **refactor/**   | Refactorización sin cambio funcional.    | Nace de `main` o `develop`. Muere en `main` o `develop`.                                                                         | `refactor/kernel-module`      |
-| **experiment/** | Experimentos sin garantía de fusión.     | Nace de `main`. Se descarta o se fusiona.                                                                                        | `experiment/new-ai-model`     |
+| Tipo de Rama                                            | Propósito                                          | Ciclo de Vida                                                                                                                    | Ejemplo                      |
+| :------------------------------------------------------ | :------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------- | :--------------------------- |
+| **main**                                                | Rama principal de producción.                      | Permanente. Protegida.                                                                                                           | `main`                       |
+| **develop**                                             | Rama de integración continua (opcional).           | Permanente (si se usa). Protegida.                                                                                               | `develop`                    |
+| **feat/** / **feature/**                                | Nueva funcionalidad.                               | Nace de la rama base del modelo. Se integra por PR.                                                                              | `feat/user-authentication`   |
+| **fix/** / **bugfix/**                                  | Corrección de errores.                             | Nace de la rama base del modelo. Se integra por PR.                                                                              | `fix/login-error`            |
+| **hotfix/**                                             | Corrección urgente en producción.                  | Nace de `main`. Se integra por PR urgente.                                                                                       | `hotfix/security-patch`      |
+| **release/**                                            | Preparación de una nueva versión.                  | En Main-oriented nace de `main` y se integra en `main`; en Main + Develop sigue el flujo de release definido por esa estrategia. | `release/v1.2.0`             |
+| **spike/**                                              | Investigación o prototipo.                         | Nace de `main` o `develop`. Se descarta o se fusiona.                                                                            | `spike/new-auth-flow`        |
+| **docs/**                                               | Documentación exclusivamente.                      | Nace de `main`. Muere en `main`.                                                                                                 | `docs/api-reference`         |
+| **refactor/**                                           | Refactorización sin cambio funcional.              | Nace de `main` o `develop`. Muere en `main` o `develop`.                                                                         | `refactor/kernel-module`     |
+| **experiment/**                                         | Experimentos sin garantía de fusión.               | Nace de `main`. Se descarta o se fusiona.                                                                                        | `experiment/new-ai-model`    |
+| **test/**                                               | Cambios dedicados a pruebas.                       | Nace de la rama base y se integra por PR.                                                                                        | `test/governance-unit-tests` |
+| **chore/**, **build/**, **ci/**, **perf/**, **revert/** | Mantenimiento, build, CI, rendimiento o reversión. | Ramas cortas integradas por PR.                                                                                                  | `chore/deps-update`          |
 
 ### 06.3. Reglas de Creación
 
-| Regla  | Descripción                                                                                       |
-| :----: | :------------------------------------------------------------------------------------------------ |
-| **R1** | Toda rama debe originarse desde la rama base correspondiente a su tipo y estrategia de branching. |
-| **R2** | El nombre de la rama debe seguir el formato `<tipo>/<descripción>` en `kebab-case`.               |
-| **R3** | La descripción debe ser breve y descriptiva.                                                      |
-| **R4** | Las ramas deben tener una vida corta (máximo 7 días sin actividad).                               |
-| **R5** | Las ramas deben ser eliminadas después de ser fusionadas.                                         |
+| Regla  | Descripción                                                                                                                                 |
+| :----: | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| **R1** | Toda rama debe originarse desde la rama base correspondiente a su tipo y estrategia de branching.                                           |
+| **R2** | El nombre de la rama debe seguir el formato `<tipo>/<descripción>` en `kebab-case`.                                                         |
+| **R3** | La descripción debe ser breve y descriptiva.                                                                                                |
+| **R4** | Las ramas deben tener una vida corta (máximo 7 días sin actividad).                                                                         |
+| **R5** | Las ramas deben ser eliminadas después de ser fusionadas.                                                                                   |
+| **R6** | El prefijo debe pertenecer al catálogo de §06.2; el sufijo será `kebab-case`, salvo `release/vX.Y.Z`. `QG-BRANCH-001` valida Pull Requests. |
 
 ### 06.4. Protección de Ramas
+
+La rama principal del repositorio (`main` o `master`, según la configuración del proyecto) deberá protegerse contra escritura directa y cambios destructivos; la integración de cambios se realizará mediante Pull Request con revisiones y status checks requeridos. Esta norma describe el requisito y no certifica por sí sola la configuración efectiva de GitHub.
 
 | Rama         | Protección                                    | Requisitos para Merge                                    |
 | :----------- | :-------------------------------------------- | :------------------------------------------------------- |
@@ -1172,6 +1177,8 @@ Cada rama de trabajo debe representar **un cambio coherente**, delimitado por ob
 | **R2** | Los commits deben ser frecuentes (varios por día).     |
 | **R3** | Los commits deben ser pequeños y enfocados.            |
 
+Los encabezados se validan conforme a Conventional Commits por `QG-COMMIT-001` en el flujo de Pull Request. Los hooks versionados en `.githooks/` ofrecen validación local de formato, lint, nombres y mensajes; se instalan por clon mediante `pnpm run hooks:install` y no sustituyen el gate de CI. Los commits de merge generados por la plataforma se excluyen del análisis; los commits de trabajo deben cumplir el formato.
+
 ---
 
 ## 08. Pull Request Workflow
@@ -1209,6 +1216,22 @@ Cada rama de trabajo debe representar **un cambio coherente**, delimitado por ob
 | **R1** | Al menos 1 approval de un reviewer calificado.                                                                                                                                                                                                                                                                                                                                                         |
 | **R2** | Los reviewers deben ser asignados automáticamente basándose en `CODEOWNERS`.                                                                                                                                                                                                                                                                                                                           |
 | **R3** | **Cambio crítico** (definición en este documento): afecta seguridad, datos productivos, release/hotfix a `main`, o contratos públicos de paquetes publicados. Requiere **≥2 approvals** de reviewers calificados **o** el umbral que fije **CODEOWNERS** / EE-DOC-007 si es más estricto. Si el ruleset as-built exige solo 1 approval, el umbral 2 es **objetivo PENDING** hasta materializar en 007. |
+
+#### 08.3.1. Clasificación de impacto — PN-017
+
+La clasificación de impacto es independiente de la revisión del código. PN-017 determina `CRITICAL` automáticamente cuando los paths completos del Pull Request coinciden con un indicador crítico vigente. Esta clasificación automática no puede degradarse mediante comentarios.
+
+Si la evidencia de paths del HEAD actual está completa y no hay indicador crítico, la clasificación predeterminada es `ORDINARY`; no se requiere una intervención de Arquitectura por cada cambio ordinario. La evidencia ausente, incompleta o disputada produce `PENDING_REVIEW` y no puede aprobar el Pull Request.
+
+Un miembro activo del Equipo de Arquitectura, con permiso efectivo de escritura y distinto del autor y de cualquier bot, puede escalar a `CRITICAL` un cambio sin indicador automático mediante comentario de conversación ligado al HEAD:
+
+```text
+EE-LABS-IMPACT: CRITICAL
+HEAD: <SHA actual de 40 caracteres hexadecimales>
+RATIONALE: <motivo no vacío>
+```
+
+El comentario es evidencia de clasificación, no una aprobación de código. Cambios de HEAD, edición/eliminación del comentario o pérdida de autoridad invalidan el escalamiento. `ORDINARY` requiere una aprobación independiente calificada; `CRITICAL` requiere dos. La pertenencia a Arquitectura no sustituye CODEOWNERS ni los requisitos de review aplicables.
 
 ### 08.4. Merge Strategy
 
@@ -1250,22 +1273,27 @@ Cada rama de trabajo debe representar **un cambio coherente**, delimitado por ob
 | **Completitud**    | La revisión debe cubrir todos los aspectos del cambio.     |
 | **Automatización** | Todo lo que puede ser automatizado, debe ser automatizado. |
 
+### 09.3. Secretos y configuración local
+
+Las credenciales reales, tokens, claves privadas y valores sensibles no se incluirán en el repositorio ni en ejemplos, fixtures o logs. La configuración local podrá documentarse en `.env.example` solo con nombres de variables y valores ficticios; el archivo `.env` y equivalentes con valores reales deberán estar ignorados por Git. Los secretos de CI se obtendrán del almacén protegido configurado para el entorno y job autorizados. La detección automatizada se rige por EE-DOC-010.
+
 ---
 
 ## 10. Quality Gates
 
 ### 10.1. Mandatory Gates (Obligatorios)
 
-| Gate                         | Descripción                                                               | Ejecutor / Estándar                                                                                                                                                                                    | Availability (EE-DOC-010)                                      | Fallo                                             |
-| :--------------------------- | :------------------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------- | :------------------------------------------------ |
-| **Build Validation**         | Verifica que todos los workspaces compilan correctamente.                 | Turborepo (`pnpm build`)                                                                                                                                                                               | Ver EE-DOC-010 (QG build)                                      | Bloquea el merge.                                 |
-| **Lint**                     | Verificación de estilo de código y reglas estáticas.                      | ESLint (`pnpm lint`)                                                                                                                                                                                   | Ver EE-DOC-010                                                 | Bloquea el merge.                                 |
-| **Formatting**               | Verificación de formato (**check**, no escritura).                        | Prettier `--check` / QG-FMT-001 (EE-DOC-010). `pnpm format` es local, no es el gate.                                                                                                                   | Ver EE-DOC-010                                                 | Bloquea el merge.                                 |
-| **Unit & Integration Tests** | Pruebas unitarias, integración y componentes.                             | Vitest (`pnpm test` / EE-ADR-002)                                                                                                                                                                      | Ver EE-DOC-010                                                 | Bloquea el merge.                                 |
-| **E2E Tests**                | Pruebas End-to-End en apps con interfaz.                                  | Playwright (EE-ADR-002). **Comando raíz:** el script canónico se define en EE-DOC-006 / EE-DOC-011 / `package.json`; si no existe `pnpm e2e`, el gate queda **PENDING** (§10.4) hasta materialización. | **PENDING** si no hay script/orquestación (V-E2E / EE-DOC-015) | Bloquea el merge **cuando Implemented+Enforced**. |
-| **Architecture & Structure** | Estructura y top-level; **capas/ciclos de imports** según disponibilidad. | `pnpm validate` / QG-ARCH-001. QG-ARCH-001 **as-built** valida top-level; capas y ciclos = **PENDING** (V-ARCH-LAYERS).                                                                                | Top-level: según 010; capas: **PENDING**                       | Bloquea el merge según Availability.              |
-| **Documentation Validation** | Gates documentales definidos en EE-DOC-010 / EE-DOC-012.                  | QG-DOC (as-built: archivos raíz / `package.json` según 010). Ampliación corpus = **PENDING** (`PA-001` / validateDocumentation).                                                                       | Ver EE-DOC-010; ampliación **PENDING**                         | Bloquea según Availability.                       |
-| **Security Audit**           | Auditoría de dependencias / secret scanning según EE-DOC-010.             | `pnpm audit` / secret scan (waivers EE-WAIVE / 010 §04.6.1)                                                                                                                                            | Ver EE-DOC-010                                                 | Bloquea según régimen / waiver.                   |
+| Gate                         | Descripción                                                                                                 | Ejecutor / Estándar                                                                                                                                                                                    | Availability (EE-DOC-010)                                                       | Fallo                                             |
+| :--------------------------- | :---------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------ | :------------------------------------------------ |
+| **Build Validation**         | Verifica que todos los workspaces compilan correctamente.                                                   | Turborepo (`pnpm build`)                                                                                                                                                                               | Ver EE-DOC-010 (QG build)                                                       | Bloquea el merge.                                 |
+| **Lint**                     | Verificación de estilo de código y reglas estáticas.                                                        | ESLint (`pnpm lint`)                                                                                                                                                                                   | Ver EE-DOC-010                                                                  | Bloquea el merge.                                 |
+| **Formatting**               | Verificación de formato (**check**, no escritura).                                                          | Prettier `--check` / QG-FMT-001 (EE-DOC-010). `pnpm format` es local, no es el gate.                                                                                                                   | Ver EE-DOC-010                                                                  | Bloquea el merge.                                 |
+| **Repository Conventions**   | Nombres de artefactos, ramas y encabezados de commits.                                                      | `QG-NAM-001`, `QG-BRANCH-001`, `QG-COMMIT-001` (EE-DOC-010); hooks locales opcionales.                                                                                                                 | ACTIVE; integrado en `validate`; CI remoto pendiente de evidencia               | Bloquea el merge conforme a Availability.         |
+| **Unit & Integration Tests** | Pruebas unitarias, integración y componentes.                                                               | Vitest (`pnpm test` / EE-ADR-002)                                                                                                                                                                      | Ver EE-DOC-010                                                                  | Bloquea el merge.                                 |
+| **E2E Tests**                | Pruebas End-to-End en apps con interfaz.                                                                    | Playwright (EE-ADR-002). **Comando raíz:** el script canónico se define en EE-DOC-006 / EE-DOC-011 / `package.json`; si no existe `pnpm e2e`, el gate queda **PENDING** (§10.4) hasta materialización. | **PENDING** si no hay script/orquestación (V-E2E / EE-DOC-015)                  | Bloquea el merge **cuando Implemented+Enforced**. |
+| **Architecture & Structure** | Estructura y top-level; dependencias/ciclos declarados e imports workspace dentro del alcance implementado. | `pnpm validate` / QG-ARCH-001. Valida top-level, manifests, ciclos e imports workspace en `src/`; los límites restantes se detallan en EE-DOC-010 §05.8.                                               | ACTIVE dentro del alcance de EE-DOC-010 §05.8; CI remoto pendiente de evidencia | Bloquea el merge según Availability.              |
+| **Documentation Validation** | Gates documentales definidos en EE-DOC-010 / EE-DOC-012.                                                    | QG-DOC (as-built: archivos raíz / `package.json` según 010). Ampliación corpus = **PENDING** (`PA-001` / validateDocumentation).                                                                       | Ver EE-DOC-010; ampliación **PENDING**                                          | Bloquea según Availability.                       |
+| **Security Audit**           | Auditoría de dependencias / secret scanning según EE-DOC-010.                                               | `pnpm audit` / secret scan (waivers EE-WAIVE / 010 §04.6.1)                                                                                                                                            | Ver EE-DOC-010                                                                  | Bloquea según régimen / waiver.                   |
 
 > **Availability:** el detalle de materialización (Implemented / Enforced / PENDING) es SSOT en **EE-DOC-010**. Este documento declara el **Mandatory**; no inventa PASS donde el mecanismo aún es PENDING (§10.4 / EE-ADR-004).
 
@@ -1590,7 +1618,7 @@ Una excepción de workflow modifica temporalmente la forma de ejecución del wor
 
 ---
 
-> **Availability:** hooks pre-commit/pre-push, husky y commitlint son **PENDING** de materialización salvo evidencia en el repo; la verificación continua de Conventional Commits se apoya en CI/PR según EE-DOC-007 / EE-DOC-010 cuando existan checks.
+> **Disponibilidad de hooks:** `.githooks/pre-commit` y `.githooks/commit-msg` son instalables localmente mediante `pnpm run hooks:install`. No se utiliza Husky ni commitlint. Los hooks son ayuda local y pueden omitirse; CI y el proceso de Pull Request son la aplicación obligatoria y verificable.
 
 ---
 
@@ -1615,15 +1643,16 @@ Una excepción de workflow modifica temporalmente la forma de ejecución del wor
 
 ## 18. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                | Cambios                                                                                                                            | Estado        |
-| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------- | :------------ |
-| **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                      | Versión inicial del Development Workflow                                                                                           | **Congelado** |
-| **v1.1.0** | 2026-08-20 | Equipo de Arquitectura | Equipo de Arquitectura | Incorporación de Implementación Adaptativa Controlada | Nueva Sección 04; actualización de principios, flujo SDLC y alcance                                                                | **Congelado** |
-| **v1.2.0** | 2026-08-21 | Equipo de Arquitectura | Equipo de Arquitectura | Implementación por fase y reordenamiento documental   | Se añadió Implementación → Validación → Borrador DT por fase; DT precede a Validación Final y Congelación apunta a Descubrimiento. | **Congelado** |
-| **v1.3.0** | 2026-09-17 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets      | Integración de Changesets en Release Workflow, especificación de Vitest/Playwright en Quality Gates y precisión SSOT.              | Congelado     |
-| **v1.3.1** | 2026-09-29 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación Formatting con EE-DOC-010                  | Gate Formatting = Prettier **check** (no write); puntero SSOT a EE-DOC-010                                                         | Congelado     |
-| **v1.4.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — auditoría 001–004                          | Meta DOC-005/Fundacional/deps; First; Tipo B; gates PENDING; release; refs                                                         | **Congelado** |
-| **v1.5.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Enmienda propuesta de workflow colaborativo           | §06.3 cambio coherente por rama; §08 responsabilidades del PR, trazabilidad de validaciones y separación documentación/código.     | **Congelado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                | Cambios                                                                                                                                              | Estado        |
+| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
+| **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                      | Versión inicial del Development Workflow                                                                                                             | **Congelado** |
+| **v1.1.0** | 2026-08-20 | Equipo de Arquitectura | Equipo de Arquitectura | Incorporación de Implementación Adaptativa Controlada | Nueva Sección 04; actualización de principios, flujo SDLC y alcance                                                                                  | **Congelado** |
+| **v1.2.0** | 2026-08-21 | Equipo de Arquitectura | Equipo de Arquitectura | Implementación por fase y reordenamiento documental   | Se añadió Implementación → Validación → Borrador DT por fase; DT precede a Validación Final y Congelación apunta a Descubrimiento.                   | **Congelado** |
+| **v1.3.0** | 2026-09-17 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets      | Integración de Changesets en Release Workflow, especificación de Vitest/Playwright en Quality Gates y precisión SSOT.                                | Congelado     |
+| **v1.3.1** | 2026-09-29 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación Formatting con EE-DOC-010                  | Gate Formatting = Prettier **check** (no write); puntero SSOT a EE-DOC-010                                                                           | Congelado     |
+| **v1.4.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — auditoría 001–004                          | Meta DOC-005/Fundacional/deps; First; Tipo B; gates PENDING; release; refs                                                                           | **Congelado** |
+| **v1.5.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Enmienda propuesta de workflow colaborativo           | §06.3 cambio coherente por rama; §08 responsabilidades del PR, trazabilidad de validaciones y separación documentación/código.                       | **Congelado** |
+| **v1.6.0** | 2026-11-02 | Equipo de Arquitectura | Equipo de Arquitectura | Convenciones y gates de desarrollo                    | §04.1 remite metadatos e historial a DOC-002 §§05/11; §06 ramas; §07 commits y hooks; §09.3 secretos; §10 convenciones con disponibilidad pendiente. | **Congelado** |
 
 ---
 

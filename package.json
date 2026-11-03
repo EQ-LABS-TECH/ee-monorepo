@@ -17,6 +17,7 @@
     "test:scripts": "node scripts/lib/run-script-tests.mjs",
     "lint": "node scripts/commands/lint",
     "format": "node scripts/commands/format",
+    "hooks:install": "node scripts/commands/install-hooks",
     "typecheck": "node scripts/commands/typecheck",
     "validate": "node scripts/commands/validate",
     "doctor": "node scripts/commands/doctor",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@eq-labs/governance": "workspace:*",
     "@eq-labs/config-prettier": "workspace:*",
+    "@typescript-eslint/typescript-estree": "8.72.1",
     "@changesets/cli": "3.0.3",
     "ajv": "8.20.0",
     "plop": "4.0.5",

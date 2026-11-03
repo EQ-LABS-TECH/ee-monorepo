@@ -16,16 +16,16 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                                                         |
 | **Nivel**             | Técnico                                                                |
 | **Normativo**         | No                                                                     |
-| **Versión**           | v0.3.0                                                                 |
-| **Estado**            | Completado                                                             |
+| **Versión**           | v0.4.0                                                                 |
+| **Estado**            | En Elaboración                                                         |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-007 — GitHub Governance                                         |
 | **Dependencias**      | EE-DOC-006, EE-DOC-007, EE-IMP-007-P01, EE-IMP-007-P02, EE-IMP-007-P03 |
-| **Aprobado por**      | Pendiente                                                              |
+| **Aprobado por**      | Equipo de Arquitectura                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps                                       |
 | **Fecha de creación** | 2026-09-22                                                             |
-| **Última revisión**   | 2026-09-23                                                             |
-| **Próxima revisión**  | No aplica — Unidad completada; siguientes vía P05–P08                  |
+| **Última revisión**   | 2026-11-02                                                             |
+| **Próxima revisión**  | 2026-11-09                                                             |
 
 ---
 
@@ -100,7 +100,10 @@ Materializar el archivo **`.github/CODEOWNERS`** con ownership real por áreas d
 | `apps/`                                                               | `@EQ-LABS-TECH/maintainers`                                   | Aplicaciones                       |
 | `connectors/`                                                         | `@EQ-LABS-TECH/maintainers`                                   | Conectores                         |
 | `scripts/`                                                            | `@EQ-LABS-TECH/repository-admin` `@EQ-LABS-TECH/maintainers`  | Automatización de repo             |
-| `docs/`                                                               | `@EQ-LABS-TECH/architecture` `@EQ-LABS-TECH/maintainers`      | Documentación (norma + técnica)    |
+| `docs/`                                                               | `@EQ-LABS-TECH/maintainers`                                   | Documentación ordinaria            |
+| `docs/architecture/`, `docs/adr/`, `docs/rfc/`                        | `@EQ-LABS-TECH/architecture`                                  | Normativa y arquitectura           |
+| `docs/validation/audit/EE-AUDIT-*`                                    | `@EQ-LABS-TECH/architecture`                                  | Auditoría normativa                |
+| `docs/developer/`, `docs/validation/`                                 | `@EQ-LABS-TECH/maintainers`                                   | Implementación y evidencia         |
 | `assets/`, `data/`, `examples/`, `marketplace/`                       | `@EQ-LABS-TECH/maintainers`                                   | Soporte / extensibilidad           |
 | `LICENSE`, `NOTICE`, `CHANGELOG.md`, `README.md`                      | `@EQ-LABS-TECH/architecture`                                  | Artefactos de gobierno del repo    |
 
@@ -151,8 +154,14 @@ connectors/                     @EQ-LABS-TECH/maintainers
 # Automation scripts
 scripts/                        @EQ-LABS-TECH/repository-admin @EQ-LABS-TECH/maintainers
 
-# Documentation
-docs/                           @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+# Documentation: routine ownership with normative path overrides
+docs/                           @EQ-LABS-TECH/maintainers
+docs/architecture/              @EQ-LABS-TECH/architecture
+docs/adr/                       @EQ-LABS-TECH/architecture
+docs/rfc/                       @EQ-LABS-TECH/architecture
+docs/developer/                 @EQ-LABS-TECH/maintainers
+docs/validation/                @EQ-LABS-TECH/maintainers
+docs/validation/audit/EE-AUDIT-* @EQ-LABS-TECH/architecture
 
 # Support / extensibility
 assets/                         @EQ-LABS-TECH/maintainers
@@ -203,17 +212,19 @@ En ruleset **Protect main** → editar → activar **Require review from Code Ow
 
 ## 07. Especificación de artefactos
 
-| Artefacto                      | Ruta / ubicación     | Estado P04                 |
-| :----------------------------- | :------------------- | :------------------------- |
-| CODEOWNERS operativo           | `.github/CODEOWNERS` | **Pendiente de ejecución** |
-| Require Code Owners en ruleset | Ruleset `23861402`   | **Opcional / pendiente**   |
-| Mapa ownership                 | Este IMP §04         | **Definido**               |
+| Artefacto                      | Ruta / ubicación     | Estado P04                                                                      |
+| :----------------------------- | :------------------- | :------------------------------------------------------------------------------ |
+| CODEOWNERS operativo           | `.github/CODEOWNERS` | Diseño aprobado en este documento; revisión y validación remota pendientes      |
+| Require Code Owners en ruleset | Ruleset `23861402`   | **Opcional / pendiente**                                                        |
+| Mapa ownership                 | Este IMP §04         | Define el mapa de ownership; el diseño aprobado lo amplía para la documentación |
 
 ---
 
 ## 08. Evidencia As-Built
 
 Evidencia capturada 2026-09-23.
+
+Los valores de tamaño y validaciones de esta sección son una captura histórica. El diseño aprobado asigna el ownership rutinario de `docs/` a Maintainers, con reglas más específicas de Architecture para `docs/architecture/`, `docs/adr/`, `docs/rfc/` y `docs/validation/audit/EE-AUDIT-*`. La evaluación efectiva de CODEOWNERS y de teams requiere una ejecución de PR y comprobación remota; no se afirma completada localmente.
 
 ### 08.1. Teams (slugs reales)
 
@@ -330,11 +341,12 @@ Evidencia capturada 2026-09-23.
 
 ## 14. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por | Motivo             | Cambios                                                                             | Estado                                          |
-| :--------- | :--------- | :----------------------- | :----------- | :----------------- | :---------------------------------------------------------------------------------- | :---------------------------------------------- |
-| **v0.1.0** | 2026-09-22 | AI Engineering Assistant | —            | Apertura P04       | Mapa ownership; contenido CODEOWNERS; plan de ejecución; criterios                  | En Elaboración                                  |
-| **v0.2.0** | 2026-09-23 | AI Engineering Assistant | —            | Evidencia as-built | CODEOWNERS materializado; B-P04-001 tooling; A-P04-001 team marketplace inexistente | Implementado — Corrección marketplace pendiente |
-| **v0.3.0** | 2026-09-23 | AI Engineering Assistant | —            | Cierre P04         | A-P04-001 corregida; marketplace→maintainers; checklist conforme                    | **Completado**                                  |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                         | Cambios                                                                                               | Estado                                          |
+| :--------- | :--------- | :----------------------- | :--------------------- | :----------------------------- | :---------------------------------------------------------------------------------------------------- | :---------------------------------------------- |
+| **v0.1.0** | 2026-09-22 | AI Engineering Assistant | —                      | Apertura P04                   | Mapa ownership; contenido CODEOWNERS; plan de ejecución; criterios                                    | En Elaboración                                  |
+| **v0.2.0** | 2026-09-23 | AI Engineering Assistant | —                      | Evidencia as-built             | CODEOWNERS materializado; B-P04-001 tooling; A-P04-001 team marketplace inexistente                   | Implementado — Corrección marketplace pendiente |
+| **v0.3.0** | 2026-09-23 | AI Engineering Assistant | —                      | Cierre P04                     | A-P04-001 corregida; marketplace→maintainers; checklist conforme                                      | **Completado**                                  |
+| **v0.4.0** | 2026-11-02 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership documental escalable | Maintainers como owner de documentación ordinaria; Architecture para dominios normativos y auditoría. | En Elaboración                                  |
 
 ---
 

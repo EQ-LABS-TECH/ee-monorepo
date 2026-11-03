@@ -1,4 +1,16 @@
 import eslint from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import namingConventions from './naming-conventions.mjs';
+
+const namingConfig = {
+  files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
+  languageOptions: {
+    parser: tseslint.parser,
+    parserOptions: { ecmaFeatures: { jsx: true }, sourceType: 'module' },
+  },
+  plugins: { 'eq-labs': { rules: { 'naming-convention': namingConventions } } },
+  rules: { 'eq-labs/naming-convention': 'error' },
+};
 
 export default [
   {
@@ -22,6 +34,7 @@ export default [
   },
 
   eslint.configs.recommended,
+  namingConfig,
 
   {
     ignores: [
