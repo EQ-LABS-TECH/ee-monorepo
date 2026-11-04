@@ -17,7 +17,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Especializado                                                                                                                                                                                  |
 | **Nivel**             | Especializado                                                                                                                                                                                  |
 | **Normativo**         | Sí                                                                                                                                                                                             |
-| **Versión**           | v1.1.1                                                                                                                                                                                         |
+| **Versión**           | v1.1.2                                                                                                                                                                                         |
 | **Estado**            | Congelado                                                                                                                                                                                      |
 | **Propietario**       | Equipo de Arquitectura                                                                                                                                                                         |
 | **Documento padre**   | EE-DOC-004 — Engineering Architecture                                                                                                                                                          |
@@ -25,7 +25,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                                                                                                                                         |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                                                                       |
 | **Fecha de creación** | 2026-10-02                                                                                                                                                                                     |
-| **Última revisión**   | 2026-10-03                                                                                                                                                                                     |
+| **Última revisión**   | 2026-11-04                                                                                                                                                                                     |
 | **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                                                                |
 
 > **Jerarquía documental:**
@@ -653,6 +653,7 @@ Clasificación A/B/C/D (EE-DOC-005). Ejemplos:
 | EE-ADR-003 | Node 24                                                   |
 | EE-ADR-004 | Progressive QG                                            |
 | EE-ADR-005 | Provider SPI vs connectors                                |
+| EE-ADR-006 | Fronteras de dependencias aplicadas en §04.2              |
 | EE-TEC-008 | Consolidado post-IMP — **emitido / alineado al as-built** |
 
 ---
@@ -673,6 +674,7 @@ Clasificación A/B/C/D (EE-DOC-005). Ejemplos:
 | **v1.0.0** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación                                | Estado **Aprobado**; OBS-02/03 (ADR sin pin de versión en §17.3; PR-08 → §13.2/§13.4)                                                                                                           | **Aprobado**                   |
 | **v1.1.0** | 2026-10-05 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre IMP                                | EE-IMP-013-P01…P06 + EE-TEC-008; estado **Congelado**                                                                                                                                           | **Congelado**                  |
 | **v1.1.1** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación con EE-ADR-006                 | §04.2: Intelligence ya no lista Execution en la matriz de imports.                                                                                                                              | Congelado                      |
+| **v1.1.2** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Trazabilidad de EE-ADR-006                | §15 incorpora la referencia de la decisión aplicada en §04.2; Dependencias conserva su alcance de validez y aplicación.                                                                         | **Congelado**                  |
 
 ---
 

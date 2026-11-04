@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**     | Fundacional                                                                |
 | **Nivel**             | Estratégico                                                                |
 | **Normativo**         | Sí                                                                         |
-| **Versión**           | v1.8.0                                                                     |
+| **Versión**           | v1.8.1                                                                     |
 | **Estado**            | Congelado                                                                  |
 | **Propietario**       | Equipo de Arquitectura                                                     |
 | **Documento padre**   | EE-DOC-004                                                                 |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**      | Equipo de Arquitectura                                                     |
 | **Audiencia**         | Arquitectura, Desarrollo, IA, DevOps                                       |
 | **Fecha de creación** | 2026-08-02                                                                 |
-| **Última revisión**   | 2026-11-03                                                                 |
+| **Última revisión**   | 2026-11-04                                                                 |
 | **Próxima revisión**  | No aplica — Documento Congelado                                            |
 
 ---
@@ -1212,11 +1212,11 @@ Los encabezados se validan conforme a Conventional Commits por `QG-COMMIT-001` e
 
 ### 08.3. Reviewers y Approvals
 
-| Regla  | Descripción                                                                                                                                                                                                                                                                                                                                                                                            |
-| :----: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **R1** | Al menos 1 approval de un reviewer calificado.                                                                                                                                                                                                                                                                                                                                                         |
-| **R2** | Los reviewers deben ser asignados automáticamente basándose en `CODEOWNERS`.                                                                                                                                                                                                                                                                                                                           |
-| **R3** | **Cambio crítico** (definición en este documento): afecta seguridad, datos productivos, release/hotfix a `main`, o contratos públicos de paquetes publicados. Requiere **≥2 approvals** de reviewers calificados **o** el umbral que fije **CODEOWNERS** / EE-DOC-007 si es más estricto. Si el ruleset as-built exige solo 1 approval, el umbral 2 es **objetivo PENDING** hasta materializar en 007. |
+| Regla  | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| :----: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **R1** | Al menos 1 approval de un reviewer calificado.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **R2** | Los reviewers deben ser asignados automáticamente basándose en `CODEOWNERS`.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **R3** | **Cambio crítico** (definición en este documento): afecta seguridad, datos productivos, release/hotfix a `main`, o contratos públicos de paquetes publicados. Requiere **≥2 approvals** de reviewers calificados **o** el umbral que fije **CODEOWNERS** / EE-DOC-007 si es más estricto. Si el ruleset nativo exige solo 1 approval, `PR Governance` aplica el umbral dinámico de PN-017: 1 approval válida para `ORDINARY` y 2 para `CRITICAL`; el requisito efectivo de `CRITICAL` sigue siendo ≥2. |
 
 #### 08.3.1. Clasificación de impacto — PN-017
 
@@ -1657,6 +1657,7 @@ Una excepción de workflow modifica temporalmente la forma de ejecución del wor
 | **v1.7.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Excepción segura para ramas Dependabot                | §06.2 y §06.3 R6 limitan la excepción a grupos configurados y validan identidad, repositorios y rama desde el payload del Pull Request.              | **Congelado** |
 | **v1.7.1** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Evidencia de CI remoto                                | §10.1 registra Validate PASS para Repository Conventions y Architecture & Structure (ejecución #41618522701).                                        | **Congelado** |
 | **v1.8.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación del alcance E2E                            | §10.1 referencia `QG-TEST-E2E` y remite a EE-DOC-010 para el alcance activo y sus límites.                                                           | **Congelado** |
+| **v1.8.1** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Umbral efectivo de approvals                          | §08.3 R3 aclara la aplicación dinámica de PN-017 cuando el ruleset nativo requiere una aprobación.                                                   | **Congelado** |
 
 ---
 
