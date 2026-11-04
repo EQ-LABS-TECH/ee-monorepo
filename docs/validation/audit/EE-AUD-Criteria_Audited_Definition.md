@@ -1,4 +1,4 @@
-# EE-AUDIT-Criteria_Audited_Definition — Criterio operativo «Auditado»
+# EE-AUD-Criteria_Audited_Definition — Criterio operativo «Auditado»
 
 Definición operativa para auditorías de documentación del Engineering Ecosystem
 (gobernanza EE-DOC / EE-ADR / EE-RFC / EE-IMP / EE-TEC y evidencias asociadas).
@@ -71,7 +71,7 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 
 - [ ] Hallazgos clasificados: Bloqueante / Crítico / Mayor / Menor
 - [ ] Abiertos: plan de cierre o diferido explícito
-- [ ] Fila actualizada en `docs/validation/audit/EE-AUDIT-Log_Progress_Register.md`
+- [ ] Fila actualizada en `docs/validation/audit/EE-AUD-Log_Progress_Register.md`
 - [ ] Fecha, versión del documento y veredicto registrados
 
 ---
@@ -93,7 +93,7 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 | :-------------------------------- | :------------------------------------------------------------- |
 | Lectura / exploración / checklist | `main` actualizado                                             |
 | Correcciones                      | Rama `docs/…` o `audit/…` desde `main` → PR → Squash and Merge |
-| Registro de progreso              | `docs/validation/audit/EE-AUDIT-Log_Progress_Register.md`      |
+| Registro de progreso              | `docs/validation/audit/EE-AUD-Log_Progress_Register.md`        |
 
 **Prohibido:** commits directos de correcciones normativas en `main` eludiendo PR.
 
@@ -111,4 +111,4 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 
 ## Reglas emergentes
 
-Las reglas detectadas en auditoría (aún no necesariamente volcadas a EE-DOC) se registran en **`EE-AUDIT-Rules_Emerging.md`** de esta misma carpeta.
+Las reglas detectadas en auditoría (aún no necesariamente volcadas a EE-DOC) se registran en **`EE-AUD-Rules_Emerging.md`** de esta misma carpeta.

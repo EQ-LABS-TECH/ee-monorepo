@@ -10,7 +10,7 @@ Primero acceder por GitHub autorizado a `EQ-LABS-TECH/ee-monorepo` en `main`, fi
 
 Nunca escribir al remoto ni a `main`. Solo `LOCAL_WRITE` en checkout local autorizado y escribible; si no existe, `ARTIFACT_EXPORT` ZIP con árbol relativo exacto, archivos completos y `manifest.json` (schema en `marketplace/skills/contract.md` del repositorio). No tratar entrega ZIP como escritura local. Comprobar hash base antes de reemplazo; si difiere, detener y preparar diff para conciliación. No borrar archivos ni ejecutar comandos destructivos sin advertencia y revisión.
 
-Cada reporte detallado de auditoría se guarda en `docs/validation/audit/reports/` como `EE-AUDIT-<scope-kebab-case>-<YYYYMMDDHHmmss>.md`; el timestamp se genera en UTC. En `ARTIFACT_EXPORT`, incluirlo bajo la misma ruta relativa dentro del ZIP.
+Cada campaña de auditoría recibe un ID secuencial de tres dígitos y una fecha de inicio, compartidos por todos sus reportes y fases. Reporte general: `EE-AUD-<NNN>-<YYYY-MM-DD>-<scope-kebab-case>-<YYYYMMDDHHmmss>.md`. Reporte por fases: `EE-AUD-<NNN>-<YYYY-MM-DD>-phase-<n>-<scope-kebab-case>-<YYYYMMDDHHmmss>.md`. El timestamp de ejecución se genera en UTC. En `ARTIFACT_EXPORT`, conservar la ruta relativa dentro del ZIP.
 
 ## Hallazgos y evidencias
 

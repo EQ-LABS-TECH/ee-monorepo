@@ -20,7 +20,7 @@ Para cada hallazgo usar un registro lógico reproducible; puede emitirse como ta
   "impact": { "components": [], "consumers": [], "risk": null },
   "fix": { "proposal": null, "validation": "NO EJECUTADO" },
   "audit": {
-    "destination": "EE-AUDIT-Log_Progress_Register.md",
+    "destination": "EE-AUD-Log_Progress_Register.md",
     "entry": null,
     "publication": "PENDIENTE DE PUBLICACIÓN"
   }

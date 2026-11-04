@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**                   | D — Cambio Significativo / Transversal                                                                                                                                                  |
 | **Nivel**                           | Estratégico                                                                                                                                                                             |
 | **Normativo**                       | Sí                                                                                                                                                                                      |
-| **Versión**                         | v0.9.0                                                                                                                                                                                  |
+| **Versión**                         | v0.9.1                                                                                                                                                                                  |
 | **Estado**                          | Propuesto (vehículo abierto — auditoría)                                                                                                                                                |
 | **Propietario**                     | Equipo de Arquitectura                                                                                                                                                                  |
 | **Documento padre**                 | EE-DOC-005                                                                                                                                                                              |
@@ -27,7 +27,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**                    | Pendiente — RFC Propuesto                                                                                                                                                               |
 | **Audiencia**                       | Arquitectura, Desarrollo, IA, QA                                                                                                                                                        |
 | **Fecha de creación**               | 2026-10-11                                                                                                                                                                              |
-| **Última revisión**                 | 2026-11-03                                                                                                                                                                              |
+| **Última revisión**                 | 2026-11-04                                                                                                                                                                              |
 | **Próxima revisión**                | Pendiente de cierre de la oleada de auditoría                                                                                                                                           |
 
 > **Régimen:** este RFC permanece en estado **Propuesto** de forma deliberada mientras dure la **auditoría documental** del monorepo. Está indexado en **EE-DOC-001 §09.2**. Acumula y ratifica cambios Tipo D de estándares (plantillas, catálogo, metadatos, VAL/WAIVE, reglas AR volcadas a 002, etc.). **No** se interpreta como Aprobado ni como alcance cerrado hasta el cierre formal de la oleada de auditoría.
@@ -67,15 +67,15 @@ La aprobación de una propuesta se registra en su fila correspondiente del histo
 
 ### 02.4. Límite de autoridad
 
-| Documento o superficie                          | Rol en esta enmienda                                                     | Límite                                                                                                 |
-| ----------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| **EE-DOC-001**                                  | Índice maestro, registro del RFC, trazabilidad y estado de los hallazgos | Se sincroniza según el estado real y el proceso gobernado; no se declara aprobado antes de tiempo      |
-| **EE-DOC-002**                                  | Plantilla y estándares documentales que originaron el RFC                | La aprobación de cambios congelados sigue el mecanismo normativo aplicable                             |
-| **EE-DOC-005**                                  | Clasificación del cambio y workflow de desarrollo, PR y release          | Las modificaciones normativas se aplican después de la aprobación correspondiente                      |
-| **EE-DOC-007**                                  | Gobernanza de GitHub, permisos, ramas, tags y workflows                  | La configuración real no cambia por la sola aprobación del texto; requiere tarea y evidencia operativa |
-| **EE-DOC-011**                                  | Contrato de automatización y release                                     | El contrato de §08.2 no cambia hasta que la enmienda sea aprobada y sincronizada                       |
-| **EE-AUDIT-Rules_Emerging / Progress Register** | Inventario y estado de los hallazgos, incluidos PN-021 y PN-030          | Los hallazgos no se cierran sin evidencia verificable                                                  |
-| Scripts, tests y CI                             | Implementación del contrato aprobado                                     | No sustituyen la decisión normativa ni se modifican antes de la aprobación exigida                     |
+| Documento o superficie                        | Rol en esta enmienda                                                     | Límite                                                                                                 |
+| --------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| **EE-DOC-001**                                | Índice maestro, registro del RFC, trazabilidad y estado de los hallazgos | Se sincroniza según el estado real y el proceso gobernado; no se declara aprobado antes de tiempo      |
+| **EE-DOC-002**                                | Plantilla y estándares documentales que originaron el RFC                | La aprobación de cambios congelados sigue el mecanismo normativo aplicable                             |
+| **EE-DOC-005**                                | Clasificación del cambio y workflow de desarrollo, PR y release          | Las modificaciones normativas se aplican después de la aprobación correspondiente                      |
+| **EE-DOC-007**                                | Gobernanza de GitHub, permisos, ramas, tags y workflows                  | La configuración real no cambia por la sola aprobación del texto; requiere tarea y evidencia operativa |
+| **EE-DOC-011**                                | Contrato de automatización y release                                     | El contrato de §08.2 no cambia hasta que la enmienda sea aprobada y sincronizada                       |
+| **EE-AUD-Rules_Emerging / Progress Register** | Inventario y estado de los hallazgos, incluidos PN-021 y PN-030          | Los hallazgos no se cierran sin evidencia verificable                                                  |
+| Scripts, tests y CI                           | Implementación del contrato aprobado                                     | No sustituyen la decisión normativa ni se modifican antes de la aprobación exigida                     |
 
 ### 02.6. Ampliación aprobada individualmente — flujo de trabajo colaborativo
 
@@ -496,7 +496,7 @@ Esta ampliación se gestiona en RFC-003 como parte de la oleada de auditoría. L
 
 ### 03.4. Trazabilidad de reglas emergentes de colaboración
 
-El detalle de las reglas de colaboración detectadas durante la auditoría se mantiene en **EE-AUDIT-Rules_Emerging.md**, conforme a su función de inventario no normativo y backlog de hallazgos. La propuesta de formalización se conserva como pendiente **PN-035** hasta que se evalúe y se promueva mediante el mecanismo gobernado aplicable.
+El detalle de las reglas de colaboración detectadas durante la auditoría se mantiene en **EE-AUD-Rules_Emerging.md**, conforme a su función de inventario no normativo y backlog de hallazgos. La propuesta de formalización se conserva como pendiente **PN-035** hasta que se evalúe y se promueva mediante el mecanismo gobernado aplicable.
 
 Este RFC no convierte por sí solo esas reglas en normativa aprobada. Las superficies normativas candidatas y sus límites permanecen descritos en §03.3; la decisión de incorporación se toma al resolver el pendiente y revisar los documentos afectados.
 
@@ -746,19 +746,19 @@ Los cambios documentales de esta rama están aprobados individualmente; su integ
 
 ## 10. Referencias
 
-| Código                      | Rol                                                                                      |
-| --------------------------- | ---------------------------------------------------------------------------------------- |
-| **EE-DOC-001**              | R2, R7, §08.1, §09.4                                                                     |
-| **EE-DOC-002**              | Estándar de forma; v1.7.0–v1.10.0+                                                       |
-| **EE-DOC-004**              | Arquitectura; convenciones futuras DB/API y límites de capas                             |
-| **EE-DOC-005**              | Workflow normativo; clasificación Tipo D §04.2 y ciclo de cambios gobernados             |
-| **EE-DOC-006**              | Estructura física y matriz de dependencias de workspaces                                 |
-| **EE-DOC-007**              | Gobernanza de GitHub; controles operativos que implementan el workflow                   |
-| **EE-DOC-010**              | Quality Gates; disponibilidad y ejecución verificable                                    |
-| **EE-DOC-015**              | Validación; padre VAL                                                                    |
-| **EE-TEC-002**              | Evidencia consolidada de configuración GitHub; solo se modifica si cambia el estado real |
-| **EE-IMP-010-P03**          | Evidencia de gates/seguridad/arquitectura, si el cambio operativo afecta su alcance      |
-| **EE-AUDIT-Rules_Emerging** | Inventario AR / backlog PC-PN-PA                                                         |
+| Código                    | Rol                                                                                      |
+| ------------------------- | ---------------------------------------------------------------------------------------- |
+| **EE-DOC-001**            | R2, R7, §08.1, §09.4                                                                     |
+| **EE-DOC-002**            | Estándar de forma; v1.7.0–v1.10.0+                                                       |
+| **EE-DOC-004**            | Arquitectura; convenciones futuras DB/API y límites de capas                             |
+| **EE-DOC-005**            | Workflow normativo; clasificación Tipo D §04.2 y ciclo de cambios gobernados             |
+| **EE-DOC-006**            | Estructura física y matriz de dependencias de workspaces                                 |
+| **EE-DOC-007**            | Gobernanza de GitHub; controles operativos que implementan el workflow                   |
+| **EE-DOC-010**            | Quality Gates; disponibilidad y ejecución verificable                                    |
+| **EE-DOC-015**            | Validación; padre VAL                                                                    |
+| **EE-TEC-002**            | Evidencia consolidada de configuración GitHub; solo se modifica si cambia el estado real |
+| **EE-IMP-010-P03**        | Evidencia de gates/seguridad/arquitectura, si el cambio operativo afecta su alcance      |
+| **EE-AUD-Rules_Emerging** | Inventario AR / backlog PC-PN-PA                                                         |
 
 ---
 
@@ -777,17 +777,18 @@ Los cambios documentales de esta rama están aprobados individualmente; su integ
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                   | Cambios                                                                                                                                                                                                                                                                                                       | Estado       |
-| ---------- | ---------- | ---------------------- | ---------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura | —                      | C-01 auditoría 002                       | Creación RFC Tipo D retroactivo                                                                                                                                                                                                                                                                               | Propuesto    |
-| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Vehículo abierto auditoría               | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                                                                                                                                                                       | **Aprobado** |
-| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Conformidad §18.5                        | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado                                                                                                                                                     | **Aprobado** |
-| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación pre-main                   | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                                                                                                                                                                               | **Aprobado** |
-| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría transversal de releases        | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.                                                                                                                                                           | **Aprobado** |
-| **v0.6.0** | 2026-10-31 | Equipo de Arquitectura | Equipo de Arquitectura | PN-017 Actions-only P0                   | Consolida §02.8: Actions-only, seguridad de triggers y límites de consistencia; CAS durable, servicio HTTP y leases diferidos.                                                                                                                                                                                | **Aprobado** |
-| **v0.7.0** | 2026-11-01 | Equipo de Arquitectura | Equipo de Arquitectura | PN-017 y convenciones transversales      | Establece `Validate` exitoso para el HEAD antes de evaluar governance; separa clasificación `ORDINARY` de approvals; añade §03.10 con 14 reglas de repositorio/DB/API, escalamiento a `CRITICAL`, diagnósticos seguros y gates de símbolos/imports workspace; conserva abierto RFC-003 y no modifica DOC-001. | **Aprobado** |
-| **v0.8.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Excepción controlada de ramas Dependabot | §03.10 regla 8 limita la excepción a grupos configurados y exige validar identidad, repositorios y rama desde el payload del Pull Request.                                                                                                                                                                    | **Aprobado** |
-| **v0.9.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas  | §03.10 regla 4 define prefijos de tipo y adopción gradual; DOC-002 y QG-NAM-001 materializan la convención.                                                                                                                                                                                                   | **Aprobado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                     | Cambios                                                                                                                                                                                                                                                                                                       | Estado       |
+| ---------- | ---------- | ---------------------- | ---------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| **v0.1.0** | 2026-10-11 | Equipo de Arquitectura | —                      | C-01 auditoría 002                         | Creación RFC Tipo D retroactivo                                                                                                                                                                                                                                                                               | Propuesto    |
+| **v0.2.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Vehículo abierto auditoría                 | Indexado en 001 §09.2; alcance oleada 002 v1.10 / 004; criterios y plan                                                                                                                                                                                                                                       | **Aprobado** |
+| **v0.3.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Conformidad §18.5                          | §02 con roles 02.1–02.5; §03 sin «Superficie C» (03.1/03.2/03.3); §05 etiquetas del template; §06 Sí/No + Justificación; metadato Clasificación unificado                                                                                                                                                     | **Aprobado** |
+| **v0.4.0** | 2026-10-22 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación pre-main                     | Consolida workflow colaborativo, metadatos y enmiendas propuestas a DOC-001, DOC-005 y DOC-007.                                                                                                                                                                                                               | **Aprobado** |
+| **v0.5.0** | 2026-10-24 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría transversal de releases          | Incorpora PN-021/PN-030: preparación por PR, publicación npm post-merge, tag final, recuperación idempotente, permisos mínimos y pruebas simuladas.                                                                                                                                                           | **Aprobado** |
+| **v0.6.0** | 2026-10-31 | Equipo de Arquitectura | Equipo de Arquitectura | PN-017 Actions-only P0                     | Consolida §02.8: Actions-only, seguridad de triggers y límites de consistencia; CAS durable, servicio HTTP y leases diferidos.                                                                                                                                                                                | **Aprobado** |
+| **v0.7.0** | 2026-11-01 | Equipo de Arquitectura | Equipo de Arquitectura | PN-017 y convenciones transversales        | Establece `Validate` exitoso para el HEAD antes de evaluar governance; separa clasificación `ORDINARY` de approvals; añade §03.10 con 14 reglas de repositorio/DB/API, escalamiento a `CRITICAL`, diagnósticos seguros y gates de símbolos/imports workspace; conserva abierto RFC-003 y no modifica DOC-001. | **Aprobado** |
+| **v0.8.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Excepción controlada de ramas Dependabot   | §03.10 regla 8 limita la excepción a grupos configurados y exige validar identidad, repositorios y rama desde el payload del Pull Request.                                                                                                                                                                    | **Aprobado** |
+| **v0.9.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas    | §03.10 regla 4 define prefijos de tipo y adopción gradual; DOC-002 y QG-NAM-001 materializan la convención.                                                                                                                                                                                                   | **Aprobado** |
+| **v0.9.1** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización de referencias de auditoría | Actualiza las referencias a los registros de auditoría para usar la familia `EE-AUD` y el esquema de informes generales y por fase.                                                                                                                                                                           | **Aprobado** |
 
 ---
 

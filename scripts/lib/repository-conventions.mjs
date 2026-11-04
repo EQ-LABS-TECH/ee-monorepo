@@ -70,10 +70,14 @@ function changedPaths() {
   const base = baseRef();
   const paths = new Set();
   if (base) {
-    for (const path of git(['diff', '--name-only', `${base}...HEAD`]).split(/\r?\n/)) {
+    for (const path of git(['diff', '--name-only', '--diff-filter=ACMR', `${base}...HEAD`]).split(
+      /\r?\n/,
+    )) {
       if (path) paths.add(path.replaceAll('\\', '/'));
     }
-    for (const path of git(['diff', '--name-only', '--cached', base]).split(/\r?\n/)) {
+    for (const path of git(['diff', '--name-only', '--diff-filter=ACMR', '--cached', base]).split(
+      /\r?\n/,
+    )) {
       if (path) paths.add(path.replaceAll('\\', '/'));
     }
   }
@@ -90,6 +94,7 @@ export function parsePorcelainStatus(status) {
 
   return status.split(/\r?\n/).flatMap((line) => {
     if (!line) return [];
+    if (line.slice(0, 2).includes('D')) return [];
     const path = line.slice(3).split(' -> ').at(-1);
     return path ? [path.replaceAll('\\', '/')] : [];
   });
@@ -105,7 +110,7 @@ function invalidPathSegment(segment) {
 }
 
 function isEeDocument(file) {
-  return /^EE-(?:DOC|ADR|RFC|IMP|TEC|VAL|WAIVE|AUDIT)-.+\.md$/.test(file);
+  return /^EE-(?:DOC|ADR|RFC|IMP|TEC|VAL|WAIVE|AUD)-.+\.md$/.test(file);
 }
 
 function isCodexSkillEntrypoint(path) {

@@ -15,7 +15,7 @@ Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (
 | **Clasificación**     | Fundacional                            |
 | **Nivel**             | Estratégico                            |
 | **Normativo**         | Sí                                     |
-| **Versión**           | v1.14.0                                |
+| **Versión**           | v1.15.0                                |
 | **Estado**            | Congelado                              |
 | **Propietario**       | Equipo de Arquitectura                 |
 | **Documento padre**   | EE-DOC-001                             |
@@ -23,7 +23,7 @@ Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (
 | **Aprobado por**      | Equipo de Arquitectura                 |
 | **Audiencia**         | Arquitectura, Desarrollo, IA           |
 | **Fecha de creación** | 2026-08-02                             |
-| **Última revisión**   | 2026-11-03                             |
+| **Última revisión**   | 2026-11-04                             |
 | **Próxima revisión**  | No aplica — Documento Congelado        |
 
 ---
@@ -417,9 +417,10 @@ El ciclo de **implementación por fases**, validación y documentación técnica
 El ESLint compartido verifica nombres de clases, componentes, tipos, funciones, parámetros, campos de clases/interfaces y constantes literales de módulo. Las variables usan `camelCase`; los componentes que contienen JSX y las expresiones de clase usan `PascalCase`. Los nombres locales de fixtures en archivos de pruebas admiten `camelCase`.
 
 > **Prefijo `EE-` en archivos (AR-2026-019):**\
-> Todo documento de **gobernanza y proceso** bajo `docs/` debe tener nombre de archivo con prefijo `EE-` (familias DOC, ADR, RFC, IMP, TEC, VAL, WAIVE, AUDIT). Formato `{ID}_{Nombre}.md` (VAL/WAIVE con fecha).
+> Todo documento de **gobernanza y proceso** bajo `docs/` debe tener nombre de archivo con prefijo `EE-` (familias DOC, ADR, RFC, IMP, TEC, VAL, WAIVE, AUD). El formato general es `{ID}_{Nombre}.md`; VAL/WAIVE incorporan fecha según su contrato. EE-AUD usa los nombres canónicos y de reportes indicados a continuación.
 > **Excepciones:** (1) `README.md` de carpeta; (2) `docs/validation/evidence/**` (soporte operativo); (3) inventarios brutos (p. ej. `.txt`).
-> Si un evidence se promueve a informe formal → `validation/reports/` como `EE-VAL-*`. Canónicos de auditoría: `EE-AUDIT-Log_Progress_Register.md`, `EE-AUDIT-Criteria_Audited_Definition.md`, `EE-AUDIT-Rules_Emerging.md`.
+> Si un evidence se promueve a informe formal → `validation/reports/` como `EE-VAL-*`. Canónicos de auditoría: `EE-AUD-Log_Progress_Register.md`, `EE-AUD-Criteria_Audited_Definition.md`, `EE-AUD-Rules_Emerging.md`.
+> Los informes detallados EE-AUD identifican la campaña con un ID secuencial de tres dígitos y fecha de inicio: `EE-AUD-<NNN>-<YYYY-MM-DD>-<scope-kebab-case>-<YYYYMMDDHHmmss>.md`. Los informes por fases insertan `phase-<n>` antes del scope. El timestamp final identifica la ejecución y se expresa en UTC (AR-2026-022).
 > Ante conflicto de árbol físico, **EE-DOC-006** manda sobre paths.
 
 > **Regla complementaria:**\
@@ -1634,6 +1635,7 @@ Todo documento nuevo deberá cumplir este estándar.
 | v1.12.0     | 2026-10-23 | Equipo de Arquitectura | Equipo de Arquitectura | Ampliación de aplicabilidad VAL/WAIVE                     | Incorpora la resolución del waiver, exige evidencia de cierre, distingue el estado documental de la resolución y renumera las secciones posteriores.                      | **Congelado** |
 | **v1.13.0** | 2026-11-02 | Equipo de Arquitectura | Equipo de Arquitectura | Nomenclatura, pruebas y documentos congelados             | §05 limita metadatos; §11 define campos de filas nuevas; §16 precisa kebab-case, excepciones y sufijos; ESLint valida nombres; DOC-004 rige DB/API.                       | **Congelado** |
 | **v1.14.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas                   | §16 establece prefijos de tipo para archivos nuevos, adopción gradual de nombres históricos y la excepción del entrypoint `SKILL.md` exigido por Codex.                   | **Congelado** |
+| **v1.15.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Nomenclatura de registros de auditoría                    | §16 define la familia `EE-AUD` y el patrón de nombre para informes generales y por fase.                                                                                  | **Congelado** |
 
 ---
 

@@ -17,7 +17,7 @@ Este documento registra la documentación técnica consolidada (estado **as-buil
 | **Clasificación**     | Implementación                                                                                         |
 | **Nivel**             | Técnico                                                                                                |
 | **Normativo**         | No                                                                                                     |
-| **Versión**           | v1.1.0                                                                                                 |
+| **Versión**           | v1.1.1                                                                                                 |
 | **Estado**            | Completado                                                                                             |
 | **Propietario**       | Equipo de Arquitectura                                                                                 |
 | **Documento padre**   | EE-DOC-011 — Automation (v1.0.0 Aprobado)                                                              |
@@ -25,7 +25,7 @@ Este documento registra la documentación técnica consolidada (estado **as-buil
 | **Aprobado por**      | Equipo de Arquitectura                                                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                                                   |
 | **Fecha de creación** | 2026-09-30                                                                                             |
-| **Última revisión**   | 2026-10-01                                                                                             |
+| **Última revisión**   | 2026-11-04                                                                                             |
 | **Próxima revisión**  | 2026-12-30                                                                                             |
 
 ---
@@ -393,27 +393,28 @@ El dictamen histórico de §13.2 permanece referido a la consolidación original
 
 ## 14. Referencias
 
-| Código                  | Documento                                      |
-| :---------------------- | :--------------------------------------------- |
-| EE-DOC-002              | Document Design Template (§18.4)               |
-| EE-DOC-005              | Development Workflow                           |
-| EE-DOC-006              | Repository Structure                           |
-| EE-DOC-007              | GitHub Governance                              |
-| EE-DOC-010              | Quality Gates                                  |
-| EE-DOC-011              | Automation (padre)                             |
-| EE-IMP-011-P01…P05      | Fases de implementación                        |
-| EE-ADR-001              | Workspace Task Orchestration                   |
-| EE-ADR-003              | Node 24 LTS                                    |
-| EE-AUDIT-Rules_Emerging | Backlog canónico de auditoría; PN-021 y PN-030 |
+| Código                | Documento                                      |
+| :-------------------- | :--------------------------------------------- |
+| EE-DOC-002            | Document Design Template (§18.4)               |
+| EE-DOC-005            | Development Workflow                           |
+| EE-DOC-006            | Repository Structure                           |
+| EE-DOC-007            | GitHub Governance                              |
+| EE-DOC-010            | Quality Gates                                  |
+| EE-DOC-011            | Automation (padre)                             |
+| EE-IMP-011-P01…P05    | Fases de implementación                        |
+| EE-ADR-001            | Workspace Task Orchestration                   |
+| EE-ADR-003            | Node 24 LTS                                    |
+| EE-AUD-Rules_Emerging | Backlog canónico de auditoría; PN-021 y PN-030 |
 
 ---
 
 ## 15. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                  | Cambios                                                                                 | Estado         |
-| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------- | :-------------------------------------------------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación inicial   | Integración P01–P05                                                                     | Completado     |
-| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Revisión arquitectónica | Diferidos reales; DEC-003 acotado; commits/CI; dictamen §13; encabezados; IMP versiones | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                   | Cambios                                                                                 | Estado         |
+| :--------- | :--------- | :--------------------- | :--------------------- | :--------------------------------------- | :-------------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación inicial                    | Integración P01–P05                                                                     | Completado     |
+| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Revisión arquitectónica                  | Diferidos reales; DEC-003 acotado; commits/CI; dictamen §13; encabezados; IMP versiones | **Completado** |
+| **v1.1.1** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización del registro de auditoría | Actualiza la referencia al registro de auditoría a la familia `EE-AUD`.                 | **Completado** |
 
 ---
 

@@ -19,11 +19,22 @@ test('preserves the first path in porcelain status when its status column is bla
   ]);
 });
 
-test('accepts kebab-case artifacts and the governed EE document filename exception', () => {
+test('ignores deleted source paths while retaining renamed destinations', () => {
+  assert.deepEqual(
+    parsePorcelainStatus(
+      ' D docs/validation/audit/EE-AUDIT-old-name.md\r\nR  old-name.md -> EE-AUD-new-name.md\r\n',
+    ),
+    ['EE-AUD-new-name.md'],
+  );
+});
+
+test('accepts kebab-case artifacts and governed EE document and audit filenames', () => {
   assert.deepEqual(
     validateRepositoryFileNames([
       'scripts/lib/repository-conventions.mjs',
       'docs/architecture/EE-DOC-006_Repository_Structure.md',
+      'docs/validation/audit/EE-AUD-Log_Progress_Register.md',
+      'docs/validation/audit/reports/EE-AUD-001-2026-11-01-phase-9-ci-efficiency-20261104190542.md',
     ]),
     [],
   );

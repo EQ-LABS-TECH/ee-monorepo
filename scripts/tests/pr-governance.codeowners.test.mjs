@@ -184,7 +184,7 @@ test('repository CODEOWNERS resolves actual governance boundaries', async () => 
       'pnpm-lock.yaml',
       'turbo.json',
       'docs/validation/evidence.md',
-      'docs/validation/audit/EE-AUDIT-Rules_Emerging.md',
+      'docs/validation/audit/EE-AUD-Rules_Emerging.md',
       'docs/architecture/EE-DOC-007_GitHub_Governance.md',
       'packages/foundation/src/contracts/provider.ts',
       'packages/foundation/src/contracts/knowledge.ts',
@@ -217,7 +217,7 @@ test('repository CODEOWNERS resolves actual governance boundaries', async () => 
   expectOwners('pnpm-lock.yaml', ['architecture']);
   expectOwners('turbo.json', ['architecture']);
   expectOwners('docs/validation/evidence.md', ['maintainers']);
-  expectOwners('docs/validation/audit/EE-AUDIT-Rules_Emerging.md', ['architecture']);
+  expectOwners('docs/validation/audit/EE-AUD-Rules_Emerging.md', ['architecture']);
   expectOwners('docs/architecture/EE-DOC-007_GitHub_Governance.md', ['architecture']);
   expectOwners('packages/foundation/src/contracts/provider.ts', ['architecture']);
   expectOwners('packages/foundation/src/contracts/knowledge.ts', ['architecture']);
