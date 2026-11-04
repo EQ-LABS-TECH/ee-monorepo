@@ -1,0 +1,57 @@
+# EE-AUDIT-phase-8-e2e-doctor — Fase 8: sincronización documental y comandos
+
+## Metadatos
+
+| Campo                  | Valor                                                                        |
+| :--------------------- | :--------------------------------------------------------------------------- |
+| Repositorio            | EQ-LABS-TECH/ee-monorepo                                                     |
+| Modo                   | repository / ci-quality / document                                           |
+| Ref y commit base      | main — 2d9d5e7808144e21947297e2f86eabe40a3e3b48                              |
+| Fecha de auditoría UTC | 2026-11-04 18:36:26                                                          |
+| Procedencia            | GITHUB_PINNED; checkout local coincidía y estaba limpio antes de los cambios |
+| Persistencia           | LOCAL_WRITE                                                                  |
+| Publicación            | PENDIENTE DE PUBLICACIÓN                                                     |
+
+## 1. Alcance y conclusión
+
+Se revisaron AUD-02, AUD-11, AUD-23, AUD-24 y AUD-32 contra el README raíz, `scripts/README.md`, EE-DOC-010, EE-DOC-011, EE-IMP-011-P04, `scripts/commands/validate`, `scripts/commands/e2e`, los workflows CI y el código de `scripts/commands/doctor`. La referencia remota `main` y el checkout local coincidían en el commit base indicado. La lectura de GitHub fue de solo lectura.
+
+El alcance E2E ya estaba correctamente limitado en el README raíz y EE-DOC-010: el gate ejecuta tareas `test:e2e` registradas por workspaces, actualmente solo Dashboard; su PASS no certifica cobertura completa del ecosistema. Se precisó ese contrato en `scripts/README.md` y EE-DOC-011 v1.2.1. El flujo antiguo de release en EE-IMP-011-P04 quedó identificado consistentemente como registro histórico de P04 frente a la evolución PN-021.
+
+En `doctor`, el indicador de éxito ahora se imprime después de comprobar que el proceso termina con status 0. No se ejecutaron tests ni quality gates; PA-007 queda parcial y requiere validación. V-E2E y la cobertura completa del ecosistema permanecen pendientes.
+
+## 2. Hallazgos y evidencia
+
+| ID     | Evidencia                                                                                               | Resultado                                                                                                                                                                                                              | Acción / estado                                                                                                  |
+| :----- | :------------------------------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
+| AUD-02 | README.md § E2E; EE-DOC-010 §§05.4.1 y 05.8; manifests workspace                                        | Las fuentes ya distinguían el gate activo de su cobertura limitada a tareas registradas; solo Dashboard declara `test:e2e`.                                                                                            | Sin cambio en README raíz ni DOC-010; se hizo explícito en `scripts/README.md` y DOC-011 §04.2. No cerrar V-E2E. |
+| AUD-11 | EE-DOC-010 QG-TEST-E2E y contrato ACTIVE                                                                | El alcance documentado de Quality Gates ya separa Dashboard del E2E completo del ecosistema.                                                                                                                           | Se conservó la formulación correcta y se sincronizó la descripción de comandos.                                  |
+| AUD-23 | `scripts/commands/validate`, `scripts/commands/e2e`, `scripts/README.md`                                | `e2e` forma parte de `validate`; el README de scripts no describía esta relación ni el alcance workspace.                                                                                                              | Fila de comando aclarada para reflejar ejecución real y límite actual.                                           |
+| AUD-24 | EE-IMP-011-P04 §§04, 05.2, 07.1, 07.3, 07.4; EE-TEC-006 §§08, 13.3; scripts/README.md; EE-DOC-011 §08.2 | El flujo pre-P04 estaba marcado histórico en §04, pero tablas de baseline y del as-built P04 podían confundirse con el release actual. EE-TEC-006 identifica §08 como Consolidación P04 y §13.3 como evolución PN-021. | Se rotularon explícitamente §§05.2 y 07 de IMP como histórico P04; TEC-006 no requirió cambios.                  |
+| AUD-32 | `scripts/commands/doctor`, función `check()`                                                            | El código imprimía `✓` antes de invocar el comando y podía imprimir después que había fallado.                                                                                                                         | Se muestra `Checking…` antes; `✓ … passed` solo tras status 0. PA-007 parcial hasta validación.                  |
+
+## 3. Cambios locales preparados
+
+- `scripts/README.md`: descripción de E2E declara que ejecuta tareas workspace `test:e2e`, hoy Dashboard, dentro de `validate`.
+- EE-DOC-011: fila de §04.2 sincronizada; versión v1.2.1, `Última revisión` actualizada y nueva fila de historial agregada conforme al estándar de documentos congelados.
+- EE-IMP-011-P04: encabezados identifican los datos del flujo anterior y el as-built de P04 como históricos.
+- `scripts/commands/doctor`: el mensaje positivo se emite únicamente después de status 0.
+- `EE-AUDIT-Log_Progress_Register.md`: informe de Fase 8 enlazado como artefacto local.
+- `EE-AUDIT-Rules_Emerging.md`: PA-007 actualizado a Parcial; no se creó una regla nueva.
+
+## 4. Límites y validación
+
+No se modificó README raíz ni EE-DOC-010 porque sus descripciones ya reflejaban el comportamiento observado. No se ejecutaron tests, `pnpm validate`, ni otros quality gates. Por ello, el cambio de `doctor` no se declara validado en runtime y PA-007 permanece parcial. El gate E2E activo no equivale a cobertura E2E completa; V-E2E continúa pendiente según EE-DOC-015.
+
+## 5. Trazabilidad AUDIT
+
+- AUD-02, AUD-11 y AUD-23: alcance E2E sincronizado documentalmente, sin declarar completo el E2E del ecosistema.
+- AUD-24: registro histórico de P04 separado visualmente del flujo PN-021 actual.
+- AUD-32 / PA-007: secuencia del mensaje corregida en código; prueba de ejecución pendiente.
+- No se creó regla emergente nueva. PN-025/PN-027 y V-E2E permanecen abiertos según su alcance mayor.
+
+BASE 2d9d5e7808144e21947297e2f86eabe40a3e3b48
+AUDIT LOG: docs/validation/audit/EE-AUDIT-Log_Progress_Register.md — entrada local agregada.
+RULES: PA-007 reutilizado y marcado Parcial; PN-025/PN-027 no cerrados; no se creó regla nueva.
+PUBLICACIÓN: PENDIENTE DE PUBLICACIÓN.
+VALIDACIÓN: revisión estática; tests y quality gates no ejecutados.

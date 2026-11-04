@@ -45,24 +45,24 @@ The architectural decision is defined by **ADR-001 — Workspace Task Orchestrat
 Normative contract: **EE-DOC-011 — Automation**. This README is operational
 documentation derived from that contract — not an independent source of truth.
 
-| Command            | Implementation                   | Category | Responsibility                                       |
-| ------------------ | -------------------------------- | -------- | ---------------------------------------------------- |
-| `bootstrap`        | `scripts/commands/bootstrap`     | A-ROOT   | Environment setup                                    |
-| `build`            | `scripts/commands/build`         | A-ROOT   | Workspace build (QG-BUILD-001)                       |
-| `dev`              | `scripts/commands/dev`           | A-ROOT   | Local development (long-running)                     |
-| `test`             | `scripts/commands/test`          | A-ROOT   | Orchestrated tests (QG-TEST-001)                     |
-| `lint`             | `scripts/commands/lint`          | A-ROOT   | Lint (QG-LINT-001)                                   |
-| `format`           | `scripts/commands/format`        | A-ROOT   | Prettier **write** (local tool; not the format gate) |
-| `hooks:install`    | `scripts/commands/install-hooks` | A-ROOT   | Install optional repository-local Git hooks          |
-| `typecheck`        | `scripts/commands/typecheck`     | A-ROOT   | Typecheck (QG-TYPE-001)                              |
-| `validate`         | `scripts/commands/validate`      | A-ROOT   | Local validation aggregator (EE-DOC-010)             |
-| `doctor`           | `scripts/commands/doctor`        | A-ROOT   | Environment diagnostics (does not replace validate)  |
-| `generate`         | `scripts/commands/generate`      | A-GEN    | Scaffolding (Plop)                                   |
-| `e2e`              | `scripts/commands/e2e`           | A-ROOT   | End-to-end tests (Playwright)                        |
-| `release`          | `scripts/commands/release`       | A-REL    | Monorepo release orchestration                       |
-| `clean`            | `scripts/commands/clean`         | A-ROOT   | Clean build artifacts / caches                       |
-| `changeset`        | `@changesets/cli`                | A-REL    | Declare SemVer changes (no file under `scripts/`)    |
-| `version-packages` | `changeset version`              | A-REL    | Apply package versions (no file under `scripts/`)    |
+| Command            | Implementation                   | Category | Responsibility                                                 |
+| ------------------ | -------------------------------- | -------- | -------------------------------------------------------------- |
+| `bootstrap`        | `scripts/commands/bootstrap`     | A-ROOT   | Environment setup                                              |
+| `build`            | `scripts/commands/build`         | A-ROOT   | Workspace build (QG-BUILD-001)                                 |
+| `dev`              | `scripts/commands/dev`           | A-ROOT   | Local development (long-running)                               |
+| `test`             | `scripts/commands/test`          | A-ROOT   | Orchestrated tests (QG-TEST-001)                               |
+| `lint`             | `scripts/commands/lint`          | A-ROOT   | Lint (QG-LINT-001)                                             |
+| `format`           | `scripts/commands/format`        | A-ROOT   | Prettier **write** (local tool; not the format gate)           |
+| `hooks:install`    | `scripts/commands/install-hooks` | A-ROOT   | Install optional repository-local Git hooks                    |
+| `typecheck`        | `scripts/commands/typecheck`     | A-ROOT   | Typecheck (QG-TYPE-001)                                        |
+| `validate`         | `scripts/commands/validate`      | A-ROOT   | Local validation aggregator (EE-DOC-010)                       |
+| `doctor`           | `scripts/commands/doctor`        | A-ROOT   | Environment diagnostics (does not replace validate)            |
+| `generate`         | `scripts/commands/generate`      | A-GEN    | Scaffolding (Plop)                                             |
+| `e2e`              | `scripts/commands/e2e`           | A-ROOT   | Workspace E2E tasks (Dashboard only today; part of `validate`) |
+| `release`          | `scripts/commands/release`       | A-REL    | Monorepo release orchestration                                 |
+| `clean`            | `scripts/commands/clean`         | A-ROOT   | Clean build artifacts / caches                                 |
+| `changeset`        | `@changesets/cli`                | A-REL    | Declare SemVer changes (no file under `scripts/`)              |
+| `version-packages` | `changeset version`              | A-REL    | Apply package versions (no file under `scripts/`)              |
 
 ### Release workflow
 

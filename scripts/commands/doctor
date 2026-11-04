@@ -9,7 +9,7 @@ const ROOT = process.cwd();
 let hasErrors = false;
 
 function check(command, args, label) {
-  console.log(`  ✓ ${label}...`);
+  console.log(`  Checking ${label}...`);
 
   const result = spawnSync(command, args, {
     stdio: 'inherit',
@@ -23,6 +23,7 @@ function check(command, args, label) {
     return false;
   }
 
+  console.log(`  ✓ ${label}: passed`);
   return true;
 }
 

@@ -143,7 +143,7 @@ El primer flujo se conserva exclusivamente como referencia histórica del cierre
 | `shell`       | `true` fijo                                                       |
 | Defecto       | `stdio: "pipe"` sin `encoding` → `stdout` Buffer; `.trim()` falla |
 
-### 05.2. Release
+### 05.2. Release — línea base pre-P04 (histórica)
 
 | Aspecto        | Pre-P04                                              |
 | :------------- | :--------------------------------------------------- |
@@ -170,9 +170,9 @@ El primer flujo se conserva exclusivamente como referencia histórica del cierre
 
 ---
 
-## 07. Cambios implementados
+## 07. Registro histórico de implementación P04
 
-### 07.1. `scripts/release`
+### 07.1. `scripts/release` — as-built de P04
 
 1. Eliminada la línea `cls;`.
 2. `shell: true` → `shell: process.platform === "win32"` (4 ocurrencias).
@@ -185,7 +185,7 @@ El primer flujo se conserva exclusivamente como referencia histórica del cierre
 2. `encoding: "utf8"` en `plop --version`.
 3. Mensaje EE-DOC-012 y exit 0 sin `plopfile.js` conservados.
 
-### 07.3. As-built verificado (fuentes monorepo)
+### 07.3. Verificación histórica del as-built P04 (fuentes del monorepo)
 
 | Check                                 | Resultado        |
 | :------------------------------------ | :--------------- |
