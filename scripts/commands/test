@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { runTurboGate } from '../lib/run-turbo-gate.mjs';
+import { runWorkspaceQualityGate } from '../lib/workspace-quality-gates.mjs';
 
 // Redirect TEMP/TMP/TMPDIR locally to avoid Windows worker EPERM errors.
 const localTmp = join(process.cwd(), '.tmp', 'vitest');
@@ -13,8 +13,5 @@ process.env.TMPDIR = localTmp;
 console.log('🧪 Running tests (QG-TEST-001)...');
 console.log('');
 
-const status = runTurboGate({
-  task: 'test',
-  gateId: 'QG-TEST-001',
-});
+const status = runWorkspaceQualityGate('test');
 process.exit(status);

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import * as fs from 'node:fs';
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -155,6 +156,115 @@ test('duplicate template ids across categories are reported', (t) => {
   t.after(() => rmSync(root, { recursive: true, force: true }));
   const { errors } = validateTemplates({ root });
   assert.ok(errors.some((e) => e.includes('duplicate template id "dup"')));
+});
+
+test('ignores category directories that do not have template markers', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  const unrelated = join(f.root, 'templates', 'package', 'notes');
+  mkdirSync(unrelated);
+  writeFileSync(join(unrelated, 'README.md'), 'Not a template.');
+
+  assert.deepEqual(validateTemplates({ root: f.root }).errors, []);
+});
+
+test('reports a template candidate with files but no template.json', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  const candidateFiles = join(f.root, 'templates', 'package', 'incomplete', 'files');
+  mkdirSync(candidateFiles, { recursive: true });
+  writeFileSync(join(candidateFiles, 'README.md.hbs'), 'template');
+
+  const { errors } = validateTemplates({ root: f.root });
+  assert.ok(
+    errors.some(
+      (error) => error.includes('package/incomplete/') && error.includes('template.json'),
+    ),
+  );
+});
+
+test('reports a valid template metadata directory without files/', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  rmSync(join(f.root, 'templates', 'package', 'sample', 'files'), { recursive: true });
+
+  const { errors } = validateTemplates({ root: f.root });
+  assert.ok(
+    errors.some((error) => error.includes('package/sample/') && error.includes('missing files/')),
+  );
+});
+
+test('reports category read failures instead of silently skipping them', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  const categoryPath = join(f.root, 'templates', 'package');
+  const fsImpl = {
+    statSync: fs.statSync,
+    readFileSync: fs.readFileSync,
+    readdirSync(path, options) {
+      if (path === categoryPath)
+        throw Object.assign(new Error('access denied'), { code: 'EACCES' });
+      return fs.readdirSync(path, options);
+    },
+  };
+
+  const { errors } = validateTemplates({ root: f.root, fsImpl });
+  assert.ok(
+    errors.some(
+      (error) =>
+        error.includes('cannot read templates/package/') && error.includes('access denied'),
+    ),
+  );
+});
+
+test('reports metadata stat and read failures', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  const metaPath = join(f.root, 'templates', 'package', 'sample', 'template.json');
+  const fsImpl = {
+    statSync(path) {
+      if (path === metaPath) throw Object.assign(new Error('access denied'), { code: 'EACCES' });
+      return fs.statSync(path);
+    },
+    readFileSync(path, encoding) {
+      if (path === metaPath) throw Object.assign(new Error('read denied'), { code: 'EACCES' });
+      return fs.readFileSync(path, encoding);
+    },
+    readdirSync: fs.readdirSync,
+  };
+
+  const { errors } = validateTemplates({ root: f.root, fsImpl });
+  assert.ok(
+    errors.some((error) => error.includes('cannot inspect templates/package/sample/template.json')),
+  );
+});
+
+test('reports metadata read failures instead of omitting the candidate', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  const metaPath = join(f.root, 'templates', 'package', 'sample', 'template.json');
+  const fsImpl = {
+    statSync: fs.statSync,
+    readdirSync: fs.readdirSync,
+    readFileSync(path, encoding) {
+      if (path === metaPath) throw Object.assign(new Error('read denied'), { code: 'EACCES' });
+      return fs.readFileSync(path, encoding);
+    },
+  };
+
+  const { errors } = validateTemplates({ root: f.root, fsImpl });
+  assert.ok(errors.some((error) => error.includes('cannot read package/sample/template.json')));
+});
+
+test('rejects files/ when it is a file instead of a directory', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  const filesDir = join(f.root, 'templates', 'package', 'sample', 'files');
+  rmSync(filesDir, { recursive: true });
+  writeFileSync(filesDir, 'not a directory');
+
+  const { errors } = validateTemplates({ root: f.root });
+  assert.ok(errors.some((error) => error.includes('package/sample/files is not a directory')));
 });
 
 // --- M-06a regression: real repo templates ---

@@ -1,11 +1,8 @@
 #!/usr/bin/env node
-import { runTurboGate } from '../lib/run-turbo-gate.mjs';
+import { runWorkspaceQualityGate } from '../lib/workspace-quality-gates.mjs';
 
 console.log('🏗️ Building all workspaces (QG-BUILD-001)...');
 console.log('');
 
-const status = runTurboGate({
-  task: 'build',
-  gateId: 'QG-BUILD-001',
-});
+const status = runWorkspaceQualityGate('build');
 process.exit(status);
