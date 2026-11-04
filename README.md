@@ -123,11 +123,10 @@ pnpm clean
 
 Also: `pnpm changeset`, `pnpm version-packages` (Changesets CLI).
 
-> **E2E:** `pnpm e2e` es el punto de entrada raíz y se ejecuta como gate
-> crítico dentro de `pnpm run validate`, utilizado también por CI.
-> La validación local reportada el 2026-10-22 obtuvo `QG-TEST-E2E: PASS`
-> para `@eq-labs/dashboard` (1 test). La cobertura E2E sigue limitada al
-> dashboard; esto no acredita una orquestación E2E multi-package.
+> **E2E:** `pnpm e2e` is a blocking gate in `pnpm run validate` and CI. It runs
+> every workspace task named `test:e2e` through Turborepo. Dashboard is the only
+> workspace currently declaring that task. A passing gate confirms the registered
+> tasks passed; it does not establish complete E2E coverage of the ecosystem.
 
 ---
 

@@ -19,7 +19,7 @@ Sigue la jerarquía documental de **EE-DOC-001**, la gobernanza de **EE-DOC-003*
 | **Clasificación**          | Decisión Arquitectónica                                                |
 | **Nivel**                  | Arquitectónico                                                         |
 | **Normativo**              | Sí, una vez aprobado                                                   |
-| **Versión**                | v1.3.1                                                                 |
+| **Versión**                | v1.4.0                                                                 |
 | **Estado**                 | Aprobado                                                               |
 | **Propietario**            | Equipo de Arquitectura                                                 |
 | **Documento padre**        | EE-DOC-004                                                             |
@@ -28,7 +28,7 @@ Sigue la jerarquía documental de **EE-DOC-001**, la gobernanza de **EE-DOC-003*
 | **Aprobado por**           | Equipo de Arquitectura                                                 |
 | **Audiencia**              | Arquitectura, Desarrollo, QA, DevOps, IA                               |
 | **Fecha de creación**      | 2026-08-29                                                             |
-| **Última revisión**        | 2026-10-19                                                             |
+| **Última revisión**        | 2026-11-04                                                             |
 | **Próxima revisión**       | —                                                                      |
 | **Prioridad**              | Alta                                                                   |
 
@@ -477,10 +477,10 @@ La ejecución seguirá:
 pnpm e2e
     │
     ▼
-scripts/e2e
+scripts/commands/e2e
     │
     ▼
-turbo run e2e
+turbo run test:e2e (all workspaces declaring the task)
     │
     ▼
 workspace:e2e
@@ -491,7 +491,7 @@ playwright test
 
 ### 10.3. Implementación del Script Root
 
-El script raíz `scripts/test` será una interfaz mínima que delega en Turborepo.
+El script raíz `scripts/commands/test` será una interfaz mínima que delega en Turborepo.
 
 ```javascript
 #!/usr/bin/env node
@@ -506,21 +506,17 @@ const result = spawnSync('turbo', ['run', 'test'], {
 process.exit(result.status ?? 1);
 ```
 
-El script `scripts/e2e` tendrá:
+El script `scripts/commands/e2e` tendrá:
 
 ```javascript
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
 
-const result = spawnSync(
-  'pnpm',
-  ['exec', 'turbo', 'run', 'test:e2e', '--filter=@eq-labs/dashboard'],
-  {
-    stdio: 'inherit',
-    shell: true,
-  },
-);
+const result = spawnSync('pnpm', ['exec', 'turbo', 'run', 'test:e2e'], {
+  stdio: 'inherit',
+  shell: true,
+});
 
 process.exit(result.status ?? 1);
 ```
@@ -528,7 +524,7 @@ process.exit(result.status ?? 1);
 Estos scripts no deberán contener lógica de testing.  
 Su única responsabilidad es exponer la interfaz root y delegar en Turborepo.
 
-> **As-built:** el contrato de ejecución (`pnpm e2e` → Turbo → Playwright) se mantiene. La implementación materializa `turbo run test:e2e --filter=@eq-labs/dashboard` mientras el gate multi-package no esté cableado. Alineado con `EE-DOC-015 §05.8`.
+> **As-built:** `pnpm e2e` delega en Turbo y ejecuta todas las tareas workspace `test:e2e` declaradas, sin filtro fijo. Actualmente solo Dashboard declara la tarea; la cobertura integral de V-E2E se determina mediante EE-DOC-015 y no se infiere de este resultado.
 
 ---
 
@@ -1527,6 +1523,7 @@ La autoridad de aprobación corresponde al Equipo de Arquitectura.
 | **v1.2.0** | 2026-09-15 | IA Asistente (revisión)  | Equipo de Arquitectura | Correcciones documentales y de gobernanza | Consolidación de Testing Library, referencias cruzadas, precisión de `--passWithNoTests`, alineación de Fase 2, trazabilidad de ausencia de tests, referencia a EE-DOC-013, revisión extraordinaria por cambios normativos y separación explícita entre autoría y aprobación | **Aprobado**               |
 | **v1.3.0** | 2026-10-02 | Equipo de Arquitectura   | Equipo de Arquitectura | Higiene DOC-002 §18.2                     | Alineación formal de estructura (intro, Alcance, Consecuencias, Referencias, Código corto); sin cambio de decisión                                                                                                                                                           | **Aprobado**               |
 | **v1.3.1** | 2026-10-19 | Equipo de Arquitectura   | Equipo de Arquitectura | As-built e2e                              | §10.3: nota as-built `test:e2e --filter=@eq-labs/dashboard`; alineado con EE-DOC-015 §05.8                                                                                                                                                                                   | Aprobado                   |
+| **v1.4.0** | 2026-11-04 | Equipo de Arquitectura   | Equipo de Arquitectura | Orquestación E2E por workspace            | §10.2–§10.3 delegan en Turbo sin filtro de paquete; el wrapper ejecuta todas las tareas workspace `test:e2e` declaradas.                                                                                                                                                     | **Aprobado**               |
 
 > **Regla de autoridad:** La columna `Autor` registra quién elaboró o propuso el cambio. La columna `Aprobado por` registra exclusivamente la autoridad humana que formalmente aprobó la decisión. La IA Asistente no puede figurar como autoridad de aprobación.
 

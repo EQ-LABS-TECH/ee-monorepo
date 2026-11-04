@@ -349,19 +349,19 @@ Missing registry ⇒ exit code ≠ 0 (No False Pass). Do not commit sample trees
 
 ## E2E orchestration
 
-The root command `pnpm run e2e` runs the `test:e2e` task for `@eq-labs/dashboard`. The root command `pnpm run validate` includes E2E as a critical gate, and CI invokes `validate`.
+The root command `pnpm run e2e` runs every workspace task named `test:e2e` through Turborepo, without a fixed package filter. `pnpm run validate` includes this blocking gate, and both CI workflows invoke `validate`. Dashboard is currently the only workspace declaring the task.
 
-The reported local validation passed `QG-TEST-E2E` with one Dashboard test. The gate is integrated, but multi-package E2E orchestration and coverage remain pending implementation and evidence.
+`QG-TEST-E2E: PASS` means every task discovered for the Turbo task passed. It does not mean every ecosystem application has an E2E suite. V-E2E in EE-DOC-015 remains PENDING until applicable ecosystem surfaces and their coverage have been evidenced.
 
-Use the following Turbo command to inspect the Dashboard suite directly:
+Use the following Turbo command to inspect all registered workspace E2E tasks:
 
 ```bash
-pnpm exec turbo run test:e2e --filter=@eq-labs/dashboard
+pnpm exec turbo run test:e2e
 ```
 
-The `test:e2e` task sets `cache: false` and depends on the upstream builds declared in Turbo. This evidence does not establish E2E coverage for other workspaces. Gate availability is governed by EE-DOC-010; CI composition is governed by EE-DOC-007.
+The `test:e2e` task sets `cache: false` and depends on the upstream builds declared in Turbo. Turbo discovers every workspace that declares this task; the current registered suite is Dashboard only. This execution does not establish E2E coverage for workspaces without a declared suite. Gate availability is governed by EE-DOC-010; CI composition is governed by EE-DOC-007.
 
-The typecheck, lint, test, build, and Dashboard E2E wrappers classify a successful Turbo exit with zero executed tasks as `SKIPPED`, not `PASS`, and return a non-zero status so the root `validate` aggregator fails the critical gate. The script-test runner fails if `scripts/tests/` contains no `*.test.mjs` files.
+The typecheck, lint, test, build, and workspace E2E wrappers classify a successful Turbo exit with zero executed tasks as `SKIPPED`, not `PASS`, and return a non-zero status so the root `validate` aggregator fails the critical gate. The script-test runner fails if `scripts/tests/` contains no `*.test.mjs` files.
 
 ## Windows: Vitest and %TEMP%
 
