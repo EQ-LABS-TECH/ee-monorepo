@@ -177,6 +177,19 @@ export function runTurboGate({
     });
   }
 
+  if (result.status === null) {
+    return completeGate({
+      gateId,
+      primary: {
+        status: 'ERROR',
+        detail: `Turbo terminated without an exit code${result.signal ? ` (signal ${result.signal})` : ''}.`,
+      },
+      additionalChecks,
+      writeOut,
+      log,
+    });
+  }
+
   if (result.status !== 0) {
     return completeGate({
       gateId,

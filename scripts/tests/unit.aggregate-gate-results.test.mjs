@@ -27,6 +27,19 @@ test('a required SKIPPED gate fails global aggregation', () => {
   );
 });
 
+test('a required FAIL or ERROR gate fails global aggregation', () => {
+  for (const status of ['FAIL', 'ERROR']) {
+    assert.deepEqual(
+      aggregateGateResults(validations, [
+        { gate: 'Type checking', status: 'PASS', exitCode: 0 },
+        { gate: 'Tests', status, exitCode: 1 },
+      ]),
+      { hasErrors: true, warnings: [] },
+      `${status} must remain blocking`,
+    );
+  }
+});
+
 test('a missing critical gate result fails global aggregation', () => {
   assert.deepEqual(
     aggregateGateResults(validations, [{ gate: 'Type checking', status: 'PASS', exitCode: 0 }]),
