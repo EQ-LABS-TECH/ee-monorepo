@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Gobernanza                                                             |
 | **Nivel**             | Especializado                                                          |
 | **Normativo**         | Sí                                                                     |
-| **Versión**           | v1.5.0                                                                 |
+| **Versión**           | v1.5.1                                                                 |
 | **Estado**            | Congelado                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-006                                                             |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                   |
 | **Fecha de creación** | 2026-09-21                                                             |
-| **Última revisión**   | 2026-11-02                                                             |
+| **Última revisión**   | 2026-11-04                                                             |
 | **Próxima revisión**  | No aplica — Documento Congelado (cambio solo vía RFC)                  |
 
 ---
@@ -1053,23 +1053,24 @@ La definición de excepciones específicas deberá evaluarse durante la implemen
 
 ### 07.18. Estado de Definiciones
 
-| Definición                                              | Estado                          |
-| :------------------------------------------------------ | :------------------------------ |
-| `main` protegida                                        | **Definido**                    |
-| `develop` protegida cuando exista                       | **Definido**                    |
-| Escritura directa bloqueada                             | **Definido**                    |
-| Pull Request obligatorio                                | **Definido**                    |
-| ≥ 1 approval estándar                                   | **Definido**                    |
-| ≥ 2 approvals para cambios críticos                     | **Definido**                    |
-| Quality Gates obligatorios                              | **Definido**                    |
-| CODEOWNERS integrado con revisión                       | **Definido**                    |
-| Merge Commit prohibido                                  | **Definido**                    |
-| Squash para `feature/*` y `bugfix/*`                    | **Definido**                    |
-| Reglas concretas de GitHub Rulesets / Branch Protection | **Pendiente de implementación** |
-| Configuración exacta de bypass                          | **Pendiente**                   |
-| Identidades con bypass autorizado                       | **Pendiente**                   |
-| Patrones concretos de CODEOWNERS                        | **Sección 08**                  |
-| Quality Gates concretos                                 | **EE-DOC-010**                  |
+| Definición                                              | Estado                                                             |
+| :------------------------------------------------------ | :----------------------------------------------------------------- |
+| `main` protegida                                        | **Definido**                                                       |
+| `develop` protegida cuando exista                       | **Definido**                                                       |
+| Escritura directa bloqueada                             | **Definido**                                                       |
+| Pull Request obligatorio                                | **Definido**                                                       |
+| ≥ 1 approval estándar                                   | **Definido**                                                       |
+| ≥ 2 approvals para cambios críticos                     | **Definido**                                                       |
+| Quality Gates obligatorios                              | **Definido**                                                       |
+| CODEOWNERS integrado con revisión                       | **Definido**                                                       |
+| Merge Commit prohibido                                  | **Definido**                                                       |
+| Squash para `feature/*` y `bugfix/*`                    | **Definido**                                                       |
+| Reglas concretas de GitHub Rulesets / Branch Protection | **Rulesets activos; Branch Protection legacy no verificada**       |
+| Configuración exacta de bypass                          | **Configurada en Rulesets; excepción pendiente de reconciliación** |
+| Identidades con bypass autorizado                       | **Configuradas; cierre de W-P03-001 pendiente**                    |
+| Rulesets de tags `v*`                                   | **Creación restringida; actualización y eliminación bloqueadas**   |
+| Patrones concretos de CODEOWNERS                        | **Sección 08**                                                     |
+| Quality Gates concretos                                 | **EE-DOC-010**                                                     |
 
 ---
 
@@ -2002,32 +2003,32 @@ Estos elementos deberán definirse en sus respectivos documentos, fases de imple
 
 ### 09.21. Estado de Definiciones
 
-| Definición                                      | Estado                          |
-| :---------------------------------------------- | :------------------------------ |
-| Ubicación `.github/workflows/`                  | **Definido**                    |
-| GitHub Actions como mecanismo de automatización | **Definido**                    |
-| Principio de reproducibilidad                   | **Definido**                    |
-| Principio de trazabilidad                       | **Definido**                    |
-| Versionado de workflows                         | **Definido**                    |
-| Least Privilege                                 | **Definido**                    |
-| Separación de responsabilidades                 | **Definido**                    |
-| Integración con Pull Requests                   | **Definido**                    |
-| Integración con Branch Protection               | **Definido**                    |
-| Integración con CODEOWNERS                      | **Definido**                    |
-| Gestión de permisos por workflow                | **Definido**                    |
-| Gestión conceptual de Secrets                   | **Definido**                    |
-| Gestión conceptual de Variables                 | **Definido**                    |
-| Uso normativo de Environments                   | **Definido conceptualmente**    |
-| Auditoría y trazabilidad                        | **Definido**                    |
-| Lista definitiva de workflows                   | **Pendiente de implementación** |
-| Nombres definitivos de workflows                | **Pendiente de implementación** |
-| Eventos concretos por workflow                  | **Pendiente de implementación** |
-| Permisos concretos por workflow                 | **Pendiente de implementación** |
-| Secrets concretos                               | **Pendiente de implementación** |
-| Variables concretas                             | **Pendiente de implementación** |
-| Environments concretos                          | **Pendiente de implementación** |
-| Required Checks concretos                       | **Pendiente / EE-DOC-010**      |
-| Quality Gates concretos                         | **EE-DOC-010**                  |
+| Definición                                      | Estado                                     |
+| :---------------------------------------------- | :----------------------------------------- |
+| Ubicación `.github/workflows/`                  | **Definido**                               |
+| GitHub Actions como mecanismo de automatización | **Definido**                               |
+| Principio de reproducibilidad                   | **Definido**                               |
+| Principio de trazabilidad                       | **Definido**                               |
+| Versionado de workflows                         | **Definido**                               |
+| Least Privilege                                 | **Definido**                               |
+| Separación de responsabilidades                 | **Definido**                               |
+| Integración con Pull Requests                   | **Definido**                               |
+| Integración con Branch Protection               | **Definido**                               |
+| Integración con CODEOWNERS                      | **Definido**                               |
+| Gestión de permisos por workflow                | **Definido**                               |
+| Gestión conceptual de Secrets                   | **Definido**                               |
+| Gestión conceptual de Variables                 | **Definido**                               |
+| Uso normativo de Environments                   | **Definido conceptualmente**               |
+| Auditoría y trazabilidad                        | **Definido**                               |
+| Lista definitiva de workflows                   | **Pendiente de implementación**            |
+| Nombres definitivos de workflows                | **Pendiente de implementación**            |
+| Eventos concretos por workflow                  | **Pendiente de implementación**            |
+| Permisos concretos por workflow                 | **Pendiente de implementación**            |
+| Secrets concretos                               | **Pendiente de implementación**            |
+| Variables concretas                             | **Pendiente de implementación**            |
+| Environments concretos                          | **Pendiente de implementación**            |
+| Required Checks concretos                       | **Configurados; Validate y PR Governance** |
+| Quality Gates concretos                         | **EE-DOC-010**                             |
 
 ### 09.22. Conformidad Normativa
 
@@ -3358,23 +3359,23 @@ EE-DOC-007 únicamente establece la integración de dichas reglas con GitHub.
 
 ### 12.19. Estado de Definiciones
 
-| Definición                                 | Estado                                 |
-| :----------------------------------------- | :------------------------------------- |
-| Integración EE-DOC-005 ↔ EE-DOC-007        | **Definido**                           |
-| Issue ↔ GitHub                             | **Definido conceptualmente**           |
-| Branch ↔ GitHub                            | **Definido / Sección 07**              |
-| Commit ↔ GitHub                            | **Definido**                           |
-| Push ↔ GitHub                              | **Definido**                           |
-| Pull Request ↔ GitHub                      | **Definido**                           |
-| CODEOWNERS ↔ Code Review                   | **Definido / Sección 08**              |
-| GitHub Actions ↔ Quality Gates             | **Definido / Sección 09 + EE-DOC-010** |
-| Branch Protection ↔ Merge                  | **Definido / Sección 07**              |
-| Trazabilidad del workflow                  | **Definido / Sección 11**              |
-| Quality Gates concretos                    | **EE-DOC-010**                         |
-| Workflows concretos                        | **Pendiente de implementación**        |
-| Required Checks concretos                  | **Pendiente / EE-DOC-010**             |
-| Integraciones concretas con Issue Tracking | **Pendiente de implementación**        |
-| Configuración concreta de GitHub           | **Pendiente de implementación**        |
+| Definición                                 | Estado                                     |
+| :----------------------------------------- | :----------------------------------------- |
+| Integración EE-DOC-005 ↔ EE-DOC-007        | **Definido**                               |
+| Issue ↔ GitHub                             | **Definido conceptualmente**               |
+| Branch ↔ GitHub                            | **Definido / Sección 07**                  |
+| Commit ↔ GitHub                            | **Definido**                               |
+| Push ↔ GitHub                              | **Definido**                               |
+| Pull Request ↔ GitHub                      | **Definido**                               |
+| CODEOWNERS ↔ Code Review                   | **Definido / Sección 08**                  |
+| GitHub Actions ↔ Quality Gates             | **Definido / Sección 09 + EE-DOC-010**     |
+| Branch Protection ↔ Merge                  | **Definido / Sección 07**                  |
+| Trazabilidad del workflow                  | **Definido / Sección 11**                  |
+| Quality Gates concretos                    | **EE-DOC-010**                             |
+| Workflows concretos                        | **Pendiente de implementación**            |
+| Required Checks concretos                  | **Configurados; Validate y PR Governance** |
+| Integraciones concretas con Issue Tracking | **Pendiente de implementación**            |
+| Configuración concreta de GitHub           | **Pendiente de implementación**            |
 
 ### 12.20. Conformidad Normativa
 
@@ -3985,7 +3986,7 @@ Cualquier capacidad de bypass administrativo deberá:
 4. utilizarse únicamente cuando exista una necesidad legítima;
 5. quedar sujeta a las reglas de seguridad y auditoría.
 
-La configuración concreta de identidades autorizadas para bypass permanece pendiente de implementación y no se define en esta sección.
+La configuración as-built de `Protect main` incluye bypass permanente del rol Repository admin. La excepción de operador único W-P03-001, documentada en EE-TEC-002, continúa pendiente de reconciliación y cierre. El bypass no constituye un flujo ordinario de integración.
 
 ### 13.23. Límites de esta Sección
 
@@ -4007,26 +4008,27 @@ Estos elementos deberán definirse en **EE-DOC-010 — Quality Gates** o en la d
 
 ### 13.24. Estado de Definiciones
 
-| Definición                                               | Estado                          |
-| :------------------------------------------------------- | :------------------------------ |
-| EE-DOC-010 como fuente normativa de Quality Gates        | **Definido**                    |
-| GitHub Actions como mecanismo de ejecución               | **Definido**                    |
-| Required Checks como mecanismo de integración            | **Definido**                    |
-| Branch Protection como mecanismo de enforcement          | **Definido**                    |
-| Integración con Pull Requests                            | **Definido**                    |
-| Integración con CODEOWNERS                               | **Definido**                    |
-| Bloqueo de Merge ante checks obligatorios no satisfechos | **Definido**                    |
-| Trazabilidad de resultados                               | **Definido**                    |
-| Reejecución sobre cambios actualizados                   | **Definido**                    |
-| Bypass controlado                                        | **Definido conceptualmente**    |
-| Catálogo de Quality Gates                                | **EE-DOC-010**                  |
-| Criterios de cada Quality Gate                           | **EE-DOC-010**                  |
-| Thresholds                                               | **EE-DOC-010**                  |
-| Herramientas concretas                                   | **EE-DOC-010 / implementación** |
-| Workflows concretos                                      | **Pendiente de implementación** |
-| Required Checks concretos                                | **Pendiente / EE-DOC-010**      |
-| Configuración exacta de Branch Protection                | **Sección 07 / implementación** |
-| Identidades de bypass                                    | **Pendiente de implementación** |
+| Definición                                               | Estado                                                           |
+| :------------------------------------------------------- | :--------------------------------------------------------------- |
+| EE-DOC-010 como fuente normativa de Quality Gates        | **Definido**                                                     |
+| GitHub Actions como mecanismo de ejecución               | **Definido**                                                     |
+| Required Checks como mecanismo de integración            | **Definido**                                                     |
+| Branch Protection como mecanismo de enforcement          | **Definido**                                                     |
+| Integración con Pull Requests                            | **Definido**                                                     |
+| Integración con CODEOWNERS                               | **Definido**                                                     |
+| Bloqueo de Merge ante checks obligatorios no satisfechos | **Definido**                                                     |
+| Trazabilidad de resultados                               | **Definido**                                                     |
+| Reejecución sobre cambios actualizados                   | **Definido**                                                     |
+| Bypass controlado                                        | **Definido conceptualmente**                                     |
+| Catálogo de Quality Gates                                | **EE-DOC-010**                                                   |
+| Criterios de cada Quality Gate                           | **EE-DOC-010**                                                   |
+| Thresholds                                               | **EE-DOC-010**                                                   |
+| Herramientas concretas                                   | **EE-DOC-010 / implementación**                                  |
+| Workflows concretos                                      | **Configurados; as-built verificado**                            |
+| Required Checks concretos                                | **Configurados; Validate y PR Governance**                       |
+| Configuración exacta de Branch Protection                | **Rulesets activos; Branch Protection legacy no verificada**     |
+| Identidades de bypass                                    | **Configuradas; cierre de W-P03-001 pendiente**                  |
+| Rulesets de tags `v*`                                    | **Creación restringida; actualización y eliminación bloqueadas** |
 
 ### 13.25. Conformidad Normativa
 
@@ -4420,22 +4422,22 @@ El Plan de Implementación no autoriza:
 
 ### 14.17. Estado del Plan
 
-| Elemento                             | Estado                                                        |
-| :----------------------------------- | :------------------------------------------------------------ |
-| Plan general de implementación       | **Completado**                                                |
-| Unidades P01–P08                     | **Completadas y validadas**                                   |
-| Artefactos físicos concretos         | **Implementados**                                             |
-| Equipos GitHub concretos             | **Implementados** (P02)                                       |
-| Usuarios concretos                   | **Bootstrap single-operator** (`edus194`)                     |
-| Branch Protection concreta           | **Implementada** (ruleset Protect main)                       |
-| `CODEOWNERS` concreto                | **Implementado** (P04)                                        |
-| Workflows concretos                  | **Implementados** (`ci.yml`)                                  |
-| Required Checks concretos            | **Implementados** (`Validate`; catálogo EE-DOC-010 pendiente) |
-| Configuración de seguridad concreta  | **Implementada** (P07)                                        |
-| Documentación `EE-IMP-007-P01...P08` | **Completa**                                                  |
-| `EE-TEC-002`                         | **Publicado** v1.0.0                                          |
-| Validación Final                     | **Conforme** (2026-09-23)                                     |
-| Cierre Documental                    | **Completado** — Congelado                                    |
+| Elemento                             | Estado                                                               |
+| :----------------------------------- | :------------------------------------------------------------------- |
+| Plan general de implementación       | **Completado**                                                       |
+| Unidades P01–P08                     | **Completadas y validadas**                                          |
+| Artefactos físicos concretos         | **Implementados**                                                    |
+| Equipos GitHub concretos             | **Implementados** (P02)                                              |
+| Usuarios concretos                   | **Bootstrap single-operator** (`edus194`)                            |
+| Branch Protection concreta           | **Implementada** (ruleset Protect main)                              |
+| `CODEOWNERS` concreto                | **Implementado** (P04)                                               |
+| Workflows concretos                  | **Implementados** (`ci.yml`)                                         |
+| Required Checks concretos            | **Implementados** (`Validate`, `PR Governance`; catálogo EE-DOC-010) |
+| Configuración de seguridad concreta  | **Implementada** (P07)                                               |
+| Documentación `EE-IMP-007-P01...P08` | **Completa**                                                         |
+| `EE-TEC-002`                         | **Publicado** v1.0.0                                                 |
+| Validación Final                     | **Conforme** (2026-09-23)                                            |
+| Cierre Documental                    | **Completado** — Congelado                                           |
 
 ---
 
@@ -5552,6 +5554,7 @@ La implementación concreta de herramientas, automatizaciones o políticas que e
 | **v1.3.0** | 2026-10-31 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 Actions-only                        | EE-RFC-003: define aprobaciones dinámicas, identidad del check, límites operativos y activación gobernada.                                                                                                                 | **Congelado**      |
 | **v1.4.0** | 2026-11-01 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 orden y clasificación independiente | EE-RFC-003 gate de `Validate` sobre HEAD actual; clasificación `ORDINARY` separada de aprobaciones; reevaluación de señales confiables.                                                                                    | **Congelado**      |
 | **v1.5.0** | 2026-11-02 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 y ownership documental escalables   | `ORDINARY` por evidencia completa; escalamiento autorizado a `CRITICAL`; diagnósticos seguros; CODEOWNERS para documentación rutinaria y normativa.                                                                        | **Congelado**      |
+| **v1.5.1** | 2026-11-04 | Equipo de Arquitectura                            | Equipo de Arquitectura | Sincronización de reglas y bypass as-built | §§07.18, 09.21, 12.19, 13.22–24 y 14 reflejan rulesets, checks y excepción W-P03-001 verificados.                                                                                                                          | **Congelado**      |
 
 ---
 
