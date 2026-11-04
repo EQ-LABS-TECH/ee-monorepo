@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Especializado                                                                                                                                                          |
 | **Nivel**             | Especializado                                                                                                                                                          |
 | **Normativo**         | Sí                                                                                                                                                                     |
-| **Versión**           | v1.2.0                                                                                                                                                                 |
+| **Versión**           | v1.2.1                                                                                                                                                                 |
 | **Estado**            | Congelado                                                                                                                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                                                                                                                 |
 | **Documento padre**   | EE-DOC-006 — Repository Structure                                                                                                                                      |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                                                                                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                                               |
 | **Fecha de creación** | 2026-09-30                                                                                                                                                             |
-| **Última revisión**   | 2026-10-24                                                                                                                                                             |
+| **Última revisión**   | 2026-11-04                                                                                                                                                             |
 | **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                                        |
 
 > **Jerarquía documental (patrón alineado a EE-DOC-010):**
@@ -160,23 +160,23 @@ Solo **A-ROOT**, **A-CLI**, **A-GEN** y **A-REL** son objeto principal de este d
 
 ### 04.2. Comandos root normativos (contrato alineado a EE-DOC-006 §12)
 
-| Comando            | Implementación               | Propósito                                                         | Categoría    |
-| :----------------- | :--------------------------- | :---------------------------------------------------------------- | :----------- |
-| `bootstrap`        | `scripts/commands/bootstrap` | Configuración inicial del entorno                                 | A-ROOT / 008 |
-| `build`            | `scripts/commands/build`     | Compilación de workspaces                                         | A-ROOT       |
-| `dev`              | `scripts/commands/dev`       | Desarrollo local (long-running)                                   | A-ROOT / 008 |
-| `test`             | `scripts/commands/test`      | Pruebas orquestadas                                               | A-ROOT       |
-| `lint`             | `scripts/commands/lint`      | Análisis estático                                                 | A-ROOT       |
-| `format`           | `scripts/commands/format`    | Formateo en modo **write** (herramienta local; **no** es el gate) | A-ROOT       |
-| `typecheck`        | `scripts/commands/typecheck` | Verificación de tipos                                             | A-ROOT       |
-| `validate`         | `scripts/commands/validate`  | Agregador local de validaciones                                   | A-ROOT       |
-| `doctor`           | `scripts/commands/doctor`    | Diagnóstico de entorno (conveniencia; no sustituye `validate`)    | A-ROOT / 008 |
-| `generate`         | `scripts/commands/generate`  | Scaffolding                                                       | A-GEN        |
-| `release`          | `scripts/commands/release`   | Orquestación de release del monorepo                              | A-REL        |
-| `clean`            | `scripts/commands/clean`     | Limpieza de artefactos                                            | A-ROOT       |
-| `e2e`              | `scripts/commands/e2e`       | Entrada root E2E (Playwright)                                     | A-ROOT       |
-| `changeset`        | CLI `@changesets/cli`        | Declaración interactiva de cambios SemVer                         | A-REL        |
-| `version-packages` | `changeset version`          | Cálculo y actualización de versiones                              | A-REL        |
+| Comando            | Implementación               | Propósito                                                                                                                    | Categoría    |
+| :----------------- | :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------- | :----------- |
+| `bootstrap`        | `scripts/commands/bootstrap` | Configuración inicial del entorno                                                                                            | A-ROOT / 008 |
+| `build`            | `scripts/commands/build`     | Compilación de workspaces                                                                                                    | A-ROOT       |
+| `dev`              | `scripts/commands/dev`       | Desarrollo local (long-running)                                                                                              | A-ROOT / 008 |
+| `test`             | `scripts/commands/test`      | Pruebas orquestadas                                                                                                          | A-ROOT       |
+| `lint`             | `scripts/commands/lint`      | Análisis estático                                                                                                            | A-ROOT       |
+| `format`           | `scripts/commands/format`    | Formateo en modo **write** (herramienta local; **no** es el gate)                                                            | A-ROOT       |
+| `typecheck`        | `scripts/commands/typecheck` | Verificación de tipos                                                                                                        | A-ROOT       |
+| `validate`         | `scripts/commands/validate`  | Agregador local de validaciones                                                                                              | A-ROOT       |
+| `doctor`           | `scripts/commands/doctor`    | Diagnóstico de entorno (conveniencia; no sustituye `validate`)                                                               | A-ROOT / 008 |
+| `generate`         | `scripts/commands/generate`  | Scaffolding                                                                                                                  | A-GEN        |
+| `release`          | `scripts/commands/release`   | Orquestación de release del monorepo                                                                                         | A-REL        |
+| `clean`            | `scripts/commands/clean`     | Limpieza de artefactos                                                                                                       | A-ROOT       |
+| `e2e`              | `scripts/commands/e2e`       | Ejecuta tareas `test:e2e` registradas; actualmente solo Dashboard declara una; no acredita cobertura completa del ecosistema | A-ROOT       |
+| `changeset`        | CLI `@changesets/cli`        | Declaración interactiva de cambios SemVer                                                                                    | A-REL        |
+| `version-packages` | `changeset version`          | Cálculo y actualización de versiones                                                                                         | A-REL        |
 
 **Notas:**
 
@@ -507,6 +507,7 @@ Incumplimiento de un comando root que materializa un gate ACTIVE → agregación
 | **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Validación Final y Congelación                  | EE-IMP-011-P01…P05 + EE-TEC-006 Completados; TEC-006 (no TEC-011); diferidos 012/backlog documentados                                                                                                                      | **Congelado** |
 | **v1.1.1** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Fix layout scripts                              | §04.2 actualizado a scripts/commands/\*; añadido comando e2e a la tabla                                                                                                                                                    | **Congelado** |
 | **v1.2.0** | 2026-10-24 | Equipo de Arquitectura | Equipo de Arquitectura | Integridad del release y publicación post-merge | Separación prepare/publish; publicación idempotente; tag final; elegibilidad, procedencia verificable, integridad independiente del plan y permisos mínimos                                                                | **Congelado** |
+| **v1.2.1** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Alcance del comando E2E                         | §04.2 precisa las tareas `test:e2e` registradas y aclara que PASS no acredita cobertura completa del ecosistema.                                                                                                           | **Congelado** |
 
 ---
 
