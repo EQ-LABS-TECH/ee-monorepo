@@ -61,8 +61,10 @@ Registro de progreso de la auditoría documental del Engineering Ecosystem.
 
 Registro de auditorías sobre código, skills u otros artefactos del repositorio. No sustituye el Log documental C1–C8 ni copia el contenido de los informes; cada entrada enlaza al informe detallado y a los hallazgos registrados en Rules cuando corresponda.
 
-| Alcance | Base (commit) | Informe | Estado | Hallazgos / reglas | Fecha | Notas |
-| ------- | ------------- | ------- | ------ | ------------------ | ----- | ----- |
+| Alcance                     | Base (commit)                            | Informe                                                                                                        | Estado         | Hallazgos / reglas                | Fecha      | Notas                                                                                                     |
+| --------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------- | --------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------- |
+| Fase 1 — Waivers QG-SEC-001 | 8166f80d4c4d8d5878cac66e60cce6c844939e4b | [EE-AUDIT-security-waivers-20261104000627.md](./reports/EE-AUDIT-security-waivers-20261104000627.md)           | **Completada** | AUD-01 / PA-013                   | 2026-11-04 | Advisories retirados; no renovación; QG-SEC-001: exit 0; otros advisories se mantienen fuera del alcance. |
+| Advisories de dependencias  | 8166f80d4c4d8d5878cac66e60cce6c844939e4b | [EE-AUDIT-dependency-advisories-20261104002847.md](./reports/EE-AUDIT-dependency-advisories-20261104002847.md) | **Parcial**    | GHSA-glob / minimatch / deepmerge | 2026-11-04 | Se eliminan cinco hallazgos mediante overrides; queda deepmerge low sin versión corregida publicada.      |
 
 ---
 
