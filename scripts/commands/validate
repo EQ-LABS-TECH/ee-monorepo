@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { parse } from 'yaml';
 import { runSecurityAuditWithWaivers } from '../lib/security-audit.mjs';
 import { validateTemplates } from '../lib/validate-templates.mjs';
-import { validateGateId } from '../lib/validate-gate-id.mjs';
+import { validateGateContract } from '../lib/validate-gate-contract.mjs';
 import { aggregateGateResults } from '../lib/aggregate-gate-results.mjs';
 
 const ROOT = process.cwd();
@@ -36,62 +36,11 @@ function execCommand(cmd, args, label, { requireGateContract = false, expectedGa
   }
 
   if (requireGateContract) {
-    const markers = [...stdout.matchAll(/^QG_RESULT (.+)$/gm)];
-
-    if (markers.length !== 1) {
-      return {
-        status: 'ERROR',
-        exitCode: result.status ?? 1,
-        detail: `expected exactly one QG_RESULT marker; found ${markers.length}`,
-      };
-    }
-
-    let contract;
-
-    try {
-      contract = JSON.parse(markers[0][1]);
-    } catch {
-      return {
-        status: 'ERROR',
-        exitCode: result.status ?? 1,
-        detail: 'invalid QG_RESULT JSON',
-      };
-    }
-
-    const gateIdError = validateGateId(contract, expectedGateId);
-
-    if (gateIdError) {
-      return {
-        status: 'ERROR',
-        exitCode: 1,
-        detail: gateIdError,
-      };
-    }
-
-    const validStatuses = new Set(['PASS', 'FAIL', 'SKIPPED', 'ERROR']);
-    const expectedExitCode = {
-      PASS: 0,
-      FAIL: 1,
-      ERROR: 1,
-      SKIPPED: 2,
-    }[contract.status];
-
-    if (
-      !validStatuses.has(contract.status) ||
-      contract.exitCode !== expectedExitCode ||
-      result.status !== expectedExitCode
-    ) {
-      return {
-        status: 'ERROR',
-        exitCode: result.status ?? 1,
-        detail: 'QG_RESULT contract does not match the process exit code',
-      };
-    }
-
-    return {
-      status: contract.status,
-      exitCode: result.status,
-    };
+    return validateGateContract({
+      stdout,
+      processExitCode: result.status,
+      expectedGateId,
+    });
   }
 
   if (result.status === 0) {

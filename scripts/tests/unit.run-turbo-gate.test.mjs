@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { runTurboGate } from '../lib/run-turbo-gate.mjs';
 
 function harness({ result, summary, summaryError, additionalChecks = [] }) {
@@ -171,6 +174,61 @@ test('returns ERROR when Turbo cannot be launched', () => {
   assert.equal(status, 1);
   assert.match(output.errors[0], /ERROR.*unable to start Turbo/);
   assert.equal(contract.status, 'ERROR');
+});
+
+test('returns ERROR when Turbo terminates without an exit code', () => {
+  const { status, output, contract } = harness({
+    result: {
+      status: null,
+      signal: 'SIGTERM',
+      stdout: '',
+      stderr: '',
+    },
+  });
+
+  assert.equal(status, 1);
+  assert.match(output.errors.join('\n'), /terminated without an exit code \(signal SIGTERM\)/);
+  assert.equal(contract.status, 'ERROR');
+  assert.equal(contract.exitCode, 1);
+});
+
+test('uses the Turbo JSON summary as task evidence, not textual task counts', (t) => {
+  const root = mkdtempSync(join(tmpdir(), 'ee-turbo-summary-'));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+
+  const runsDirectory = join(root, '.turbo', 'runs');
+  mkdirSync(runsDirectory, { recursive: true });
+  writeFileSync(
+    join(runsDirectory, 'run.json'),
+    JSON.stringify({
+      tasks: [{ taskId: 'workspace#typecheck', execution: { exitCode: 0 } }],
+    }),
+  );
+
+  const output = { stdout: '', errors: [], warnings: [], logs: [] };
+  const status = runTurboGate({
+    task: 'typecheck',
+    gateId: 'QG-TYPE-001',
+    cwd: root,
+    spawnSyncImpl: () => ({
+      status: 0,
+      stdout: 'Tasks: 0\nSummary: .turbo/runs/run.json\n',
+      stderr: '',
+    }),
+    writeOut: (value) => {
+      output.stdout += value;
+    },
+    writeErr: () => {},
+    log: {
+      log: (message) => output.logs.push(message),
+      error: (message) => output.errors.push(message),
+      warn: (message) => output.warnings.push(message),
+    },
+  });
+
+  const marker = output.stdout.split(/\r?\n/).find((line) => line.startsWith('QG_RESULT '));
+  assert.equal(status, 0);
+  assert.equal(JSON.parse(marker.slice('QG_RESULT '.length)).status, 'PASS');
 });
 
 test('aggregates additional checks into one gate result', () => {

@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Especializado                                                                                                                                  |
 | **Nivel**             | Especializado                                                                                                                                  |
 | **Normativo**         | Sí                                                                                                                                             |
-| **Versión**           | v1.8.0                                                                                                                                         |
+| **Versión**           | v1.9.0                                                                                                                                         |
 | **Estado**            | Congelado                                                                                                                                      |
 | **Propietario**       | Equipo de Arquitectura                                                                                                                         |
 | **Documento padre**   | EE-DOC-006 — Repository Structure                                                                                                              |
@@ -238,7 +238,8 @@ PENDING y DEPRECATED **no** entran en la agregación de bloqueo del merge (no ha
 | **QG-TYPE-001**   | Typecheck                                                                  |           (soporte de integridad)            | BLOCKING | ACTIVE                 |
 | **QG-LINT-001**   | Lint                                                                       |                    **Sí**                    | BLOCKING | ACTIVE                 |
 | **QG-FMT-001**    | Format check                                                               |                    **Sí**                    | BLOCKING | ACTIVE                 |
-| **QG-TEST-001**   | Tests (unit / integration / component; E2E bajo §10.4 de 005)              |                    **Sí**                    | BLOCKING | **ACTIVE**             |
+| **QG-TEST-001**   | Tests unitarios, integración y componentes                                 |                    **Sí**                    | BLOCKING | **ACTIVE**             |
+| **QG-TEST-E2E**   | Dashboard End-to-End (Playwright); alcance multipaquete pendiente          |                    **Sí**                    | BLOCKING | **ACTIVE**             |
 | **QG-BUILD-001**  | Build                                                                      |                    **Sí**                    | BLOCKING | **ACTIVE**             |
 | **QG-SEC-001**    | Dependency Audit                                                           |             (seguridad de deps)              | BLOCKING | ACTIVE                 |
 | **QG-SEC-002**    | Secret Detection                                                           |           **Sí** (Secret Scanning)           | BLOCKING | **ACTIVE**             |
@@ -258,7 +259,7 @@ PENDING y DEPRECATED **no** entran en la agregación de bloqueo del merge (no ha
 > **PENDING** = falta de implementación/enforcement del **mecanismo del gate**, no “ausencia de tests/comando” ni “gate opcional”.  
 > **QG-TEST-001 ACTIVE (EE-IMP-010-P02):** `pnpm run test` + paso CI; **0 tasks → SKIPPED** (no PASS).  
 > **QG-BUILD-001 ACTIVE (EE-IMP-010-P02):** `pnpm run build` en `validate` y step **Build** en job `Validate`.  
-> **Alcance ACTIVE (EE-IMP-010-P05):** TEST-001 cubre unit/integration/component; E2E permanece PENDING. ARCH-001 valida top-level, dependencias/ciclos declarados e imports workspace detectables bajo `src/`; aliases de `tsconfig`, configuración, pruebas y composición implícita no están cubiertos.
+> **Alcance ACTIVE:** TEST-001 cubre unit/integration/component; QG-TEST-E2E cubre la suite Playwright disponible de Dashboard. La cobertura E2E multipaquete permanece pendiente. ARCH-001 valida top-level, dependencias/ciclos declarados e imports workspace detectables bajo `src/`; aliases de `tsconfig`, configuración, pruebas y composición implícita no están cubiertos.
 > Gates Mandatory + PENDING: régimen transitorio **EE-DOC-005 §10.4** (plan Arquitectura + IMP-010), no PASS simulado.
 
 ### 05.2. Mapeo baseline y required check
@@ -271,6 +272,7 @@ PENDING y DEPRECATED **no** entran en la agregación de bloqueo del merge (no ha
 | QG-SEC-001    | `pnpm audit` vía validate                             | ACTIVE; umbral §05.8                                                                                                           |
 | QG-REPO-001   | checks de estructura en validate/doctor               | ACTIVE                                                                                                                         |
 | QG-TEST-001   | `pnpm run test` + CI; 0 tasks → SKIPPED               | **ACTIVE**                                                                                                                     |
+| QG-TEST-E2E   | `node scripts/commands/e2e` en `validate`             | ACTIVE para Dashboard; cobertura multipaquete pendiente                                                                        |
 | QG-BUILD-001  | `pnpm run build` en validate + CI step Build          | **ACTIVE**                                                                                                                     |
 | QG-NAM-001    | ESLint compartido + `scripts/commands/validate-names` | ACTIVE; valida símbolos, rutas cambiadas, excepciones y prefijos de tipo de test; conserva gradualmente los nombres existentes |
 | QG-BRANCH-001 | `scripts/commands/validate-branch` en `validate`      | ACTIVE; valida rama del Pull Request                                                                                           |
@@ -279,9 +281,9 @@ PENDING y DEPRECATED **no** entran en la agregación de bloqueo del merge (no ha
 
 **Required status check (EE-DOC-007):** nombre de plataforma **`Validate`**.
 
-| Required check | Rol          | Gates que debe garantizar (Minimum Merge Set ACTIVE)                                                                              |
-| :------------- | :----------- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| **`Validate`** | Agregador CI | todos los gates ACTIVE del §05.1 (TYPE, LINT, FMT, NAM, BRANCH, COMMIT, SEC-001/002, REPO, TEST, BUILD, ARCH, DOC-001/002, INFRA) |
+| Required check | Rol          | Gates que debe garantizar (Minimum Merge Set ACTIVE)                                                                                        |
+| :------------- | :----------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| **`Validate`** | Agregador CI | todos los gates ACTIVE del §05.1 (TYPE, LINT, FMT, NAM, BRANCH, COMMIT, SEC-001/002, REPO, TEST, TEST-E2E, BUILD, ARCH, DOC-001/002, INFRA) |
 
 Contrato de comandos root: **EE-DOC-006**.  
 **Format check:** hoy materializado **dentro** de `validate`; un comando root aislado `format:check` es especialización Type B opcional (no bloquea la norma del gate).
@@ -292,14 +294,15 @@ Contrato de comandos root: **EE-DOC-006**.
 > Este conjunto es el de gates **ACTIVE** que participan en la agregación y en el required check **`Validate`**.  
 > **No** redefine el catálogo Mandatory de EE-DOC-005 §10.1: los gates Mandatory aún PENDING siguen obligatorios en norma y bajo régimen §10.4 de 005.
 
-| Etapa                                | Gates ACTIVE en enforcement de merge                                                                              |
-| :----------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
-| **Baseline P01**                     | TYPE, LINT, FMT, SEC-001, REPO                                                                                    |
-| **Tras P02**                         | + QG-TEST-001, QG-BUILD-001                                                                                       |
-| **Tras P03**                         | + QG-SEC-002, QG-ARCH-001                                                                                         |
-| **Tras P04**                         | + QG-DOC-001, QG-DOC-002, QG-INFRA-001                                                                            |
-| **Integración de convenciones**      | QG-NAM-001, QG-BRANCH-001, QG-COMMIT-001 y análisis de imports workspace en QG-ARCH-001 integrados en `validate`. |
-| **Pendiente (régimen §10.4 de 005)** | QG-SEC-003, QG-PERF-001, QG-COV-001; E2E; aliases, configuración y composición fuera del alcance ARCH.            |
+| Etapa                                | Gates ACTIVE en enforcement de merge                                                                                          |
+| :----------------------------------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| **Baseline P01**                     | TYPE, LINT, FMT, SEC-001, REPO                                                                                                |
+| **Tras P02**                         | + QG-TEST-001, QG-BUILD-001                                                                                                   |
+| **Tras P03**                         | + QG-SEC-002, QG-ARCH-001                                                                                                     |
+| **Tras P04**                         | + QG-DOC-001, QG-DOC-002, QG-INFRA-001                                                                                        |
+| **Integración de convenciones**      | QG-NAM-001, QG-BRANCH-001, QG-COMMIT-001 y análisis de imports workspace en QG-ARCH-001 integrados en `validate`.             |
+| **Integración E2E Dashboard**        | QG-TEST-E2E integrado en `validate`; cero tareas requeridas bloquean como SKIPPED.                                            |
+| **Pendiente (régimen §10.4 de 005)** | QG-SEC-003, QG-PERF-001, QG-COV-001; cobertura E2E multipaquete; aliases, configuración y composición fuera del alcance ARCH. |
 
 La columna de fases describe **materialización**, no “cuando el gate pasa a ser obligatorio”.
 
@@ -313,7 +316,7 @@ La columna de fases describe **materialización**, no “cuando el gate pasa a s
 
 **QG-FMT-001:** solo **check**. `pnpm run format` (write) no es Quality Gate. Alineado a **EE-DOC-005 §10.1** (desde v1.3.1; régimen de adopción v1.4.0).
 
-### 05.4. QG-TEST-001 — Tests (incl. E2E)
+### 05.4. QG-TEST-001 — Tests unitarios, integración y componentes
 
 **Mecanismo contractual:** ejecución de las pruebas **aplicables** al ámbito afectado, incluyendo **unit, integration, component y E2E** cuando corresponda (**EE-ADR-002**: Vitest / Playwright).
 
@@ -325,16 +328,19 @@ La columna de fases describe **materialización**, no “cuando el gate pasa a s
 | **Applicability** | ¿**Este cambio** tiene superficie de test que deba ejecutarse?                              |
 
 - **Availability = ACTIVE** (EE-IMP-010-P02): mecanismo cableado en `scripts/test`, `scripts/validate` y job CI `Validate`.
-- **Regla cero tareas (implementada):** exit 0 con 0 tasks → **SKIPPED** con mensaje contractual `QG-TEST-001: SKIPPED` — **nunca PASS** (EE-DOC-010 §05.4).
-- Target/cambio **sin tests aplicables** con tasks en scope vacío a nivel monorepo → **SKIPPED** (baseline actual); cuando existan suites en packages afectados → ejecución real → PASS/FAIL; sin superficie aplicable → **NOT_APPLICABLE** + evidencia.
+- **Regla cero tareas:** si el gate es requerido y Turbo ejecuta cero tareas, el resultado es **SKIPPED** y bloquea la agregación; nunca se convierte en PASS. Un gate sin superficie aplicable debe declarar **NOT_APPLICABLE** con evidencia.
 
 **Alcance ACTIVE:** unit / integration / component (Vitest, `pnpm run test`).
 
-**E2E (Playwright):** Mandatory en EE-DOC-005 §10.1. Existe la tarea Turbo `test:e2e` conectada al script `apps/dashboard:test:e2e`; existe la invocación root `pnpm run e2e` (mapea a `turbo run test:e2e`), pero aún no está integrada como gate bloqueante en `validate` ni en CI. Por tanto, el gate E2E permanece bajo el régimen transitorio de **EE-DOC-005 §10.4** (EE-IMP-010-P05 §06) hasta completar ese cableado. Al activarse: PASS si la suite E2E aplicable es exitosa; NOT_APPLICABLE con evidencia si no hay superficie E2E afectada.
+Las pruebas E2E se rigen por el gate específico QG-TEST-E2E (§05.4.1).
 
-**Regla cero tareas:** exit 0 con **0 tasks** ≠ PASS. Mientras **ningún workspace defina `test`**, ese caso se resuelve como **SKIPPED con justificación contractual** (no constituye incumplimiento BLOCKING, §04.8). Desde que exista la primera suite, 0 tareas sobre un ámbito con superficie de test es incumplimiento (SKIPPED sin justificación).
+**Evidencia de ejecución:** PASS requiere al menos una tarea ejecutada con éxito o satisfecha mediante cache HIT verificable. La ausencia de tareas requeridas produce SKIPPED y bloquea; cero tareas no se considera justificación contractual de éxito.
 
-**Materialización de la evidencia:** el mensaje `QG-TEST-001: SKIPPED` lo emite `scripts/test`; la fase Tests de `validate` invoca Turbo directamente y solo muestra la advertencia de Turbo (evidencia granular: observación D6, EE-IMP-010-P05).
+#### 05.4.1. QG-TEST-E2E — End-to-End
+
+El comando `node scripts/commands/e2e`, invocado por `validate`, ejecuta `test:e2e` mediante Turbo y produce su contrato QG independiente. La cobertura actualmente materializada corresponde a Dashboard mediante Playwright; la orquestación E2E multipaquete del ecosistema permanece pendiente.
+
+PASS requiere evidencia estructurada de al menos una tarea aplicable exitosa, incluida una tarea satisfecha con cache HIT. Si el gate requerido no ejecuta tareas, el resultado es SKIPPED y bloquea la agregación. La no aplicabilidad requiere evidencia explícita y no se infiere de cero tareas.
 
 ### 05.5. QG-BUILD-001
 
@@ -454,7 +460,7 @@ Cada gate ejecutable debe producir un resultado explícito e independiente de su
 #### Evidencia de ejecución
 
 1. El código de salida contractual determina el éxito o fallo del proceso ejecutado; no demuestra por sí solo que se hayan ejecutado tareas.
-2. La existencia y el resultado de las tareas deben acreditarse mediante evidencia estructurada o una señal contractual estable de la herramienta.
+2. La existencia y el resultado de las tareas deben acreditarse mediante el resumen JSON de Turbo asociado a la invocación; la salida puede identificar la ruta del resumen, pero no determina el número ni el resultado de las tareas.
 3. La salida textual de Turbo puede conservarse como diagnóstico, pero no será la única fuente para determinar `PASS` o `SKIPPED`.
 4. Si la evidencia de ejecución no existe, es ambigua o no puede asociarse inequívocamente a la invocación evaluada, el resultado será `ERROR`; nunca `PASS` por defecto.
 5. Una ejecución con cero tareas debe producir `SKIPPED` cuando el gate aplique y no se hayan ejecutado las tareas requeridas. Solo podrá tratarse como una excepción no bloqueante cuando exista una justificación admitida por la regla específica del gate y el régimen aplicable. `SKIPPED` no se convertirá automáticamente en `NOT_APPLICABLE`.
@@ -469,7 +475,7 @@ El agregador debe conservar el resultado individual de cada gate y aplicar §04.
 - La ausencia de tareas, resultados o evidencia no equivale a una evaluación satisfactoria.
 - El resumen global debe permitir identificar cada gate evaluado, su resultado, la evidencia asociada y la razón de cualquier estado no satisfactorio.
 
-La implementación técnica y las pruebas de regresión deben verificar, como mínimo, cero tareas, errores de ejecución, evidencia indeterminada y agregación de resultados mixtos. La incorporación de E2E como gate bloqueante en `validate` o CI queda fuera de este contrato hasta resolver expresamente su estado transitorio en EE-DOC-005 §10.4.
+La implementación técnica y las pruebas de regresión deben verificar, como mínimo, cero tareas, errores de ejecución, evidencia indeterminada y agregación de resultados mixtos. QG-TEST-E2E forma parte de la agregación de `validate`; el alcance multipaquete permanece pendiente conforme al régimen transitorio de EE-DOC-005 §10.4.
 
 ### 06.5. Herramientas del workspace
 
@@ -489,6 +495,7 @@ Preferir `pnpm` / `pnpm exec` / Turbo del workspace. La ausencia de un binario g
 | QG-SEC-001    | `pnpm audit --audit-level high` vía `validate` (incl. devDependencies)  | Local + CI      |
 | QG-REPO-001   | Checks de estructura en `validate` / `doctor`                           | Local + CI      |
 | QG-TEST-001   | `pnpm run test` (0 tasks → SKIPPED)                                     | Local + CI      |
+| QG-TEST-E2E   | `node scripts/commands/e2e` (Dashboard; cero tareas → SKIPPED)          | Local + CI      |
 | QG-BUILD-001  | `pnpm run build` / fase Build en validate + CI                          | Local + CI      |
 | QG-SEC-002    | GitHub secret scanning + push protection; Gitleaks CLI en CI            | Plataforma + CI |
 | QG-ARCH-001   | Required dirs, top-level, matriz/ciclos e imports workspace bajo `src/` | Local + CI      |
@@ -504,13 +511,13 @@ Runtime y estándares de apoyo: Node ≥ 24 (EE-ADR-003), Vitest/Playwright (EE-
 
 ### 07.2. Gaps (PENDING_IMPLEMENTATION)
 
-| Gate                              | Motivo de PENDING                                                                        | Unidad IMP prevista                   |
-| :-------------------------------- | :--------------------------------------------------------------------------------------- | :------------------------------------ |
-| QG-SEC-003                        | SAST no materializado (sin CodeQL/Semgrep cableado)                                      | EE-IMP-010-P03 (diferido) / posterior |
-| QG-PERF-001 / QG-COV-001          | Sin política de umbrales publicada                                                       | Posterior a umbral normativo en 010   |
-| QG-TEST-001 (E2E)                 | Tarea Turbo `test:e2e` disponible; sin invocación root en `validate` ni step CI dedicado | Régimen §10.4 — EE-IMP-010-P05 §06    |
-| QG-ARCH-001 (aliases/composición) | Aliases de `tsconfig`, configuración y composición implícita no están analizados         | Evolución posterior                   |
-| Evidencia por gate (§06.2)        | `validate` sin reporte estructurado                                                      | Observación D6 — EE-IMP-010-P05 §06   |
+| Gate                                 | Motivo de PENDING                                                                | Unidad IMP prevista                   |
+| :----------------------------------- | :------------------------------------------------------------------------------- | :------------------------------------ |
+| QG-SEC-003                           | SAST no materializado (sin CodeQL/Semgrep cableado)                              | EE-IMP-010-P03 (diferido) / posterior |
+| QG-PERF-001 / QG-COV-001             | Sin política de umbrales publicada                                               | Posterior a umbral normativo en 010   |
+| QG-TEST-E2E (múltiples aplicaciones) | La cobertura E2E fuera de Dashboard aún no está orquestada                       | Régimen §10.4 — evolución posterior   |
+| QG-ARCH-001 (aliases/composición)    | Aliases de `tsconfig`, configuración y composición implícita no están analizados | Evolución posterior                   |
+| Evidencia por gate (§06.2)           | `validate` sin reporte estructurado                                              | Observación D6 — EE-IMP-010-P05 §06   |
 
 Los gaps **Mandatory** (005 §10.1) permanecen bajo régimen transitorio **EE-DOC-005 §10.4**.
 
@@ -658,6 +665,7 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 | **v1.6.0**        | 2026-11-02    | Equipo de Arquitectura | Equipo de Arquitectura | Gates de convenciones y arquitectura          | Integra validación ESLint de símbolos, QG-NAM-001, QG-BRANCH-001, QG-COMMIT-001 y análisis de imports workspace bajo `src/` en `validate`; registra límites restantes de QG-ARCH-001.                                                                                                | **Congelado**              |
 | **v1.7.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Procedencia de ramas Dependabot               | QG-BRANCH-001 verifica grupos autorizados, identidad del bot, repositorios y coincidencia con el payload; falla ante contexto incompleto.                                                                                                                                            | **Congelado**              |
 | **v1.8.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas       | QG-NAM-001 exige prefijos de tipo para tests nuevos y admite la migración gradual de nombres existentes, conforme a EE-DOC-002 §16.                                                                                                                                                  | **Congelado**              |
+| **v1.9.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Integridad de resultados y alcance E2E        | Formaliza PASS/FAIL/SKIPPED/ERROR y su agregación; exige evidencia JSON de tareas; activa QG-TEST-E2E para Dashboard y mantiene pendiente la cobertura multipaquete.                                                                                                                 | **Congelado**              |
 
 ---
 
@@ -675,27 +683,25 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 
 ### 14.2. Dictamen de Cierre
 
-**Esta versión está aprobada.** Los 15 gates obligatorios del baseline están materializados en `validate`; QG-SEC-003, QG-PERF-001 y QG-COV-001 permanecen pendientes conforme a su régimen condicional/transitorio. QG-ARCH-001 analiza imports entre workspaces en `src/` con el alcance limitado de §05.8; E2E de ecosistema permanece fuera del alcance activo.
+**Esta versión está aprobada.** Los gates ACTIVE del baseline están materializados en `validate`; QG-SEC-003, QG-PERF-001, QG-COV-001 y la cobertura E2E multipaquete permanecen pendientes conforme a su régimen condicional/transitorio. QG-ARCH-001 analiza imports entre workspaces en `src/` con el alcance limitado de §05.8; QG-TEST-E2E evalúa la suite E2E de Dashboard.
 
 ### 14.3. Estado Final
 
 | Campo                 | Valor                                                                                                 |
 | :-------------------- | :---------------------------------------------------------------------------------------------------- |
 | **Estado documental** | **Congelado**                                                                                         |
-| **Versión**           | v1.5.3                                                                                                |
-| **Congelación**       | **2026-09-30** (norma); sync frontera **2026-10-06**                                                  |
 | **Próximo hito**      | Evolución PENDING vía IMP; frontera **EE-DOC-015** vigente (§02.6); cambio de catálogo solo gobernado |
 
 ### 14.4. Condiciones para el Cierre
 
-| Condición                                | Estado               |
-| :--------------------------------------- | :------------------- |
-| Alineación EE-DOC-005 §10.4 / EE-ADR-004 | ✅ Cumplida          |
-| Plantilla EE-DOC-002 §18.1               | ✅ Cumplida          |
-| Aprobación arquitectónica                | ✅ v1.0.0            |
-| EE-IMP-010-P01…P05                       | ✅ Completados       |
-| EE-TEC-005                               | ✅ Completado v1.0.0 |
-| Validación Final                         | ✅ 2026-09-30        |
+| Condición                                | Estado         |
+| :--------------------------------------- | :------------- |
+| Alineación EE-DOC-005 §10.4 / EE-ADR-004 | ✅ Cumplida    |
+| Plantilla EE-DOC-002 §18.1               | ✅ Cumplida    |
+| Aprobación arquitectónica                | ✅ Cumplida    |
+| EE-IMP-010-P01…P05                       | ✅ Completados |
+| EE-TEC-005                               | ✅ Completado  |
+| Validación Final                         | ✅ Cumplida    |
 
 ---
 
