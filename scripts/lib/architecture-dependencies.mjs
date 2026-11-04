@@ -216,6 +216,7 @@ export function loadWorkspaceSourceImports(workspaces, root = process.cwd(), par
           imports.push({
             from: workspace.name,
             to: targetWorkspace.name,
+            specifier,
             path,
             line,
           });
@@ -336,6 +337,16 @@ export function validateWorkspaceSourceImports(workspaces, imports) {
     }
     const from = byName.get(sourceImport.from);
     const to = byName.get(sourceImport.to);
+    if (sourceImport.specifier?.startsWith('.')) {
+      violations.push({
+        code: 'source-import-relative-cross-workspace',
+        from: sourceImport.from,
+        to: sourceImport.to,
+        path: sourceImport.path,
+        line: sourceImport.line,
+      });
+      continue;
+    }
     if (!from || !to || !ALLOWED[from.category].includes(to.category)) {
       violations.push({
         code: 'source-import-not-allowed',

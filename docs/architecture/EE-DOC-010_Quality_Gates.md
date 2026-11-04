@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Especializado                                                                                                                                  |
 | **Nivel**             | Especializado                                                                                                                                  |
 | **Normativo**         | Sí                                                                                                                                             |
-| **Versión**           | v1.9.0                                                                                                                                         |
+| **Versión**           | v1.10.0                                                                                                                                        |
 | **Estado**            | Congelado                                                                                                                                      |
 | **Propietario**       | Equipo de Arquitectura                                                                                                                         |
 | **Documento padre**   | EE-DOC-006 — Repository Structure                                                                                                              |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                                                                                                                         |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                       |
 | **Fecha de creación** | 2026-09-26                                                                                                                                     |
-| **Última revisión**   | 2026-11-03                                                                                                                                     |
+| **Última revisión**   | 2026-11-04                                                                                                                                     |
 | **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                |
 
 ---
@@ -367,7 +367,7 @@ PASS requiere evidencia estructurada de al menos una tarea aplicable exitosa, in
 
 **Contrato ACTIVE:** directorios requeridos y allowlist top-level en `scripts/commands/validate`, además de la matriz workspace declarada, detección de ciclos y análisis de imports entre workspaces mediante `scripts/commands/validate-architecture`, invocado por `validate`.
 
-El analizador contrasta dependencias workspace de `dependencies`, `optionalDependencies` y `peerDependencies` declaradas en manifests con EE-DOC-006 §13.2 y detecta ciclos. En archivos bajo `src/`, contrasta imports estáticos, dinámicos con literal, imports de tipos TypeScript y `require` con la matriz y las dependencias declaradas. Los imports dinámicos no literales y referencias `@eq-labs/*` no resueltas generan error. Configuración fuera de `src/`, pruebas y aliases de `tsconfig` quedan fuera del análisis.
+El analizador contrasta dependencias workspace de `dependencies`, `optionalDependencies` y `peerDependencies` declaradas en manifests con EE-DOC-006 §13.2 y detecta ciclos. En archivos bajo `src/`, contrasta imports estáticos, dinámicos con literal, imports de tipos TypeScript y `require` con la matriz y las dependencias declaradas; los imports que cruzan workspaces deben usar el nombre del paquete y los relativos se rechazan conforme a EE-DOC-006 §13.4 R3. Los imports dinámicos no literales y referencias `@eq-labs/*` no resueltas generan error. Configuración fuera de `src/`, pruebas y aliases de `tsconfig` quedan fuera del análisis.
 
 La revisión arquitectónica de contratos, aliases, configuración fuera de `src/` y composición permanece complementaria y no se certifica mediante este analizador.
 
@@ -666,6 +666,7 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 | **v1.7.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Procedencia de ramas Dependabot               | QG-BRANCH-001 verifica grupos autorizados, identidad del bot, repositorios y coincidencia con el payload; falla ante contexto incompleto.                                                                                                                                            | **Congelado**              |
 | **v1.8.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas       | QG-NAM-001 exige prefijos de tipo para tests nuevos y admite la migración gradual de nombres existentes, conforme a EE-DOC-002 §16.                                                                                                                                                  | **Congelado**              |
 | **v1.9.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Integridad de resultados y alcance E2E        | Formaliza PASS/FAIL/SKIPPED/ERROR y su agregación; exige evidencia JSON de tareas; activa QG-TEST-E2E para Dashboard y mantiene pendiente la cobertura multipaquete.                                                                                                                 | **Congelado**              |
+| **v1.10.0**       | 2026-11-04    | Equipo de Arquitectura | Equipo de Arquitectura | Enforcement de imports entre workspaces       | QG-ARCH-001 rechaza imports relativos que cruzan workspaces y exige el nombre del paquete conforme a EE-DOC-006 §13.4 R3.                                                                                                                                                            | **Congelado**              |
 
 ---
 

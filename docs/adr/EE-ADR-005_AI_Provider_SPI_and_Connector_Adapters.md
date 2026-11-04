@@ -17,7 +17,7 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 | **Clasificación**          | Arquitectura / Decisión Arquitectónica                                             |
 | **Nivel**                  | Arquitectónico                                                                     |
 | **Normativo**              | Sí                                                                                 |
-| **Versión**                | v1.3.1                                                                             |
+| **Versión**                | v1.3.2                                                                             |
 | **Estado**                 | **Aprobado**                                                                       |
 | **Propietario**            | Equipo de Arquitectura                                                             |
 | **Documento padre**        | EE-DOC-004 — Engineering Architecture                                              |
@@ -26,7 +26,7 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 | **Aprobado por**           | Equipo de Arquitectura                                                             |
 | **Audiencia**              | Arquitectura, Desarrollo, DevOps                                                   |
 | **Fecha de creación**      | 2026-10-02                                                                         |
-| **Última revisión**        | 2026-10-03                                                                         |
+| **Última revisión**        | 2026-11-04                                                                         |
 | **Próxima revisión**       | 2026-10-17                                                                         |
 | **Prioridad**              | Alta                                                                               |
 
@@ -106,7 +106,7 @@ Si en el futuro un SDK publicado debiera actuar como host de providers, se reque
 4. El composition root es el único lugar que conoce implementaciones concretas de connectors de provider.
 5. **ABI operacional** (payloads, Error, timeouts/retries/backoff, versionado SPI, degraded mode, compatibilidad) → **EE-IMP-013-P03** (criterio de aceptación obligatorio antes de adapters ACTIVE).
 6. **Patrón de wiring** (register, default provider, catalog port, swap, validación pre-route, evidencia de un solo root por runtime) → **EE-IMP-013-P03/P04**.
-7. Enforcement automático de imports prohibidos en `scripts/validate` → **Tipo B** (EE-IMP-013 / alineación EE-DOC-010); hasta entonces, revisión + criterios IMP.
+7. Enforcement automático de imports prohibidos → QG-ARCH-001 valida la matriz, las dependencias declaradas y los imports entre workspaces bajo `src/`, incluidos los imports relativos cruzados conforme a EE-DOC-006 §13.4 R3. La revisión arquitectónica sigue siendo complementaria para composición, aliases y configuración fuera del alcance del analizador.
 
 ### 04.3. Extensión explícita de EE-DOC-006 §13.2 (Tipo C)
 
@@ -174,7 +174,7 @@ Materializado en **EE-DOC-006** (vigente) (R-CONN; composition root sin SDK).
 
 ### 08.2. Negativas / Riesgos
 
-- Disciplina en composition root por app; Local Inference abierto hasta ADR posterior; cambio de tipos Foundation impacta connectors e Intelligence; hasta enforcement en validate, control de imports es revisión + criterios IMP.
+- Disciplina en composition root por app; Local Inference abierto hasta ADR posterior; cambio de tipos Foundation impacta connectors e Intelligence. QG-ARCH-001 materializa el control automatizado de dependencias e imports dentro del alcance definido por EE-DOC-010 §05.8; composition, aliases y configuración excluidos requieren revisión arquitectónica complementaria.
 
 ---
 
@@ -210,14 +210,15 @@ Implementación: **EE-IMP-013-P03** (SPI/ABI/adapters) y **P04** (routing/wiring
 
 ## 11. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo               | Cambios                                                                                                             | Estado       |
-| :--------- | :--------- | :--------------------- | :--------------------- | :------------------- | :------------------------------------------------------------------------------------------------------------------ | :----------- |
-| **v1.0.0** | 2026-10-02 | Equipo de Arquitectura | —                      | Cierre B2            | SPI vs connectors (borrador)                                                                                        | Propuesto    |
-| **v1.0.1** | 2026-10-02 | Equipo de Arquitectura | —                      | Revisión AI          | SPI en Foundation; composition root; Local Runtime                                                                  | Propuesto    |
-| **v1.1.0** | 2026-10-02 | Equipo de Arquitectura | —                      | N1 + §18.2           | Plantilla completa; sin "o"; PR-08/09                                                                               | Propuesto    |
-| **v1.2.0** | 2026-10-03 | Equipo de Arquitectura | —                      | Sync 006/013         | Dependencia hacia Foundation; un root/runtime; extensión §13.2; ABI→P03                                             | Propuesto    |
-| **v1.3.0** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre revisión      | Config como tooling; SDK **excluido** de composition root; prohibiciones alineadas a 006; ADR = SSOT de la decisión | **Aprobado** |
-| **v1.3.1** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación 006 §13.5 | Composition root = `apps/*` solo; R-SDK-3; desambiguación bootstrap                                                 | **Aprobado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo               | Cambios                                                                                                                                                | Estado       |
+| :--------- | :--------- | :--------------------- | :--------------------- | :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- | :----------- |
+| **v1.0.0** | 2026-10-02 | Equipo de Arquitectura | —                      | Cierre B2            | SPI vs connectors (borrador)                                                                                                                           | Propuesto    |
+| **v1.0.1** | 2026-10-02 | Equipo de Arquitectura | —                      | Revisión AI          | SPI en Foundation; composition root; Local Runtime                                                                                                     | Propuesto    |
+| **v1.1.0** | 2026-10-02 | Equipo de Arquitectura | —                      | N1 + §18.2           | Plantilla completa; sin "o"; PR-08/09                                                                                                                  | Propuesto    |
+| **v1.2.0** | 2026-10-03 | Equipo de Arquitectura | —                      | Sync 006/013         | Dependencia hacia Foundation; un root/runtime; extensión §13.2; ABI→P03                                                                                | Propuesto    |
+| **v1.3.0** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre revisión      | Config como tooling; SDK **excluido** de composition root; prohibiciones alineadas a 006; ADR = SSOT de la decisión                                    | **Aprobado** |
+| **v1.3.1** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación 006 §13.5 | Composition root = `apps/*` solo; R-SDK-3; desambiguación bootstrap                                                                                    | **Aprobado** |
+| **v1.3.2** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Sync QG-ARCH-001     | Alinea el estado del enforcement de imports entre workspaces con EE-DOC-010 §05.8 y conserva explícitos los límites sujetos a revisión arquitectónica. | **Aprobado** |
 
 ---
 
