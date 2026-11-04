@@ -151,6 +151,29 @@ export function extractAdvisories(stdout = '') {
   const advisories = new Map();
   const data = JSON.parse(stdout);
 
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    throw new TypeError('Audit JSON must be an object');
+  }
+
+  const hasAdvisories = Object.hasOwn(data, 'advisories');
+  const hasVulnerabilities = Object.hasOwn(data, 'vulnerabilities');
+
+  if (!hasAdvisories && !hasVulnerabilities) {
+    throw new TypeError(
+      'Audit JSON does not contain a supported advisories or vulnerabilities field',
+    );
+  }
+
+  if (
+    (hasAdvisories &&
+      (!data.advisories ||
+        typeof data.advisories !== 'object' ||
+        Array.isArray(data.advisories))) ||
+    (hasVulnerabilities && !Array.isArray(data.vulnerabilities))
+  ) {
+    throw new TypeError('Audit JSON contains an invalid advisories or vulnerabilities field');
+  }
+
   function collect(item) {
     const severity = String(item?.severity ?? '').toLowerCase();
 
@@ -177,11 +200,11 @@ export function extractAdvisories(stdout = '') {
     }
   }
 
-  if (data.advisories && typeof data.advisories === 'object') {
+  if (hasAdvisories) {
     Object.values(data.advisories).forEach(collect);
   }
 
-  if (Array.isArray(data.vulnerabilities)) {
+  if (hasVulnerabilities) {
     data.vulnerabilities.forEach(collect);
   }
 

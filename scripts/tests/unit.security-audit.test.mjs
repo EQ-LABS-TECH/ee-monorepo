@@ -306,6 +306,10 @@ test('extractAdvisories rejects invalid JSON instead of guessing from text', () 
   assert.throws(() => extractAdvisories(`invalid output containing ${GHSA_A}`));
 });
 
+test('extractAdvisories rejects valid JSON with an unsupported report shape', () => {
+  assert.throws(() => extractAdvisories('{}'), /supported advisories or vulnerabilities field/);
+});
+
 test('low and moderate findings do not block the gate', (t) => {
   const f = fixture();
   t.after(f.cleanup);
@@ -319,6 +323,40 @@ test('low and moderate findings do not block the gate', (t) => {
   const result = runSecurityAuditWithWaivers({
     root: f.root,
     spawnSyncImpl,
+    today: TODAY,
+    log: quietLog(),
+  });
+
+  assert.equal(result.ok, true);
+});
+
+test('structured non-blocking advisories pass without extracting GHSA text from stderr', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  const result = runSecurityAuditWithWaivers({
+    root: f.root,
+    spawnSyncImpl: () => ({
+      status: 1,
+      stdout: JSON.stringify({
+        vulnerabilities: [{ github_advisory_id: GHSA_A, severity: 'moderate' }],
+      }),
+      stderr: `Additional output mentions ${GHSA_B} without structured severity evidence.`,
+    }),
+    today: TODAY,
+    log: quietLog(),
+  });
+
+  assert.equal(result.ok, true);
+});
+
+test('a valid empty report passes when the audit command succeeds', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  const result = runSecurityAuditWithWaivers({
+    root: f.root,
+    spawnSyncImpl: () => ({ status: 0, stdout: '{"vulnerabilities":[]}', stderr: '' }),
     today: TODAY,
     log: quietLog(),
   });
@@ -445,6 +483,24 @@ test('audit failure with invalid JSON fails closed', (t) => {
   const result = runSecurityAuditWithWaivers({
     root: f.root,
     spawnSyncImpl,
+    today: TODAY,
+    log: quietLog(),
+  });
+
+  assert.deepEqual(result, { ok: false });
+});
+
+test('audit failure with GHSA text but no structured report fails closed', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+
+  const result = runSecurityAuditWithWaivers({
+    root: f.root,
+    spawnSyncImpl: () => ({
+      status: 1,
+      stdout: `audit output mentions ${GHSA_A} but contains no JSON report`,
+      stderr: '',
+    }),
     today: TODAY,
     log: quietLog(),
   });

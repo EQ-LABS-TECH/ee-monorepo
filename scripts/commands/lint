@@ -1,13 +1,9 @@
 #!/usr/bin/env node
-import { runTurboGate } from '../lib/run-turbo-gate.mjs';
+import { runWorkspaceQualityGate } from '../lib/workspace-quality-gates.mjs';
 import { lintScripts } from '../lib/lint-scripts.mjs';
 
 console.log('🔍 Running linter (QG-LINT-001)...');
 console.log('');
 
-const status = runTurboGate({
-  task: 'lint',
-  gateId: 'QG-LINT-001',
-  additionalChecks: [lintScripts],
-});
+const status = runWorkspaceQualityGate('lint', { additionalChecks: [lintScripts] });
 process.exit(status);

@@ -50,6 +50,54 @@ describe('createInMemoryKnowledgePort', () => {
     expect(result.units[0]?.id).toBe('b');
   });
 
+  it('queries for units that contain every requested tag', async () => {
+    const port = createInMemoryKnowledgePort();
+    await port.index({
+      units: [
+        { id: 'both', content: 'Both tags', meta: { tags: ['alpha', 'beta'] } },
+        { id: 'one', content: 'One tag', meta: { tags: ['alpha'] } },
+        { id: 'none', content: 'No tags' },
+      ],
+    });
+
+    const result = await port.query({ tags: ['alpha', 'beta'] });
+    expect(isKnowledgeError(result)).toBe(false);
+    if (isKnowledgeError(result)) return;
+    expect(result.units.map((unit) => unit.id)).toEqual(['both']);
+  });
+
+  it('queries by source metadata', async () => {
+    const port = createInMemoryKnowledgePort();
+    await port.index({
+      units: [
+        { id: 'source-a', content: 'A', meta: { source: 'manual' } },
+        { id: 'source-b', content: 'B', meta: { source: 'import' } },
+        { id: 'source-none', content: 'C' },
+      ],
+    });
+
+    const result = await port.query({ source: 'import' });
+    expect(isKnowledgeError(result)).toBe(false);
+    if (isKnowledgeError(result)) return;
+    expect(result.units.map((unit) => unit.id)).toEqual(['source-b']);
+  });
+
+  it('limits the number of returned units in insertion order', async () => {
+    const port = createInMemoryKnowledgePort();
+    await port.index({
+      units: [
+        { id: 'first', content: 'First' },
+        { id: 'second', content: 'Second' },
+        { id: 'third', content: 'Third' },
+      ],
+    });
+
+    const result = await port.query({ limit: 2 });
+    expect(isKnowledgeError(result)).toBe(false);
+    if (isKnowledgeError(result)) return;
+    expect(result.units.map((unit) => unit.id)).toEqual(['first', 'second']);
+  });
+
   it('returns NOT_FOUND for missing id', async () => {
     const port = createInMemoryKnowledgePort();
     const unit = await port.retrieve('missing');
