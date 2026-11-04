@@ -1,4 +1,4 @@
-# EE-DOC-006 — Repository Structure
+﻿# EE-DOC-006 — Repository Structure
 
 Este documento sigue el estándar **EE-DOC-002 — Document Design Template**. El ciclo de implementación y validación se rige por **EE-DOC-005 — Development Workflow**.
 
@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**. E
 | **Clasificación**     | Implementable                                                                          |
 | **Nivel**             | Táctico                                                                                |
 | **Normativo**         | Sí                                                                                     |
-| **Versión**           | v1.12.0                                                                                |
+| **Versión**           | v1.13.0                                                                                |
 | **Estado**            | Congelado                                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                                 |
 | **Documento padre**   | EE-DOC-005                                                                             |
@@ -582,29 +582,29 @@ El repositorio utiliza **pnpm** como gestor de paquetes:
 
 La implementación física de los comandos root vive bajo **`scripts/commands/<cmd>`**, con librerías compartidas en **`scripts/lib/`** (p. ej. `security-audit.mjs`) y pruebas en **`scripts/tests/`**. `scripts/plopfile.mjs` permanece en la raíz de `scripts/`. Las entradas de `package.json` invocan `node scripts/commands/<cmd>`.
 
-| Comando              | Implementación                   | Propósito                                                              | Frecuencia          |
-| :------------------- | :------------------------------- | :--------------------------------------------------------------------- | :------------------ |
-| **bootstrap**        | `scripts/commands/bootstrap`     | Configuración inicial del entorno.                                     | Una vez.            |
-| **build**            | `scripts/commands/build`         | Compilación de todos los paquetes.                                     | Por cambio.         |
-| **dev**              | `scripts/commands/dev`           | Ejecución en modo desarrollo con recarga en caliente.                  | Durante desarrollo. |
-| **test**             | `scripts/commands/test`          | Ejecución de todas las pruebas disponibles.                            | Por cambio.         |
-| **lint**             | `scripts/commands/lint`          | Análisis estático y linting.                                           | Por cambio.         |
-| **format**           | `scripts/commands/format`        | Formateo del repositorio mediante Prettier.                            | Por cambio.         |
-| **typecheck**        | `scripts/commands/typecheck`     | Verificación de tipos TypeScript.                                      | Por cambio.         |
-| **validate**         | `scripts/commands/validate`      | Validación integral del repositorio (incl. QG-SEC con EE-WAIVE).       | Por cambio.         |
-| **doctor**           | `scripts/commands/doctor`        | Diagnóstico del entorno de desarrollo.                                 | Por necesidad.      |
-| **generate**         | `scripts/commands/generate`      | Generación de código mediante Plop.                                    | Por necesidad.      |
-| **release**          | `scripts/commands/release`       | Gestión del proceso de release.                                        | Por release.        |
-| **clean**            | `scripts/commands/clean`         | Limpieza de artefactos de compilación y cachés.                        | Por necesidad.      |
-| **e2e**              | `scripts/commands/e2e`           | Entrada root E2E (orquestación actual: `turbo run test:e2e` filtrado). | Por cambio / CI.    |
-| **hooks:install**    | `scripts/commands/install-hooks` | Configura `.githooks` como hooks locales de este clon.                 | Una vez por clon.   |
-| **changeset**        | `changeset`                      | Declaración interactiva de cambios y SemVer.                           | Por cambio.         |
-| **version-packages** | `changeset version`              | Cálculo y actualización de versiones en el monorepo.                   | Por release.        |
+| Comando              | Implementación                   | Propósito                                                           | Frecuencia          |
+| :------------------- | :------------------------------- | :------------------------------------------------------------------ | :------------------ |
+| **bootstrap**        | `scripts/commands/bootstrap`     | Configuración inicial del entorno.                                  | Una vez.            |
+| **build**            | `scripts/commands/build`         | Compilación de todos los paquetes.                                  | Por cambio.         |
+| **dev**              | `scripts/commands/dev`           | Ejecución en modo desarrollo con recarga en caliente.               | Durante desarrollo. |
+| **test**             | `scripts/commands/test`          | Ejecución de todas las pruebas disponibles.                         | Por cambio.         |
+| **lint**             | `scripts/commands/lint`          | Análisis estático y linting.                                        | Por cambio.         |
+| **format**           | `scripts/commands/format`        | Formateo del repositorio mediante Prettier.                         | Por cambio.         |
+| **typecheck**        | `scripts/commands/typecheck`     | Verificación de tipos TypeScript.                                   | Por cambio.         |
+| **validate**         | `scripts/commands/validate`      | Validación integral del repositorio (incl. QG-SEC con EE-WAIVE).    | Por cambio.         |
+| **doctor**           | `scripts/commands/doctor`        | Diagnóstico del entorno de desarrollo.                              | Por necesidad.      |
+| **generate**         | `scripts/commands/generate`      | Generación de código mediante Plop.                                 | Por necesidad.      |
+| **release**          | `scripts/commands/release`       | Gestión del proceso de release.                                     | Por release.        |
+| **clean**            | `scripts/commands/clean`         | Limpieza de artefactos de compilación y cachés.                     | Por necesidad.      |
+| **e2e**              | `scripts/commands/e2e`           | Orquesta todas las tareas workspace `test:e2e` declaradas en Turbo. | Por cambio / CI.    |
+| **hooks:install**    | `scripts/commands/install-hooks` | Configura `.githooks` como hooks locales de este clon.              | Una vez por clon.   |
+| **changeset**        | `changeset`                      | Declaración interactiva de cambios y SemVer.                        | Por cambio.         |
+| **version-packages** | `changeset version`              | Cálculo y actualización de versiones en el monorepo.                | Por release.        |
 
 > **Nota:**
 > Esta lista constituye el contrato oficial de **nombres** de comandos root (`pnpm <cmd>`). La **ruta de implementación** canónica es `scripts/commands/<cmd>` (no `scripts/<cmd>` plano). `changeset` / `version-packages` se invocan vía CLI de Changesets. Turborepo orquesta tareas de workspace cuando corresponde. Los hooks son opt-in y no sustituyen CI.
 
-> **E2E (Availability del gate):** el script root **`pnpm e2e`** existe y delega en la implementación actual (`test:e2e` de package(s), p. ej. dashboard). El **gate E2E de ecosistema** (QG / V-E2E) permanece **PENDING** de enforcement en `validate`/CI y de alineación plena con ADR-002 (`turbo run e2e` multi-package sin filtro fijo), conforme EE-DOC-005 §10.4 / EE-DOC-010 / EE-DOC-015. `test:e2e` de un package **no** cierra solo el gate de ecosistema.
+> **E2E:** el comando root **`pnpm e2e`** delega en Turbo y descubre todas las tareas workspace `test:e2e` declaradas, sin filtro fijo; está integrado en `validate` y CI. Actualmente solo Dashboard declara esa tarea. Un PASS confirma las tareas registradas y no acredita por sí solo la cobertura de todas las superficies aplicables del ecosistema; **V-E2E** permanece **PENDING** según EE-DOC-015.
 
 ---
 
@@ -929,6 +929,8 @@ Cada unidad de implementación física del monorepo es responsable de materializ
 | **v1.11.0** | 2026-11-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Reportes individuales de auditoría               | Añade `docs/validation/audit/reports/` para conservar reportes detallados por ejecución, separados de los tres registros canónicos.                                                     |     **Congelado**     |
 | **v1.12.0** | 2026-11-04 | Equipo de Arquitectura  | Equipo de Arquitectura | Enforcement de imports entre workspaces          | Rechaza imports relativos que cruzan workspaces conforme a §13.4 R3; la validación remota de esta regla queda sujeta al CI del Pull Request.                                            |     **Congelado**     |
 
+| **v1.13.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Orquestación E2E por workspace | El comando root descubre todas las tareas `test:e2e` de Turbo; distingue la ejecución registrada de la cobertura integral V-E2E del ecosistema. | **Congelado** |
+
 > **Validación incremental:** la Validación Final histórica (§20.1, v1.3.0) permanece como registro de cierre de fase. Las evoluciones v1.4.0 en adelante (esta edición) se consideran **validadas de forma incremental** en auditoría documental + contraste as-built (`scripts/commands`, e2e root, matriz §13, nota PN-008). El gate V-E2E de ecosistema y gates de 010/015 pueden permanecer PENDING sin invalidar el congelamiento estructural de 006. Evidencia operativa recomendada: `pnpm validate` en `main` + SHA.
 
 ---
@@ -956,7 +958,7 @@ La Validación Final de **EE-DOC-006 — Repository Structure** se registró el 
 | Tests                         | Conforme al modelo de adopción **EE-ADR-002** (NO_TESTS ≠ PASS automático).                                                                                                                                                                          |
 | Security Audit                | **No** se declara “0 vulnerabilidades” como hecho permanente. El estado real es el de `pnpm audit` / EE-DOC-010; residuales requieren **EE-WAIVE** vigente (≤7 días salvo régimen 010) o remediación. `auditConfig.ignoreGhsas` no sustituye waiver. |
 | Project Structure / Workspace | QG-ARCH-001 **ACTIVE** para allowlist §05.1, dependencias/ciclos declarados e imports entre workspaces bajo `src/`; no implica enforcement completo del blueprint §05.                                                                               |
-| E2E Dashboard                 | **PENDING** a nivel contrato root (`pnpm e2e` materializado; gate ecosistema PENDING (010/015)). Ejecuciones ad hoc (`test:e2e` de package) no cierran el gate de ecosistema (V-E2E / EE-DOC-015).                                                   |
+| E2E                           | QG-TEST-E2E ejecuta todas las tareas `test:e2e` registradas en Turbo; actualmente solo Dashboard declara una. V-E2E permanece **PENDING** hasta evidenciar cobertura de las superficies aplicables del ecosistema.                                   |
 | `pnpm validate`               | Conforme a gates **ACTIVE** en la fecha de evidencia; no implica PASS de gates PENDING.                                                                                                                                                              |
 
 ### 20.3. Dictamen de Cierre

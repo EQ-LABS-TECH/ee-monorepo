@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 import { runTurboGate } from '../lib/run-turbo-gate.mjs';
+import { runE2EGate } from '../lib/e2e-gate.mjs';
 
 console.log('🧪 EE-LABS E2E validation');
-console.log('Target: @eq-labs/dashboard#test:e2e');
+console.log('Target: all workspace tasks declaring test:e2e');
 
-const status = runTurboGate({
-  task: 'test:e2e',
-  args: ['--filter=@eq-labs/dashboard'],
-  gateId: 'QG-TEST-E2E',
-});
+const status = runE2EGate(runTurboGate);
 process.exit(status);

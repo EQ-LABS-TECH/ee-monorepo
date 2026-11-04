@@ -6,10 +6,18 @@ import { join } from 'node:path';
 import YAML from 'yaml';
 import {
   getCurrentBranchName,
+  parsePorcelainStatus,
   validateBranchName,
   validateCommitMessages,
   validateRepositoryFileNames,
 } from '../lib/repository-conventions.mjs';
+
+test('preserves the first path in porcelain status when its status column is blank', () => {
+  assert.deepEqual(parsePorcelainStatus(' M README.md\r\n?? scripts/new-file.mjs\r\n'), [
+    'README.md',
+    'scripts/new-file.mjs',
+  ]);
+});
 
 test('accepts kebab-case artifacts and the governed EE document filename exception', () => {
   assert.deepEqual(

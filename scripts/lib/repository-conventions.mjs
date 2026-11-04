@@ -77,12 +77,22 @@ function changedPaths() {
       if (path) paths.add(path.replaceAll('\\', '/'));
     }
   }
-  const status = git(['status', '--porcelain=v1', '--untracked-files=all']);
-  for (const line of status.split(/\r?\n/)) {
-    const path = line.slice(3).split(' -> ').at(-1);
-    if (path) paths.add(path.replaceAll('\\', '/'));
-  }
+  const status = execFileSync('git', ['status', '--porcelain=v1', '--untracked-files=all'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+  }).replace(/(?:\r?\n)+$/, '');
+  for (const path of parsePorcelainStatus(status)) paths.add(path);
   return [...paths];
+}
+
+export function parsePorcelainStatus(status) {
+  if (typeof status !== 'string') throw new TypeError('Git status output must be a string');
+
+  return status.split(/\r?\n/).flatMap((line) => {
+    if (!line) return [];
+    const path = line.slice(3).split(' -> ').at(-1);
+    return path ? [path.replaceAll('\\', '/')] : [];
+  });
 }
 
 function isKebabToken(value) {

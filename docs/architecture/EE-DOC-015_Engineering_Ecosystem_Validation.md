@@ -17,7 +17,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**       | Especializado                                                                                                                                                                                                                                              |
 | **Nivel**               | Especializado                                                                                                                                                                                                                                              |
 | **Normativo**           | Sí                                                                                                                                                                                                                                                         |
-| **Versión**             | v1.1.1                                                                                                                                                                                                                                                     |
+| **Versión**             | v1.2.0                                                                                                                                                                                                                                                     |
 | **Estado**              | Congelado                                                                                                                                                                                                                                                  |
 | **Propietario**         | Equipo de Arquitectura                                                                                                                                                                                                                                     |
 | **Documento padre**     | EE-DOC-004 — Engineering Architecture (conceptual)                                                                                                                                                                                                         |
@@ -26,7 +26,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**        | Equipo de Arquitectura                                                                                                                                                                                                                                     |
 | **Audiencia**           | Arquitectura, Desarrollo, QA, DevOps, IA                                                                                                                                                                                                                   |
 | **Fecha de creación**   | 2026-10-06                                                                                                                                                                                                                                                 |
-| **Última revisión**     | 2026-10-18                                                                                                                                                                                                                                                 |
+| **Última revisión**     | 2026-11-04                                                                                                                                                                                                                                                 |
 | **Próxima revisión**    | No aplica — Documento Congelado                                                                                                                                                                                                                            |
 
 > **Precedente de roadmap (EE-DOC-001):** EE-DOC-014 — Knowledge Management (Fase 3 → Fase 4).
@@ -66,7 +66,7 @@ Este documento:
 | **Integración de ports** | Coexistencia SPI + KnowledgePort desde `apps/*`; wiring **efectivo**                                               |
 | **Automatización**       | CLI facade; composition root; comandos EE-DOC-011; templates vía 012 **y** QG-REPO por separado                    |
 | **Infra**                | QG-INFRA + política                                                                                                |
-| **Smoke / E2E**          | Smoke normativo; E2E PENDING hasta comando root `e2e`                                                              |
+| **Smoke / E2E**          | Smoke normativo; V-E2E PENDING hasta evidenciar cobertura de las superficies aplicables del ecosistema             |
 | **Gobernanza**           | Índice EE-DOC-001; CODEOWNERS; lista cerrada documental; precedencia QG-DOC                                        |
 | **Reporte**              | `docs/validation/` (autorizado en **EE-DOC-006**)                                                                  |
 
@@ -149,21 +149,21 @@ Este documento:
 
 #### 04.4.2. Hito × dominio
 
-| Dominio                | Baseline                         | Cierre Fase 4 / congelación 015                                   |
-| :--------------------- | :------------------------------- | :---------------------------------------------------------------- |
-| **V-STRUCT**           | Obligatorio                      | Obligatorio                                                       |
-| **V-ARCH-TOPLEVEL**    | Obligatorio                      | Obligatorio                                                       |
-| **V-ARCH-LAYERS**      | PENDING admisible                | PENDING admisible; PASS total de capas no exigido hasta validador |
-| **V-ARCH-COMPOSITION** | Obligatorio (efectivo o PENDING) | Obligatorio                                                       |
-| **V-QG**               | Obligatorio                      | Obligatorio                                                       |
-| **V-INT**              | Obligatorio (efectivo o PENDING) | Obligatorio                                                       |
-| **V-AUTO**             | Obligatorio                      | Obligatorio                                                       |
-| **V-INFRA**            | Obligatorio                      | Obligatorio                                                       |
-| **V-GOV**              | Obligatorio                      | Obligatorio                                                       |
-| **V-SMOKE**            | Obligatorio                      | Obligatorio                                                       |
-| **V-E2E**              | PENDING (nunca N/A)              | PENDING hasta `pnpm run e2e`                                      |
+| Dominio                | Baseline                         | Cierre Fase 4 / congelación 015                                                     |
+| :--------------------- | :------------------------------- | :---------------------------------------------------------------------------------- |
+| **V-STRUCT**           | Obligatorio                      | Obligatorio                                                                         |
+| **V-ARCH-TOPLEVEL**    | Obligatorio                      | Obligatorio                                                                         |
+| **V-ARCH-LAYERS**      | PENDING admisible                | PENDING admisible; PASS total de capas no exigido hasta validador                   |
+| **V-ARCH-COMPOSITION** | Obligatorio (efectivo o PENDING) | Obligatorio                                                                         |
+| **V-QG**               | Obligatorio                      | Obligatorio                                                                         |
+| **V-INT**              | Obligatorio (efectivo o PENDING) | Obligatorio                                                                         |
+| **V-AUTO**             | Obligatorio                      | Obligatorio                                                                         |
+| **V-INFRA**            | Obligatorio                      | Obligatorio                                                                         |
+| **V-GOV**              | Obligatorio                      | Obligatorio                                                                         |
+| **V-SMOKE**            | Obligatorio                      | Obligatorio                                                                         |
+| **V-E2E**              | PENDING (nunca N/A)              | PENDING hasta evidenciar cobertura E2E de las superficies aplicables del ecosistema |
 
-**Nota hito × dominio:** Para **V-ARCH-LAYERS** y **V-E2E**, baseline y cierre Fase 4 comparten resultado **PENDING** admisible; la columna de cierre **no** exige PASS de esos dominios. En cierre, LAYERS puede exigir además evidencia de revisión manual §05.2.1 si Arquitectura la solicita; E2E permanece PENDING hasta comando root `e2e`.
+**Nota hito × dominio:** Para **V-ARCH-LAYERS** y **V-E2E**, baseline y cierre Fase 4 comparten resultado **PENDING** admisible; la columna de cierre **no** exige PASS de esos dominios. En cierre, LAYERS puede exigir además evidencia de revisión manual §05.2.1 si Arquitectura la solicita; V-E2E permanece PENDING hasta que el Validation Report identifique las superficies aplicables y evidencie sus suites, sin inferir cobertura por la ejecución de tareas registradas solamente.
 
 Congelación de 015: dictamen ecosistema **DEGRADED** admisible si PENDING listados con régimen y sin FAIL no gestionado.
 
@@ -296,7 +296,7 @@ Coexistencia Foundation→Intelligence y Foundation→Knowledge desde `apps/*`; 
 | :------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **CLI facade**             | Delega a `pnpm run`; **no reimplementa** Quality Gates ni umbrales                                                                                                                                                                                                                                                                                                                                                                                          |
 | **Composition**            | §05.2.2 (puede residir en el mismo app que la facade)                                                                                                                                                                                                                                                                                                                                                                                                       |
-| **Comandos root**          | Contrato EE-DOC-011 (incluye `e2e`; el gate V-E2E sigue PENDING hasta integración en CI)                                                                                                                                                                                                                                                                                                                                                                    |
+| **Comandos root**          | Contrato EE-DOC-011; `e2e` ejecuta todas las tareas `test:e2e` registradas en Turbo y `validate` las integra en CI. Esto no convierte por sí solo V-E2E en PASS                                                                                                                                                                                                                                                                                             |
 | **QG-REPO**                | Integridad estructural del repo / templates path → Result del gate                                                                                                                                                                                                                                                                                                                                                                                          |
 | **Templates (EE-DOC-012)** | Validar el **contrato semántico definido por EE-DOC-012** (p. ej. schema, `template.json`, `files/`, outputs, ids). **PASS de QG-REPO no implica PASS del contrato de templates.** Si **EE-DOC-012** exige un mecanismo de validación y **ése** no está materializado → **PENDING**. Si el mecanismo ACTIVE del ref falla → **FAIL**. DEGRADED solo con WAIVE §04.5. EE-DOC-015 **no** inventa obligaciones de enforcement adicionales a las de 012/IMP-012 |
 
@@ -317,7 +317,7 @@ El Validation Report debe mostrar **Result original del gate** y el **mapeo** al
 
 ### 05.8. V-E2E
 
-**PENDING** como gate bloqueante, aunque el comando root `pnpm run e2e` ya existe. Falta integración en CI (Tipo B/C). Scripts workspace alineados a EE-ADR-002 (`e2e`, no solo alias ad hoc). **Prohibido N/A**.
+**PENDING** como dominio bloqueante, no como estado de integración del comando. `pnpm run e2e` ejecuta todas las tareas workspace `test:e2e` registradas en Turbo; `validate` y CI ya ejecutan este gate. Actualmente solo Dashboard declara una tarea, por lo que el resultado QG no demuestra cobertura E2E de todas las superficies aplicables. El Validation Report debe enumerar dichas superficies y registrar evidencia por suite antes de declarar V-E2E PASS. **Prohibido N/A**.
 
 ### 05.9. V-GOV
 
@@ -434,15 +434,16 @@ Ejemplos: plantillas EE-VAL/EE-WAIVE en EE-DOC-002 (A/B); `pnpm run e2e` (B/C); 
 
 ## 12. Historial de Cambios
 
-| Versión           | Fecha      | Autor                  | Aprobado por           | Motivo                              | Cambios                                                                                                                                           | Estado                         |
-| :---------------- | :--------- | :--------------------- | :--------------------- | :---------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------- |
-| **v0.1.0–v0.4.0** | 2026-10-06 | Equipo de Arquitectura | —                      | Elaboración incremental             | Modelo, WAIVE, hitos, composition, smoke                                                                                                          | En Elaboración                 |
-| **v0.5.0**        | 2026-10-06 | Equipo de Arquitectura | —                      | Re-revisión prioritaria (3 bloques) | SKIPPED≠N/A; docs/validation vía 006; QG-DOC precedencia; templates≠REPO; salida residual; build completo; agregación; sin refs por versión ajena | **En Elaboración**             |
-| **v0.5.1**        | 2026-10-06 | Equipo de Arquitectura | —                      | Higiene agregación N/A + 006 README | Regla N/A en §04.4.3; anti-FP cuantificable; matriz config con aplicabilidad; V-GOV README raíz; templates 012 sin atribución ambigua             | **En Revisión Arquitectónica** |
-| **v0.5.2**        | 2026-10-07 | Equipo de Arquitectura | —                      | Higiene revisión arquitectónica     | P01 README; V-QG FMT vía validate; dictamen ≠ aprobado; nota hito LAYERS/E2E                                                                      | **En Revisión Arquitectónica** |
-| **v1.0.0**        | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica           | Congelación del marco de validación de ecosistema; habilita EE-IMP-015                                                                            | **Aprobado**                   |
-| **v1.1.0**        | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre implementación + congelación | IMP-015 P01–P05; EE-VAL-072b5e7; EE-TEC-010; dictamen DEGRADED admisible                                                                          | **Congelado**                  |
-| **v1.1.1**        | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Fix aclaración E2E                  | §05.8 aclara que el comando root e2e existe pero el gate sigue PENDING                                                                            | Congelado                      |
+| Versión           | Fecha      | Autor                  | Aprobado por           | Motivo                              | Cambios                                                                                                                                                    | Estado                         |
+| :---------------- | :--------- | :--------------------- | :--------------------- | :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------- |
+| **v0.1.0–v0.4.0** | 2026-10-06 | Equipo de Arquitectura | —                      | Elaboración incremental             | Modelo, WAIVE, hitos, composition, smoke                                                                                                                   | En Elaboración                 |
+| **v0.5.0**        | 2026-10-06 | Equipo de Arquitectura | —                      | Re-revisión prioritaria (3 bloques) | SKIPPED≠N/A; docs/validation vía 006; QG-DOC precedencia; templates≠REPO; salida residual; build completo; agregación; sin refs por versión ajena          | **En Elaboración**             |
+| **v0.5.1**        | 2026-10-06 | Equipo de Arquitectura | —                      | Higiene agregación N/A + 006 README | Regla N/A en §04.4.3; anti-FP cuantificable; matriz config con aplicabilidad; V-GOV README raíz; templates 012 sin atribución ambigua                      | **En Revisión Arquitectónica** |
+| **v0.5.2**        | 2026-10-07 | Equipo de Arquitectura | —                      | Higiene revisión arquitectónica     | P01 README; V-QG FMT vía validate; dictamen ≠ aprobado; nota hito LAYERS/E2E                                                                               | **En Revisión Arquitectónica** |
+| **v1.0.0**        | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica           | Congelación del marco de validación de ecosistema; habilita EE-IMP-015                                                                                     | **Aprobado**                   |
+| **v1.1.0**        | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre implementación + congelación | IMP-015 P01–P05; EE-VAL-072b5e7; EE-TEC-010; dictamen DEGRADED admisible                                                                                   | **Congelado**                  |
+| **v1.1.1**        | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Fix aclaración E2E                  | §05.8 aclara que el comando root e2e existe pero el gate sigue PENDING                                                                                     | Congelado                      |
+| **v1.2.0**        | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Alcance y evidencia de V-E2E        | Distingue el gate QG de tareas workspace registradas del dominio V-E2E; exige evidencia de cobertura de las superficies aplicables antes de declarar PASS. | **Congelado**                  |
 
 ---
 
