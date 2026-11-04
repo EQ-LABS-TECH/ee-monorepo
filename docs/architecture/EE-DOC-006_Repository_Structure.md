@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**. E
 | **Clasificación**     | Implementable                                                                          |
 | **Nivel**             | Táctico                                                                                |
 | **Normativo**         | Sí                                                                                     |
-| **Versión**           | v1.13.0                                                                                |
+| **Versión**           | v1.14.0                                                                                |
 | **Estado**            | Congelado                                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                                 |
 | **Documento padre**   | EE-DOC-005                                                                             |
@@ -189,7 +189,7 @@ ee-monorepo/                   # Raíz del monorepo Engineering Ecosystem
 │   ├── developer/             # Implementación por fases (EE-IMP-*)
 │   ├── rfc/                   # Solicitudes de cambio transversal (EE-RFC-*)
 │   └── validation/            # Evidencia de validación y waivers
-│       ├── audit/             # Registro y criterios de auditoría (EE-AUDIT-*)
+│       ├── audit/             # Registro y criterios de auditoría (EE-AUD-*)
 │       │   └── reports/       # Informes detallados de cada ejecución de auditoría
 │       ├── evidence/          # Evidencias de validación de ecosistema
 │       ├── reports/           # Informes de validación
@@ -314,7 +314,7 @@ La allowlist canónica de entradas de primer nivel autorizadas (alineada a `scri
 | `.git/`, `.turbo/`, `node_modules/`                                                                                                           | Runtime Git/tooling (no versionar node_modules) |
 | Archivos raíz de gobierno (`package.json`, `pnpm-workspace.yaml`, `turbo.json`, `.nvmrc`, `LICENSE`, `NOTICE`, configs de formato/lint, etc.) | SSOT de tooling                                 |
 
-> **Nota:** la existencia de `docs/validation/audit/` (EE-AUDIT-\*) forma parte de `docs/validation/` as-built. `prettier.config.mjs`, `scripts/plopfile.mjs` y `scripts/README.md` son artefacto raíz/scripts reconocidos (no se interpretan como top-level prohibido).
+> **Nota:** la existencia de `docs/validation/audit/` (EE-AUD-\*) forma parte de `docs/validation/` as-built. `prettier.config.mjs`, `scripts/plopfile.mjs` y `scripts/README.md` son artefacto raíz/scripts reconocidos (no se interpretan como top-level prohibido).
 
 ---
 
@@ -392,7 +392,7 @@ La **política de idioma por tipo de artefacto** se define normativamente en **E
 > - **`categoría`** corresponde a la capa o dominio del paquete (ej. `foundation`, `execution`, `config`, `intelligence`, `knowledge`, `governance`, `integration`, `registry`, `sdk`).
 > - **`nombre`** es **opcional**. Se utiliza cuando la categoría contiene múltiples componentes (ej. `@eq-labs/connector-github`, `@eq-labs/config-typescript`). Si el paquete representa la categoría completa, se omite (ej. `@eq-labs/foundation`).
 
-> **Nota as-built:** las interfaces del ecosistema usan `PascalCase` sin prefijo `I` (`AIProvider`, `CatalogPort`, `KnowledgePort`). Los paquetes que representan una categoría completa omiten el sufijo `-<nombre>` (`@eq-labs/foundation`, `@eq-labs/intelligence`). Las aplicaciones usan `@eq-labs/<nombre>` con scope (`@eq-labs/cli`, `@eq-labs/dashboard`). Ampliación TEC/VAL/WAIVE/AUDIT: EE-DOC-002 §16 y §18.
+> **Nota as-built:** las interfaces del ecosistema usan `PascalCase` sin prefijo `I` (`AIProvider`, `CatalogPort`, `KnowledgePort`). Los paquetes que representan una categoría completa omiten el sufijo `-<nombre>` (`@eq-labs/foundation`, `@eq-labs/intelligence`). Las aplicaciones usan `@eq-labs/<nombre>` con scope (`@eq-labs/cli`, `@eq-labs/dashboard`). Ampliación TEC/VAL/WAIVE/AUD: EE-DOC-002 §16 y §18.
 
 > **Contratos de datos y APIs:** las convenciones semánticas de nombres SQL, rutas REST y JSON se definen en EE-DOC-004 §12.3–§12.4. Los archivos de contratos técnicos usarán nombres de archivo `kebab-case` y permanecerán en el paquete propietario; no se crearán carpetas o workspaces de datos/API hasta que un cambio gobernado los requiera.
 
@@ -930,6 +930,7 @@ Cada unidad de implementación física del monorepo es responsable de materializ
 | **v1.12.0** | 2026-11-04 | Equipo de Arquitectura  | Equipo de Arquitectura | Enforcement de imports entre workspaces          | Rechaza imports relativos que cruzan workspaces conforme a §13.4 R3; la validación remota de esta regla queda sujeta al CI del Pull Request.                                            |     **Congelado**     |
 
 | **v1.13.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Orquestación E2E por workspace | El comando root descubre todas las tareas `test:e2e` de Turbo; distingue la ejecución registrada de la cobertura integral V-E2E del ecosistema. | **Congelado** |
+| **v1.14.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Familia y rutas físicas de auditoría | Actualiza la estructura física y las referencias de auditoría a la familia `EE-AUD`, con informes generales y por fase. | **Congelado** |
 
 > **Validación incremental:** la Validación Final histórica (§20.1, v1.3.0) permanece como registro de cierre de fase. Las evoluciones v1.4.0 en adelante (esta edición) se consideran **validadas de forma incremental** en auditoría documental + contraste as-built (`scripts/commands`, e2e root, matriz §13, nota PN-008). El gate V-E2E de ecosistema y gates de 010/015 pueden permanecer PENDING sin invalidar el congelamiento estructural de 006. Evidencia operativa recomendada: `pnpm validate` en `main` + SHA.
 

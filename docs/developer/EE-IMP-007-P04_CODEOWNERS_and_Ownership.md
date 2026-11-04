@@ -16,7 +16,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                                                         |
 | **Nivel**             | Técnico                                                                |
 | **Normativo**         | No                                                                     |
-| **Versión**           | v0.7.0                                                                 |
+| **Versión**           | v0.7.1                                                                 |
 | **Estado**            | En Elaboración                                                         |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-007 — GitHub Governance                                         |
@@ -24,7 +24,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Aprobado por**      | Equipo de Arquitectura                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps                                       |
 | **Fecha de creación** | 2026-09-22                                                             |
-| **Última revisión**   | 2026-11-03                                                             |
+| **Última revisión**   | 2026-11-04                                                             |
 | **Próxima revisión**  | 2026-11-09                                                             |
 
 ---
@@ -105,7 +105,7 @@ Materializar el archivo **`.github/CODEOWNERS`** con ownership real por áreas d
 | `scripts/commands/enforce`, `scripts/commands/reconcile`, `scripts/commands/governance` | `@EQ-LABS-TECH/architecture` | Comandos que aplican políticas PN-017        |
 | `docs/`                                                                                 | `@EQ-LABS-TECH/maintainers`  | Documentación ordinaria                      |
 | `docs/architecture/`, `docs/adr/`, `docs/rfc/`                                          | `@EQ-LABS-TECH/architecture` | Normativa y arquitectura                     |
-| `docs/validation/audit/EE-AUDIT-*`                                                      | `@EQ-LABS-TECH/architecture` | Auditoría normativa                          |
+| `docs/validation/audit/EE-AUD-*`                                                        | `@EQ-LABS-TECH/architecture` | Auditoría normativa                          |
 | `docs/developer/`, `docs/validation/`                                                   | `@EQ-LABS-TECH/maintainers`  | Implementación y evidencia                   |
 | `assets/`, `data/`, `examples/`, `marketplace/`                                         | `@EQ-LABS-TECH/maintainers`  | Soporte / extensibilidad                     |
 | `infra/`                                                                                | `@EQ-LABS-TECH/architecture` | Infraestructura de plataforma                |
@@ -183,7 +183,7 @@ docs/adr/                       @EQ-LABS-TECH/architecture
 docs/rfc/                       @EQ-LABS-TECH/architecture
 docs/developer/                 @EQ-LABS-TECH/maintainers
 docs/validation/                @EQ-LABS-TECH/maintainers
-docs/validation/audit/EE-AUDIT-* @EQ-LABS-TECH/architecture
+docs/validation/audit/EE-AUD-* @EQ-LABS-TECH/architecture
 
 # Support / extensibility
 assets/                         @EQ-LABS-TECH/maintainers
@@ -252,7 +252,7 @@ En ruleset **Protect main** → editar → activar **Require review from Code Ow
 
 Evidencia capturada 2026-09-23.
 
-Los valores de tamaño y validaciones de esta sección son una captura histórica. El diseño aprobado asigna el ownership rutinario de `docs/` a Maintainers, con reglas más específicas de Architecture para `docs/architecture/`, `docs/adr/`, `docs/rfc/` y `docs/validation/audit/EE-AUDIT-*`. La evaluación efectiva de CODEOWNERS y de teams requiere una ejecución de PR y comprobación remota; no se afirma completada localmente.
+Los valores de tamaño y validaciones de esta sección son una captura histórica. El diseño aprobado asigna el ownership rutinario de `docs/` a Maintainers, con reglas más específicas de Architecture para `docs/architecture/`, `docs/adr/`, `docs/rfc/` y `docs/validation/audit/EE-AUD-*`. La evaluación efectiva de CODEOWNERS y de teams requiere una ejecución de PR y comprobación remota; no se afirma completada localmente.
 
 ### 08.1. Teams (slugs reales)
 
@@ -387,6 +387,7 @@ Los valores de tamaño y validaciones de esta sección son una captura históric
 | **v0.5.0** | 2026-11-03 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership de plataforma sin owners alternativos | Architecture como owner único de `.github/`; Maintainers como owner único de `scripts/`; Repository Admin conserva `infra/`.                                                                       | En Elaboración                                  |
 | **v0.6.0** | 2026-11-03 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership único por área                        | Un equipo responsable por cada patrón explícito de CODEOWNERS; Architecture cubre orquestación, configuración, infraestructura y plantillas; Maintainers cubre `scripts/` y `packages/knowledge/`. | En Elaboración                                  |
 | **v0.7.0** | 2026-11-03 | Equipo de Arquitectura   | Equipo de Arquitectura | Revisión arquitectónica de PN-017               | Architecture como owner de componentes PN-017 en `scripts/`; una sola regla wildcard para contratos Knowledge.                                                                                     | En Elaboración                                  |
+| **v0.7.1** | 2026-11-04 | Equipo de Arquitectura   | Equipo de Arquitectura | Sincronización de ownership de auditoría        | Actualiza ejemplos y rutas del registro de auditoría a la familia `EE-AUD`.                                                                                                                        | En Elaboración                                  |
 
 ---
 

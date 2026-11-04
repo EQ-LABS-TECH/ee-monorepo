@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Implementación                                     |
 | **Nivel**             | Técnico                                            |
 | **Normativo**         | No                                                 |
-| **Versión**           | v1.0.0                                             |
+| **Versión**           | v1.0.1                                             |
 | **Estado**            | Congelado (as-built post Validación Final)         |
 | **Propietario**       | Equipo de Arquitectura                             |
 | **Documento padre**   | EE-DOC-007 — GitHub Governance                     |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Aprobado por**      | Equipo de Arquitectura                             |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA               |
 | **Fecha de creación** | 2026-09-23                                         |
-| **Última revisión**   | 2026-09-23                                         |
+| **Última revisión**   | 2026-11-04                                         |
 | **Próxima revisión**  | 2026-12-23                                         |
 
 ---
@@ -183,24 +183,25 @@ Esta evolución no modifica retrospectivamente el dictamen de la Validación Fin
 
 ## 07. Referencias
 
-| Código                  | Documento                                          |
-| :---------------------- | :------------------------------------------------- |
-| EE-DOC-001              | Master Documentation Index                         |
-| EE-DOC-007              | GitHub Governance                                  |
-| EE-DOC-011              | Automation — contrato A-REL                        |
-| EE-IMP-007-P01 … P08    | Unidades de implementación GitHub Governance       |
-| EE-IMP-011-P04          | Generators and Release                             |
-| EE-TEC-006              | Consolidated Technical Documentation of EE-DOC-011 |
-| EE-ADR-003              | Node.js Baseline 24 LTS                            |
-| EE-AUDIT-Rules_Emerging | Backlog canónico de auditoría — PN-021 y PN-030    |
+| Código                | Documento                                          |
+| :-------------------- | :------------------------------------------------- |
+| EE-DOC-001            | Master Documentation Index                         |
+| EE-DOC-007            | GitHub Governance                                  |
+| EE-DOC-011            | Automation — contrato A-REL                        |
+| EE-IMP-007-P01 … P08  | Unidades de implementación GitHub Governance       |
+| EE-IMP-011-P04        | Generators and Release                             |
+| EE-TEC-006            | Consolidated Technical Documentation of EE-DOC-011 |
+| EE-ADR-003            | Node.js Baseline 24 LTS                            |
+| EE-AUD-Rules_Emerging | Backlog canónico de auditoría — PN-021 y PN-030    |
 
 ---
 
 ## 08. Historial de Cambios
 
-| Versión    | Fecha      | Autor                                   | Cambio                             | Estado    |
-| :--------- | :--------- | :-------------------------------------- | :--------------------------------- | :-------- |
-| **v1.0.0** | 2026-09-23 | Arquitectura / AI Engineering Assistant | As-built post Validación Final P08 | Congelado |
+| Versión    | Fecha      | Autor                                   | Cambio                                                                  | Estado    |
+| :--------- | :--------- | :-------------------------------------- | :---------------------------------------------------------------------- | :-------- |
+| **v1.0.0** | 2026-09-23 | Arquitectura / AI Engineering Assistant | As-built post Validación Final P08                                      | Congelado |
+| **v1.0.1** | 2026-11-04 | Arquitectura / AI Engineering Assistant | Sincroniza referencias al registro de auditoría con la familia `EE-AUD` | Congelado |
 
 ---
 

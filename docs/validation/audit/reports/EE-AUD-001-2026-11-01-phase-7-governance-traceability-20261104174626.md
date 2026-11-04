@@ -1,10 +1,13 @@
-# EE-AUDIT-governance-traceability — Fase 7: Gobierno y trazabilidad documental
+# EE-AUD-001-2026-11-01-phase-7-governance-traceability — Fase 7: Gobierno y trazabilidad documental
 
 ## Metadatos
 
 | Campo                  | Valor                                              |
 | :--------------------- | :------------------------------------------------- |
 | Repositorio            | EQ-LABS-TECH/ee-monorepo                           |
+| ID de auditoría        | EE-AUD-001                                         |
+| Fecha de inicio        | 2026-11-01                                         |
+| Fase                   | 7                                                  |
 | Modo                   | repository / governance                            |
 | Ref y commit base      | main — 03a1b34661a094e15338fa249bbd7ad45efc5971    |
 | Fecha de auditoría UTC | 2026-11-04 17:46:26                                |
@@ -50,7 +53,7 @@ La configuración remota demuestra capacidad de bypass, no que un actor la haya 
 - No se creó una regla emergente nueva. AUD-08 conserva el estado global de RFC-003 abierto hasta el fin de la auditoría.
 
 BASE 03a1b34661a094e15338fa249bbd7ad45efc5971
-AUDIT LOG: docs/validation/audit/EE-AUDIT-Log_Progress_Register.md — entrada local agregada.
+AUDIT LOG: docs/validation/audit/EE-AUD-Log_Progress_Register.md — entrada local agregada.
 RULES: PN-017, PN-019, PN-030 y PN-035 reutilizados; no se creó regla nueva.
 PUBLICACIÓN: PENDIENTE DE PUBLICACIÓN.
 VALIDACIÓN: revisión estática y `git diff --check`; tests y quality gates no ejecutados.

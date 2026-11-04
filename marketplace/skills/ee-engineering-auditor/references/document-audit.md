@@ -1,6 +1,6 @@
 # Auditoría documental formal (procedimiento heredado)
 
-Aplicar únicamente en modo `document` o cuando una auditoría combinada incluya explícitamente un documento normativo. Consultar EE-DOC-002 y EE-AUDIT-Criteria vigentes; los resúmenes aquí son operativos y se subordinan al texto de `main`.
+Aplicar únicamente en modo `document` o cuando una auditoría combinada incluya explícitamente un documento normativo. Consultar EE-DOC-002 y EE-AUD-Criteria vigentes; los resúmenes aquí son operativos y se subordinan al texto de `main`.
 
 ## Pasos 1 a 9
 
@@ -149,7 +149,7 @@ Emite el reporte usando el formato obligatorio de abajo y ejecuta el flujo de pe
 
 ## Reglas para veredicto
 
-- Aplicar C1–C8 de `EE-AUDIT-Criteria_Audited_Definition.md`, con justificación de N/A. No usar la regla simplificada «falta un condicional = CONFORME CON OBSERVACIONES» para afirmar conformidad con un criterio material no verificable: dejar el veredicto formal pendiente cuando el requisito esencial no puede comprobarse.
+- Aplicar C1–C8 de `EE-AUD-Criteria_Audited_Definition.md`, con justificación de N/A. No usar la regla simplificada «falta un condicional = CONFORME CON OBSERVACIONES» para afirmar conformidad con un criterio material no verificable: dejar el veredicto formal pendiente cuando el requisito esencial no puede comprobarse.
 - Sin bloqueantes ni críticos no basta para «CONFORME» si hay mayores abiertos; contrastar las condiciones expresas del criterio vigente.
 - El reporte documental usa las ocho secciones del formato anterior y añade procedencia, SHA/snapshot y estado de publicación AUDIT.
 - No llamar «auditado» a un documento mientras C1–C8 y registro AUDIT no estén completados.

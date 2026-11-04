@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | **Clasificación**     | Gobernanza                                                             |
 | **Nivel**             | Especializado                                                          |
 | **Normativo**         | Sí                                                                     |
-| **Versión**           | v1.5.1                                                                 |
+| **Versión**           | v1.5.2                                                                 |
 | **Estado**            | Congelado                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                 |
 | **Documento padre**   | EE-DOC-006                                                             |
@@ -1222,7 +1222,7 @@ La asignación concreta deberá respetar la separación entre:
 
 Cuando la documentación normativa o los ADRs residan bajo rutas específicas (por ejemplo `docs/architecture/`, `docs/adr/`), el ownership deberá mapearse a esas rutas reales de la estructura física vigente (**EE-DOC-006**), sin crear ownership ficticio sobre rutas inexistentes.
 
-La regla por defecto asigna documentación ordinaria a Maintainers. Arquitectura conserva ownership de `docs/architecture/`, `docs/adr/`, `docs/rfc/` y los artefactos de auditoría normativa `docs/validation/audit/EE-AUDIT-*`. La documentación de implementación, evidencia y validación rutinaria bajo `docs/developer/` y `docs/validation/` corresponde a Maintainers. Los patrones más específicos prevalecen según el orden de `.github/CODEOWNERS`.
+La regla por defecto asigna documentación ordinaria a Maintainers. Arquitectura conserva ownership de `docs/architecture/`, `docs/adr/`, `docs/rfc/` y los artefactos de auditoría normativa `docs/validation/audit/EE-AUD-*`. La documentación de implementación, evidencia y validación rutinaria bajo `docs/developer/` y `docs/validation/` corresponde a Maintainers. Los patrones más específicos prevalecen según el orden de `.github/CODEOWNERS`.
 
 La configuración de `.github/CODEOWNERS` es evidencia as-built; no cambia por sí sola permisos efectivos, rulesets ni cantidad de aprobaciones exigidas.
 
@@ -5555,6 +5555,7 @@ La implementación concreta de herramientas, automatizaciones o políticas que e
 | **v1.4.0** | 2026-11-01 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 orden y clasificación independiente | EE-RFC-003 gate de `Validate` sobre HEAD actual; clasificación `ORDINARY` separada de aprobaciones; reevaluación de señales confiables.                                                                                    | **Congelado**      |
 | **v1.5.0** | 2026-11-02 | Equipo de Arquitectura                            | Equipo de Arquitectura | PN-017 y ownership documental escalables   | `ORDINARY` por evidencia completa; escalamiento autorizado a `CRITICAL`; diagnósticos seguros; CODEOWNERS para documentación rutinaria y normativa.                                                                        | **Congelado**      |
 | **v1.5.1** | 2026-11-04 | Equipo de Arquitectura                            | Equipo de Arquitectura | Sincronización de reglas y bypass as-built | §§07.18, 09.21, 12.19, 13.22–24 y 14 reflejan rulesets, checks y excepción W-P03-001 verificados.                                                                                                                          | **Congelado**      |
+| **v1.5.2** | 2026-11-04 | Equipo de Arquitectura                            | Equipo de Arquitectura | Referencias a registros de auditoría       | Actualiza el patrón de ownership de CODEOWNERS y las referencias del registro de auditoría a `EE-AUD`.                                                                                                                     | **Congelado**      |
 
 ---
 

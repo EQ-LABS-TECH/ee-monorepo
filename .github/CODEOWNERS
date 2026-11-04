@@ -62,7 +62,7 @@ docs/adr/                                        @EQ-LABS-TECH/architecture
 docs/rfc/                                        @EQ-LABS-TECH/architecture
 docs/developer/                                  @EQ-LABS-TECH/maintainers
 docs/validation/                                 @EQ-LABS-TECH/maintainers
-docs/validation/audit/EE-AUDIT-* @EQ-LABS-TECH/architecture
+docs/validation/audit/EE-AUD-*                   @EQ-LABS-TECH/architecture
 
 # Support / extensibility
 assets/                                          @EQ-LABS-TECH/maintainers
