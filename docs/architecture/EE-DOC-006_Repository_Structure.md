@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**. E
 | **Clasificación**     | Implementable                                                                          |
 | **Nivel**             | Táctico                                                                                |
 | **Normativo**         | Sí                                                                                     |
-| **Versión**           | v1.11.0                                                                                |
+| **Versión**           | v1.12.0                                                                                |
 | **Estado**            | Congelado                                                                              |
 | **Propietario**       | Equipo de Arquitectura                                                                 |
 | **Documento padre**   | EE-DOC-005                                                                             |
@@ -23,7 +23,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**. E
 | **Aprobado por**      | Equipo de Arquitectura                                                                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps                                                       |
 | **Fecha de creación** | 2026-08-03                                                                             |
-| **Última revisión**   | 2026-11-03                                                                             |
+| **Última revisión**   | 2026-11-04                                                                             |
 | **Próxima revisión**  | No aplica — Documento Congelado                                                        |
 
 ---
@@ -260,7 +260,7 @@ ee-monorepo/                   # Raíz del monorepo Engineering Ecosystem
 │   │   ├── repository-conventions.mjs # Naming / branch / commit validators
 │   │   └── security-audit.mjs # Audit + cruce con EE-WAIVE (QG-SEC-001)
 │   ├── tests/                 # Pruebas de la automatización root
-│   │   ├── architecture-dependencies.unit.test.mjs # Validador de dependencias, ciclos e imports workspace
+│   │   ├── unit.architecture-dependencies.test.mjs # Validador de dependencias, ciclos e imports workspace
 │   │   ├── unit.repository-conventions.test.mjs # Naming, branches y commits
 │   │   └── security-audit.test.mjs # Tests de lógica de waivers / audit
 │   ├── plopfile.mjs           # Definición de generadores Plop
@@ -657,7 +657,7 @@ La implementación física de los comandos root vive bajo **`scripts/commands/<c
 
 > **Nota sobre la arquitectura en capas:** La tabla anterior define la matriz oficial de dependencias permitidas del Engineering Ecosystem. Aunque las categorías se organizan en capas, cada paquete únicamente puede depender de otros paquetes pertenecientes a las categorías expresamente autorizadas en esta matriz. Por ejemplo, **Governance (Capa 5)** puede depender de **Knowledge (Capa 4)** porque requiere inspeccionar el conocimiento para aplicar políticas de calidad, métricas u observabilidad, mientras que Knowledge no puede depender de Governance.
 >
-> **Alcance de enforcement integrado:** `scripts/commands/validate-architecture`, invocado por `validate`, comprueba dependencias workspace declaradas en manifests contra §13.2, detecta ciclos y valida imports estáticos, dinámicos con literal y `require` entre workspaces en código bajo `src/`. Exige que la relación esté permitida por la matriz y declarada en dependencias del paquete. Los imports dinámicos no literales y referencias `@eq-labs/*` no resueltas bloquean. Configuración fuera de `src/`, pruebas, aliases de `tsconfig` y composición implícita permanecen fuera del alcance; la revisión arquitectónica sigue siendo complementaria. La evidencia de CI remoto queda pendiente de la ejecución del Pull Request.
+> **Alcance de enforcement integrado:** `scripts/commands/validate-architecture`, invocado por `validate`, comprueba dependencias workspace declaradas en manifests contra §13.2, detecta ciclos y valida imports estáticos, dinámicos con literal y `require` entre workspaces en código bajo `src/`. Exige que la relación esté permitida por la matriz y declarada en dependencias del paquete; los imports entre workspaces deben usar el nombre del paquete y los imports relativos que crucen workspaces se rechazan conforme a §13.4 R3. Los imports dinámicos no literales y referencias `@eq-labs/*` no resueltas bloquean. Configuración fuera de `src/`, pruebas, aliases de `tsconfig` y composición implícita permanecen fuera del alcance; la revisión arquitectónica sigue siendo complementaria. La evidencia remota previa de QG-ARCH-001 no sustituye la validación del cambio de esta revisión; el Pull Request debe ejecutar el gate con la nueva regla.
 
 > **Config como tooling (todas las categorías de packages y connectors):**  
 > Dependencias de `@eq-labs/config-*` en `devDependencies` **no** se interpretan como violación de la matriz de runtime. Config es capa 0 de tooling compartido.
@@ -927,6 +927,7 @@ Cada unidad de implementación física del monorepo es responsable de materializ
 | **v1.10.0** | 2026-11-02 | Equipo de Arquitectura  | Equipo de Arquitectura | Nombres, hooks y límites de QG-ARCH-001          | Actualiza sufijos de tests, registra `.githooks`, documenta validación de símbolos y amplía QG-ARCH-001 a imports entre workspaces bajo `src/`, manifests y ciclos.                     |     **Congelado**     |
 | **v1.10.1** | 2026-11-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas          | Alinea §07.1 con EE-DOC-002 y registra el nombre actualizado de la prueba de repository conventions.                                                                                    |     **Congelado**     |
 | **v1.11.0** | 2026-11-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Reportes individuales de auditoría               | Añade `docs/validation/audit/reports/` para conservar reportes detallados por ejecución, separados de los tres registros canónicos.                                                     |     **Congelado**     |
+| **v1.12.0** | 2026-11-04 | Equipo de Arquitectura  | Equipo de Arquitectura | Enforcement de imports entre workspaces          | Rechaza imports relativos que cruzan workspaces conforme a §13.4 R3; la validación remota de esta regla queda sujeta al CI del Pull Request.                                            |     **Congelado**     |
 
 > **Validación incremental:** la Validación Final histórica (§20.1, v1.3.0) permanece como registro de cierre de fase. Las evoluciones v1.4.0 en adelante (esta edición) se consideran **validadas de forma incremental** en auditoría documental + contraste as-built (`scripts/commands`, e2e root, matriz §13, nota PN-008). El gate V-E2E de ecosistema y gates de 010/015 pueden permanecer PENDING sin invalidar el congelamiento estructural de 006. Evidencia operativa recomendada: `pnpm validate` en `main` + SHA.
 
