@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | :------------------------- | :---------------------------------------------------------- |
 | **ID**                     | EE-IMP-012-P01                                              |
 | **Documento**              | Inventory and Contract                                      |
-| **Código corto**           | EE-IMP-012-P01                                              |
+| **Código corto**           | IMP-012-P01                                                 |
 | **Fase**                   | Fase 3 — Core Components                                    |
 | **Fase de implementación** | P01 — Inventory and Contract (Implementación de EE-DOC-012) |
 | **Tipo**                   | Documento Técnico de Implementación                         |
@@ -21,7 +21,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | **Estado**                 | Completado                                                  |
 | **Propietario**            | Equipo de Arquitectura                                      |
 | **Documento padre**        | EE-DOC-012 — Templates (v0.4.0 Aprobado)                    |
-| **Dependencias**           | EE-DOC-006 v1.5.0, EE-DOC-011, EE-RFC-002, EE-DOC-010       |
+| **Dependencias**           | contenido=EE-DOC-006, EE-DOC-010…EE-DOC-012, EE-RFC-002     |
 | **Aprobado por**           | Equipo de Arquitectura                                      |
 | **Audiencia**              | Arquitectura, Desarrollo, DevOps                            |
 | **Fecha de creación**      | 2026-10-01                                                  |

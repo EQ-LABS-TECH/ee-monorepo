@@ -1,0 +1,100 @@
+#!/usr/bin/env node
+
+import { readFileSync } from 'node:fs';
+import { validateGovernancePullRequestReview } from '@eq-labs/governance/pr-governance/workflow';
+import { getGitHubRequestId } from '../lib/pr-governance.github-error.mjs';
+import { runGovernanceReviewRelay } from '../lib/pr-governance.review-relay.mjs';
+
+const POSITIVE_INTEGER = /^[1-9]\d*$/;
+
+function readPositiveInteger(value) {
+  if (typeof value !== 'string' || !POSITIVE_INTEGER.test(value)) return null;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) ? parsed : null;
+}
+
+function readContext(env) {
+  const repoMatch = /^([a-z\d-]+)\/([a-z\d_.-]+)$/i.exec(env.GITHUB_REPOSITORY ?? '');
+  if (!repoMatch || typeof env.GITHUB_EVENT_PATH !== 'string' || !env.GITHUB_EVENT_PATH) {
+    throw new TypeError('Invalid governance review relay GitHub context');
+  }
+
+  const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8'));
+  const { number } = validateGovernancePullRequestReview({
+    event,
+    expectedRepository: env.GITHUB_REPOSITORY,
+  });
+  const currentRunId = readPositiveInteger(env.GITHUB_RUN_ID);
+  const currentRunNumber = readPositiveInteger(env.GITHUB_RUN_NUMBER);
+  const expectedHeadSha = event.pull_request?.head?.sha;
+
+  if (
+    env.GITHUB_EVENT_NAME !== 'pull_request_review' ||
+    currentRunId === null ||
+    currentRunNumber === null ||
+    typeof expectedHeadSha !== 'string' ||
+    !/^[0-9a-f]{40}$/i.test(expectedHeadSha)
+  ) {
+    throw new TypeError('Invalid governance review relay event evidence');
+  }
+
+  return {
+    owner: repoMatch[1],
+    repo: repoMatch[2],
+    number,
+    expectedHeadSha: expectedHeadSha.toLowerCase(),
+    currentRunId,
+    currentRunNumber,
+    token: env.GITHUB_TOKEN,
+  };
+}
+
+function httpStatus(error) {
+  if (!(error instanceof Error)) return undefined;
+  const match = /\bHTTP ([1-5]\d{2})\b/.exec(error.message);
+  return match ? Number(match[1]) : undefined;
+}
+
+let context;
+try {
+  context = readContext(process.env);
+  const result = await runGovernanceReviewRelay(context);
+  console.log(
+    JSON.stringify({
+      status: result.status,
+      pr: context.number,
+      headSha: context.expectedHeadSha,
+      runId: context.currentRunId,
+      ...(Number.isSafeInteger(result.newerRunNumber)
+        ? { supersedingRunNumber: result.newerRunNumber }
+        : {}),
+      ...(Number.isSafeInteger(result.validationCheckRunId)
+        ? { validationCheckRunId: result.validationCheckRunId }
+        : {}),
+    }),
+  );
+} catch (error) {
+  const status = httpStatus(error);
+  console.error(
+    JSON.stringify({
+      status: 'ERROR',
+      ...(Number.isSafeInteger(context?.number) ? { pr: context.number } : {}),
+      ...(typeof context?.expectedHeadSha === 'string' &&
+      /^[0-9a-f]{40}$/i.test(context.expectedHeadSha)
+        ? { headSha: context.expectedHeadSha.toLowerCase() }
+        : {}),
+      ...(Number.isSafeInteger(context?.currentRunId) ? { runId: context.currentRunId } : {}),
+      ...(getGitHubRequestId(error) ? { requestId: getGitHubRequestId(error) } : {}),
+      phase: 'review-relay',
+      code:
+        error instanceof TypeError
+          ? 'invalid-review-event-or-evidence'
+          : status !== undefined
+            ? 'github-http-error'
+            : 'unexpected-operation-error',
+      kind: error instanceof AggregateError ? 'AggregateError' : (error?.name ?? 'Error'),
+      ...(status !== undefined ? { httpStatus: status } : {}),
+    }),
+  );
+  process.exitCode = 1;
+}

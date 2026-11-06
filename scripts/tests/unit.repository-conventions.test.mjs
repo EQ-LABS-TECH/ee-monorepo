@@ -40,6 +40,34 @@ test('accepts kebab-case artifacts and governed EE document and audit filenames'
   );
 });
 
+test('accepts governed EE document template filenames only in their template directories', () => {
+  assert.deepEqual(
+    validateRepositoryFileNames([
+      'templates/document/ee-adr/files/EE-ADR-XXX_Title.md.hbs',
+      'templates/document/ee-doc/files/EE-DOC-XXX_Title.md.hbs',
+      'templates/document/ee-imp/files/EE-IMP-XXX-PXX_Title.md.hbs',
+      'templates/document/ee-rfc/files/EE-RFC-XXX_Title.md.hbs',
+      'templates/document/ee-tec/files/EE-TEC-XXX_Title.md.hbs',
+    ]),
+    [],
+  );
+
+  assert.deepEqual(
+    validateRepositoryFileNames([
+      'templates/document/ee-doc/files/EE-DOC-XXX_Title.md.hbs',
+      'scripts/EE-DOC-XXX_Title.md.hbs',
+      'templates/document/ee-doc/files/EE-ADR-XXX_Title.md.hbs',
+    ]),
+    [
+      { path: 'scripts/EE-DOC-XXX_Title.md.hbs', code: 'file-not-kebab-case' },
+      {
+        path: 'templates/document/ee-doc/files/EE-ADR-XXX_Title.md.hbs',
+        code: 'file-not-kebab-case',
+      },
+    ],
+  );
+});
+
 test('accepts the Codex skill entrypoint only at skill roots', () => {
   assert.deepEqual(
     validateRepositoryFileNames([

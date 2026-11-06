@@ -6,25 +6,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## METADATOS
 
-| Campo                 | Valor                                                          |
-| --------------------- | -------------------------------------------------------------- |
-| **ID**                | EE-DOC-004                                                     |
-| **Documento**         | Engineering Architecture                                       |
-| **Código corto**      | DOC-004                                                        |
-| **Tipo**              | Documento Normativo                                            |
-| **Clasificación**     | Fundacional                                                    |
-| **Nivel**             | Estratégico                                                    |
-| **Normativo**         | Sí                                                             |
-| **Versión**           | v1.3.0                                                         |
-| **Estado**            | Congelado                                                      |
-| **Propietario**       | Equipo de Arquitectura                                         |
-| **Documento padre**   | EE-DOC-003                                                     |
-| **Dependencias**      | padre=EE-DOC-003; contenido=EE-DOC-001, EE-DOC-002, EE-DOC-005 |
-| **Aprobado por**      | Equipo de Arquitectura                                         |
-| **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección                        |
-| **Fecha de creación** | 2026-08-02                                                     |
-| **Última revisión**   | 2026-11-02                                                     |
-| **Próxima revisión**  | No aplica — Documento Congelado                                |
+| Campo                 | Valor                                       |
+| --------------------- | ------------------------------------------- |
+| **ID**                | EE-DOC-004                                  |
+| **Documento**         | Engineering Architecture                    |
+| **Código corto**      | DOC-004                                     |
+| **Tipo**              | Documento Normativo                         |
+| **Clasificación**     | Fundacional                                 |
+| **Nivel**             | Estratégico                                 |
+| **Normativo**         | Sí                                          |
+| **Versión**           | v1.3.0                                      |
+| **Estado**            | Congelado                                   |
+| **Propietario**       | Equipo de Arquitectura                      |
+| **Documento padre**   | EE-DOC-003                                  |
+| **Dependencias**      | contenido=EE-DOC-001…EE-DOC-003, EE-DOC-005 |
+| **Aprobado por**      | Equipo de Arquitectura                      |
+| **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección     |
+| **Fecha de creación** | 2026-08-02                                  |
+| **Última revisión**   | 2026-11-02                                  |
+| **Próxima revisión**  | No aplica — Documento Congelado             |
 
 ---
 
@@ -627,7 +627,7 @@ La matriz física de dependencias de EE-DOC-006 y la matriz arquitectónica de e
 
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                          | Cambios                                                                                                                                                                    | Estado        |
 | :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
-| **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                | Versión inicial de la arquitectura del Engineering Ecosystem                                                                                                               | **Congelado** |
+| **v0.1.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                | Versión inicial de la arquitectura del Engineering Ecosystem                                                                                                               | **Congelado** |
 | **v1.1.0** | 2026-09-16 | Equipo de Arquitectura | Equipo de Arquitectura | Sync lógica (regularizar: Tipo B + ADR-001/002) | Alineación con EE-ADR-001/002 e inclusión de subcomponentes lógicos (MCP, A2A, Task Orchestrator, Test Engine), depuración de acoplamiento físico y adición de EE-DOC-005. | **Congelado** |
 | **v1.2.0** | 2026-10-12 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo B/C (ADR-005) + regularización v1.1.0      | Auditoría: metadatos, R3 connectors, §06.1 categorías 006, matriz §11.2, PENDING QG, First, títulos Mermaid                                                                | **Congelado** |
 | **v1.3.0** | 2026-11-02 | Equipo de Arquitectura | Equipo de Arquitectura | Capas y contratos futuros de API/datos          | §12.3 define REST/JSON; §12.4 fija convenciones DB; §12.5 establece organización interna sin cambiar top-level ni reestructurar paquetes existentes.                       | **Congelado** |

@@ -1,6 +1,7 @@
 # PN-017 — Trusted governance verification.
 # Automatic validation; not yet a required check.
 name: Governance Verification
+run-name: ${{ github.event_name == 'pull_request_review' && 'Governance review relay' || (github.event_name == 'workflow_dispatch' && format('PN-017 PR-{0} SHA-{1} REVIEW-{2}', inputs.pr_number, inputs.head_sha, inputs.review_run_number)) || 'Governance Verification' }}
 
 on:
   workflow_run:
@@ -8,6 +9,11 @@ on:
       - CI
     types:
       - completed
+  pull_request_review:
+    types:
+      - submitted
+      - edited
+      - dismissed
   issue_comment:
     types:
       - created
@@ -25,6 +31,11 @@ on:
         description: Exact PR HEAD commit SHA
         required: true
         type: string
+      review_run_number:
+        description: Review relay run number for idempotent dispatch
+        required: false
+        default: 0
+        type: number
 
 permissions:
   contents: read
@@ -135,9 +146,59 @@ jobs:
           GOVERNANCE_PR_TOKEN: ${{ github.token }}
           GOVERNANCE_EVIDENCE_TOKEN: ${{ steps.governance-token.outputs.token }}
           GOVERNANCE_PUBLISHER_TOKEN: ${{ steps.governance-token.outputs.token }}
+          GOVERNANCE_WAIT_FOR_APPROVALS: 'true'
+          GOVERNANCE_DEDUPLICATE_CHECKS: 'true'
         run: |
           set -euo pipefail
           node scripts/commands/enforce
+
+  dispatch-review:
+    name: Queue governance on main
+    if: >-
+      github.event_name == 'pull_request_review' &&
+      github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      actions: write
+      contents: read
+      pull-requests: read
+      checks: read
+
+    steps:
+      - name: Checkout trusted main implementation
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install trusted dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Dispatch governance verification on main
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          node scripts/commands/relay
 
   reconcile:
     name: PR Governance Reconcile

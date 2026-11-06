@@ -1,4 +1,4 @@
-# EE-DOC-002 — Document Design Template
+﻿# EE-DOC-002 — Document Design Template
 
 Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (norma de diseño documental del ecosistema).
 
@@ -6,25 +6,25 @@ Este documento **es** el estándar **EE-DOC-002 — Document Design Template** (
 
 ## METADATOS
 
-| Campo                 | Valor                                  |
-| --------------------- | -------------------------------------- |
-| **ID**                | EE-DOC-002                             |
-| **Documento**         | Document Design Template               |
-| **Código corto**      | DOC-002                                |
-| **Tipo**              | Documento Normativo                    |
-| **Clasificación**     | Fundacional                            |
-| **Nivel**             | Estratégico                            |
-| **Normativo**         | Sí                                     |
-| **Versión**           | v1.15.0                                |
-| **Estado**            | Congelado                              |
-| **Propietario**       | Equipo de Arquitectura                 |
-| **Documento padre**   | EE-DOC-001                             |
-| **Dependencias**      | padre=EE-DOC-001; contenido=EE-DOC-001 |
-| **Aprobado por**      | Equipo de Arquitectura                 |
-| **Audiencia**         | Arquitectura, Desarrollo, IA           |
-| **Fecha de creación** | 2026-08-02                             |
-| **Última revisión**   | 2026-11-04                             |
-| **Próxima revisión**  | No aplica — Documento Congelado        |
+| Campo                 | Valor                           |
+| --------------------- | ------------------------------- |
+| **ID**                | EE-DOC-002                      |
+| **Documento**         | Document Design Template        |
+| **Código corto**      | DOC-002                         |
+| **Tipo**              | Documento Normativo             |
+| **Clasificación**     | Fundacional                     |
+| **Nivel**             | Estratégico                     |
+| **Normativo**         | Sí                              |
+| **Versión**           | v1.13.0                         |
+| **Estado**            | Congelado                       |
+| **Propietario**       | Equipo de Arquitectura          |
+| **Documento padre**   | EE-DOC-001                      |
+| **Dependencias**      | Ninguna                         |
+| **Aprobado por**      | Equipo de Arquitectura          |
+| **Audiencia**         | Arquitectura, Desarrollo, IA    |
+| **Fecha de creación** | 2026-08-02                      |
+| **Última revisión**   | 2026-11-05                      |
+| **Próxima revisión**  | No aplica — Documento Congelado |
 
 ---
 
@@ -114,25 +114,25 @@ Los documentos técnicos (guías, manuales, estándares de implementación) pued
 
 Todos los documentos deben incluir la siguiente tabla de metadatos al inicio:
 
-| Campo                 | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                             | Obligatoriedad |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| **ID**                | Identificador único del documento                                                                                                                                                                                                                                                                                                                                                                                                                       | Obligatorio    |
-| **Documento**         | Nombre completo del documento                                                                                                                                                                                                                                                                                                                                                                                                                           | Obligatorio    |
-| **Código corto**      | Código sin prefijo `EE` (p. ej. `DOC-002`)                                                                                                                                                                                                                                                                                                                                                                                                              | Obligatorio    |
-| **Tipo**              | Tipo de documento                                                                                                                                                                                                                                                                                                                                                                                                                                       | Obligatorio    |
-| **Clasificación**     | Clasificación del documento                                                                                                                                                                                                                                                                                                                                                                                                                             | Obligatorio    |
-| **Nivel**             | Nivel jerárquico                                                                                                                                                                                                                                                                                                                                                                                                                                        | Obligatorio    |
-| **Normativo**         | Indica si es normativo                                                                                                                                                                                                                                                                                                                                                                                                                                  | Obligatorio    |
-| **Versión**           | Versión semántica                                                                                                                                                                                                                                                                                                                                                                                                                                       | Obligatorio    |
-| **Estado**            | Estado del ciclo de vida                                                                                                                                                                                                                                                                                                                                                                                                                                | Obligatorio    |
-| **Propietario**       | Equipo responsable                                                                                                                                                                                                                                                                                                                                                                                                                                      | Obligatorio    |
-| **Documento padre**   | ID del documento padre                                                                                                                                                                                                                                                                                                                                                                                                                                  | Opcional       |
-| **Dependencias**      | **(AR-2026-020)** Solo lo **necesario** para validez/aplicación. Formato: `padre={ID}` y, si aplica, `contenido={ID},…`. **No** listar citados (van a § Referencias). **Documento padre** (campo) = ID del padre estructural; `padre=` en Dependencias **debe coincidir** con Documento padre cuando ambos se usen. **No** confundir con la columna **Predecesor** de EE-DOC-001 §06 (orden de implementación del roadmap, no dependencia de contenido) | Opcional       |
-| **Aprobado por**      | Equipo que aprueba                                                                                                                                                                                                                                                                                                                                                                                                                                      | Opcional       |
-| **Audiencia**         | Público objetivo                                                                                                                                                                                                                                                                                                                                                                                                                                        | Obligatorio    |
-| **Fecha de creación** | Fecha de creación                                                                                                                                                                                                                                                                                                                                                                                                                                       | Obligatorio    |
-| **Última revisión**   | Fecha de última revisión                                                                                                                                                                                                                                                                                                                                                                                                                                | Obligatorio    |
-| **Próxima revisión**  | Fecha de próxima revisión                                                                                                                                                                                                                                                                                                                                                                                                                               | Obligatorio\*  |
+| Campo                 | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Obligatoriedad |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| **ID**                | Identificador único del documento                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Obligatorio    |
+| **Documento**         | Nombre completo del documento                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Obligatorio    |
+| **Código corto**      | Código sin prefijo `EE` (p. ej. `DOC-002`)                                                                                                                                                                                                                                                                                                                                                                                                                                             | Obligatorio    |
+| **Tipo**              | Tipo de documento                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Obligatorio    |
+| **Clasificación**     | Clasificación del documento                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Obligatorio    |
+| **Nivel**             | Nivel jerárquico                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Obligatorio    |
+| **Normativo**         | Indica si es normativo                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Obligatorio    |
+| **Versión**           | Versión semántica                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Obligatorio    |
+| **Estado**            | Estado del ciclo de vida                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Obligatorio    |
+| **Propietario**       | Equipo responsable                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Obligatorio    |
+| **Documento padre**   | ID del documento padre                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Opcional       |
+| **Dependencias**      | **(AR-2026-020)** Solo lo **necesario** para validez/aplicación. Si **Documento padre** identifica al padre estructural, no se repite en este campo; de lo contrario se usa `padre={ID}`. Las dependencias de contenido se expresan como `contenido={ID},…`. **No** listar citados (van a § Referencias). `padre=` debe coincidir con **Documento padre** cuando ambos se usen. **No** confundir con **Predecesor** de EE-DOC-001 §06 (orden de roadmap, no dependencia de contenido). | Opcional       |
+| **Aprobado por**      | Equipo que aprueba                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Opcional       |
+| **Audiencia**         | Público objetivo                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Obligatorio    |
+| **Fecha de creación** | Fecha de creación                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Obligatorio    |
+| **Última revisión**   | Fecha de última revisión                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Obligatorio    |
+| **Próxima revisión**  | Fecha de próxima revisión                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Obligatorio\*  |
 
 > **(\*) Próxima revisión — excepción Congelado:** Si el **Estado** del documento es **Congelado**, el valor obligatorio del campo es `No aplica — Documento Congelado` (no se exige una fecha futura de revisión mientras permanezca congelado). Cualquier descongelamiento o nueva versión vuelve a exigir fecha o la misma excepción según el nuevo estado.
 
@@ -145,11 +145,15 @@ Todos los documentos deben incluir la siguiente tabla de metadatos al inicio:
 > | **EE-IMP / EE-TEC**   | `Fase` (IMP) obligatorio cuando aplique; `Normativo` = No                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 > | **EE-VAL / EE-WAIVE** | Ver §18.6; `Normativo` = No                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
-> **Regla de Inmutabilidad:** Los campos **ID**, **Código corto** y **Fecha de creación** son inmutables una vez que el documento ha sido aprobado. No pueden modificarse bajo ninguna circunstancia.
+> **Regla de Inmutabilidad:** Los campos **ID** y **Fecha de creación** son inmutables una vez que el documento ha sido aprobado. **Código corto** se deriva del ID y debe excluir el prefijo `EE-` conforme a §05/§16.
 >
-> **Metadatos de una nueva versión de documento congelado:** Al preparar una nueva versión mediante el mecanismo gobernado, solo se modifican en la tabla de metadatos los campos **Versión** y **Última revisión**. Los demás campos conservan sus valores.
+> **Migración gobernada de Código corto heredado (PC-001):** Si un documento ya aprobado conserva en **Código corto** el ID completo con `EE-`, el valor puede normalizarse una sola vez al ID sin ese prefijo, previa aprobación explícita de Arquitectura y mediante una nueva versión documental. No se alteran ID, nombre físico, fecha de creación ni cuerpo del documento. En documentos Congelados, esta excepción permite actualizar además de **Versión** y **Última revisión** únicamente el campo **Código corto**; los demás metadatos conservan sus valores. La fila nueva del historial conserva **Autor**, **Aprobado por** y **Estado** conforme a §11.
+>
+> **Metadatos de una nueva versión de documento congelado:** Al preparar una nueva versión mediante el mecanismo gobernado, solo se modifican en la tabla de metadatos los campos **Versión** y **Última revisión**, salvo la migración de **Código corto** expresamente autorizada en el párrafo anterior. Los demás campos conservan sus valores.
 >
 > **Ubicación de la versión (AR-2026-007):** el número de versión del documento solo es normativo en: (1) metadatos **Versión**, (2) **Historial de Cambios**, (3) citas de trazabilidad a otra versión concreta. No esparcir el número de versión en el cuerpo como texto normativo.
+>
+> **Rangos compactos de dependencias (AR-2026-023):** los rangos son inclusivos y conservan una misma familia y prefijo estable; se usan para secuencias de tres o más IDs consecutivos, por ejemplo, `EE-DOC-002…EE-DOC-005`, `EE-ADR-001…EE-ADR-004` o las fases `EE-IMP-006-P01…P06`. Dos IDs consecutivos se enumeran explícitamente, por ejemplo, `EE-DOC-009, EE-DOC-010`. Solo se abrevia si **todos** los identificadores comprendidos existen y aplican. Si un ID intermedio no aplica, se divide el rango; no se infiere una dependencia por estar comprendida en él. Cuando **Documento padre** identifica al padre estructural y ese ID forma parte de una secuencia continua de dependencias aplicables, puede incluirse en el rango para evitar fragmentarlo (por ejemplo, padre `EE-DOC-001` y dependencias `EE-DOC-001…EE-DOC-009`). Si el padre queda fuera de la secuencia aplicable, se omite de Dependencias. Los rangos no sustituyen ni modifican la sección Referencias.
 
 ### 05.1. Catálogo cerrado de Tipo, Clasificación y Nivel
 
@@ -276,7 +280,7 @@ flowchart TD
 
 > **Nota:** Cada entrada del historial representa una versión documental identificable. Una versión que haya alcanzado el estado Congelado deberá conservarse como referencia histórica y no podrá ser modificada directamente.
 >
-> **Campos de una fila nueva:** Al crear una fila para una nueva versión, los campos **Autor**, **Aprobado por** y **Estado** no se modifican; los demás campos de esa fila pueden completarse o ajustarse. Esta regla aplica a la fila nueva y no autoriza modificar filas históricas existentes.
+> **Campos de una fila nueva:** Al crear una fila para una nueva versión, **Autor** y **Aprobado por** conservan los valores correspondientes al cambio gobernado. **Estado** se establece según el estado normativo que corresponda a esa versión conforme a EE-DOC-001 §08; no se copia automáticamente el estado de la versión anterior. Las filas de versiones ya integradas en `main` son históricas y no se reescriben. Esta regla aplica a la fila nueva y no autoriza modificar filas históricas existentes.
 
 > **Longitud Motivo + Cambios (AR-2026-018):** la **suma** de caracteres de las celdas **Motivo** y **Cambios** no debe superar **230** (texto visible, sin markup de tabla). Detalle extenso → cuerpo del documento o RFC/ADR asociado.
 
@@ -373,17 +377,17 @@ El ciclo de **implementación por fases**, validación y documentación técnica
 
 ## 15. Reglas de Versionado
 
-| Regla                                | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Formato**                          | `vX.Y.Z` donde X es mayor, Y es menor y Z es parche                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| **Cambio Mayor (X)**                 | Cambios incompatibles en la estructura, alcance o contenido normativo                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| **Cambio Menor (Y)**                 | Adiciones o modificaciones compatibles que amplían o ajustan el contenido sin romper su contrato normativo existente                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| **Parche (Z)**                       | Correcciones ortográficas, tipográficas, de formato o errores menores que no modifican el significado normativo                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| **Nueva versión**                    | Toda modificación posterior a una versión congelada debe generar una nueva versión mediante el mecanismo de cambio gobernado aplicable                                                                                                                                                                                                                                                                                                                                                                                                        |
-| **Versión congelada**                | Una versión que ha alcanzado el estado Congelado no puede modificarse directamente                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| **Evolución documental**             | El documento puede evolucionar mediante nuevas versiones, cada una sometida al ciclo de gobernanza correspondiente                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| **Historial**                        | Todo cambio de versión debe registrarse en el historial de cambios del documento.                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| **Paquete pre-`main` (AR-2026-017)** | Mientras el **paquete de cambios no esté mergeado en `main`**, las correcciones de trabajo **no** exigen una cadena de bumps (`vX.Y.Z`→`Z+1`) por cada arreglo: se consolida en **una versión de trabajo** hasta publicar. Aplica a documentos en **cualquier estado** (En Elaboración, Aprobado, Congelado, etc.): el estado no obliga a bump intermedio si el paquete aún no está en `main`. **Tras** publicación en `main`, toda corrección a esa versión publicada exige **nueva versión** (típicamente parche Z) y fila en el historial. |
+| Regla                                | Descripción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Formato**                          | `vX.Y.Z` donde X es mayor, Y es menor y Z es parche                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **Cambio Mayor (X)**                 | Cambios incompatibles en la estructura, alcance o contenido normativo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Cambio Menor (Y)**                 | Adiciones o modificaciones compatibles que amplían o ajustan el contenido sin romper su contrato normativo existente                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| **Parche (Z)**                       | Correcciones ortográficas, tipográficas, de formato o errores menores que no modifican el significado normativo                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Nueva versión**                    | Toda modificación posterior a una versión congelada debe generar una nueva versión mediante el mecanismo de cambio gobernado aplicable                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Versión congelada**                | Una versión que ha alcanzado el estado Congelado no puede modificarse directamente                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Evolución documental**             | El documento puede evolucionar mediante nuevas versiones, cada una sometida al ciclo de gobernanza correspondiente                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Historial**                        | Todo cambio de versión debe registrarse en el historial de cambios del documento.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| **Paquete pre-`main` (AR-2026-017)** | Mientras el **paquete de cambios no esté mergeado en `main`**, sus correcciones se consolidan en **una versión de trabajo**, sin bumps sucesivos por cada arreglo. El estado de la fila de historial describe el estado normativo de esa versión; no determina por sí solo el incremento de versión. La preparación de la fila debe reflejar el estado aplicable conforme a EE-DOC-001 §08. **Tras** integrar el paquete en `main`, toda corrección posterior a esa versión exige **nueva versión** (típicamente parche Z) y una fila de historial, independientemente del estado registrado. |
 
 > **Regla de Inmutabilidad de Versión:** Una vez que una versión documental alcanza el estado Congelado, su contenido correspondiente a dicha versión no podrá modificarse directamente. Cualquier cambio posterior deberá producir una nueva versión documental y conservar la trazabilidad con respecto a la versión anterior.
 
@@ -410,7 +414,7 @@ El ciclo de **implementación por fases**, validación y documentación técnica
 | **Carpetas**                         | kebab-case                                                                                                      | `packages/foundation/`                                                        |
 | **Variables**                        | camelCase                                                                                                       | `knowledgeEngine`                                                             |
 | **Tipos**                            | PascalCase                                                                                                      | `KnowledgeEngine`                                                             |
-| **Interfaces**                       | PascalCase                                                                                                      | `IKnowledgeEngine`                                                            |
+| **Interfaces**                       | PascalCase                                                                                                      | `KnowledgeEngine`                                                             |
 | **Enums**                            | PascalCase                                                                                                      | `KnowledgeStatus`                                                             |
 | **Constantes**                       | UPPER_SNAKE_CASE                                                                                                | `MAX_RETRY_COUNT`                                                             |
 
@@ -419,7 +423,7 @@ El ESLint compartido verifica nombres de clases, componentes, tipos, funciones, 
 > **Prefijo `EE-` en archivos (AR-2026-019):**\
 > Todo documento de **gobernanza y proceso** bajo `docs/` debe tener nombre de archivo con prefijo `EE-` (familias DOC, ADR, RFC, IMP, TEC, VAL, WAIVE, AUD). El formato general es `{ID}_{Nombre}.md`; VAL/WAIVE incorporan fecha según su contrato. EE-AUD usa los nombres canónicos y de reportes indicados a continuación.
 > **Excepciones:** (1) `README.md` de carpeta; (2) `docs/validation/evidence/**` (soporte operativo); (3) inventarios brutos (p. ej. `.txt`).
-> Si un evidence se promueve a informe formal → `validation/reports/` como `EE-VAL-*`. Canónicos de auditoría: `EE-AUD-Log_Progress_Register.md`, `EE-AUD-Criteria_Audited_Definition.md`, `EE-AUD-Rules_Emerging.md`.
+> Si un evidence se promueve a informe formal → `validation/reports/` como `EE-VAL-*`. Canónicos de auditoría: `EE-AUD-Log_Progress_Register.md`, `EE-AUD-Criteria_Audited_Definition.md`, `EE-AUD-Rules_Register.md`.
 > Los informes detallados EE-AUD identifican la campaña con un ID secuencial de tres dígitos y fecha de inicio: `EE-AUD-<NNN>-<YYYY-MM-DD>-<scope-kebab-case>-<YYYYMMDDHHmmss>.md`. Los informes por fases insertan `phase-<n>` antes del scope. El timestamp final identifica la ejecución y se expresa en UTC (AR-2026-022).
 > Ante conflicto de árbol físico, **EE-DOC-006** manda sobre paths.
 
@@ -563,7 +567,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Estado**            | En Elaboración                               |
 | **Propietario**       | Equipo de Arquitectura                       |
 | **Documento padre**   | EE-DOC-XXX / No aplica                       |
-| **Dependencias**      | padre=EE-DOC-XXX; contenido=EE-DOC-XXX       |
+| **Dependencias**      | contenido=EE-DOC-XXX, …                      |
 | **Aprobado por**      | Equipo de Arquitectura                       |
 | **Audiencia**         | Arquitectura, Desarrollo, IA                 |
 | **Fecha de creación** | YYYY-MM-DD                                   |
@@ -647,9 +651,9 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## BB. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo           | Cambios                       | Estado         |
-| ---------- | ---------- | ---------------------- | ---------------------- | ---------------- | ----------------------------- | -------------- |
-| **v1.0.0** | YYYY-MM-DD | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial | Versión inicial del documento | En Elaboración |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo           | Cambios                       | Estado             |
+| ---------- | ---------- | ---------------------- | ---------------------- | ---------------- | ----------------------------- | ------------------ |
+| **v1.0.0** | YYYY-MM-DD | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial | Versión inicial del documento | **En Elaboración** |
 
 ---
 
@@ -728,7 +732,7 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 | **Estado**                 | Propuesto                                      |
 | **Propietario**            | Equipo de Arquitectura                         |
 | **Documento padre**        | EE-DOC-XXX                                     |
-| **Dependencias**           | padre=EE-DOC-XXX; contenido=EE-DOC-XXX         |
+| **Dependencias**           | contenido=EE-IMP-XXX-PXX, …                    |
 | **Fase**                   | Fase X — Nombre                                |
 | **Fase de implementación** | Fase Y — Nombre (Implementación de EE-DOC-XXX) |
 | **Decisión relacionada**   | EE-ADR-XXX / No aplica                         |
@@ -812,9 +816,9 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 
 ## ZZ. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo           | Cambios                              | Estado                     |
-| ---------- | ---------- | ---------------------- | ---------------------- | ---------------- | ------------------------------------ | -------------------------- |
-| **v1.0.0** | YYYY-MM-DD | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial | Propuesta de decisión arquitectónica | En Revisión Arquitectónica |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo           | Cambios                              | Estado       |
+| ---------- | ---------- | ---------------------- | ---------------------- | ---------------- | ------------------------------------ | ------------ |
+| **v1.0.0** | YYYY-MM-DD | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial | Propuesta de decisión arquitectónica | **Aprobado** |
 
 ---
 
@@ -861,26 +865,26 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## METADATOS
 
-| Campo                 | Valor                                  |
-| --------------------- | -------------------------------------- |
-| **ID**                | EE-IMP-XXX-PXX                         |
-| **Documento**         | Nombre de la fase de implementación    |
-| **Código corto**      | IMP-XXX-PXX                            |
-| **Tipo**              | Implementación                         |
-| **Clasificación**     | Implementación                         |
-| **Nivel**             | Táctico / Operativo                    |
-| **Normativo**         | No                                     |
-| **Versión**           | v0.1.0                                 |
-| **Estado**            | En Elaboración                         |
-| **Propietario**       | Equipo de Arquitectura                 |
-| **Documento padre**   | EE-DOC-XXX                             |
-| **Dependencias**      | padre=EE-DOC-XXX; contenido=EE-DOC-XXX |
-| **Fase**              | Fase X — Nombre de Fase                |
-| **Aprobado por**      | Equipo de Arquitectura                 |
-| **Audiencia**         | Arquitectura, Desarrollo               |
-| **Fecha de creación** | YYYY-MM-DD                             |
-| **Última revisión**   | YYYY-MM-DD                             |
-| **Próxima revisión**  | YYYY-MM-DD / No aplica                 |
+| Campo                 | Valor                               |
+| --------------------- | ----------------------------------- |
+| **ID**                | EE-IMP-XXX-PXX                      |
+| **Documento**         | Nombre de la fase de implementación |
+| **Código corto**      | IMP-XXX-PXX                         |
+| **Tipo**              | Implementación                      |
+| **Clasificación**     | Implementación                      |
+| **Nivel**             | Táctico / Operativo                 |
+| **Normativo**         | No                                  |
+| **Versión**           | v0.1.0                              |
+| **Estado**            | En Elaboración                      |
+| **Propietario**       | Equipo de Arquitectura              |
+| **Documento padre**   | EE-DOC-XXX                          |
+| **Dependencias**      | contenido=EE-DOC-XXX, …             |
+| **Fase**              | Fase X — Nombre de Fase             |
+| **Aprobado por**      | Equipo de Arquitectura              |
+| **Audiencia**         | Arquitectura, Desarrollo            |
+| **Fecha de creación** | YYYY-MM-DD                          |
+| **Última revisión**   | YYYY-MM-DD                          |
+| **Próxima revisión**  | YYYY-MM-DD / No aplica              |
 
 ---
 
@@ -972,9 +976,9 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## AA. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                  | Cambios                                 | Estado   |
-| ---------- | ---------- | ---------------------- | ------------ | ----------------------- | --------------------------------------- | -------- |
-| **v0.1.0** | YYYY-MM-DD | Equipo de Arquitectura | —            | Creación del DT de Fase | Registro de evidencia de implementación | Borrador |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                  | Cambios                                 | Estado       |
+| ---------- | ---------- | ---------------------- | ------------ | ----------------------- | --------------------------------------- | ------------ |
+| **v0.1.0** | YYYY-MM-DD | Equipo de Arquitectura | —            | Creación del DT de Fase | Registro de evidencia de implementación | **Borrador** |
 
 ---
 
@@ -1032,7 +1036,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Estado**            | Borrador / En Revisión / Completado          |
 | **Propietario**       | Equipo de Arquitectura                       |
 | **Documento padre**   | EE-DOC-XXX                                   |
-| **Dependencias**      | padre=EE-DOC-XXX; contenido=EE-IMP-XXX-PXX   |
+| **Dependencias**      | contenido=EE-IMP-XXX-PXX, …                  |
 | **Aprobado por**      | Equipo de Arquitectura                       |
 | **Audiencia**         | Arquitectura, Desarrollo                     |
 | **Fecha de creación** | YYYY-MM-DD                                   |
@@ -1136,9 +1140,9 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## BB. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                                           | Cambios                               | Estado   |
-| ---------- | ---------- | ---------------------- | ------------ | ------------------------------------------------ | ------------------------------------- | -------- |
-| **v1.0.0** | YYYY-MM-DD | Equipo de Arquitectura | —            | Creación de la documentación técnica consolidada | Consolidación de EE-IMP-XXX-P01 … PNN | Borrador |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                                           | Cambios                               | Estado       |
+| ---------- | ---------- | ---------------------- | ------------ | ------------------------------------------------ | ------------------------------------- | ------------ |
+| **v1.0.0** | YYYY-MM-DD | Equipo de Arquitectura | —            | Creación de la documentación técnica consolidada | Consolidación de EE-IMP-XXX-P01 … PNN | **Borrador** |
 
 ---
 
@@ -1193,7 +1197,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Estado**                          | Propuesto                                              |
 | **Propietario**                     | Equipo de Arquitectura                                 |
 | **Documento padre**                 | EE-DOC-XXX                                             |
-| **Dependencias**                    | padre=EE-DOC-XXX; contenido=EE-DOC-XXX                 |
+| **Dependencias**                    | contenido={ID}, …                                      |
 | **Solicitante**                     | {EE-DOC-XXX u origen del descubrimiento}               |
 | **Documentos normativos afectados** | {paquete documental que el RFC modifica}               |
 | **Documento de dominio**            | {EE-DOC-XXX si distinto del padre; si no, No aplica}   |
@@ -1349,9 +1353,9 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por | Motivo           | Cambios           | Estado    |
-| ---------- | ---------- | ---------------------- | ------------ | ---------------- | ----------------- | --------- |
-| **v0.1.0** | YYYY-MM-DD | Equipo de Arquitectura | —            | Creación inicial | Propuesta inicial | Propuesto |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo           | Cambios           | Estado        |
+| ---------- | ---------- | ---------------------- | ------------ | ---------------- | ----------------- | ------------- |
+| **v0.1.0** | YYYY-MM-DD | Equipo de Arquitectura | —            | Creación inicial | Propuesta inicial | **Propuesto** |
 
 ---
 
@@ -1394,25 +1398,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## METADATOS
 
-| Campo                 | Valor                                  |
-| --------------------- | -------------------------------------- |
-| **ID**                | EE-VAL-XXX / EE-WAIVE-XXX              |
-| **Documento**         | {Nombre de la evidencia}               |
-| **Código corto**      | VAL-XXX / WAIVE-XXX                    |
-| **Tipo**              | Evidencia de Validación / Waiver       |
-| **Clasificación**     | Validación                             |
-| **Nivel**             | Operativo                              |
-| **Normativo**         | No                                     |
-| **Versión**           | v1.0.0                                 |
-| **Estado**            | {según EE-DOC-001 §08.1}               |
-| **Propietario**       | Equipo de Arquitectura                 |
-| **Documento padre**   | EE-DOC-015 / EE-DOC-010                |
-| **Dependencias**      | padre=EE-DOC-015; contenido=EE-DOC-010 |
-| **Aprobado por**      | Equipo de Arquitectura                 |
-| **Audiencia**         | Arquitectura, QA, DevOps               |
-| **Fecha de creación** | YYYY-MM-DD                             |
-| **Última revisión**   | YYYY-MM-DD                             |
-| **Próxima revisión**  | No aplica                              |
+| Campo                 | Valor                            |
+| --------------------- | -------------------------------- |
+| **ID**                | EE-VAL-XXX / EE-WAIVE-XXX        |
+| **Documento**         | {Nombre de la evidencia}         |
+| **Código corto**      | VAL-XXX / WAIVE-XXX              |
+| **Tipo**              | Evidencia de Validación / Waiver |
+| **Clasificación**     | Validación                       |
+| **Nivel**             | Operativo                        |
+| **Normativo**         | No                               |
+| **Versión**           | v1.0.0                           |
+| **Estado**            | {según EE-DOC-001 §08.1}         |
+| **Propietario**       | Equipo de Arquitectura           |
+| **Documento padre**   | EE-DOC-015 / EE-DOC-010          |
+| **Dependencias**      | contenido={ID}, …                |
+| **Aprobado por**      | Equipo de Arquitectura           |
+| **Audiencia**         | Arquitectura, QA, DevOps         |
+| **Fecha de creación** | YYYY-MM-DD                       |
+| **Última revisión**   | YYYY-MM-DD                       |
+| **Próxima revisión**  | No aplica                        |
 
 ---
 
@@ -1500,7 +1504,7 @@ Lista de verificación antes de aprobar un documento:
 - [ ] **Historial de Cambios** con las **7 columnas** de §11 (Versión, Fecha, Autor, Aprobado por, Motivo, Cambios, Estado)
 - [ ] **Motivo + Cambios ≤ 230 caracteres** sumados (AR-2026-018)
 - [ ] **Nombre de archivo** con prefijo `EE-` y excepciones §16 (AR-2026-019)
-- [ ] **Dependencias** solo `padre=` / `contenido=`; citas en § Referencias (AR-2026-020)
+- [ ] **Dependencias** solo requisitos necesarios; no repetir el padre ya declarado; usar rangos inclusivos solo si todos los IDs aplican (AR-2026-020/023); citas en § Referencias
 - [ ] **Versión** solo en metadatos, historial y citas explícitas (AR-2026-007)
 
 **Estructura y Formato:**
@@ -1599,43 +1603,39 @@ Todo documento nuevo deberá cumplir este estándar.
 
 ## 22. Referencias
 
-| Código         | Documento                          | Descripción                                                                 |
-| -------------- | ---------------------------------- | --------------------------------------------------------------------------- |
-| **EE-DOC-001** | Master Documentation Index         | Índice, estados §08/§08.1, matrices, R2/R7, §09.4 VAL/WAIVE                 |
-| **EE-DOC-002** | Document Design Template           | Este estándar                                                               |
-| **EE-DOC-003** | Engineering Ecosystem Constitution | Gobernanza constitucional; capas EQ-LABS                                    |
-| **EE-DOC-004** | Engineering Architecture           | Arquitectura del ecosistema (§17)                                           |
-| **EE-DOC-005** | Development Workflow               | Ciclo, Descubrimiento, Tipo A/B/C/D                                         |
-| **EE-DOC-006** | Repository Structure               | Árbol físico; nomenclatura archivos EE-\*                                   |
-| **EE-DOC-010** | Quality Gates                      | Result WAIVED y campos §04.6.1                                              |
-| **EE-DOC-015** | Engineering Ecosystem Validation   | Validación de ecosistema; padre típico EE-VAL-\*                            |
-| **EE-RFC-003** | Documentation Standards Sync       | Tipo D (Propuesto/vehículo abierto); alcance 002 v1.7.0–v1.10.0+ y sync 001 |
+| Código         | Documento                          | Descripción                                                               |
+| -------------- | ---------------------------------- | ------------------------------------------------------------------------- |
+| **EE-DOC-001** | Master Documentation Index         | Índice, estados §08/§08.1, matrices, R2/R7, §09.4 VAL/WAIVE               |
+| **EE-DOC-002** | Document Design Template           | Este estándar                                                             |
+| **EE-DOC-003** | Engineering Ecosystem Constitution | Gobernanza constitucional; capas EQ-LABS                                  |
+| **EE-DOC-004** | Engineering Architecture           | Arquitectura del ecosistema (§17)                                         |
+| **EE-DOC-005** | Development Workflow               | Ciclo, Descubrimiento, Tipo A/B/C/D                                       |
+| **EE-DOC-006** | Repository Structure               | Árbol físico; nomenclatura archivos EE-\*                                 |
+| **EE-DOC-010** | Quality Gates                      | Result WAIVED y campos §04.6.1                                            |
+| **EE-DOC-015** | Engineering Ecosystem Validation   | Validación de ecosistema; padre típico EE-VAL-\*                          |
+| **EE-RFC-003** | Documentation Standards Sync       | Tipo D; coordinación de cambios transversales de estándares documentales. |
 
 ---
 
 ## 23. Historial de Cambios
 
-| Versión     | Fecha      | Autor                  | Aprobado por           | Motivo                                                    | Cambios                                                                                                                                                                   | Estado        |
-| :---------- | :--------- | :--------------------- | :--------------------- | :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------ |
-| **v1.0.0**  | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                          | Versión inicial del estándar documental                                                                                                                                   | **Congelado** |
-| **v1.1.0**  | 2026-08-13 | Equipo de Arquitectura | Equipo de Arquitectura | Descubrimiento durante implementación de EE-DOC-006       | Ajustes derivados de la implementación, incluyendo integridad normativa, naturaleza de Congelado y evolución de versiones                                                 | **Congelado** |
-| **v1.2.0**  | 2026-09-16 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización y Estandarización de Metadatos             | Inclusión de plantillas de metadatos para EE-ADR y EE-IMP; precisión del estándar SSOT                                                                                    | **Congelado** |
-| **v1.3.0**  | 2026-09-20 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización y Estandarización de Metadatos             | Incorporación de 18.4 — Plantilla para Documentación Técnica Consolidada (EE-TEC-XXX)                                                                                     | **Congelado** |
-| **v1.4.0**  | 2026-09-21 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación plantilla EE-DOC con documentos implementables | Ampliación de §18.1: cola fija XX Plan de Implementación y Fases, YY Evolución, ZZ Cumplimiento, AA Referencias, BB Historial, CC Cierre Documental                       | **Congelado** |
-| **v1.5.0**  | 2026-09-21 | Equipo de Arquitectura | Equipo de Arquitectura | SSOT política de idioma                                   | §16.1 ampliada (plantillas Issue/PR, CI/Actions, workflows, EE-IMP, EE-TEC); declaración explícita de Single Source of Truth; evolución del catálogo solo en esta sección | **Congelado** |
-| **v1.6.0**  | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Plantilla EE-RFC                                          | §18.5 Request for Comments (EE-RFC-XXX); derivada de EE-RFC-001/002                                                                                                       | **Congelado** |
-| **v1.6.1**  | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración (Tipo A) post-auditoría                        | §20.1 → §18 Plantillas Base; §05 excepción Próxima revisión en Congelado; §02 alcance sin redundancia; §13 tilde «documentación»; frase H1 de identidad del estándar      | **Congelado** |
-| **v1.6.2**  | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — §18 as-built                                     | Plantillas §18 alineadas a corpus; SSOT §06                                                                                                                               | **Congelado** |
-| **v1.7.0**  | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Minor post-auditoría                                      | Estados SSOT→001; §03.1 derivados; detalle RFC-003                                                                                                                        | **Congelado** |
-| **v1.8.0**  | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Minor post-auditoría                                      | Prohíbe x.0; precedencia §03.1; detalle RFC-003                                                                                                                           | **Congelado** |
-| **v1.9.0**  | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo D — EE-RFC-003                                       | C-01 gobernado; §18.4 Tipo; catálogo §05.1                                                                                                                                | **Congelado** |
-| **v1.9.1**  | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — aclaración metadatos                             | §05: Código corto sin EE es regla general (no excepción ADR); Title RFC siempre en-US; campos adicionales por tipo                                                        | **Congelado** |
-| **v1.10.0** | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — volcar AR auditoría                            | AR-001 ya en §06; AR-003/004/005 §18; AR-006/018 §11; AR-007 §05; AR-017 §15; AR-019 §16; AR-020 §05 Dependencias                                                         | **Congelado** |
-| **v1.11.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — §18 meta + AR-017/022                            | Meta §18.1–18.6; nota §05 RFC=18.5; plantilla→corpus; pre-main                                                                                                            | **Congelado** |
-| v1.12.0     | 2026-10-23 | Equipo de Arquitectura | Equipo de Arquitectura | Ampliación de aplicabilidad VAL/WAIVE                     | Incorpora la resolución del waiver, exige evidencia de cierre, distingue el estado documental de la resolución y renumera las secciones posteriores.                      | **Congelado** |
-| **v1.13.0** | 2026-11-02 | Equipo de Arquitectura | Equipo de Arquitectura | Nomenclatura, pruebas y documentos congelados             | §05 limita metadatos; §11 define campos de filas nuevas; §16 precisa kebab-case, excepciones y sufijos; ESLint valida nombres; DOC-004 rige DB/API.                       | **Congelado** |
-| **v1.14.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas                   | §16 establece prefijos de tipo para archivos nuevos, adopción gradual de nombres históricos y la excepción del entrypoint `SKILL.md` exigido por Codex.                   | **Congelado** |
-| **v1.15.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Nomenclatura de registros de auditoría                    | §16 define la familia `EE-AUD` y el patrón de nombre para informes generales y por fase.                                                                                  | **Congelado** |
+| Versión     | Fecha      | Autor                  | Aprobado por           | Motivo                                              | Cambios                                                                                                                                             | Estado        |
+| :---------- | :--------- | :--------------------- | :--------------------- | :-------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
+| **v0.1.0**  | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                    | Versión inicial del estándar documental                                                                                                             | **Congelado** |
+| **v1.0.0**  | 2026-08-13 | Equipo de Arquitectura | Equipo de Arquitectura | Descubrimiento durante implementación de EE-DOC-006 | Ajustes derivados de la implementación, incluyendo integridad normativa, naturaleza de Congelado y evolución de versiones                           | **Congelado** |
+| **v1.1.0**  | 2026-09-16 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización y Estandarización de Metadatos       | Inclusión de plantillas de metadatos para EE-ADR y EE-IMP; precisión del estándar SSOT                                                              | **Congelado** |
+| **v1.2.0**  | 2026-09-20 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización y Estandarización de Metadatos       | Incorporación de 18.4 — Plantilla para Documentación Técnica Consolidada (EE-TEC-XXX)                                                               | **Congelado** |
+| **v1.3.0**  | 2026-09-21 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidated changes for the same date and state    | Aligns EE-DOC and implementation templates, fixes section order, and establishes SSOT for language and naming.                                      | **Congelado** |
+| **v1.4.0**  | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Plantilla EE-RFC                                    | §18.5 Request for Comments (EE-RFC-XXX); derivada de EE-RFC-001/002                                                                                 | **Congelado** |
+| **v1.5.0**  | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidated changes for the same date and state    | Aligns templates to the as-built corpus; clarifies review date for frozen documents, scope and metadata terminology.                                | **Congelado** |
+| **v1.6.0**  | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidated changes for the same date and state    | Syncs SSOT statuses and DOC-001 precedence; prohibits x.0; consolidates RFC-003, short code without EE and per-type fields.                         | **Congelado** |
+| **v1.7.0**  | 2026-10-13 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A/B — volcar AR auditoría                      | AR-001 ya en §06; AR-003/004/005 §18; AR-006/018 §11; AR-007 §05; AR-017 §15; AR-019 §16; AR-020 §05 Dependencias                                   | **Congelado** |
+| **v1.8.0**  | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — §18 meta + AR-017/022                      | Meta §18.1–18.6; nota §05 RFC=18.5; plantilla→corpus; pre-main                                                                                      | **Congelado** |
+| **v1.9.0**  | 2026-10-23 | Equipo de Arquitectura | Equipo de Arquitectura | Ampliación de aplicabilidad VAL/WAIVE               | Incorpora la resolución del waiver, exige evidencia de cierre, distingue el estado documental de la resolución y renumera secciones posteriores.    | **Congelado** |
+| **v1.10.0** | 2026-11-02 | Equipo de Arquitectura | Equipo de Arquitectura | Nomenclatura, pruebas y documentos congelados       | §05 limita metadatos; §11 define campos de filas nuevas; §16 precisa kebab-case, excepciones y sufijos; ESLint valida nombres; DOC-004 rige DB/API. | **Congelado** |
+| **v1.11.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas             | §16 establece prefijos para pruebas nuevas, adopción gradual de nombres existentes y excepción del entrypoint `SKILL.md` requerido por Codex.       | **Congelado** |
+| **v1.12.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Nomenclatura de registros de auditoría              | §16 define la familia `EE-AUD` y los nombres de informes generales y por fase.                                                                      | **Congelado** |
+| **v1.13.0** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Cambios consolidados del mismo estado y fecha       | Corrige ejemplo PascalCase y regula la migración aprobada de Código corto heredado sin EE, preservando ID y archivo.                                | **Congelado** |
 
 ---
 

@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | :------------------------- | :---------------------------------------------------------- |
 | **ID**                     | EE-IMP-010-P01                                              |
 | **Documento**              | Quality Gates Baseline                                      |
-| **Código corto**           | EE-IMP-010-P01                                              |
+| **Código corto**           | IMP-010-P01                                                 |
 | **Fase**                   | Fase 3 — Core Components                                    |
 | **Fase de implementación** | P01 — Quality Gates Baseline (Implementación de EE-DOC-010) |
 | **Tipo**                   | Documento Técnico de Implementación                         |
@@ -21,7 +21,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | **Estado**                 | Completado                                                  |
 | **Propietario**            | Equipo de Arquitectura                                      |
 | **Documento padre**        | EE-DOC-010 — Quality Gates (v1.0.0 Aprobado)                |
-| **Dependencias**           | EE-DOC-005, EE-DOC-006, EE-DOC-007, EE-DOC-010, EE-ADR-004  |
+| **Dependencias**           | contenido=EE-DOC-005…EE-DOC-007, EE-ADR-004                 |
 | **Aprobado por**           | Equipo de Arquitectura                                      |
 | **Audiencia**              | Arquitectura, Desarrollo, DevOps, QA                        |
 | **Fecha de creación**      | 2026-09-29                                                  |

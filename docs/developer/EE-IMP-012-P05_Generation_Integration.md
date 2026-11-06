@@ -6,26 +6,26 @@ Evidencia técnica de **P05** de **EE-DOC-012 — Templates** (integración con 
 
 ## METADATOS
 
-| Campo                      | Valor                                                             |
-| :------------------------- | :---------------------------------------------------------------- |
-| **ID**                     | EE-IMP-012-P05                                                    |
-| **Documento**              | Generation Integration                                            |
-| **Código corto**           | EE-IMP-012-P05                                                    |
-| **Fase de implementación** | P05 — Generation Integration                                      |
-| **Tipo**                   | Documento Técnico de Implementación                               |
-| **Clasificación**          | Implementación                                                    |
-| **Nivel**                  | Técnico                                                           |
-| **Normativo**              | No                                                                |
-| **Versión**                | v1.1.0                                                            |
-| **Estado**                 | Completado                                                        |
-| **Propietario**            | Equipo de Arquitectura                                            |
-| **Documento padre**        | EE-DOC-012 — Templates (v0.5.0)                                   |
-| **Dependencias**           | EE-IMP-012-P04 Completado, EE-DOC-011, EE-IMP-011-P04, EE-DOC-006 |
-| **Aprobado por**           | Equipo de Arquitectura                                            |
-| **Audiencia**              | Arquitectura, Desarrollo                                          |
-| **Fecha de creación**      | 2026-10-01                                                        |
-| **Última revisión**        | 2026-10-02                                                        |
-| **Próxima revisión**       | — (fase Completada)                                               |
+| Campo                      | Valor                                                                        |
+| :------------------------- | :--------------------------------------------------------------------------- |
+| **ID**                     | EE-IMP-012-P05                                                               |
+| **Documento**              | Generation Integration                                                       |
+| **Código corto**           | IMP-012-P05                                                                  |
+| **Fase de implementación** | P05 — Generation Integration                                                 |
+| **Tipo**                   | Documento Técnico de Implementación                                          |
+| **Clasificación**          | Implementación                                                               |
+| **Nivel**                  | Técnico                                                                      |
+| **Normativo**              | No                                                                           |
+| **Versión**                | v1.1.1                                                                       |
+| **Estado**                 | Completado                                                                   |
+| **Propietario**            | Equipo de Arquitectura                                                       |
+| **Documento padre**        | EE-DOC-012 — Templates (v0.5.0)                                              |
+| **Dependencias**           | contenido=EE-IMP-012-P04, EE-DOC-006, EE-DOC-011, EE-DOC-012, EE-IMP-011-P04 |
+| **Aprobado por**           | Equipo de Arquitectura                                                       |
+| **Audiencia**              | Arquitectura, Desarrollo                                                     |
+| **Fecha de creación**      | 2026-10-01                                                                   |
+| **Última revisión**        | 2026-11-04                                                                   |
+| **Próxima revisión**       | — (fase Completada)                                                          |
 
 ---
 
@@ -463,10 +463,11 @@ git push origin main
 
 ## 10. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Motivo                                                                                                 | Estado         |
-| :--------- | :--------- | :--------------------- | :----------------------------------------------------------------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-10-01 | Equipo de Arquitectura | Apertura P05 tras P04 Completado                                                                       | Borrador       |
-| **v1.1.0** | 2026-10-02 | Equipo de Arquitectura | Cierre: E2E +/- PASS, commits `3d74d74`/`1c8d7c6`, CI verde; args posicionales; fix connector template | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                                                                                                 | Cambios                                                                             | Estado         |
+| :--------- | :--------- | :--------------------- | :----------- | :----------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-10-01 | Equipo de Arquitectura | —            | Apertura P05 tras P04 Completado                                                                       | —                                                                                   | Borrador       |
+| **v1.1.0** | 2026-10-02 | Equipo de Arquitectura | —            | Cierre: E2E +/- PASS, commits `3d74d74`/`1c8d7c6`, CI verde; args posicionales; fix connector template | —                                                                                   | **Completado** |
+| **v1.1.1** | 2026-11-04 | Equipo de Arquitectura | —            | Regularizacion PC-002                                                                                  | Historial normalizado a 7 columnas segun EE-DOC-002 §11; datos previos preservados. | **Completado** |
 
 ---
 

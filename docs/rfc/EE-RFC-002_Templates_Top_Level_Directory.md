@@ -10,18 +10,22 @@ Este documento es una **Request for Comments (RFC)** conforme a **EE-DOC-005 —
 | :---------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
 | **ID**                              | EE-RFC-002                                                                                                          |
 | **Title**                           | Incorporation of `templates/` into the Top-Level Repository Tree and Index Synchronization                          |
-| **Código corto**                    | EE-RFC-002                                                                                                          |
+| **Código corto**                    | RFC-002                                                                                                             |
 | **Tipo**                            | Request for Comments (Cambio gobernado)                                                                             |
-| **Clasificación EE-DOC-005**        | **D — Cambio Significativo / Transversal**                                                                          |
+| **Clasificación**                   | **D — Cambio Significativo / Transversal**                                                                          |
+| **Nivel**                           | Táctico                                                                                                             |
+| **Normativo**                       | Sí                                                                                                                  |
 | **Estado**                          | Aprobado                                                                                                            |
-| **Versión**                         | v1.1.0                                                                                                              |
+| **Versión**                         | v1.3.0                                                                                                              |
 | **Propietario**                     | Equipo de Arquitectura                                                                                              |
 | **Solicitante**                     | EE-DOC-012 — Templates (elaboración)                                                                                |
 | **Documentos normativos afectados** | **EE-DOC-006** (v1.4.0 → v1.5.0) y **EE-DOC-001** (v2.8.0 → v2.9.0) — **único paquete de sincronización normativa** |
 | **Documento de dominio**            | EE-DOC-012 — Templates v0.4.0                                                                                       |
 | **ADR asociado**                    | No requerido para la ubicación (ver §06)                                                                            |
+| **Aprobado por**                    | Equipo de Arquitectura                                                                                              |
 | **Fecha de creación**               | 2026-10-01                                                                                                          |
-| **Última revisión**                 | 2026-10-01                                                                                                          |
+| **Última revisión**                 | 2026-11-05                                                                                                          |
+| **Próxima revisión**                | No aplica — RFC implementado; los cambios futuros requieren un nuevo RFC                                            |
 | **Audiencia**                       | Arquitectura, Desarrollo, DevOps                                                                                    |
 | **Responsable de decisión**         | Equipo de Arquitectura (revisión y aprobación)                                                                      |
 
@@ -248,12 +252,12 @@ Los pasos 2 y 6 **no** se declaran vigentes de forma independiente.
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                                   | Motivo                                                                                                               | Estado       |
-| :--------- | :--------- | :-------------------------------------- | :------------------------------------------------------------------------------------------------------------------- | :----------- |
-| **v1.0.0** | 2026-10-01 | IA Asistente (propuesta) / Arquitectura | Propuesta inicial RFC coordinado `templates/`                                                                        | Propuesto    |
-| **v1.0.1** | 2026-10-01 | IA Asistente (propuesta) / Arquitectura | Precisión del mecanismo de exclusión Prettier; referencia a EE-DOC-012 v0.3.1                                        | Propuesto    |
-| **v1.0.2** | 2026-10-01 | IA Asistente (propuesta) / Arquitectura | Referencia a EE-DOC-012 v0.3.2 (sin cambio de alcance)                                                               | Propuesto    |
-| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura                  | Aprobación; versiones 001→v2.9.0 (v2.8.0 ya cerró 011); TEC-006 ya aplicado; resolución Implementado (documentación) | **Aprobado** |
+| Versión    | Fecha      | Autor                                   | Aprobado por | Motivo                                                                                                                                                                               | Cambios                                                                                | Estado       |
+| :--------- | :--------- | :-------------------------------------- | :----------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------- | :----------- |
+| **v1.0.0** | 2026-10-01 | IA Asistente (propuesta) / Arquitectura | —            | Propuesta inicial RFC coordinado `templates/`; Precisión del mecanismo de exclusión Prettier; referencia a EE-DOC-012 v0.3.1; Referencia a EE-DOC-012 v0.3.2 (sin cambio de alcance) | —                                                                                      | Propuesto    |
+| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura                  | —            | Aprobación; versiones 001→v2.9.0 (v2.8.0 ya cerró 011); TEC-006 ya aplicado; resolución Implementado (documentación)                                                                 | —                                                                                      | **Aprobado** |
+| **v1.2.0** | 2026-11-04 | Equipo de Arquitectura                  | —            | PC-002/003: regularizacion documental                                                                                                                                                | Historial 7 columnas; Clasificacion y Nivel normalizados segun EE-DOC-002 §05.1/§18.5. | **Aprobado** |
+| **v1.3.0** | 2026-11-05 | Equipo de Arquitectura                  | —            | PC-004: metadatos RFC completos                                                                                                                                                      | Añade Normativo, Aprobado por y Próxima revisión no aplicable al RFC implementado.     | **Aprobado** |
 
 ---
 

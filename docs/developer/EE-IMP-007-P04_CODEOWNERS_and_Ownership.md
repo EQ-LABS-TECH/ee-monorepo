@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                                                  |
-| :-------------------- | :--------------------------------------------------------------------- |
-| **ID**                | EE-IMP-007-P04                                                         |
-| **Documento**         | CODEOWNERS and Ownership                                               |
-| **Código corto**      | EE-IMP-007-P04                                                         |
-| **Fase**              | Fase 4 — CODEOWNERS and Ownership                                      |
-| **Tipo**              | Documento Técnico de Implementación                                    |
-| **Clasificación**     | Implementación                                                         |
-| **Nivel**             | Técnico                                                                |
-| **Normativo**         | No                                                                     |
-| **Versión**           | v0.7.1                                                                 |
-| **Estado**            | En Elaboración                                                         |
-| **Propietario**       | Equipo de Arquitectura                                                 |
-| **Documento padre**   | EE-DOC-007 — GitHub Governance                                         |
-| **Dependencias**      | EE-DOC-006, EE-DOC-007, EE-IMP-007-P01, EE-IMP-007-P02, EE-IMP-007-P03 |
-| **Aprobado por**      | Equipo de Arquitectura                                                 |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                       |
-| **Fecha de creación** | 2026-09-22                                                             |
-| **Última revisión**   | 2026-11-04                                                             |
-| **Próxima revisión**  | 2026-11-09                                                             |
+| Campo                 | Valor                                            |
+| :-------------------- | :----------------------------------------------- |
+| **ID**                | EE-IMP-007-P04                                   |
+| **Documento**         | CODEOWNERS and Ownership                         |
+| **Código corto**      | IMP-007-P04                                      |
+| **Fase**              | Fase 4 — CODEOWNERS and Ownership                |
+| **Tipo**              | Documento Técnico de Implementación              |
+| **Clasificación**     | Implementación                                   |
+| **Nivel**             | Técnico                                          |
+| **Normativo**         | No                                               |
+| **Versión**           | v0.6.0                                           |
+| **Estado**            | En Elaboración                                   |
+| **Propietario**       | Equipo de Arquitectura                           |
+| **Documento padre**   | EE-DOC-007 — GitHub Governance                   |
+| **Dependencias**      | contenido=EE-DOC-006, EE-DOC-007, EE-IMP-007-P01 |
+| **Aprobado por**      | Equipo de Arquitectura                           |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps                 |
+| **Fecha de creación** | 2026-09-22                                       |
+| **Última revisión**   | 2026-11-05                                       |
+| **Próxima revisión**  | 2026-11-09                                       |
 
 ---
 
@@ -378,16 +378,14 @@ Los valores de tamaño y validaciones de esta sección son una captura históric
 
 ## 14. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                          | Cambios                                                                                                                                                                                            | Estado                                          |
-| :--------- | :--------- | :----------------------- | :--------------------- | :---------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------- |
-| **v0.1.0** | 2026-09-22 | AI Engineering Assistant | —                      | Apertura P04                                    | Mapa ownership; contenido CODEOWNERS; plan de ejecución; criterios                                                                                                                                 | En Elaboración                                  |
-| **v0.2.0** | 2026-09-23 | AI Engineering Assistant | —                      | Evidencia as-built                              | CODEOWNERS materializado; B-P04-001 tooling; A-P04-001 team marketplace inexistente                                                                                                                | Implementado — Corrección marketplace pendiente |
-| **v0.3.0** | 2026-09-23 | AI Engineering Assistant | —                      | Cierre P04                                      | A-P04-001 corregida; marketplace→maintainers; checklist conforme                                                                                                                                   | **Completado**                                  |
-| **v0.4.0** | 2026-11-02 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership documental escalable                  | Maintainers como owner de documentación ordinaria; Architecture para dominios normativos y auditoría.                                                                                              | En Elaboración                                  |
-| **v0.5.0** | 2026-11-03 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership de plataforma sin owners alternativos | Architecture como owner único de `.github/`; Maintainers como owner único de `scripts/`; Repository Admin conserva `infra/`.                                                                       | En Elaboración                                  |
-| **v0.6.0** | 2026-11-03 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership único por área                        | Un equipo responsable por cada patrón explícito de CODEOWNERS; Architecture cubre orquestación, configuración, infraestructura y plantillas; Maintainers cubre `scripts/` y `packages/knowledge/`. | En Elaboración                                  |
-| **v0.7.0** | 2026-11-03 | Equipo de Arquitectura   | Equipo de Arquitectura | Revisión arquitectónica de PN-017               | Architecture como owner de componentes PN-017 en `scripts/`; una sola regla wildcard para contratos Knowledge.                                                                                     | En Elaboración                                  |
-| **v0.7.1** | 2026-11-04 | Equipo de Arquitectura   | Equipo de Arquitectura | Sincronización de ownership de auditoría        | Actualiza ejemplos y rutas del registro de auditoría a la familia `EE-AUD`.                                                                                                                        | En Elaboración                                  |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                           | Cambios                                                                                                                         | Estado                                          |
+| :--------- | :--------- | :----------------------- | :--------------------- | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------- |
+| **v0.1.0** | 2026-09-22 | AI Engineering Assistant | —                      | Apertura P04                                     | Mapa ownership; contenido CODEOWNERS; plan de ejecución; criterios                                                              | En Elaboración                                  |
+| **v0.2.0** | 2026-09-23 | AI Engineering Assistant | —                      | Evidencia as-built                               | CODEOWNERS materializado; B-P04-001 tooling; A-P04-001 team marketplace inexistente                                             | Implementado — Corrección marketplace pendiente |
+| **v0.3.0** | 2026-09-23 | AI Engineering Assistant | —                      | Cierre P04                                       | A-P04-001 corregida; marketplace→maintainers; checklist conforme                                                                | **Completado**                                  |
+| **v0.4.0** | 2026-11-02 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership documental escalable                   | Maintainers como owner de documentación ordinaria; Architecture para dominios normativos y auditoría.                           | En Elaboración                                  |
+| **v0.5.0** | 2026-11-03 | Equipo de Arquitectura   | Equipo de Arquitectura | Consolidated changes for the same date and state | Defines one owner per area; Architecture reviews PN-017 components while Maintainers owns `scripts/` and `packages/knowledge/`. | En Elaboración                                  |
+| **v0.6.0** | 2026-11-05 | Equipo de Arquitectura   | Equipo de Arquitectura | Ownership y metadatos PC-001                     | Actualiza rutas `EE-AUD` y Código corto conforme a DOC-002 §05/§16.                                                             | En Elaboración                                  |
 
 ---
 

@@ -6,26 +6,26 @@ Evidencia técnica de **P03** (T-DOC) de **EE-DOC-012 — Templates**.
 
 ## METADATOS
 
-| Campo                      | Valor                                                 |
-| :------------------------- | :---------------------------------------------------- |
-| **ID**                     | EE-IMP-012-P03                                        |
-| **Documento**              | Document Templates                                    |
-| **Código corto**           | EE-IMP-012-P03                                        |
-| **Fase de implementación** | P03 — Document Templates (T-DOC)                      |
-| **Tipo**                   | Documento Técnico de Implementación                   |
-| **Clasificación**          | Implementación                                        |
-| **Nivel**                  | Técnico                                               |
-| **Normativo**              | No                                                    |
-| **Versión**                | v1.4.0                                                |
-| **Estado**                 | Completado                                            |
-| **Propietario**            | Equipo de Arquitectura                                |
-| **Documento padre**        | EE-DOC-012 — Templates (v0.5.0)                       |
-| **Dependencias**           | EE-IMP-012-P02 Completado, EE-DOC-002 §18, EE-DOC-006 |
-| **Aprobado por**           | Equipo de Arquitectura                                |
-| **Audiencia**              | Arquitectura, Desarrollo                              |
-| **Fecha de creación**      | 2026-10-01                                            |
-| **Última revisión**        | 2026-10-01                                            |
-| **Próxima revisión**       | — (fase Completada)                                   |
+| Campo                      | Valor                                                           |
+| :------------------------- | :-------------------------------------------------------------- |
+| **ID**                     | EE-IMP-012-P03                                                  |
+| **Documento**              | Document Templates                                              |
+| **Código corto**           | IMP-012-P03                                                     |
+| **Fase de implementación** | P03 — Document Templates (T-DOC)                                |
+| **Tipo**                   | Documento Técnico de Implementación                             |
+| **Clasificación**          | Implementación                                                  |
+| **Nivel**                  | Técnico                                                         |
+| **Normativo**              | No                                                              |
+| **Versión**                | v1.3.0                                                          |
+| **Estado**                 | Completado                                                      |
+| **Propietario**            | Equipo de Arquitectura                                          |
+| **Documento padre**        | EE-DOC-012 — Templates (v0.5.0)                                 |
+| **Dependencias**           | contenido=EE-IMP-012-P02 Completado, EE-DOC-002 §18, EE-DOC-006 |
+| **Aprobado por**           | Equipo de Arquitectura                                          |
+| **Audiencia**              | Arquitectura, Desarrollo                                        |
+| **Fecha de creación**      | 2026-10-01                                                      |
+| **Última revisión**        | 2026-11-05                                                      |
+| **Próxima revisión**       | — (fase Completada)                                             |
 
 ---
 
@@ -103,7 +103,7 @@ Eliminar `templates/document/.gitkeep` si existe.
 
 ---
 
-## 03.1. Nombre del archivo `.hbs` (normativa de implementación)
+### 03.1. Nombre del archivo `.hbs` (normativa de implementación)
 
 | Opción                       | Ejemplo                   | Dictamen                        |
 | :--------------------------- | :------------------------ | :------------------------------ |
@@ -894,13 +894,12 @@ git push origin main
 
 ## 10. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Motivo                                                                                         | Estado         |
-| :--------- | :--------- | :--------------------- | :--------------------------------------------------------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-10-01 | Equipo de Arquitectura | Apertura P03                                                                                   | Borrador       |
-| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Completar § hbs ADR/IMP/TEC, README, mapa docs/                                                | Borrador       |
-| **v1.2.0** | 2026-10-01 | Equipo de Arquitectura | Alineación EE-DOC-002 §18 (CC/XX DOC); nombres propios `.hbs`; ADR/IMP/TEC §18                 | Borrador       |
-| **v1.3.0** | 2026-10-01 | Equipo de Arquitectura | Incorporar ee-rfc (EE-DOC-002 §18.5 / DOC-012 v0.5.0)                                          | Borrador       |
-| **v1.4.0** | 2026-10-01 | Equipo de Arquitectura | Cierre: 5 T-DOC en main (`2e651cd`), rename `EE-IMP-XXX-PXX_Title.md.hbs` (`4ee51cf`), CI PASS | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                                                                                                                                                                                               | Cambios                                                                             | Estado         |
+| :--------- | :--------- | :--------------------- | :----------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-10-01 | Equipo de Arquitectura | —            | Apertura P03; Completar § hbs ADR/IMP/TEC, README, mapa docs/; Alineación EE-DOC-002 §18 (CC/XX DOC); nombres propios `.hbs`; ADR/IMP/TEC §18; Incorporar ee-rfc (EE-DOC-002 §18.5 / DOC-012 v0.5.0) | —                                                                                   | Borrador       |
+| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | —            | Cierre: 5 T-DOC en main (`2e651cd`), rename `EE-IMP-XXX-PXX_Title.md.hbs` (`4ee51cf`), CI PASS                                                                                                       | —                                                                                   | **Completado** |
+| **v1.2.0** | 2026-11-04 | Equipo de Arquitectura | —            | Regularizacion PC-002                                                                                                                                                                                | Historial normalizado a 7 columnas segun EE-DOC-002 §11; datos previos preservados. | **Completado** |
+| **v1.3.0** | 2026-11-05 | Equipo de Arquitectura | —            | Normalización PC-006                                                                                                                                                                                 | Jerarquía de encabezados alineada con EE-DOC-002 §06 y §07.                         | **Completado** |
 
 ---
 

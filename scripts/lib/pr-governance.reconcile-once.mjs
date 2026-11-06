@@ -124,6 +124,8 @@ export async function reconcileOpenGovernancePrs({
         token,
         governanceToken,
         publisherToken,
+        waitForApprovalReadiness: true,
+        deduplicateSuccessfulChecks: true,
         fetchImpl,
       });
 
@@ -134,6 +136,16 @@ export async function reconcileOpenGovernancePrs({
           (Number.isSafeInteger(result.validationCheckRunId) && result.validationCheckRunId > 0))
       ) {
         results.push({ number, status: 'WAITING_FOR_VALIDATION' });
+        continue;
+      }
+
+      if (
+        result?.mode === 'ALREADY_CURRENT' &&
+        result.headSha?.toLowerCase() === resolved.expectedHeadSha.toLowerCase() &&
+        Number.isSafeInteger(result.checkId) &&
+        result.checkId > 0
+      ) {
+        results.push({ number, status: 'ALREADY_CURRENT' });
         continue;
       }
 

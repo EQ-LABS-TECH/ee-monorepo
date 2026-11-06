@@ -6,29 +6,29 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 
 ## METADATOS
 
-| Campo                      | Valor                                                                              |
-| :------------------------- | :--------------------------------------------------------------------------------- |
-| **ID**                     | EE-ADR-005                                                                         |
-| **Documento**              | AI Provider SPI and Connector Adapters                                             |
-| **Código corto**           | ADR-005                                                                            |
-| **Fase**                   | Fase Global del Ecosistema                                                         |
-| **Fase de implementación** | Fase 3 — Implementación de EE-DOC-013 (AI Ecosystem)                               |
-| **Tipo**                   | Architectural Decision Record                                                      |
-| **Clasificación**          | Arquitectura / Decisión Arquitectónica                                             |
-| **Nivel**                  | Arquitectónico                                                                     |
-| **Normativo**              | Sí                                                                                 |
-| **Versión**                | v1.3.2                                                                             |
-| **Estado**                 | **Aprobado**                                                                       |
-| **Propietario**            | Equipo de Arquitectura                                                             |
-| **Documento padre**        | EE-DOC-004 — Engineering Architecture                                              |
-| **Dependencias**           | EE-DOC-003; EE-DOC-004; EE-DOC-006; EE-DOC-009; EE-DOC-010; EE-DOC-012; EE-DOC-013 |
-| **Decisión relacionada**   | EE-ADR-001 — Workspace Task Orchestration Strategy; EE-ADR-003 — Node.js Baseline  |
-| **Aprobado por**           | Equipo de Arquitectura                                                             |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps                                                   |
-| **Fecha de creación**      | 2026-10-02                                                                         |
-| **Última revisión**        | 2026-11-04                                                                         |
-| **Próxima revisión**       | 2026-10-17                                                                         |
-| **Prioridad**              | Alta                                                                               |
+| Campo                      | Valor                                                                                        |
+| :------------------------- | :------------------------------------------------------------------------------------------- |
+| **ID**                     | EE-ADR-005                                                                                   |
+| **Documento**              | AI Provider SPI and Connector Adapters                                                       |
+| **Código corto**           | ADR-005                                                                                      |
+| **Fase**                   | Fase Global del Ecosistema                                                                   |
+| **Fase de implementación** | Fase 3 — Implementación de EE-DOC-013 (AI Ecosystem)                                         |
+| **Tipo**                   | Architectural Decision Record                                                                |
+| **Clasificación**          | Arquitectura / Decisión Arquitectónica                                                       |
+| **Nivel**                  | Arquitectónico                                                                               |
+| **Normativo**              | Sí                                                                                           |
+| **Versión**                | v1.4.0                                                                                       |
+| **Estado**                 | Aprobado                                                                                     |
+| **Propietario**            | Equipo de Arquitectura                                                                       |
+| **Documento padre**        | EE-DOC-004                                                                                   |
+| **Dependencias**           | contenido=EE-DOC-003, EE-DOC-004, EE-DOC-006, EE-DOC-009, EE-DOC-010, EE-DOC-012, EE-DOC-013 |
+| **Decisión relacionada**   | EE-ADR-001; EE-ADR-003                                                                       |
+| **Aprobado por**           | Equipo de Arquitectura                                                                       |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps                                                             |
+| **Fecha de creación**      | 2026-10-02                                                                                   |
+| **Última revisión**        | 2026-11-05                                                                                   |
+| **Próxima revisión**       | 2026-10-17                                                                                   |
+| **Prioridad**              | Alta                                                                                         |
 
 ---
 
@@ -210,15 +210,13 @@ Implementación: **EE-IMP-013-P03** (SPI/ABI/adapters) y **P04** (routing/wiring
 
 ## 11. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo               | Cambios                                                                                                                                                | Estado       |
-| :--------- | :--------- | :--------------------- | :--------------------- | :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- | :----------- |
-| **v1.0.0** | 2026-10-02 | Equipo de Arquitectura | —                      | Cierre B2            | SPI vs connectors (borrador)                                                                                                                           | Propuesto    |
-| **v1.0.1** | 2026-10-02 | Equipo de Arquitectura | —                      | Revisión AI          | SPI en Foundation; composition root; Local Runtime                                                                                                     | Propuesto    |
-| **v1.1.0** | 2026-10-02 | Equipo de Arquitectura | —                      | N1 + §18.2           | Plantilla completa; sin "o"; PR-08/09                                                                                                                  | Propuesto    |
-| **v1.2.0** | 2026-10-03 | Equipo de Arquitectura | —                      | Sync 006/013         | Dependencia hacia Foundation; un root/runtime; extensión §13.2; ABI→P03                                                                                | Propuesto    |
-| **v1.3.0** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre revisión      | Config como tooling; SDK **excluido** de composition root; prohibiciones alineadas a 006; ADR = SSOT de la decisión                                    | **Aprobado** |
-| **v1.3.1** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación 006 §13.5 | Composition root = `apps/*` solo; R-SDK-3; desambiguación bootstrap                                                                                    | **Aprobado** |
-| **v1.3.2** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Sync QG-ARCH-001     | Alinea el estado del enforcement de imports entre workspaces con EE-DOC-010 §05.8 y conserva explícitos los límites sujetos a revisión arquitectónica. | **Aprobado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                | Cambios                                                                                                                                                                                  | Estado        |
+| :--------- | :--------- | :--------------------- | :--------------------- | :------------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
+| **v1.0.0** | 2026-10-02 | Equipo de Arquitectura | —                      | Cierre B2; Revisión AI; N1 + §18.2    | SPI vs connectors (borrador); SPI en Foundation; composition root; Local Runtime; Plantilla completa; sin "o"; PR-08/09                                                                  | **Propuesto** |
+| **v1.1.0** | 2026-10-03 | Equipo de Arquitectura | —                      | Sync 006/013                          | Dependencia hacia Foundation; un root/runtime; extensión §13.2; ABI→P03                                                                                                                  | **Propuesto** |
+| **v1.2.0** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre revisión; Alineación 006 §13.5 | Config como tooling; SDK **excluido** de composition root; prohibiciones alineadas a 006; ADR = SSOT de la decisión; Composition root = `apps/*` solo; R-SDK-3; desambiguación bootstrap | **Aprobado**  |
+| **v1.3.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Sync QG-ARCH-001                      | Alinea el estado del enforcement de imports entre workspaces con EE-DOC-010 §05.8 y conserva explícitos los límites sujetos a revisión arquitectónica.                                   | **Aprobado**  |
+| **v1.4.0** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | PN-011: formato de metadato           | Deja el valor `Aprobado` de `Estado` sin negritas, conforme a la plantilla ADR de EE-DOC-002 §18.2.                                                                                      | **Aprobado**  |
 
 ---
 

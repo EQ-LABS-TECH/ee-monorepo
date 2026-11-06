@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                          |
-| :-------------------- | :--------------------------------------------- |
-| **ID**                | EE-IMP-006-P07                                 |
-| **Documento**         | Root Script Suite Automation                   |
-| **Código corto**      | IMP-006-P07                                    |
-| **Fase**              | Fase 7                                         |
-| **Tipo**              | Documento Técnico de Implementación            |
-| **Clasificación**     | Implementación                                 |
-| **Nivel**             | Técnico                                        |
-| **Normativo**         | No                                             |
-| **Versión**           | v1.1.0                                         |
-| **Estado**            | Aprobado                                       |
-| **Propietario**       | Equipo de Arquitectura                         |
-| **Documento padre**   | EE-DOC-006                                     |
-| **Dependencias**      | padre=EE-DOC-006; contenido=EE-IMP-006-P01…P06 |
-| **Aprobado por**      | Equipo de Arquitectura                         |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps               |
-| **Fecha de creación** | 2026-09-18                                     |
-| **Última revisión**   | 2026-10-18                                     |
-| **Próxima revisión**  | No aplica — Documento Aprobado                 |
+| Campo                 | Valor                               |
+| :-------------------- | :---------------------------------- |
+| **ID**                | EE-IMP-006-P07                      |
+| **Documento**         | Root Script Suite Automation        |
+| **Código corto**      | IMP-006-P07                         |
+| **Fase**              | Fase 7                              |
+| **Tipo**              | Documento Técnico de Implementación |
+| **Clasificación**     | Implementación                      |
+| **Nivel**             | Técnico                             |
+| **Normativo**         | No                                  |
+| **Versión**           | v1.1.1                              |
+| **Estado**            | Aprobado                            |
+| **Propietario**       | Equipo de Arquitectura              |
+| **Documento padre**   | EE-DOC-006                          |
+| **Dependencias**      | contenido=EE-IMP-006-P01…P06        |
+| **Aprobado por**      | Equipo de Arquitectura              |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
+| **Fecha de creación** | 2026-09-18                          |
+| **Última revisión**   | 2026-11-05                          |
+| **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
@@ -691,7 +691,7 @@ La implementación integra:
 - tag Git;
 - push.
 
-### 05.11.1. Versionado Canónico
+#### 05.11.1. Versionado Canónico
 
 La política establece:
 
@@ -1298,6 +1298,7 @@ flowchart TD
 | :--------- | :--------- | :----------------------- | :--------------------- | :------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- | :----------- |
 | **v1.0.0** | 2026-09-18 | IA Asistente (propuesta) | Pendiente              | Creación inicial     | Generación desde cero de la documentación técnica de la Fase 7, alineada con EE-DOC-006 v1.2.0, la implementación física registrada y EE-ADR-002 | **Aprobado** |
 | **v1.1.0** | 2026-10-18 | Equipo de Arquitectura   | Equipo de Arquitectura | Auditoría EE-DOC-006 | As-built scripts/commands y estados documentales merge                                                                                           | Aprobado     |
+| **v1.1.1** | 2026-11-05 | Equipo de Arquitectura   | Equipo de Arquitectura | Normalización PC-006 | Jerarquía de encabezados alineada con EE-DOC-002 §06 y §07.                                                                                      | Aprobado     |
 
 > **Regla de autoridad:** La columna **Autor** registra quién elaboró o propuso el documento. La columna **Aprobado por** registra exclusivamente la autoridad humana que formalmente aprueba el documento. La IA Asistente no constituye autoridad de aprobación.
 

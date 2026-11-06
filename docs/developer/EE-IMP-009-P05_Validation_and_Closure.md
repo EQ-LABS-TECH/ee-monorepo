@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                                                       |
-| :-------------------- | :-------------------------------------------------------------------------- |
-| **ID**                | EE-IMP-009-P05                                                              |
-| **Documento**         | Validation and Closure                                                      |
-| **Código corto**      | EE-IMP-009-P05                                                              |
-| **Fase**              | Fase 5 — Validation and Closure                                             |
-| **Tipo**              | Documento Técnico de Implementación                                         |
-| **Clasificación**     | Implementación                                                              |
-| **Nivel**             | Técnico                                                                     |
-| **Normativo**         | No                                                                          |
-| **Versión**           | v1.1.0                                                                      |
-| **Estado**            | Completado                                                                  |
-| **Propietario**       | Equipo de Arquitectura                                                      |
-| **Documento padre**   | EE-DOC-009 — Infrastructure                                                 |
-| **Dependencias**      | EE-IMP-009-P01…P04 (Completados), EE-DOC-009, EE-DOC-006 v1.4.0, EE-RFC-001 |
-| **Aprobado por**      | Equipo de Arquitectura                                                      |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                            |
-| **Fecha de creación** | 2026-09-26                                                                  |
-| **Última revisión**   | 2026-09-26                                                                  |
-| **Próxima revisión**  | Tras Validación Final de EE-DOC-009                                         |
+| Campo                 | Valor                                                                     |
+| :-------------------- | :------------------------------------------------------------------------ |
+| **ID**                | EE-IMP-009-P05                                                            |
+| **Documento**         | Validation and Closure                                                    |
+| **Código corto**      | IMP-009-P05                                                               |
+| **Fase**              | Fase 5 — Validation and Closure                                           |
+| **Tipo**              | Documento Técnico de Implementación                                       |
+| **Clasificación**     | Implementación                                                            |
+| **Nivel**             | Técnico                                                                   |
+| **Normativo**         | No                                                                        |
+| **Versión**           | v1.1.0                                                                    |
+| **Estado**            | Completado                                                                |
+| **Propietario**       | Equipo de Arquitectura                                                    |
+| **Documento padre**   | EE-DOC-009 — Infrastructure                                               |
+| **Dependencias**      | contenido=EE-IMP-009-P01…P04 (Completados), EE-DOC-006 v1.4.0, EE-RFC-001 |
+| **Aprobado por**      | Equipo de Arquitectura                                                    |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                          |
+| **Fecha de creación** | 2026-09-26                                                                |
+| **Última revisión**   | 2026-09-26                                                                |
+| **Próxima revisión**  | Tras Validación Final de EE-DOC-009                                       |
 
 ---
 
@@ -208,12 +208,10 @@ Conforme a **EE-DOC-009 §10 P05** y **§12 Cumplimiento**. Ciclo **EE-DOC-005**
 
 ## 10. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                      | Cambios                      | Estado            |
-| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------- | :--------------------------- | :---------------- |
-| **v1.0.0** | 2026-09-26 | AI Engineering Assistant | —                      | Creación                    | Checklist P05                | En Implementación |
-| **v1.0.1** | 2026-09-26 | AI Engineering Assistant | Equipo de Arquitectura | Evidencia                   | Dictamen cierre              | Completado        |
-| **v1.0.2** | 2026-09-26 | AI Engineering Assistant | Equipo de Arquitectura | Revisión                    | Inventario + residuales      | Completado        |
-| **v1.1.0** | 2026-09-26 | AI Engineering Assistant | Equipo de Arquitectura | Alineación EE-DOC-002 §18.3 | Reestructura al template IMP | **Completado**    |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                           | Cambios                                                                                                   | Estado            |
+| :--------- | :--------- | :----------------------- | :--------------------- | :----------------------------------------------- | :-------------------------------------------------------------------------------------------------------- | :---------------- |
+| **v1.0.0** | 2026-09-26 | AI Engineering Assistant | —                      | Creación                                         | Checklist P05                                                                                             | En Implementación |
+| **v1.1.0** | 2026-09-26 | AI Engineering Assistant | Equipo de Arquitectura | Consolidated changes for the same date and state | Records P05 evidence, closure and residuals; aligns the implementation artifact with the EE-IMP template. | Completado        |
 
 ---
 

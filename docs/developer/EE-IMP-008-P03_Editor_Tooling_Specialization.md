@@ -10,17 +10,17 @@ Este documento registra la evidencia técnica de la implementación física y va
 | :-------------------- | :------------------------------------- |
 | **ID**                | EE-IMP-008-P03                         |
 | **Documento**         | Editor Tooling Specialization          |
-| **Código corto**      | EE-IMP-008-P03                         |
+| **Código corto**      | IMP-008-P03                            |
 | **Fase**              | Fase 3 — Editor Tooling Specialization |
 | **Tipo**              | Documento Técnico de Implementación    |
 | **Clasificación**     | Implementación                         |
 | **Nivel**             | Técnico                                |
 | **Normativo**         | No                                     |
-| **Versión**           | v1.1.0                                 |
+| **Versión**           | v1.0.0                                 |
 | **Estado**            | Completado                             |
 | **Propietario**       | Equipo de Arquitectura                 |
 | **Documento padre**   | EE-DOC-008 — Development Environment   |
-| **Dependencias**      | EE-DOC-008, EE-IMP-008-P02             |
+| **Dependencias**      | contenido=EE-IMP-008-P02               |
 | **Aprobado por**      | Equipo de Arquitectura                 |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps       |
 | **Fecha de creación** | 2026-09-24                             |
@@ -149,11 +149,10 @@ Conforme a **EE-DOC-008 §06.5 / §12.6**. Ciclo según **EE-DOC-005**.
 
 ## 10. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                      | Cambios                            | Estado     |
-| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------- | :--------------------------------- | :--------- |
-| **v0.1.0** | 2026-09-24 | AI Engineering Assistant | —                      | Creación del DT de Fase     | Opciones A/B tasks-launch          | Borrador   |
-| **v1.0.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Cierre P03                  | Opción A + verificación CODEOWNERS | Completado |
-| **v1.1.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Alineación EE-DOC-002 §18.3 | Reestructura al template IMP       | Completado |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                  | Cambios                                                          | Estado     |
+| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------------------- | :--------------------------------------------------------------- | :--------- |
+| **v0.1.0** | 2026-09-24 | AI Engineering Assistant | —                      | Creación del DT de Fase                 | Opciones A/B tasks-launch                                        | Borrador   |
+| **v1.0.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Cierre P03; Alineación EE-DOC-002 §18.3 | Opción A + verificación CODEOWNERS; Reestructura al template IMP | Completado |
 
 ---
 

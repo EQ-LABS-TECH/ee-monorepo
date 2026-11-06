@@ -133,6 +133,41 @@ test('output without matching .hbs file is reported', (t) => {
   );
 });
 
+test('rejects unsafe output paths', (t) => {
+  const f = fixture({ meta: { outputs: ['../outside'] } });
+  t.after(f.cleanup);
+
+  const { errors } = validateTemplates({ root: f.root });
+  assert.ok(errors.some((error) => error.includes('output path is unsafe')));
+});
+
+test('reports undeclared Handlebars variables, including conditional inputs', (t) => {
+  const f = fixture({ meta: { inputs: [{ name: 'name', type: 'string' }] } });
+  t.after(f.cleanup);
+  writeFileSync(
+    join(f.root, 'templates', 'package', 'sample', 'files', 'README.md.hbs'),
+    '{{#if optionalTitle}}{{optionalTitle}}{{/if}}{{name}}',
+  );
+
+  const { errors } = validateTemplates({ root: f.root });
+  assert.ok(
+    errors.some((error) => error.includes('template variable "optionalTitle" is not declared')),
+  );
+  assert.ok(!errors.some((error) => error.includes('template variable "name" is not declared')));
+});
+
+test('requires every .hbs file to be declared in outputs', (t) => {
+  const f = fixture();
+  t.after(f.cleanup);
+  writeFileSync(
+    join(f.root, 'templates', 'package', 'sample', 'files', 'extra.txt.hbs'),
+    'extra template',
+  );
+
+  const { errors } = validateTemplates({ root: f.root });
+  assert.ok(errors.some((error) => error.includes('extra.txt.hbs" is not declared in outputs')));
+});
+
 test('duplicate template ids across categories are reported', (t) => {
   const root = mkdtempSync(join(tmpdir(), 'ee-tpl-dup-'));
   const templatesRoot = join(root, 'templates');

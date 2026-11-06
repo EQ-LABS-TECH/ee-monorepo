@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                                              |
-| :-------------------- | :----------------------------------------------------------------- |
-| **ID**                | EE-IMP-007-P06                                                     |
-| **Documento**         | Quality Gates Integration                                          |
-| **Código corto**      | EE-IMP-007-P06                                                     |
-| **Fase**              | Fase 6 — Quality Gates Integration                                 |
-| **Tipo**              | Documento Técnico de Implementación                                |
-| **Clasificación**     | Implementación                                                     |
-| **Nivel**             | Técnico                                                            |
-| **Normativo**         | No                                                                 |
-| **Versión**           | v0.2.0                                                             |
-| **Estado**            | Completado                                                         |
-| **Propietario**       | Equipo de Arquitectura                                             |
-| **Documento padre**   | EE-DOC-007 — GitHub Governance                                     |
-| **Dependencias**      | EE-DOC-005, EE-DOC-007, EE-IMP-007-P03, EE-IMP-007-P05, EE-ADR-003 |
-| **Aprobado por**      | Pendiente                                                          |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                   |
-| **Fecha de creación** | 2026-09-23                                                         |
-| **Última revisión**   | 2026-09-23                                                         |
-| **Próxima revisión**  | No aplica — Unidad completada; siguientes vía P07–P08              |
+| Campo                 | Valor                                                            |
+| :-------------------- | :--------------------------------------------------------------- |
+| **ID**                | EE-IMP-007-P06                                                   |
+| **Documento**         | Quality Gates Integration                                        |
+| **Código corto**      | IMP-007-P06                                                      |
+| **Fase**              | Fase 6 — Quality Gates Integration                               |
+| **Tipo**              | Documento Técnico de Implementación                              |
+| **Clasificación**     | Implementación                                                   |
+| **Nivel**             | Técnico                                                          |
+| **Normativo**         | No                                                               |
+| **Versión**           | v0.2.0                                                           |
+| **Estado**            | Completado                                                       |
+| **Propietario**       | Equipo de Arquitectura                                           |
+| **Documento padre**   | EE-DOC-007 — GitHub Governance                                   |
+| **Dependencias**      | contenido=EE-DOC-005, EE-IMP-007-P03, EE-IMP-007-P05, EE-ADR-003 |
+| **Aprobado por**      | Pendiente                                                        |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                 |
+| **Fecha de creación** | 2026-09-23                                                       |
+| **Última revisión**   | 2026-09-23                                                       |
+| **Próxima revisión**  | No aplica — Unidad completada; siguientes vía P07–P08            |
 
 ---
 
@@ -40,7 +40,7 @@ Conectar los controles de calidad **ejecutados en GitHub Actions** con:
 
 de modo que un cambio no pueda integrarse en `main` mientras el check obligatorio no esté en estado exitoso.
 
-> **EE-DOC-010 define qué debe validarse; EE-DOC-007 define cómo GitHub ejecuta, reporta y condiciona la integración.**  
+> **EE-DOC-010 define qué debe validarse; EE-DOC-007 define cómo GitHub ejecuta, reporta y condiciona la integración.**
 > P06 **no define** el catálogo normativo de Quality Gates (eso es EE-DOC-010).
 
 ---

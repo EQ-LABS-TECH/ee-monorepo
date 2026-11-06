@@ -14,7 +14,7 @@ Cada campaña de auditoría recibe un ID secuencial de tres dígitos y una fecha
 
 ## Hallazgos y evidencias
 
-Rutas/IDs deben existir o quedar `NO_VERIFICABLE`. Mantener los tres artefactos canónicos separados: `Criteria` contiene criterios y no recibe hallazgos ordinarios; `Log` registra la auditoría y referencia el reporte; `Rules` contiene reglas emergentes y backlog pertinente, no el detalle completo de cada hallazgo. No añadir reglas duplicadas ni alterar criterios normativos sin gobernanza. `PROPUESTO_LOCAL`, `EXPORTADO` y `PUBLICADO_VERIFICADO` son diferentes.
+Rutas/IDs deben existir o quedar `NO_VERIFICABLE`. Mantener los cuatro registros separados: `Criteria` contiene criterios y no recibe hallazgos ordinarios; `Log` registra la auditoría y referencia el reporte; `Rules` contiene el índice y la trazabilidad AR de reglas identificadas, con su estado de incorporación; `Backlog` contiene las acciones PC/PN/PA y su estado. Ninguno reemplaza el reporte detallado. No añadir entradas duplicadas ni alterar criterios normativos sin gobernanza. `PROPUESTO_LOCAL`, `EXPORTADO` y `PUBLICADO_VERIFICADO` son diferentes.
 
 ## Gobernanza
 

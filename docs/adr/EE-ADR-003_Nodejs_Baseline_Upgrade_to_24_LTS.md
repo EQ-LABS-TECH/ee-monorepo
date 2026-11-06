@@ -6,29 +6,29 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 
 ## METADATOS
 
-| Campo                      | Valor                                                          |
-| :------------------------- | :------------------------------------------------------------- |
-| **ID**                     | EE-ADR-003                                                     |
-| **Documento**              | Node.js Baseline Upgrade to 24 LTS                             |
-| **Código corto**           | ADR-003                                                        |
-| **Fase**                   | Fase Global del Ecosistema                                     |
-| **Fase de implementación** | Runtime baseline (EE-DOC-006 / EE-IMP-007-P05)                 |
-| **Tipo**                   | Architectural Decision Record                                  |
-| **Clasificación**          | Arquitectura / Decisión Arquitectónica                         |
-| **Nivel**                  | Arquitectónico                                                 |
-| **Normativo**              | Sí                                                             |
-| **Versión**                | v1.1.0                                                         |
-| **Estado**                 | Aprobado                                                       |
-| **Propietario**            | Equipo de Arquitectura                                         |
-| **Documento padre**        | EE-DOC-006 — Repository Structure                              |
-| **Dependencias**           | EE-DOC-004; EE-DOC-005; EE-DOC-006; EE-DOC-007; EE-IMP-007-P05 |
-| **Decisión relacionada**   | EE-ADR-001 — Workspace Task Orchestration Strategy             |
-| **Aprobado por**           | Equipo de Arquitectura                                         |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps                               |
-| **Fecha de creación**      | 2026-09-23                                                     |
-| **Última revisión**        | 2026-10-02                                                     |
-| **Próxima revisión**       | Ante cambio de LTS Active de Node.js                           |
-| **Prioridad**              | Alta                                                           |
+| Campo                      | Valor                                              |
+| :------------------------- | :------------------------------------------------- |
+| **ID**                     | EE-ADR-003                                         |
+| **Documento**              | Node.js Baseline Upgrade to 24 LTS                 |
+| **Código corto**           | ADR-003                                            |
+| **Fase**                   | Fase Global del Ecosistema                         |
+| **Fase de implementación** | Runtime baseline (EE-DOC-006 / EE-IMP-007-P05)     |
+| **Tipo**                   | Architectural Decision Record                      |
+| **Clasificación**          | Arquitectura / Decisión Arquitectónica             |
+| **Nivel**                  | Arquitectónico                                     |
+| **Normativo**              | Sí                                                 |
+| **Versión**                | v1.1.0                                             |
+| **Estado**                 | Aprobado                                           |
+| **Propietario**            | Equipo de Arquitectura                             |
+| **Documento padre**        | EE-DOC-006 — Repository Structure                  |
+| **Dependencias**           | contenido=EE-DOC-004…EE-DOC-007, EE-IMP-007-P05    |
+| **Decisión relacionada**   | EE-ADR-001 — Workspace Task Orchestration Strategy |
+| **Aprobado por**           | Equipo de Arquitectura                             |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps                   |
+| **Fecha de creación**      | 2026-09-23                                         |
+| **Última revisión**        | 2026-10-02                                         |
+| **Próxima revisión**       | Ante cambio de LTS Active de Node.js               |
+| **Prioridad**              | Alta                                               |
 
 ---
 
@@ -113,17 +113,17 @@ No se adopta Node 26 como baseline.
 
 #### Opción A — Mantener Node 22 hasta 2027
 
-**Pros:** sin cambio inmediato; sigue siendo LTS Maintenance válida a la fecha de la decisión.  
+**Pros:** sin cambio inmediato; sigue siendo LTS Maintenance válida a la fecha de la decisión.
 **Contras:** migración obligatoria cerca de abril 2027; coste alto si el monorepo ya está estabilizado; baseline en Maintenance mientras existe LTS Active (24).
 
 #### Opción B — Adoptar Node 24 LTS ahora (**elegida**)
 
-**Pros:** LTS Active; soporte hasta ~abril 2028; coste mínimo en bootstrap; una sola oleada `.nvmrc` / engines / CI.  
+**Pros:** LTS Active; soporte hasta ~abril 2028; coste mínimo en bootstrap; una sola oleada `.nvmrc` / engines / CI.
 **Contras:** cambio formal de política; posible ajuste menor de toolchains (poco probable en bootstrap).
 
 #### Opción C — Adoptar Node 26 Current
 
-**Pros:** últimas features.  
+**Pros:** últimas features.
 **Contras:** no es LTS; mayor churn. **Descartada.**
 
 La Opción B maximiza alineación LTS Active y minimiza riesgo de migración forzada en go-live.
@@ -174,7 +174,7 @@ Orden (misma PR o PR encadenados):
 
 ## 09. Estado de la decisión
 
-**Aprobado** — 2026-09-23 · Equipo de Arquitectura.  
+**Aprobado** — 2026-09-23 · Equipo de Arquitectura.
 **Implementación:** Completada 2026-09-23.
 
 (Estado documental unificado a **Aprobado**; equivalía al rótulo previo “Aceptado”.)
@@ -197,11 +197,10 @@ Orden (misma PR o PR encadenados):
 
 ## 11. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                | Cambios                                                                                  | Estado       |
-| :--------- | :--------- | :--------------------- | :--------------------- | :-------------------- | :--------------------------------------------------------------------------------------- | :----------- |
-| **v1.0.0** | 2026-09-23 | Equipo de Arquitectura | Equipo de Arquitectura | Decisión baseline     | Node 24 LTS como runtime                                                                 | Aprobado     |
-| **v1.0.1** | 2026-09-23 | Equipo de Arquitectura | Equipo de Arquitectura | Materialización       | `.nvmrc`/engines/CI en main (`52c420a`); CI ✓                                            | Aprobado     |
-| **v1.1.0** | 2026-10-02 | Equipo de Arquitectura | Equipo de Arquitectura | Higiene DOC-002 §18.2 | Metadatos completos; Propósito/Alcance/Justificación/Referencias; sin cambio de decisión | **Aprobado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                             | Cambios                                                                                  | Estado       |
+| :--------- | :--------- | :--------------------- | :--------------------- | :--------------------------------- | :--------------------------------------------------------------------------------------- | :----------- |
+| **v1.0.0** | 2026-09-23 | Equipo de Arquitectura | Equipo de Arquitectura | Decisión baseline; Materialización | Node 24 LTS como runtime; `.nvmrc`/engines/CI en main (`52c420a`); CI ✓                  | **Aprobado** |
+| **v1.1.0** | 2026-10-02 | Equipo de Arquitectura | Equipo de Arquitectura | Higiene DOC-002 §18.2              | Metadatos completos; Propósito/Alcance/Justificación/Referencias; sin cambio de decisión | **Aprobado** |
 
 ---
 

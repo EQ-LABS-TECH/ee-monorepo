@@ -10,18 +10,22 @@ Este documento es una **Request for Comments (RFC)** conforme a **EE-DOC-005 —
 | :---------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
 | **ID**                              | EE-RFC-001                                                                                                           |
 | **Title**                           | Incorporation of `infra/` into the Top-Level Repository Tree and Index Synchronization                               |
-| **Código corto**                    | EE-RFC-001                                                                                                           |
+| **Código corto**                    | RFC-001                                                                                                              |
 | **Tipo**                            | Request for Comments (Cambio gobernado)                                                                              |
-| **Clasificación EE-DOC-005**        | **D — Cambio Significativo / Transversal**                                                                           |
+| **Clasificación**                   | **D — Cambio Significativo / Transversal**                                                                           |
+| **Nivel**                           | Táctico                                                                                                              |
+| **Normativo**                       | Sí                                                                                                                   |
 | **Estado**                          | Aprobado / Implementado (documentación)                                                                              |
-| **Versión**                         | v1.2.0                                                                                                               |
+| **Versión**                         | v1.3.0                                                                                                               |
 | **Propietario**                     | Equipo de Arquitectura                                                                                               |
 | **Solicitante**                     | EE-DOC-009 — Infrastructure (elaboración)                                                                            |
 | **Documentos normativos afectados** | **EE-DOC-006** y **EE-DOC-001** — **único paquete de sincronización normativa** (no cambios secuenciales informales) |
 | **Documento de dominio**            | EE-DOC-009 — Infrastructure v0.3.0                                                                                   |
 | **ADR asociado**                    | No requerido para la ubicación (ver §06)                                                                             |
+| **Aprobado por**                    | Equipo de Arquitectura                                                                                               |
 | **Fecha de creación**               | 2026-09-25                                                                                                           |
-| **Última revisión**                 | 2026-09-25                                                                                                           |
+| **Última revisión**                 | 2026-11-05                                                                                                           |
+| **Próxima revisión**                | No aplica — RFC implementado; los cambios futuros requieren un nuevo RFC                                             |
 | **Audiencia**                       | Arquitectura, Desarrollo, DevOps                                                                                     |
 | **Responsable de decisión**         | Equipo de Arquitectura (revisión y aprobación)                                                                       |
 
@@ -248,12 +252,12 @@ Los pasos **2 y 3** no se publican como vigentes de forma independiente.
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                                   | Motivo                                                                                                                                                                | Estado                                      |
-| :--------- | :--------- | :-------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------ |
-| **v1.0.0** | 2026-09-25 | AI Engineering Assistant / Arquitectura | Propuesta inicial RFC coordinado `infra/`                                                                                                                             | Propuesto                                   |
-| **v1.1.0** | 2026-09-25 | AI Engineering Assistant / Arquitectura | Revision pass: límite 006 vs 009; paquete único 001+006; cita EE-DOC-005 §04; alternativas A–E; CODEOWNERS como impacto IMP; checks medibles; responsable de decisión | Propuesto                                   |
-| **v1.1.1** | 2026-09-25 | AI Engineering Assistant                | Document title in English (naming convention)                                                                                                                         | Propuesto                                   |
-| **v1.2.0** | 2026-09-25 | Equipo de Arquitectura                  | Aprobado; aplicado en EE-DOC-006 v1.4.0 y EE-DOC-001 v2.5.0                                                                                                           | **Aprobado / Implementado (documentación)** |
+| Versión    | Fecha      | Autor                                                              | Aprobado por | Motivo                                                      | Cambios                                                                                                                     | Estado                                      |
+| :--------- | :--------- | :----------------------------------------------------------------- | :----------- | :---------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------ |
+| **v1.0.0** | 2026-09-25 | AI Engineering Assistant / Arquitectura / AI Engineering Assistant | —            | Consolidated changes for the same date and state            | Proposes `infra/` with alternatives, DOC-006/DOC-009 boundaries, CODEOWNERS impact, measurable checks and normalized title. | Propuesto                                   |
+| **v1.1.0** | 2026-09-25 | Equipo de Arquitectura                                             | —            | Aprobado; aplicado en EE-DOC-006 v1.4.0 y EE-DOC-001 v2.5.0 | —                                                                                                                           | **Aprobado / Implementado (documentación)** |
+| **v1.2.0** | 2026-11-04 | Equipo de Arquitectura                                             | —            | PC-002/003: regularizacion documental                       | Historial 7 columnas; Clasificacion y Nivel normalizados segun EE-DOC-002 §05.1/§18.5.                                      | **Aprobado / Implementado (documentación)** |
+| **v1.3.0** | 2026-11-05 | Equipo de Arquitectura                                             | —            | PC-004: metadatos RFC completos                             | Añade Normativo, Aprobado por y Próxima revisión no aplicable al RFC implementado.                                          | **Aprobado / Implementado (documentación)** |
 
 ---
 

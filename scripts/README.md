@@ -56,6 +56,7 @@ documentation derived from that contract — not an independent source of truth.
 | `hooks:install`    | `scripts/commands/install-hooks` | A-ROOT   | Install optional repository-local Git hooks                    |
 | `typecheck`        | `scripts/commands/typecheck`     | A-ROOT   | Typecheck (QG-TYPE-001)                                        |
 | `validate`         | `scripts/commands/validate`      | A-ROOT   | Local validation aggregator (EE-DOC-010)                       |
+| `audit`            | `scripts/commands/audit`         | Audit    | Informational PA-001 corpus baseline; not a Quality Gate       |
 | `doctor`           | `scripts/commands/doctor`        | A-ROOT   | Environment diagnostics (does not replace validate)            |
 | `generate`         | `scripts/commands/generate`      | A-GEN    | Scaffolding (Plop)                                             |
 | `e2e`              | `scripts/commands/e2e`           | A-ROOT   | Workspace E2E tasks (Dashboard only today; part of `validate`) |
@@ -63,6 +64,10 @@ documentation derived from that contract — not an independent source of truth.
 | `clean`            | `scripts/commands/clean`         | A-ROOT   | Clean build artifacts / caches                                 |
 | `changeset`        | `@changesets/cli`                | A-REL    | Declare SemVer changes (no file under `scripts/`)              |
 | `version-packages` | `changeset version`              | A-REL    | Apply package versions (no file under `scripts/`)              |
+
+### PA-001 documentation baseline
+
+Run `node scripts/commands/audit` to inventory deterministic checks from EE-DOC-002 §19 over EE-DOC, EE-ADR, EE-RFC, EE-IMP, and EE-TEC files. The command is informational and is not connected to `validate`; exit 0 means the scan completed, not that the corpus conforms. EE-VAL and EE-WAIVE use their separate §18.6 contract and are reported as deferred until that mapping is implemented. Content quality, hierarchy, links, diagrams, and implementation consistency remain subject to governed review.
 
 ### Release workflow
 
@@ -383,9 +388,9 @@ Release preparation and publication are separate operations.
 
 `pnpm run release -- prepare` requires a clean working tree, applies Changesets versioning, synchronizes the canonical root version, verifies the release manifest, runs validation and build, and commits the prepared changes on a dedicated release branch. It does not use `git add .` or create the final release tag.
 
-`pnpm run release -- publish` runs after the release PR is merged. It verifies the release manifest, independently reconstructs the Changesets plan, checks applicable Quality Gates and build requirements, and reconciles npm registry and Git tag state before performing publication operations.
+`pnpm run release -- publish` runs after the release PR is merged. It verifies the release manifest, independently reconstructs the Changesets plan, and checks applicable Quality Gates and build requirements. Plans containing explicitly public packages use Public Release, reconcile npm and Git state, and use the `vX.Y.Z` tag namespace. Plans containing only private packages use Internal Release, do not access npm or npm credentials, and use `platform-vX.Y.Z`. Empty or inconsistent plans fail without creating a tag.
 
-The annotated release tag is created only after the required public package versions have been verified in npm. The GitHub release workflow subsequently pushes the tag and verifies its remote target.
+The final annotated tag is created only after the selected release flow passes its checks. The GitHub release workflow subsequently pushes the tag and verifies its remote target. Tag rulesets must protect both `v*` and `platform-v*`.
 
 ### Recovery after a partial failure
 
@@ -394,6 +399,7 @@ The annotated release tag is created only after the required public package vers
 | `prepare` fails after creating the release branch                                       | Stop. The command intentionally leaves the branch and working tree available for inspection and does not provide an automatic resume or rollback. Inspect `git status --short`, `git diff`, the release manifest, the current branch, and local and remote tags. Do not rerun `prepare` or `version-packages` on this partial state. Repair it under review or preserve the evidence before abandoning the branch and returning to the starting point. |
 | npm publication fails after one or more packages were published                         | Do not rerun versioning. Inspect the release manifest, the exact planned `name@version` entries in npm, and local and remote tag state. Retry only the failed Release workflow for the same merged release commit after confirming there is no conflicting tag. The publisher rechecks the registry, skips versions already present, publishes only missing planned versions, verifies them, and creates the tag last.                                 |
 | local tag creation or remote tag push fails after npm publication                       | Verify every planned public package version in npm and confirm whether the local or remote tag exists. Retry only the failed Release workflow for the same commit. A tag already pointing to that commit can be reused; if a local or remote tag points elsewhere, stop and resolve the conflict without moving or force-pushing the tag.                                                                                                              |
+| internal platform tag creation or push fails                                            | Do not rerun Changesets versioning. Retry finalization for the same merged commit after confirming the manifest and reconstructed plan. Validate and build run again; `platform-vX.Y.Z` is reused only if the remote tag points to that exact commit. A conflicting tag stops recovery. No npm registry or npm credential is involved.                                                                                                                 |
 | release manifest, source plan, registry state, or tag target is missing or inconsistent | Stop the release. Preserve the workflow logs and inspect the release commit and manifest. Do not publish manually, regenerate the version plan, or overwrite a tag to bypass the failed verification.                                                                                                                                                                                                                                                  |
 
 All release recovery validation must use the repository's simulated tests. Do not use a live npm publication as a test method.

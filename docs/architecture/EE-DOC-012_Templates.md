@@ -6,25 +6,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                                                                                                  |
-| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **ID**                | EE-DOC-012                                                                                                                                                             |
-| **Documento**         | Templates                                                                                                                                                              |
-| **Código corto**      | EE-DOC-012                                                                                                                                                             |
-| **Tipo**              | Documento Normativo                                                                                                                                                    |
-| **Clasificación**     | Especializado                                                                                                                                                          |
-| **Nivel**             | Especializado                                                                                                                                                          |
-| **Normativo**         | Sí                                                                                                                                                                     |
-| **Versión**           | v1.0.0                                                                                                                                                                 |
-| **Estado**            | Congelado                                                                                                                                                              |
-| **Propietario**       | Equipo de Arquitectura                                                                                                                                                 |
-| **Documento padre**   | EE-DOC-006 — Repository Structure                                                                                                                                      |
-| **Dependencias**      | EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-DOC-005, EE-DOC-006, EE-DOC-007, EE-DOC-010, EE-DOC-011, EE-ADR-001, EE-ADR-002, EE-ADR-003, EE-ADR-004, EE-RFC-002 |
-| **Aprobado por**      | Equipo de Arquitectura                                                                                                                                                 |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                                               |
-| **Fecha de creación** | 2026-09-30                                                                                                                                                             |
-| **Última revisión**   | 2026-10-02                                                                                                                                                             |
-| **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                                        |
+| Campo                 | Valor                                                                                      |
+| :-------------------- | :----------------------------------------------------------------------------------------- |
+| **ID**                | EE-DOC-012                                                                                 |
+| **Documento**         | Templates                                                                                  |
+| **Código corto**      | DOC-012                                                                                    |
+| **Tipo**              | Documento Normativo                                                                        |
+| **Clasificación**     | Especializado                                                                              |
+| **Nivel**             | Operativo                                                                                  |
+| **Normativo**         | Sí                                                                                         |
+| **Versión**           | v1.1.0                                                                                     |
+| **Estado**            | Congelado                                                                                  |
+| **Propietario**       | Equipo de Arquitectura                                                                     |
+| **Documento padre**   | EE-DOC-006 — Repository Structure                                                          |
+| **Dependencias**      | contenido=EE-DOC-001…EE-DOC-007, EE-DOC-010, EE-DOC-011, EE-ADR-001…EE-ADR-004, EE-RFC-002 |
+| **Aprobado por**      | Equipo de Arquitectura                                                                     |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                   |
+| **Fecha de creación** | 2026-09-30                                                                                 |
+| **Última revisión**   | 2026-11-04                                                                                 |
+| **Próxima revisión**  | No aplica — Documento Congelado                                                            |
 
 > **Jerarquía documental (patrón alineado a EE-DOC-010 y EE-DOC-011):**
 >
@@ -104,7 +104,7 @@ El contrato del template es **agnóstico del motor**. La implementación física
 | :-- | :------------------------------ | :-------------------------------------------------------------------------------------- |
 | 1   | **Reuse First**                 | Verificar existencia de un template equivalente antes de crear otro.                    |
 | 2   | **Single Source of Template**   | Cada patrón tiene una única fuente en `templates/`.                                     |
-| 3   | **Documentation Driven**        | Estructura y propósito documentados.                                                    |
+| 3   | **Documentation First**         | La estructura se documenta antes de implementarse; véase EE-DOC-003 §08.                |
 | 4   | **Architecture First**          | Respeta fronteras de 006, 007, 010, 011.                                                |
 | 5   | **Automation First**            | Patrones repetibles se generan por el mecanismo canónico.                               |
 | 6   | **Minimal Intervention**        | Genera solo lo necesario; no modifica archivos existentes fuera de su salida declarada. |
@@ -240,12 +240,12 @@ Ejemplo conceptual: `templates/package/typescript-node/`. El layout no se congel
 
 ### 06.2. Registro y engine
 
-| Aspecto                    | Norma                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| :------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Propietario del registro   | **EE-DOC-011** (engine, comando y registro)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| Descubrimiento             | El registro **descubre** templates por convención (`templates/*/*/template.json`); no se edita por template                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| Ubicación                  | EE-DOC-006 §05 (nota de raíz) no autoriza archivos de configuración de herramientas en la raíz. El `scripts/generate` as-built busca `plopfile.js` en la raíz. **EE-IMP-012-P05** reubica el registro a **`scripts/plopfile.mjs`** como especialización Type B de EE-DOC-011 (sin cambio de contrato: nombre de comando, efectos y exit codes). Se registra como descubrimiento Tipo B en **EE-IMP-012-P05** (EE-IMP-011-P01…P05 ya están cerrados), con addendum a EE-TEC-006 y sincronización de `scripts/README.md` en la misma ola (EE-DOC-011 §14). `scripts/` ya está cubierto por CODEOWNERS. Si Arquitectura prefiere la raíz, requiere ampliar EE-DOC-006 vía RFC. |
-| Un `plopfile` por template | Prohibido                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Aspecto                    | Norma                                                                                                                                                                                                                                                                                                                                                                            |
+| :------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Propietario del registro   | **EE-DOC-011** (engine, comando y registro)                                                                                                                                                                                                                                                                                                                                      |
+| Descubrimiento             | El registro **descubre** templates por convención (`templates/*/*/template.json`); no se edita por template                                                                                                                                                                                                                                                                      |
+| Ubicación                  | EE-DOC-006 §05 (nota de raíz) no autoriza archivos de configuración de herramientas en la raíz. El comando `pnpm generate` ejecuta `scripts/commands/generate` y carga `scripts/plopfile.mjs`; esta ubicación está materializada en el repositorio. **EE-IMP-012-P05** registra la ubicación como especialización Type B de EE-DOC-011. `scripts/` está cubierto por CODEOWNERS. |
+| Un `plopfile` por template | Prohibido                                                                                                                                                                                                                                                                                                                                                                        |
 
 ### 06.3. README del template
 
@@ -313,22 +313,27 @@ Antes de generar se validan: obligatorios, tipos, formatos, valores permitidos, 
 
 Evaluadas **antes** de producir mutaciones: destino inexistente (o vacío) según el template; nombre no duplicado; destino cubierto por un patrón de `pnpm-workspace.yaml` cuando el template genera un workspace; permisos suficientes; ausencia de archivos que no deban sobrescribirse.
 
-> Un template **no lee ni modifica** `pnpm-workspace.yaml` ni `scripts/validate`. La verificación la ejecuta el **registro del engine** en tiempo de generación (EE-DOC-011) contra los patrones de `pnpm-workspace.yaml`. Si el destino no está cubierto, la generación falla de forma segura (exit ≠ 0) con mensaje explícito, y el administrador actualiza el workspace conforme a EE-DOC-006.
+> Un template **no lee ni modifica** `pnpm-workspace.yaml` ni `scripts/commands/validate`. La verificación la ejecuta el **registro del engine** en tiempo de generación (EE-DOC-011) contra los patrones de `pnpm-workspace.yaml`. Si el destino no está cubierto, la generación falla de forma segura (exit ≠ 0) con mensaje explícito, y el administrador actualiza el workspace conforme a EE-DOC-006.
 >
 > **Limitación adoptada (D-012-11):** los patrones as-built son literales (p. ej. `packages/foundation`): cubren solo ese directorio exacto, que además ya existe como paquete, y no sus subdirectorios. Destinos efectivos hoy: `apps/*`, `apps/extensions/*`, `connectors/official/*` y `packages/config/*`. Generar bajo `packages/<capa>/…` falla de forma segura (exit ≠ 0). La ampliación de patrones es materia de EE-DOC-006 y se tramita en un RFC futuro (§13.1); este documento no la codifica ni la bloquea.
 
 ### 07.5. Enforcement del contrato (`validateTemplates()`)
 
-El contrato se verifica en una función **`validateTemplates()` dentro de `scripts/validate`** (junto a `validateDocumentation()` y `validateInfra()`). No se crea script independiente (EE-DOC-011 §03.2) ni Quality Gate nuevo (EE-DOC-010 está Congelado); la evidencia se reporta bajo **QG-REPO-001**.
+El contrato se verifica en **`scripts/lib/validate-templates.mjs`** mediante `validateTemplates()`, invocada por **`scripts/commands/validate`**. La evidencia se reporta bajo **QG-REPO-001**; no se crea un Quality Gate nuevo.
 
-| Verificación                                                                  | Resultado si falla |
-| :---------------------------------------------------------------------------- | :----------------- |
-| Cada `templates/<cat>/<name>/` tiene `template.json`, `files/`, `README.md`   | exit ≠ 0           |
-| `template.json` válido frente al esquema; SemVer válido                       | exit ≠ 0           |
-| `category` coincide con el directorio                                         | exit ≠ 0           |
-| `outputs` ⇔ contenido de `files/` (sin faltantes ni no declarados)            | exit ≠ 0           |
-| `package.json.hbs`: sin rangos (`^`, `~`) en `dependencies`/`devDependencies` | exit ≠ 0           |
-| Sin directorios de categorías diferidas                                       | exit ≠ 0           |
+| Verificación                                                                                   | Resultado si falla |
+| :--------------------------------------------------------------------------------------------- | :----------------- |
+| Cada `templates/<cat>/<name>/` tiene `template.json`, `files/`, `README.md`                    | exit ≠ 0           |
+| `template.json` válido frente al esquema; SemVer válido                                        | exit ≠ 0           |
+| `category` coincide con el directorio                                                          | exit ≠ 0           |
+| `outputs` ⇔ contenido de `files/` (sin faltantes ni no declarados)                             | exit ≠ 0           |
+| Cada ruta declarada en `outputs` es relativa, segura y permanece dentro del destino autorizado | exit ≠ 0           |
+| Variables de Handlebars declaradas en `inputs`, excepto contexto reservado del generador T-DOC | exit ≠ 0           |
+| Cada archivo `.hbs` de `files/` tiene una entrada correspondiente en `outputs`, y viceversa    | exit ≠ 0           |
+| `package.json.hbs`: sin rangos (`^`, `~`) en `dependencies`/`devDependencies`                  | exit ≠ 0           |
+| Sin directorios de categorías diferidas                                                        | exit ≠ 0           |
+
+El generador T-DOC inyecta `createdAt` y `shortCode` como contexto reservado de renderizado; no son inputs ocultos. `shortCode` se deriva del identificador documental eliminando únicamente el prefijo inicial `EE-`; el identificador completo se conserva. Ninguna otra variable queda exenta de estar declarada en `inputs`.
 
 Antes de EE-IMP-012-P02, `templates/` no existe y la función no reporta errores. Desde P02, `templates/` es directorio requerido. Si Arquitectura considera que la validación de contratos merece un gate propio, el cambio se gestiona sobre EE-DOC-010.
 
@@ -706,16 +711,13 @@ Antes de aprobar o congelar:
 
 ## 25. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                                   | Cambios                                                                                                                                                                                                                                                                                              | Estado         |
-| :--------- | :--------- | :--------------------- | :--------------------- | :----------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------- |
-| **v0.1.0** | 2026-09-30 | Equipo de Arquitectura | —                      | Apertura EE-DOC-012                                                      | Borrador inicial                                                                                                                                                                                                                                                                                     | Borrador       |
-| **v0.2.0** | 2026-10-01 | Equipo de Arquitectura | —                      | Observaciones OBS-012-01…03                                              | Frontera 011/012; T-WF vs 007; validación de inputs y artefactos; fallo seguro; formateo vs QG                                                                                                                                                                                                       | En Elaboración |
-| **v0.3.0** | 2026-10-01 | Equipo de Arquitectura | —                      | Revisión arquitectónica B1–B3, M1–M6, m1–m5 y decisiones de Arquitectura | Estructura conforme a EE-DOC-002 §18.1; `templates/` vía EE-RFC-002; registro Plop y propiedad; contrato `template.json` con `validateTemplates()`; alcance T-DOC/T-PKG/T-APP/T-CON y diferidos; padre EE-DOC-006; mapeo a QG; regla de ID; idioma por categoría; EE-TEC-007; criterios verificables | En Elaboración |
-| **v0.3.1** | 2026-10-01 | Equipo de Arquitectura | —                      | Consenso de revisión de decisiones                                       | L-06 (`.prettierignore`) y L-07; registro Tipo B en EE-IMP-012-P05; verificación de workspace por el engine y limitación de patrones; RFC de T-DOC como Diferido; matriz 011/012 ampliada; prohibición 20                                                                                            | En Elaboración |
-| **v0.3.2** | 2026-10-01 | Equipo de Arquitectura | —                      | Decisión sobre limitación de T-PKG                                       | Limitación de destinos adoptada (§07.4); capacidad `packages/<capa>/` diferida a RFC futuro aditivo (§13.1); P-10; criterios P04/P05 ajustados; reenvío de argumentos en `generate`                                                                                                                  | En Elaboración |
-| **v0.4.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica                                                | RFC-002 aplicado; L-03 con 001 v2.9.0; listo para EE-IMP-012-P01                                                                                                                                                                                                                                     | **Aprobado**   |
-| **v0.5.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Activación T-DOC RFC                                                     | EE-DOC-002 §18.5; §04.2/D-07/D-012-06; P03 incluye ee-rfc                                                                                                                                                                                                                                            | **Aprobado**   |
-| **v1.0.0** | 2026-10-02 | Equipo de Arquitectura | Equipo de Arquitectura | Validación Final + congelación                                           | EE-IMP-012-P01…P06 + EE-TEC-007 Completados; generate operativo; T-CFG Diferido                                                                                                                                                                                                                      | **Congelado**  |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                           | Cambios                                                                                                                                                            | Estado         |
+| :--------- | :--------- | :--------------------- | :--------------------- | :----------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------- |
+| **v0.1.0** | 2026-09-30 | Equipo de Arquitectura | —                      | Apertura EE-DOC-012                              | Borrador inicial                                                                                                                                                   | Borrador       |
+| **v0.2.0** | 2026-10-01 | Equipo de Arquitectura | —                      | Consolidated changes for the same date and state | Defines template structure, safe inputs/outputs, ownership, validation, categories, T-DOC/T-PKG, restrictions and implementation criteria.                         | En Elaboración |
+| **v0.3.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidated changes for the same date and state | Approves RFC-002 and enables T-DOC under DOC-002 section 18.5; prepares implementation P01.                                                                        | **Aprobado**   |
+| **v1.0.0** | 2026-10-02 | Equipo de Arquitectura | Equipo de Arquitectura | Validación Final + congelación                   | EE-IMP-012-P01…P06 + EE-TEC-007 Completados; generate operativo; T-CFG Diferido                                                                                    | **Congelado**  |
+| **v1.1.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Contrato de templates y regularización PC-003    | Alinea Documentation First, rutas y outputs seguros, `.hbs`/`outputs`, variables y contexto inyectado; corrige Clasificación/Nivel e historial conforme a DOC-002. | **Congelado**  |
 
 ### 25.1. Trazabilidad de la revisión 2026-10-01
 
@@ -738,19 +740,19 @@ Antes de aprobar o congelar:
 
 ### 25.2. Decisiones de elaboración confirmadas por Arquitectura (2026-10-01)
 
-| ID       | Decisión                                                                                                                    | Tipo / mecanismo                   |
-| :------- | :-------------------------------------------------------------------------------------------------------------------------- | :--------------------------------- |
-| D-012-01 | `templates/` de primer nivel                                                                                                | Tipo D — EE-RFC-002                |
-| D-012-02 | Alcance inicial T-DOC/T-PKG/T-APP/T-CON; Diferidos T-WF/T-EXT/T-CFG                                                         | Tipo A — Diferido (backlog)        |
-| D-012-03 | Validación de `template.json` en `validateTemplates()` dentro de `scripts/validate`, bajo QG-REPO-001                       | Tipo B — sin cambio de EE-DOC-010  |
-| D-012-04 | Registro Plop en `scripts/plopfile.mjs`                                                                                     | Tipo B — EE-IMP-012-P05            |
-| D-012-05 | `assets/templates/` delimitado (estático/pasivo) frente a `templates/`                                                      | Tipo A — §02.4 + EE-RFC-002        |
-| D-012-06 | Template de RFC (T-DOC) **activado** tras EE-DOC-002 §18.5 (v1.6.0)                                                         | Tipo A — **Adoptado** (2026-10-01) |
-| D-012-07 | `validateTemplates()` desde P02                                                                                             | Replanificación de fases           |
-| D-012-08 | Verificación de workspace por el engine; templates no tocan `pnpm-workspace.yaml`                                           | Tipo B                             |
-| D-012-09 | Exclusión de `templates/**/files/**` en `.prettierignore`                                                                   | Tipo A                             |
-| D-012-10 | Sincronización de EE-DOC-001 como último paso del paquete EE-RFC-002 (no diferida a una revisión periódica)                 | Tipo D — EE-RFC-002 §08            |
-| D-012-11 | Limitación de destinos de workspace adoptada; ampliación aditiva de patrones diferida a RFC futuro sobre EE-DOC-006 (§13.1) | Tipo A — Diferido                  |
+| ID       | Decisión                                                                                                                                                        | Tipo / mecanismo                   |
+| :------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------- |
+| D-012-01 | `templates/` de primer nivel                                                                                                                                    | Tipo D — EE-RFC-002                |
+| D-012-02 | Alcance inicial T-DOC/T-PKG/T-APP/T-CON; Diferidos T-WF/T-EXT/T-CFG                                                                                             | Tipo A — Diferido (backlog)        |
+| D-012-03 | Validación de `template.json` mediante `validateTemplates()` en `scripts/lib/validate-templates.mjs`, invocada por `scripts/commands/validate` bajo QG-REPO-001 | Tipo B — sin cambio de EE-DOC-010  |
+| D-012-04 | Registro Plop en `scripts/plopfile.mjs`                                                                                                                         | Tipo B — EE-IMP-012-P05            |
+| D-012-05 | `assets/templates/` delimitado (estático/pasivo) frente a `templates/`                                                                                          | Tipo A — §02.4 + EE-RFC-002        |
+| D-012-06 | Template de RFC (T-DOC) **activado** tras EE-DOC-002 §18.5 (v1.6.0)                                                                                             | Tipo A — **Adoptado** (2026-10-01) |
+| D-012-07 | `validateTemplates()` desde P02                                                                                                                                 | Replanificación de fases           |
+| D-012-08 | Verificación de workspace por el engine; templates no tocan `pnpm-workspace.yaml`                                                                               | Tipo B                             |
+| D-012-09 | Exclusión de `templates/**/files/**` en `.prettierignore`                                                                                                       | Tipo A                             |
+| D-012-10 | Sincronización de EE-DOC-001 como último paso del paquete EE-RFC-002 (no diferida a una revisión periódica)                                                     | Tipo D — EE-RFC-002 §08            |
+| D-012-11 | Limitación de destinos de workspace adoptada; ampliación aditiva de patrones diferida a RFC futuro sobre EE-DOC-006 (§13.1)                                     | Tipo A — Diferido                  |
 
 ---
 
@@ -766,14 +768,14 @@ Antes de aprobar o congelar:
 
 ### 26.2. Dictamen de aprobación arquitectónica (2026-10-01)
 
-> **EE-DOC-012 v0.5.0 Aprobado.** Norma de Templates lista para implementación (EE-IMP-012-P01…).  
-> Prerrequisito estructural **EE-RFC-002** Aprobado y aplicado (006 v1.5.0 + 001 v2.9.0).  
+> **EE-DOC-012 v0.5.0 Aprobado.** Norma de Templates lista para implementación (EE-IMP-012-P01…).
+> Prerrequisito estructural **EE-RFC-002** Aprobado y aplicado (006 v1.5.0 + 001 v2.9.0).
 > Diferidos explícitos (§13): T-WF, T-EXT, T-CFG. **T-DOC RFC** en alcance (EE-DOC-002 §18.5).
 
 ### 26.3. Dictamen de Validación Final y congelación (2026-10-02)
 
-> **EE-DOC-012 v1.0.0 Congelado.** Implementación P01–P06 y **EE-TEC-007** completados.  
-> Sistema as-built: `templates/` + `scripts/plopfile.mjs` + `pnpm run generate` (args posicionales Plop 4).  
+> **EE-DOC-012 v1.0.0 Congelado.** Implementación P01–P06 y **EE-TEC-007** completados.
+> Sistema as-built: `templates/` + `scripts/plopfile.mjs` + `pnpm run generate` (args posicionales Plop 4).
 > Diferidos permanecen fuera de alcance (§13, §13.1). Sin Adoptados abiertos bloqueantes.
 
 ### 26.4. Estado Final

@@ -6,27 +6,27 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 
 ## METADATOS
 
-| Campo                      | Valor                                                                          |
-| :------------------------- | :----------------------------------------------------------------------------- |
-| **ID**                     | EE-IMP-011-P05                                                                 |
-| **Documento**              | Validation and Closure                                                         |
-| **Código corto**           | EE-IMP-011-P05                                                                 |
-| **Fase**                   | Fase 3 — Core Components                                                       |
-| **Fase de implementación** | P05 — Validation and Closure (Implementación de EE-DOC-011)                    |
-| **Tipo**                   | Documento Técnico de Implementación                                            |
-| **Clasificación**          | Implementación                                                                 |
-| **Nivel**                  | Técnico                                                                        |
-| **Normativo**              | No                                                                             |
-| **Versión**                | v1.1.0                                                                         |
-| **Estado**                 | Completado                                                                     |
-| **Propietario**            | Equipo de Arquitectura                                                         |
-| **Documento padre**        | EE-DOC-011 — Automation (v1.0.0 Aprobado)                                      |
-| **Dependencias**           | EE-DOC-005, EE-DOC-006, EE-DOC-010, EE-DOC-011, EE-IMP-011-P01…P04, EE-TEC-006 |
-| **Aprobado por**           | Equipo de Arquitectura                                                         |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps, IA                                           |
-| **Fecha de creación**      | 2026-09-30                                                                     |
-| **Última revisión**        | 2026-10-01                                                                     |
-| **Próxima revisión**       | 2026-12-30                                                                     |
+| Campo                      | Valor                                                                                |
+| :------------------------- | :----------------------------------------------------------------------------------- |
+| **ID**                     | EE-IMP-011-P05                                                                       |
+| **Documento**              | Validation and Closure                                                               |
+| **Código corto**           | IMP-011-P05                                                                          |
+| **Fase**                   | Fase 3 — Core Components                                                             |
+| **Fase de implementación** | P05 — Validation and Closure (Implementación de EE-DOC-011)                          |
+| **Tipo**                   | Documento Técnico de Implementación                                                  |
+| **Clasificación**          | Implementación                                                                       |
+| **Nivel**                  | Técnico                                                                              |
+| **Normativo**              | No                                                                                   |
+| **Versión**                | v1.1.0                                                                               |
+| **Estado**                 | Completado                                                                           |
+| **Propietario**            | Equipo de Arquitectura                                                               |
+| **Documento padre**        | EE-DOC-011 — Automation (v1.0.0 Aprobado)                                            |
+| **Dependencias**           | contenido=EE-DOC-005, EE-DOC-006, EE-DOC-010, EE-DOC-011, EE-IMP-011-P01, EE-TEC-006 |
+| **Aprobado por**           | Equipo de Arquitectura                                                               |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps, IA                                                 |
+| **Fecha de creación**      | 2026-09-30                                                                           |
+| **Última revisión**        | 2026-10-01                                                                           |
+| **Próxima revisión**       | 2026-12-30                                                                           |
 
 ---
 

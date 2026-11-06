@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | :------------------ | :------------------------------------------ |
 | **ID**              | EE-IMP-007-P02                              |
 | **Documento**       | Access and Organization Governance          |
-| **Código corto**    | EE-IMP-007-P02                              |
+| **Código corto**    | IMP-007-P02                                 |
 | **Fase**            | Fase 2 — Access and Organization Governance |
 | **Tipo**            | Documento Técnico de Implementación         |
 | **Clasificación**   | Implementación                              |
@@ -21,7 +21,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Propietario**     | Equipo de Arquitectura                      |
 | **Documento padre** | EE-DOC-007 — GitHub Governance              |
 
-| **Dependencias** | EE-DOC-005, EE-DOC-007, EE-IMP-007-P01 |
+| **Dependencias** | contenido=EE-DOC-005, EE-IMP-007-P01 |
 | **Aprobado por** | Pendiente |
 | **Audiencia** | Arquitectura, Desarrollo, DevOps |
 | **Fecha de creación** | 2026-09-22 |

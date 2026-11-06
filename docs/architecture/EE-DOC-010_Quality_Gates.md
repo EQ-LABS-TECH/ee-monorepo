@@ -6,25 +6,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                                                                          |
-| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
-| **ID**                | EE-DOC-010                                                                                                                                     |
-| **Documento**         | Quality Gates                                                                                                                                  |
-| **Código corto**      | EE-DOC-010                                                                                                                                     |
-| **Tipo**              | Documento Normativo                                                                                                                            |
-| **Clasificación**     | Especializado                                                                                                                                  |
-| **Nivel**             | Especializado                                                                                                                                  |
-| **Normativo**         | Sí                                                                                                                                             |
-| **Versión**           | v1.11.0                                                                                                                                        |
-| **Estado**            | Congelado                                                                                                                                      |
-| **Propietario**       | Equipo de Arquitectura                                                                                                                         |
-| **Documento padre**   | EE-DOC-006 — Repository Structure                                                                                                              |
-| **Dependencias**      | EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-DOC-005, EE-DOC-006, EE-DOC-007, EE-DOC-008, EE-DOC-009, EE-ADR-002, EE-ADR-003, EE-ADR-004 |
-| **Aprobado por**      | Equipo de Arquitectura                                                                                                                         |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                       |
-| **Fecha de creación** | 2026-09-26                                                                                                                                     |
-| **Última revisión**   | 2026-11-04                                                                                                                                     |
-| **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                |
+| Campo                 | Valor                                                  |
+| :-------------------- | :----------------------------------------------------- |
+| **ID**                | EE-DOC-010                                             |
+| **Documento**         | Quality Gates                                          |
+| **Código corto**      | DOC-010                                                |
+| **Tipo**              | Documento Normativo                                    |
+| **Clasificación**     | Especializado                                          |
+| **Nivel**             | Táctico                                                |
+| **Normativo**         | Sí                                                     |
+| **Versión**           | v1.5.1                                                 |
+| **Estado**            | Congelado                                              |
+| **Propietario**       | Equipo de Arquitectura                                 |
+| **Documento padre**   | EE-DOC-006 — Repository Structure                      |
+| **Dependencias**      | contenido=EE-DOC-001…EE-DOC-009, EE-ADR-002…EE-ADR-004 |
+| **Aprobado por**      | Equipo de Arquitectura                                 |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA               |
+| **Fecha de creación** | 2026-09-26                                             |
+| **Última revisión**   | 2026-11-05                                             |
+| **Próxima revisión**  | No aplica — Documento Congelado                        |
 
 ---
 
@@ -40,14 +40,14 @@ Establece:
 - evidencia mínima y mapeo al required check de plataforma;
 - la separación norma (010) / CI (007) / local (008) / dominio infra (009).
 
-**EE-DOC-010** es el **Single Source of Validation** del detalle de gates (IDs, severidad, disponibilidad, agregación).  
-**EE-DOC-005 §10** define el conjunto **Mandatory** del workflow; 010 **no elimina ni relaja** esa obligatoriedad (**EE-ADR-004**, EE-DOC-005 §10.4).  
-**Separación normativa:** `Mandatory` (005) ≠ `Availability` (010) ≠ `Enforcement` (007).  
-**EE-DOC-007** aplica enforcement efectivo solo a gates **ACTIVE**.  
-**EE-DOC-008** habilita paridad local.  
+**EE-DOC-010** es el **Single Source of Validation** del detalle de gates (IDs, severidad, disponibilidad, agregación).
+**EE-DOC-005 §10** define el conjunto **Mandatory** del workflow; 010 **no elimina ni relaja** esa obligatoriedad (**EE-ADR-004**, EE-DOC-005 §10.4).
+**Separación normativa:** `Mandatory` (005) ≠ `Availability` (010) ≠ `Enforcement` (007).
+**EE-DOC-007** aplica enforcement efectivo solo a gates **ACTIVE**.
+**EE-DOC-008** habilita paridad local.
 **EE-DOC-011** (Automation) y **EE-DOC-015** (Ecosystem Validation) **no** forman parte del catálogo ni de la agregación de merge de este documento. Frontera: **010** = Quality Gates de cambio/merge (Severity, Availability, Result, agregación ACCEPT/BLOCK); **015** = dictamen de validación del **ecosistema** en un ref (PASS/DEGRADED/FAIL por dominios). Ninguno sustituye al otro. Un dictamen PASS de 015 **no** bypasea required checks ni gates ACTIVE.
 
-**Documento padre:** EE-DOC-006 (serie implementable 006–015; mismo criterio que EE-DOC-007 y EE-DOC-009).  
+**Documento padre:** EE-DOC-006 (serie implementable 006–015; mismo criterio que EE-DOC-007 y EE-DOC-009).
 **Precedente de roadmap en EE-DOC-001:** EE-DOC-009. Ambas relaciones coexisten: padre estructural vs. orden de fase. Al **Aprobar** este documento debe sincronizarse **EE-DOC-001** (matriz §09, métricas §13) en el mismo cambio (R10).
 
 ---
@@ -255,10 +255,10 @@ PENDING y DEPRECATED **no** entran en la agregación de bloqueo del merge (no ha
 | **QG-PERF-001**   | Performance                                                                |            Condicional 005 §10.2             | WARNING  | PENDING_IMPLEMENTATION |
 | **QG-COV-001**    | Coverage                                                                   |            Condicional 005 §10.2             | WARNING  | PENDING_IMPLEMENTATION |
 
-> **Mandatory (005)** = obligación normativa del workflow. **Availability (010)** = estado de materialización. Un gate puede ser Mandatory **y** PENDING a la vez (**EE-ADR-004**).  
-> **PENDING** = falta de implementación/enforcement del **mecanismo del gate**, no “ausencia de tests/comando” ni “gate opcional”.  
-> **QG-TEST-001 ACTIVE (EE-IMP-010-P02):** `pnpm run test` + paso CI; **0 tasks → SKIPPED** (no PASS).  
-> **QG-BUILD-001 ACTIVE (EE-IMP-010-P02):** `pnpm run build` en `validate` y step **Build** en job `Validate`.  
+> **Mandatory (005)** = obligación normativa del workflow. **Availability (010)** = estado de materialización. Un gate puede ser Mandatory **y** PENDING a la vez (**EE-ADR-004**).
+> **PENDING** = falta de implementación/enforcement del **mecanismo del gate**, no “ausencia de tests/comando” ni “gate opcional”.
+> **QG-TEST-001 ACTIVE (EE-IMP-010-P02):** `pnpm run test` + paso CI; **0 tasks → SKIPPED** (no PASS).
+> **QG-BUILD-001 ACTIVE (EE-IMP-010-P02):** `pnpm run build` en `validate` y step **Build** en job `Validate`.
 > **Alcance ACTIVE:** TEST-001 cubre unit/integration/component; QG-TEST-E2E ejecuta todas las tareas `test:e2e` registradas en workspaces. Actualmente solo Dashboard declara una. Un PASS acredita esas tareas registradas, no la cobertura completa de las superficies del ecosistema; V-E2E permanece PENDING según EE-DOC-015. ARCH-001 valida top-level, dependencias/ciclos declarados e imports workspace detectables bajo `src/`; aliases de `tsconfig`, configuración, pruebas y composición implícita no están cubiertos.
 > Gates Mandatory + PENDING: régimen transitorio **EE-DOC-005 §10.4** (plan Arquitectura + IMP-010), no PASS simulado.
 
@@ -285,13 +285,13 @@ PENDING y DEPRECATED **no** entran en la agregación de bloqueo del merge (no ha
 | :------------- | :----------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
 | **`Validate`** | Agregador CI | todos los gates ACTIVE del §05.1 (TYPE, LINT, FMT, NAM, BRANCH, COMMIT, SEC-001/002, REPO, TEST, TEST-E2E, BUILD, ARCH, DOC-001/002, INFRA) |
 
-Contrato de comandos root: **EE-DOC-006**.  
+Contrato de comandos root: **EE-DOC-006**.
 **Format check:** hoy materializado **dentro** de `validate`; un comando root aislado `format:check` es especialización Type B opcional (no bloquea la norma del gate).
 
-### 05.2.1. Minimum Merge Set (enforcement efectivo)
+#### 05.2.1. Minimum Merge Set (enforcement efectivo)
 
-> Fases P01–P05: **§09.1**.  
-> Este conjunto es el de gates **ACTIVE** que participan en la agregación y en el required check **`Validate`**.  
+> Fases P01–P05: **§09.1**.
+> Este conjunto es el de gates **ACTIVE** que participan en la agregación y en el required check **`Validate`**.
 > **No** redefine el catálogo Mandatory de EE-DOC-005 §10.1: los gates Mandatory aún PENDING siguen obligatorios en norma y bajo régimen §10.4 de 005.
 
 | Etapa                                | Gates ACTIVE en enforcement de merge                                                                                        |
@@ -545,7 +545,7 @@ Los gaps **Mandatory** (005 §10.1) permanecen bajo régimen transitorio **EE-DO
 
 ## 09. Plan de Implementación y Fases (Normativo)
 
-> Obligatoria: documento implementable. Ciclo por unidad según **EE-DOC-005**.  
+> La secuencia normativa de implementación por fases, validación y borrador de Documentación Técnica se define en **EE-DOC-005 §04.1**.
 > Las fases materializan **PENDING → ACTIVE** bajo **EE-DOC-005 §10.4** y **EE-ADR-004**. No alteran el carácter Mandatory de §10.1 de 005.
 
 ```mermaid
@@ -645,29 +645,19 @@ La decisión de agregación refleja el **enforcement efectivo** (gates ACTIVE). 
 
 ## 13. Historial de Cambios
 
-| Versión           | Fecha         | Autor                  | Aprobado por           | Motivo                                        | Cambios                                                                                                                                                                                                                                                                              | Estado                     |
-| :---------------- | :------------ | :--------------------- | :--------------------- | :-------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------- |
-| **v0.1.0–v0.4.0** | 2026-09-26…29 | Arquitectura           | —                      | Elaboración incremental                       | Modelo, PENDING, agregación inicial                                                                                                                                                                                                                                                  | En Elaboración / Revisión  |
-| **v0.5.0**        | 2026-09-29    | Equipo de Arquitectura | —                      | Cierre hallazgos bloqueantes                  | Alineación 005; E2E; Severity; TEST/BUILD PENDING; agregación; SEC SSOT; Validate                                                                                                                                                                                                    | En Revisión Arquitectónica |
-| **v0.6.0**        | 2026-09-29    | Equipo de Arquitectura | —                      | Correcciones quirúrgicas agregación/PENDING   | N/A → ACCEPT; vacío = sin evaluación → BLOCK; PENDING = enforcement                                                                                                                                                                                                                  | En Revisión Arquitectónica |
-| **v0.7.0**        | 2026-09-29    | Equipo de Arquitectura | —                      | Alineación EE-ADR-004 / 005 §10.4             | Mandatory ≠ Availability ≠ Enforcement; Merge Set = enforcement efectivo                                                                                                                                                                                                             | En Revisión Arquitectónica |
-| **v0.7.1**        | 2026-09-29    | Equipo de Arquitectura | —                      | Conformidad plantilla EE-DOC-002 / estilo 009 | Subtítulos §06; tablas; fases; Cierre §14                                                                                                                                                                                                                                            | En Revisión Arquitectónica |
-| **v1.0.0**        | 2026-09-29    | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica                     | Norma de Quality Gates aprobada; listo para EE-IMP-010                                                                                                                                                                                                                               | Aprobado                   |
-| **v1.1.0**        | 2026-09-29    | Equipo de Arquitectura | Equipo de Arquitectura | Activación P02                                | QG-TEST-001 + QG-BUILD-001 → **ACTIVE**; 0 tasks → SKIPPED; Build en validate/CI; commit `b386e14`                                                                                                                                                                                   | Aprobado                   |
-| **v1.2.0**        | 2026-09-29    | Equipo de Arquitectura | Equipo de Arquitectura | Activación P03                                | QG-SEC-002 + QG-ARCH-001 → **ACTIVE**; Gitleaks CLI en CI; allowlist top-level; SEC-003 PENDING justificado; commits `4bdaae3`/`6b1793f`                                                                                                                                             | Aprobado                   |
-| **v1.3.0**        | 2026-09-29    | Equipo de Arquitectura | Equipo de Arquitectura | Activación P04                                | QG-DOC-001/002 + QG-INFRA-001 → **ACTIVE**; PERF/COV/SEC-003 PENDING; commit `7682e45`                                                                                                                                                                                               | Aprobado                   |
-| **v1.4.0**        | 2026-09-29    | Equipo de Arquitectura | Equipo de Arquitectura | Cierre P05 (Tipo A)                           | D3: SKIPPED contractual por cero tareas (§04.8, §05.4); D4: E2E fuera del alcance ACTIVE; D5: contrato ARCH-001 acotado; D1: SEC-001 materializado con `--audit-level high` incl. dev; texto obsoleto §05.5–05.11 corregido; régimen transitorio §07.2; EE-TEC-005; commit `e2400d3` | Aprobado                   |
-| **v1.4.0**        | 2026-09-30    | Equipo de Arquitectura | Equipo de Arquitectura | Congelación post-Validación Final             | EE-IMP-010-P05 Completado; EE-TEC-005 Completado; Validación Final §14; estado **Congelado**                                                                                                                                                                                         | **Congelado**              |
-| **v1.5.0**        | 2026-10-06    | Equipo de Arquitectura | Equipo de Arquitectura | Sync frontera 015 (B1)                        | Quita «no vinculante» 011/015; §02.6 frontera 010↔015; 011/015 fuera del catálogo de merge                                                                                                                                                                                           | **Congelado**              |
-| **v1.5.1**        | 2026-10-06    | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A frontera 015                           | §02.6: solo WAIVED vigentes → DEGRADED en 015; high sin WAIVE no DEGRADED                                                                                                                                                                                                            | **Congelado**              |
-| **v1.5.2**        | 2026-10-18    | Equipo de Arquitectura | Equipo de Arquitectura | Fix aclaración E2E                            | §05.4 aclara que el comando root e2e existe pero el gate sigue PENDING                                                                                                                                                                                                               | Congelado                  |
-| **v1.5.3**        | 2026-10-23    | Equipo de Arquitectura | Equipo de Arquitectura | Integridad de quality gates (Fase 2)          | Contratos explícitos de resultados; evidencia de ejecución; prevención de falsos PASS; agregación de gates; regresiones para cero tareas, evidencia no disponible y fallos de ejecución.                                                                                             | **Congelado**              |
-| **v1.6.0**        | 2026-11-02    | Equipo de Arquitectura | Equipo de Arquitectura | Gates de convenciones y arquitectura          | Integra validación ESLint de símbolos, QG-NAM-001, QG-BRANCH-001, QG-COMMIT-001 y análisis de imports workspace bajo `src/` en `validate`; registra límites restantes de QG-ARCH-001.                                                                                                | **Congelado**              |
-| **v1.7.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Procedencia de ramas Dependabot               | QG-BRANCH-001 verifica grupos autorizados, identidad del bot, repositorios y coincidencia con el payload; falla ante contexto incompleto.                                                                                                                                            | **Congelado**              |
-| **v1.8.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas       | QG-NAM-001 exige prefijos de tipo para tests nuevos y admite la migración gradual de nombres existentes, conforme a EE-DOC-002 §16.                                                                                                                                                  | **Congelado**              |
-| **v1.9.0**        | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Integridad de resultados y alcance E2E        | Formaliza PASS/FAIL/SKIPPED/ERROR y su agregación; exige evidencia JSON de tareas; activa QG-TEST-E2E para Dashboard y mantiene pendiente la cobertura multipaquete.                                                                                                                 | **Congelado**              |
-| **v1.10.0**       | 2026-11-04    | Equipo de Arquitectura | Equipo de Arquitectura | Enforcement de imports entre workspaces       | QG-ARCH-001 rechaza imports relativos que cruzan workspaces y exige el nombre del paquete conforme a EE-DOC-006 §13.4 R3.                                                                                                                                                            | **Congelado**              |
-| **v1.11.0**       | 2026-11-04    | Equipo de Arquitectura | Equipo de Arquitectura | Orquestación E2E por workspace                | QG-TEST-E2E descubre todas las tareas `test:e2e` de Turbo; el resultado no implica cobertura completa V-E2E del ecosistema.                                                                                                                                                          | **Congelado**              |
+| Versión    | Fecha         | Autor                  | Aprobado por           | Motivo                                   | Cambios                                                                                                                                                                                  | Estado                         |
+| :--------- | :------------ | :--------------------- | :--------------------- | :--------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------- |
+| **v0.1.0** | 2026-09-26…29 | Arquitectura           | —                      | Elaboración incremental                  | Modelo, PENDING, agregación inicial                                                                                                                                                      | **En Elaboración**             |
+| **v0.2.0** | 2026-09-29    | Equipo de Arquitectura | —                      | Cierre de revisión arquitectónica        | Alinea DOC-005; delimita E2E y Severity; formaliza agregación y PENDING/BLOCK; sincroniza Mandatory/Availability/Enforcement y Merge Set; adapta estructura y cierre a DOC-002.          | **En Revisión Arquitectónica** |
+| **v1.0.0** | 2026-09-29    | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación y activación inicial de gates | Aprueba DOC-010; activa TEST/BUILD, SEC/ARCH, DOC/INFRA; define SKIPPED y Merge Set; materializa SEC-001 y régimen transitorio; delimita E2E y ARCH.                                     | **Aprobado**                   |
+| **v1.0.1** | 2026-09-30    | Equipo de Arquitectura | Equipo de Arquitectura | Cierre de Validación Final               | EE-IMP-010-P05 y EE-TEC-005 completados; se incorpora §14 y se congela el documento, sin cambio del contrato normativo.                                                                  | **Congelado**                  |
+| **v1.1.0** | 2026-10-06    | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización de frontera y estados     | Sincroniza DOC-010/015; WAIVED vigente puede producir DEGRADED; high sin WAIVE no degrada; excluye DOC-011/015 del Merge Set.                                                            | **Congelado**                  |
+| **v1.1.1** | 2026-10-18    | Equipo de Arquitectura | Equipo de Arquitectura | Aclaración del alcance E2E               | §05.4 aclara que la existencia del comando root `e2e` no cambia el estado PENDING del gate; precisión documental sin cambio del contrato normativo.                                      | **Congelado**                  |
+| **v1.2.0** | 2026-10-23    | Equipo de Arquitectura | Equipo de Arquitectura | Integridad de quality gates (Fase 2)     | Contratos explícitos de resultados; evidencia de ejecución; prevención de falsos PASS; agregación de gates; regresiones para cero tareas, evidencia no disponible y fallos de ejecución. | **Congelado**                  |
+| **v1.3.0** | 2026-11-02    | Equipo de Arquitectura | Equipo de Arquitectura | Gates de convenciones y arquitectura     | Integra validación ESLint de símbolos, QG-NAM-001, QG-BRANCH-001, QG-COMMIT-001 y análisis de imports workspace bajo `src/` en `validate`; registra límites restantes de QG-ARCH-001.    | **Congelado**                  |
+| **v1.4.0** | 2026-11-03    | Equipo de Arquitectura | Equipo de Arquitectura | Gates de ramas, nombres y resultados     | QG-BRANCH-001 valida Dependabot; QG-NAM-001 exige prefijos nuevos; formaliza PASS/FAIL/SKIPPED/ERROR y tareas ejecutadas; limita E2E a Dashboard; V-E2E sigue PENDING.                   | **Congelado**                  |
+| **v1.5.0** | 2026-11-04    | Equipo de Arquitectura | Equipo de Arquitectura | Enforcement arquitectónico y E2E         | QG-ARCH-001 controla imports entre workspaces; QG-TEST-E2E orquesta `test:e2e` por workspace sin acreditar V-E2E global; clasificación y Nivel se alinean con DOC-002 §05.1.             | **Congelado**                  |
+| **v1.5.1** | 2026-11-05    | Equipo de Arquitectura | Equipo de Arquitectura | Normalización documental PC-006/PC-010   | Jerarquía de encabezados alineada con DOC-002 §06–§07; se normaliza el historial por fecha y estado, sin cambio del contrato normativo.                                                  | **Congelado**                  |
 
 ---
 

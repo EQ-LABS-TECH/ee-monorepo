@@ -6,25 +6,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 
 ## METADATOS
 
-| Campo                 | Valor                                                                   |
-| :-------------------- | :---------------------------------------------------------------------- |
-| **ID**                | EE-DOC-009                                                              |
-| **Documento**         | Infrastructure                                                          |
-| **Código corto**      | EE-DOC-009                                                              |
-| **Tipo**              | Documento Normativo                                                     |
-| **Clasificación**     | Especializado                                                           |
-| **Nivel**             | Especializado                                                           |
-| **Normativo**         | Sí                                                                      |
-| **Versión**           | v1.1.0                                                                  |
-| **Estado**            | Congelado                                                               |
-| **Propietario**       | Equipo de Arquitectura                                                  |
-| **Documento padre**   | EE-DOC-006 — Repository Structure                                       |
-| **Dependencias**      | EE-DOC-001 … EE-DOC-008, EE-DOC-003, EE-ADR-001, EE-ADR-003, EE-RFC-001 |
-| **Aprobado por**      | Equipo de Arquitectura                                                  |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                    |
-| **Fecha de creación** | 2026-09-25                                                              |
-| **Última revisión**   | 2026-09-26                                                              |
-| **Próxima revisión**  | No aplica — Documento Congelado (cambio vía RFC)                        |
+| Campo                 | Valor                                                               |
+| :-------------------- | :------------------------------------------------------------------ |
+| **ID**                | EE-DOC-009                                                          |
+| **Documento**         | Infrastructure                                                      |
+| **Código corto**      | DOC-009                                                             |
+| **Tipo**              | Documento Normativo                                                 |
+| **Clasificación**     | Especializado                                                       |
+| **Nivel**             | Operativo                                                           |
+| **Normativo**         | Sí                                                                  |
+| **Versión**           | v1.2.0                                                              |
+| **Estado**            | Congelado                                                           |
+| **Propietario**       | Equipo de Arquitectura                                              |
+| **Documento padre**   | EE-DOC-006 — Repository Structure                                   |
+| **Dependencias**      | contenido=EE-DOC-001…EE-DOC-008, EE-ADR-001, EE-ADR-003, EE-RFC-001 |
+| **Aprobado por**      | Equipo de Arquitectura                                              |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                |
+| **Fecha de creación** | 2026-09-25                                                          |
+| **Última revisión**   | 2026-11-04                                                          |
+| **Próxima revisión**  | No aplica — Documento Congelado (cambio vía RFC)                    |
 
 ---
 
@@ -332,7 +332,7 @@ EE-TEC-004 → Validación Final → Congelación   ← **cumplido**
 
 ## 10. Plan de Implementación y Fases (Normativo)
 
-> Obligatoria: documento implementable. Ciclo por unidad según **EE-DOC-005**.
+> La secuencia normativa de implementación por fases, validación y borrador de Documentación Técnica se define en **EE-DOC-005 §04.1**.
 
 **Prerrequisito documental de materialización física:** **cumplido** (EE-RFC-001 + EE-DOC-006 v1.4.0 + EE-DOC-001). **Implementación EE-IMP-009-P01…P05:** **cumplida**. **Documentación técnica consolidada:** **EE-TEC-004 v1.1.0 Aprobado**. **Validación Final:** **conforme** (2026-09-26).
 
@@ -412,15 +412,12 @@ Mecanismo general: EE-DOC-005 (Aclaración, Especialización Técnica, ADR, RFC)
 
 ## 14. Historial de Cambios
 
-| Versión    | Fecha      | Autor                                   | Aprobado por           | Motivo                             | Cambios                                                                          | Estado         |
-| :--------- | :--------- | :-------------------------------------- | :--------------------- | :--------------------------------- | :------------------------------------------------------------------------------- | :------------- |
-| **v0.1.0** | 2026-09-25 | AI Engineering Assistant                | —                      | Apertura Fase 3                    | Propósito, alcance, fronteras, dominios, plan preliminar, ubicación pendiente    | En Elaboración |
-| **v0.2.0** | 2026-09-25 | AI Engineering Assistant                | —                      | Revisión arquitectónica            | Opción B `infra/`; padre 006; §06.2; U-01…U-05; P01 post-RFC                     | En Elaboración |
-| **v0.3.0** | 2026-09-25 | AI Engineering Assistant / Arquitectura | —                      | Dictamen de autoridad y SSOT       | §08 RFC coordinado 006+001; G-01…G-04                                            | En Elaboración |
-| **v0.4.0** | 2026-09-25 | AI Engineering Assistant / Arquitectura | —                      | Post EE-RFC-001                    | RFC aprobado e implementado en 006 v1.4.0 + 001 v2.5.0; U-03/U-06/G actualizados | En Elaboración |
-| **v0.4.1** | 2026-09-25 | AI Engineering Assistant                | —                      | Observaciones menores revisión     | §10.2 enlace EE-TEC-004; §08.6 secuencia post-aprobación                         | En Elaboración |
-| **v1.0.0** | 2026-09-25 | Equipo de Arquitectura                  | Equipo de Arquitectura | Revisión arquitectónica — Aprobado | Norma lista para EE-IMP-009; prerrequisitos RFC/006/001 cumplidos                | Aprobado       |
-| **v1.1.0** | 2026-09-26 | Equipo de Arquitectura                  | Equipo de Arquitectura | Validación Final y Congelación     | IMP P01–P05; EE-TEC-004; §15 Cierre; corrección EE-TEC-004 (no TEC-009)          | **Congelado**  |
+| Versión    | Fecha      | Autor                                                              | Aprobado por           | Motivo                                           | Cambios                                                                                                   | Estado         |
+| :--------- | :--------- | :----------------------------------------------------------------- | :--------------------- | :----------------------------------------------- | :-------------------------------------------------------------------------------------------------------- | :------------- |
+| **v0.1.0** | 2026-09-25 | AI Engineering Assistant / AI Engineering Assistant / Arquitectura | —                      | Consolidated changes for the same date and state | Selects `infra/`; sets DOC-006 as parent, RFC-001 coordination, implementation units and review criteria. | En Elaboración |
+| **v1.0.0** | 2026-09-25 | Equipo de Arquitectura                                             | Equipo de Arquitectura | Revisión arquitectónica — Aprobado               | Norma lista para EE-IMP-009; prerrequisitos RFC/006/001 cumplidos                                         | Aprobado       |
+| **v1.1.0** | 2026-09-26 | Equipo de Arquitectura                                             | Equipo de Arquitectura | Validación Final y Congelación                   | IMP P01–P05; EE-TEC-004; §15 Cierre; corrección EE-TEC-004 (no TEC-009)                                   | **Congelado**  |
+| **v1.2.0** | 2026-11-04 | Equipo de Arquitectura                                             | Equipo de Arquitectura | Correccion PC-003                                | Clasificacion y Nivel alineados a EE-DOC-002 §05.1 y jerarquia de EE-DOC-001.                             | **Congelado**  |
 
 ---
 

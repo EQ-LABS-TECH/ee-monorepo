@@ -1,5 +1,9 @@
 import { evaluatePrGovernance } from './pr-governance.evaluate.mjs';
-import { startPrGovernanceCheck, completePrGovernanceCheck } from './pr-governance.publish.mjs';
+import {
+  findCurrentSuccessfulPrGovernanceCheck,
+  startPrGovernanceCheck,
+  completePrGovernanceCheck,
+} from './pr-governance.publish.mjs';
 import { readValidateReadiness } from './pr-governance.ci.mjs';
 import { getGitHubRequestId } from './pr-governance.github-error.mjs';
 
@@ -53,6 +57,8 @@ export async function runPrGovernance({
   token,
   governanceToken,
   publisherToken,
+  waitForApprovalReadiness = false,
+  deduplicateSuccessfulChecks = false,
   fetchImpl = fetch,
 }) {
   if (
@@ -104,6 +110,58 @@ export async function runPrGovernance({
       headSha: expectedHeadSha.toLowerCase(),
       validationCheckRunId: validation.checkRunId,
     };
+  }
+
+  let initialEvaluation;
+  if (waitForApprovalReadiness || deduplicateSuccessfulChecks) {
+    phase = 'evaluation';
+    try {
+      initialEvaluation = await evaluatePrGovernance({
+        owner,
+        repo,
+        number,
+        token,
+        governanceToken,
+        fetchImpl,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      }
+      throw error;
+    }
+
+    if (initialEvaluation.headSha?.toLowerCase() !== expectedHeadSha.toLowerCase()) {
+      const error = new Error('PR governance evaluation returned a superseded HEAD');
+      error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      throw error;
+    }
+  }
+
+  if (initialEvaluation?.decision.status === 'PASS' && deduplicateSuccessfulChecks) {
+    phase = 'check-deduplication';
+    try {
+      const existing = await findCurrentSuccessfulPrGovernanceCheck({
+        owner,
+        repo,
+        expectedHeadSha,
+        expectedAppId,
+        token: publisherToken,
+        fetchImpl,
+      });
+      if (existing) {
+        return {
+          mode: 'ALREADY_CURRENT',
+          headSha: existing.headSha,
+          checkId: existing.checkId,
+        };
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      }
+      throw error;
+    }
   }
 
   phase = 'check-start';

@@ -16,20 +16,20 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                      |
 | **Nivel**             | Técnico                             |
 | **Normativo**         | No                                  |
-| **Versión**           | v1.1.0                              |
+| **Versión**           | v1.1.1                              |
 | **Estado**            | Aprobado                            |
 | **Propietario**       | Equipo de Arquitectura              |
 | **Documento padre**   | EE-DOC-006                          |
-| **Dependencias**      | EE-DOC-006, EE-IMP-006-P05          |
+| **Dependencias**      | contenido=EE-IMP-006-P05            |
 | **Aprobado por**      | Equipo de Arquitectura              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
 | **Fecha de creación** | 2026-08-31                          |
-| **Última revisión**   | 2026-10-18                          |
+| **Última revisión**   | 2026-11-05                          |
 | **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
-## 1. Objetivo
+## 01. Objetivo
 
 Documentar la implementación y validación de la **Fase 6 — Connectors** del Engineering Ecosystem (EE-LABS).
 
@@ -39,7 +39,7 @@ La fase establece la base estructural de los conectores oficiales sin implementa
 
 ---
 
-## 2. Alcance implementado
+## 02. Alcance implementado
 
 La Fase 6 comprendió la creación de la estructura:
 
@@ -82,7 +82,7 @@ No se implementó lógica funcional de integración, autenticación, transporte,
 
 ---
 
-## 3. Estructura física implementada
+## 03. Estructura física implementada
 
 La estructura resultante de `connectors/` quedó establecida de la siguiente manera:
 
@@ -142,11 +142,11 @@ La estructura mantiene separadas las integraciones oficiales de las categorías 
 
 ---
 
-## 4. Conectores oficiales implementados
+## 04. Conectores oficiales implementados
 
 Durante la Fase 6 se crearon los seis conectores oficiales definidos para la capa `connectors/official/`.
 
-### 4.1 `@eq-labs/connector-github`
+### 04.1. `@eq-labs/connector-github`
 
 Se creó el workspace:
 
@@ -193,7 +193,7 @@ El punto de entrada contiene:
 export {};
 ```
 
-### 4.2 `@eq-labs/connector-docker`
+### 04.2. `@eq-labs/connector-docker`
 
 Se creó el workspace:
 
@@ -238,7 +238,7 @@ El punto de entrada contiene:
 export {};
 ```
 
-### 4.3 `@eq-labs/connector-kubernetes`
+### 04.3. `@eq-labs/connector-kubernetes`
 
 Se creó el workspace:
 
@@ -285,7 +285,7 @@ El punto de entrada contiene:
 export {};
 ```
 
-### 4.4 `@eq-labs/connector-notebooklm`
+### 04.4. `@eq-labs/connector-notebooklm`
 
 Se creó el workspace:
 
@@ -330,7 +330,7 @@ El punto de entrada contiene:
 export {};
 ```
 
-### 4.5 `@eq-labs/connector-mcp`
+### 04.5. `@eq-labs/connector-mcp`
 
 Se creó el workspace:
 
@@ -384,7 +384,7 @@ El punto de entrada contiene:
 export {};
 ```
 
-### 4.6 `@eq-labs/connector-a2a`
+### 04.6. `@eq-labs/connector-a2a`
 
 Se creó el workspace:
 
@@ -432,7 +432,7 @@ export {};
 
 ---
 
-## 5. Estructura común de los conectores oficiales
+## 05. Estructura común de los conectores oficiales
 
 Los seis conectores oficiales utilizan una estructura homogénea:
 
@@ -456,7 +456,7 @@ Esta estructura permite mantener cada integración aislada como unidad de worksp
 
 ---
 
-## 6. Namespaces de los conectores
+## 06. Namespaces de los conectores
 
 Los namespaces definidos para los conectores oficiales son:
 
@@ -489,7 +489,7 @@ Apache-2.0
 
 ---
 
-## 7. Configuración TypeScript
+## 07. Configuración TypeScript
 
 Los seis conectores oficiales utilizan la configuración compartida:
 
@@ -521,7 +521,7 @@ debido al carácter estructural de esta fase.
 
 ---
 
-## 8. Dependencia de configuración compartida
+## 08. Dependencia de configuración compartida
 
 Cada conector declara la configuración TypeScript compartida mediante:
 
@@ -544,7 +544,7 @@ Esta configuración evita duplicar las reglas TypeScript dentro de cada conector
 
 ---
 
-## 9. Scripts de los conectores
+## 09. Scripts de los conectores
 
 Los seis conectores oficiales utilizan una interfaz homogénea de scripts:
 
@@ -949,6 +949,7 @@ El documento permanece en estado **Aprobado** como documento técnico de impleme
 | :--------- | :--------- | :--------------------- | :--------------------- | :------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------- | :----------- |
 | **v1.0.0** | 2026-08-31 | Equipo de Arquitectura | Equipo de Arquitectura | Creación de EE-IMP-006-P06 y documentación de la estructura de conectores oficiales, comunitarios y experimentales. | Registrar la implementación y validación de la Fase 6. | **Aprobado** |
 | **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006                                                                                                | As-built scripts/commands y estados documentales merge | Aprobado     |
+| **v1.1.1** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Normalización PC-006                                                                                                | Encabezados numerados a dos dígitos; sin `x.0`.        | Aprobado     |
 
 ---
 

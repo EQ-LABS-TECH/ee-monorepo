@@ -1,4 +1,4 @@
-﻿# EE-DOC-006 — Repository Structure
+# EE-DOC-006 — Repository Structure
 
 Este documento sigue el estándar **EE-DOC-002 — Document Design Template**. El ciclo de implementación y validación se rige por **EE-DOC-005 — Development Workflow**.
 
@@ -6,25 +6,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**. E
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                  |
-| --------------------- | -------------------------------------------------------------------------------------- |
-| **ID**                | EE-DOC-006                                                                             |
-| **Documento**         | Repository Structure                                                                   |
-| **Código corto**      | DOC-006                                                                                |
-| **Tipo**              | Documento Normativo                                                                    |
-| **Clasificación**     | Implementable                                                                          |
-| **Nivel**             | Táctico                                                                                |
-| **Normativo**         | Sí                                                                                     |
-| **Versión**           | v1.14.0                                                                                |
-| **Estado**            | Congelado                                                                              |
-| **Propietario**       | Equipo de Arquitectura                                                                 |
-| **Documento padre**   | EE-DOC-005                                                                             |
-| **Dependencias**      | padre=EE-DOC-005; contenido=EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-DOC-005 |
-| **Aprobado por**      | Equipo de Arquitectura                                                                 |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                                       |
-| **Fecha de creación** | 2026-08-03                                                                             |
-| **Última revisión**   | 2026-11-04                                                                             |
-| **Próxima revisión**  | No aplica — Documento Congelado                                                        |
+| Campo                 | Valor                            |
+| --------------------- | -------------------------------- |
+| **ID**                | EE-DOC-006                       |
+| **Documento**         | Repository Structure             |
+| **Código corto**      | DOC-006                          |
+| **Tipo**              | Documento Normativo              |
+| **Clasificación**     | Implementable                    |
+| **Nivel**             | Táctico                          |
+| **Normativo**         | Sí                               |
+| **Versión**           | v1.9.0                           |
+| **Estado**            | Congelado                        |
+| **Propietario**       | Equipo de Arquitectura           |
+| **Documento padre**   | EE-DOC-005                       |
+| **Dependencias**      | contenido=EE-DOC-001…EE-DOC-005  |
+| **Aprobado por**      | Equipo de Arquitectura           |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps |
+| **Fecha de creación** | 2026-08-03                       |
+| **Última revisión**   | 2026-11-04                       |
+| **Próxima revisión**  | No aplica — Documento Congelado  |
 
 ---
 
@@ -659,7 +659,7 @@ La implementación física de los comandos root vive bajo **`scripts/commands/<c
 >
 > **Alcance de enforcement integrado:** `scripts/commands/validate-architecture`, invocado por `validate`, comprueba dependencias workspace declaradas en manifests contra §13.2, detecta ciclos y valida imports estáticos, dinámicos con literal y `require` entre workspaces en código bajo `src/`. Exige que la relación esté permitida por la matriz y declarada en dependencias del paquete; los imports entre workspaces deben usar el nombre del paquete y los imports relativos que crucen workspaces se rechazan conforme a §13.4 R3. Los imports dinámicos no literales y referencias `@eq-labs/*` no resueltas bloquean. Configuración fuera de `src/`, pruebas, aliases de `tsconfig` y composición implícita permanecen fuera del alcance; la revisión arquitectónica sigue siendo complementaria. La evidencia remota previa de QG-ARCH-001 no sustituye la validación del cambio de esta revisión; el Pull Request debe ejecutar el gate con la nueva regla.
 
-> **Config como tooling (todas las categorías de packages y connectors):**  
+> **Config como tooling (todas las categorías de packages y connectors):**
 > Dependencias de `@eq-labs/config-*` en `devDependencies` **no** se interpretan como violación de la matriz de runtime. Config es capa 0 de tooling compartido.
 >
 > **Extensión Connectors (EE-ADR-005):**
@@ -907,32 +907,24 @@ Cada unidad de implementación física del monorepo es responsable de materializ
 
 ## 19. Historial de Cambios
 
-|   Versión   |   Fecha    | Autor                   | Aprobado por           | Motivo                                           | Cambios                                                                                                                                                                                 |        Estado         |
-| :---------: | :--------: | :---------------------- | :--------------------- | :----------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------: |
-| **v1.0.0**  | 2026-08-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Creación inicial                                 | Versión inicial de la estructura del repositorio                                                                                                                                        | **En Implementación** |
-| **v1.1.0**  | 2026-09-17 | Equipo de Arquitectura  | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets | Inclusión de config/playwright, .changeset, ignoredBuiltDependencies y scripts de Changesets.                                                                                           | **En Implementación** |
-| **v1.2.0**  | 2026-09-18 | IA Asistente (revisión) | Equipo de Arquitectura | Sincronización con la implementación actual      | Alineación de la estructura de `scripts/`, comandos root, configuración Playwright y especificación de Fase 7 con la referencia de implementación actual.                               | **En Implementación** |
-| **v1.3.0**  | 2026-09-20 | Equipo de Arquitectura  | Equipo de Arquitectura | Validación final alcance                         | Cierre histórico v1.3.0; IMP P01–P08; detalle en TEC-001                                                                                                                                |     **Congelado**     |
-| **v1.3.1**  | 2026-09-21 | Equipo de Arquitectura  | Equipo de Arquitectura | SSOT política de idioma                          | §07.1 declara que el idioma deriva de EE-DOC-002 §16.1; esta sección especializa nomenclatura del monorepo sin redefinir la política                                                    |     **Congelado**     |
-| **v1.4.0**  | 2026-09-25 | Equipo de Arquitectura  | Equipo de Arquitectura | EE-RFC-001 aprobado                              | Incorporación estructural de `infra/` (§04 diagrama, §05 árbol, nota frontera vs connectors). Semántica de infraestructura permanece en EE-DOC-009. Paquete coordinado con EE-DOC-001   |     **Congelado**     |
-| **v1.5.0**  | 2026-10-01 | Equipo de Arquitectura  | Equipo de Arquitectura | EE-RFC-002 aprobado                              | Incorporación estructural de `templates/` (§04 Soporte, §05 árbol, §14 frontera assets). Semántica de templates → EE-DOC-012. Paquete coordinado con EE-DOC-001 v2.9.0                  |     **Congelado**     |
-| **v1.6.0**  | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | EE-ADR-005 / EE-DOC-013                          | §13.2–13.4: categoría Connectors; composition root; R-CONN; higiene §05/§14 (`infra/secrets/`)                                                                                          |     **Congelado**     |
-| **v1.6.1**  | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Revisión cumplimiento + ADR-005 Aprobado v1.3.0  | Runtime Foundation + Config tooling; composition root **sin** SDK; No False Pass (validate); §12 tabla; §18 refs; §20.4 vigente **v1.6.1**                                              |     **Congelado**     |
-| **v1.7.0**  | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | DOC-002 §15 (cambio de significado)              | Reemisión **minor**: matriz Connectors (Foundation + Config tooling); composition root **sin** SDK; No False Pass; cierre distingue validación v1.3.0 vs cambios gobernados v1.4–v1.7.0 |     **Congelado**     |
-| **v1.7.1**  | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | §13.5 Composition root                           | Subsección composition root (`apps/*`); nota §13.2/R-CONN-3 sin “bootstrap” ambiguo; alineación SDK/Connectors                                                                          |     **Congelado**     |
-| **v1.7.2**  | 2026-10-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Higiene §13.5                                    | Una sola fila «Qué no es» (sdk + scripts/bootstrap)                                                                                                                                     |     **Congelado**     |
-| **v1.8.0**  | 2026-10-06 | Equipo de Arquitectura  | Equipo de Arquitectura | Auth docs/validation/                            | Subárbol `docs/validation/{reports,waivers,evidence}` para EE-DOC-015                                                                                                                   |     **Congelado**     |
-| **v1.8.1**  | 2026-10-16 | Equipo de Arquitectura  | Equipo de Arquitectura | Tipo B as-built monorepo                         | §05/§12/§13 Apps-Shared; tops assets/examples/marketplace                                                                                                                               |     **Congelado**     |
-| **v1.9.0**  | 2026-10-19 | Equipo de Arquitectura  | Equipo de Arquitectura | **Minor:** ADR-006 aplicado                      | §13.2: eliminadas aristas `Intelligence→Execution` y `Knowledge→Intelligence` (EE-ADR-006); notas de resolución; §07.1 convenciones as-built; §18 referencias actualizadas              |     **Congelado**     |
-| **v1.10.0** | 2026-11-02 | Equipo de Arquitectura  | Equipo de Arquitectura | Nombres, hooks y límites de QG-ARCH-001          | Actualiza sufijos de tests, registra `.githooks`, documenta validación de símbolos y amplía QG-ARCH-001 a imports entre workspaces bajo `src/`, manifests y ciclos.                     |     **Congelado**     |
-| **v1.10.1** | 2026-11-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Prefijos de tipo en archivos de pruebas          | Alinea §07.1 con EE-DOC-002 y registra el nombre actualizado de la prueba de repository conventions.                                                                                    |     **Congelado**     |
-| **v1.11.0** | 2026-11-03 | Equipo de Arquitectura  | Equipo de Arquitectura | Reportes individuales de auditoría               | Añade `docs/validation/audit/reports/` para conservar reportes detallados por ejecución, separados de los tres registros canónicos.                                                     |     **Congelado**     |
-| **v1.12.0** | 2026-11-04 | Equipo de Arquitectura  | Equipo de Arquitectura | Enforcement de imports entre workspaces          | Rechaza imports relativos que cruzan workspaces conforme a §13.4 R3; la validación remota de esta regla queda sujeta al CI del Pull Request.                                            |     **Congelado**     |
+|  Versión   |   Fecha    | Autor                  | Aprobado por           | Motivo                                           | Cambios                                                                                                                                                                               |        Estado         |
+| :--------: | :--------: | :--------------------- | :--------------------- | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------: |
+| **v0.1.0** | 2026-08-03 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                 | Versión inicial de la estructura del repositorio                                                                                                                                      |     **Aprobado**      |
+| **v0.2.0** | 2026-09-17 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización con ADR-001, ADR-002 y Changesets | Inclusión de config/playwright, .changeset, ignoredBuiltDependencies y scripts de Changesets.                                                                                         | **En Implementación** |
+| **v0.3.0** | 2026-09-18 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización con la implementación actual      | Alineación de la estructura de `scripts/`, comandos root, configuración Playwright y especificación de Fase 7 con la referencia de implementación actual.                             | **En Implementación** |
+| **v1.0.0** | 2026-09-20 | Equipo de Arquitectura | Equipo de Arquitectura | Validación final alcance                         | Cierre histórico; IMP P01–P08; detalle en TEC-001                                                                                                                                     |     **Congelado**     |
+| **v1.1.0** | 2026-09-21 | Equipo de Arquitectura | Equipo de Arquitectura | SSOT política de idioma                          | §07.1 declara que el idioma deriva de EE-DOC-002 §16.1; esta sección especializa nomenclatura del monorepo sin redefinir la política                                                  |     **Congelado**     |
+| **v1.2.0** | 2026-09-25 | Equipo de Arquitectura | Equipo de Arquitectura | EE-RFC-001 aprobado                              | Incorporación estructural de `infra/` (§04 diagrama, §05 árbol, nota frontera vs connectors). Semántica de infraestructura permanece en EE-DOC-009. Paquete coordinado con EE-DOC-001 |     **Congelado**     |
+| **v1.3.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | EE-RFC-002 aprobado                              | Incorporación estructural de `templates/` (§04 Soporte, §05 árbol, §14 frontera assets). Semántica de templates → EE-DOC-012. Paquete coordinado con EE-DOC-001 v2.9.0                |     **Congelado**     |
+| **v1.4.0** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidated changes for the same date and state | Adds Connectors and Config tooling; defines `apps/*` composition root without SDK, import boundaries and No False Pass.                                                               |     **Congelado**     |
+| **v1.5.0** | 2026-10-06 | Equipo de Arquitectura | Equipo de Arquitectura | Auth docs/validation/                            | Subárbol `docs/validation/{reports,waivers,evidence}` para EE-DOC-015                                                                                                                 |     **Congelado**     |
+| **v1.5.1** | 2026-10-16 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo B as-built monorepo                         | §05/§12/§13 Apps-Shared; tops assets/examples/marketplace                                                                                                                             |     **Congelado**     |
+| **v1.6.0** | 2026-10-19 | Equipo de Arquitectura | Equipo de Arquitectura | **Minor:** ADR-006 aplicado                      | §13.2: eliminadas aristas `Intelligence→Execution` y `Knowledge→Intelligence` (EE-ADR-006); notas de resolución; §07.1 convenciones as-built; §18 referencias actualizadas            |     **Congelado**     |
+| **v1.7.0** | 2026-11-02 | Equipo de Arquitectura | Equipo de Arquitectura | Nombres, hooks y límites de QG-ARCH-001          | Actualiza sufijos de tests, registra `.githooks`, documenta validación de símbolos y amplía QG-ARCH-001 a imports entre workspaces bajo `src/`, manifests y ciclos.                   |     **Congelado**     |
+| **v1.8.0** | 2026-11-03 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidated changes for the same date and state | Defines test type prefixes and separates audit reports under `docs/validation/audit/reports/` from canonical registers.                                                               |     **Congelado**     |
+| **v1.9.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidated changes for the same date and state | Enforces workspace import boundaries and E2E orchestration; updates EE-AUD family and physical audit paths.                                                                           |     **Congelado**     |
 
-| **v1.13.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Orquestación E2E por workspace | El comando root descubre todas las tareas `test:e2e` de Turbo; distingue la ejecución registrada de la cobertura integral V-E2E del ecosistema. | **Congelado** |
-| **v1.14.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Familia y rutas físicas de auditoría | Actualiza la estructura física y las referencias de auditoría a la familia `EE-AUD`, con informes generales y por fase. | **Congelado** |
-
-> **Validación incremental:** la Validación Final histórica (§20.1, v1.3.0) permanece como registro de cierre de fase. Las evoluciones v1.4.0 en adelante (esta edición) se consideran **validadas de forma incremental** en auditoría documental + contraste as-built (`scripts/commands`, e2e root, matriz §13, nota PN-008). El gate V-E2E de ecosistema y gates de 010/015 pueden permanecer PENDING sin invalidar el congelamiento estructural de 006. Evidencia operativa recomendada: `pnpm validate` en `main` + SHA.
+> **Validación incremental:** la Validación Final histórica (§20.1, v1.0.0) permanece como registro de cierre de fase. Las evoluciones en adelante se consideran **validadas de forma incremental** en auditoría documental + contraste as-built (`scripts/commands`, e2e root, matriz §13, nota PN-008). El gate V-E2E de ecosistema y gates de 010/015 pueden permanecer PENDING sin invalidar el congelamiento estructural de 006. Evidencia operativa recomendada: `pnpm validate` en `main` + SHA.
 
 ---
 
@@ -940,7 +932,7 @@ Cada unidad de implementación física del monorepo es responsable de materializ
 
 ### 20.1. Validación Final
 
-La Validación Final de **EE-DOC-006 — Repository Structure** se registró el **2026-09-20** para el **alcance histórico v1.3.0**, con evolución gobernada posterior (v1.4.0–v1.8.x) documentada en el historial.
+La Validación Final de **EE-DOC-006 — Repository Structure** se registró el **2026-09-20** para el **alcance histórico v1.0.0**, con evolución gobernada posterior documentada en el historial.
 
 **Evidencia de trazabilidad (no equivale a PASS de todos los gates ACTIVE):**
 
@@ -968,13 +960,13 @@ La Validación Final determinó que la implementación correspondiente a **EE-DO
 
 Las diferencias correspondientes a componentes cuya materialización se encuentra prevista en etapas posteriores del roadmap del Engineering Ecosystem no constituyen desviaciones de la norma, conforme al modelo de implementación progresiva establecido por EE-DOC-001.
 
-No existen hallazgos abiertos que bloqueen el cierre documental del **alcance histórico validado (v1.3.0)**.
+No existen hallazgos abiertos que bloqueen el cierre documental del **alcance histórico validado (v1.0.0)**.
 
-Los cambios gobernados **v1.4.0–v1.7.1** (RFC-001, RFC-002, ADR-005 / matriz Connectors y composition root) están **documentados y aprobados** como evolución de la norma. `QG-ARCH-001` valida dependencias y ciclos declarados en manifests e imports entre workspaces bajo `src/`; los límites restantes del analizador se detallan en EE-DOC-010 y no se declaran como cobertura completa del blueprint.
+Los cambios gobernados (RFC-001, RFC-002, ADR-005 / matriz Connectors y composition root) están **documentados y aprobados** como evolución de la norma. `QG-ARCH-001` valida dependencias y ciclos declarados en manifests e imports entre workspaces bajo `src/`; los límites restantes del analizador se detallan en EE-DOC-010 y no se declaran como cobertura completa del blueprint.
 
 ### 20.4. Estado Final
 
-La Validación Final original (2026-09-20) cerró el alcance implementado de **v1.3.0**. Versiones posteriores incorporaron cambios gobernados **sin invalidar** aquella validación para el alcance previo:
+La Validación Final original (2026-09-20) cerró el alcance implementado de **v1.0.0**. Versiones posteriores incorporaron cambios gobernados **sin invalidar** aquella validación para el alcance previo:
 
 | Versión    | Cambio gobernado                                                                                                                 |
 | :--------- | :------------------------------------------------------------------------------------------------------------------------------- |

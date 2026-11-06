@@ -6,27 +6,27 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 
 ## METADATOS
 
-| Campo                      | Valor                                                          |
-| :------------------------- | :------------------------------------------------------------- |
-| **ID**                     | EE-IMP-013-P02                                                 |
-| **Documento**              | Baseline Package                                               |
-| **Código corto**           | EE-IMP-013-P02                                                 |
-| **Fase**                   | Fase 3 — Core Components                                       |
-| **Fase de implementación** | P02 — Baseline package (Implementación de EE-DOC-013)          |
-| **Tipo**                   | Documento Técnico de Implementación                            |
-| **Clasificación**          | Implementación                                                 |
-| **Nivel**                  | Técnico                                                        |
-| **Normativo**              | No                                                             |
-| **Versión**                | v1.1.0                                                         |
-| **Estado**                 | Completado                                                     |
-| **Propietario**            | Equipo de Arquitectura                                         |
-| **Documento padre**        | EE-DOC-013 — AI Ecosystem (Aprobado)                           |
-| **Dependencias**           | EE-DOC-006; EE-DOC-013; EE-ADR-005; EE-IMP-013-P01; EE-DOC-010 |
-| **Aprobado por**           | Equipo de Arquitectura                                         |
-| **Audiencia**              | Arquitectura, Desarrollo                                       |
-| **Fecha de creación**      | 2026-10-03                                                     |
-| **Última revisión**        | 2026-10-03                                                     |
-| **Próxima revisión**       | EE-IMP-013-P03                                                 |
+| Campo                      | Valor                                                        |
+| :------------------------- | :----------------------------------------------------------- |
+| **ID**                     | EE-IMP-013-P02                                               |
+| **Documento**              | Baseline Package                                             |
+| **Código corto**           | IMP-013-P02                                                  |
+| **Fase**                   | Fase 3 — Core Components                                     |
+| **Fase de implementación** | P02 — Baseline package (Implementación de EE-DOC-013)        |
+| **Tipo**                   | Documento Técnico de Implementación                          |
+| **Clasificación**          | Implementación                                               |
+| **Nivel**                  | Técnico                                                      |
+| **Normativo**              | No                                                           |
+| **Versión**                | v1.1.0                                                       |
+| **Estado**                 | Completado                                                   |
+| **Propietario**            | Equipo de Arquitectura                                       |
+| **Documento padre**        | EE-DOC-013 — AI Ecosystem (Aprobado)                         |
+| **Dependencias**           | contenido=EE-DOC-006, EE-ADR-005, EE-IMP-013-P01, EE-DOC-010 |
+| **Aprobado por**           | Equipo de Arquitectura                                       |
+| **Audiencia**              | Arquitectura, Desarrollo                                     |
+| **Fecha de creación**      | 2026-10-03                                                   |
+| **Última revisión**        | 2026-10-03                                                   |
+| **Próxima revisión**       | EE-IMP-013-P03                                               |
 
 ---
 

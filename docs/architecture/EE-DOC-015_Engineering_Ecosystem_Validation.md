@@ -1,4 +1,4 @@
-﻿# EE-DOC-015 — Engineering Ecosystem Validation
+# EE-DOC-015 — Engineering Ecosystem Validation
 
 Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
@@ -8,26 +8,26 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## METADATOS
 
-| Campo                   | Valor                                                                                                                                                                                                                                                      |
-| :---------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **ID**                  | EE-DOC-015                                                                                                                                                                                                                                                 |
-| **Documento**           | Engineering Ecosystem Validation                                                                                                                                                                                                                           |
-| **Código corto**        | EE-DOC-015                                                                                                                                                                                                                                                 |
-| **Tipo**                | Documento Normativo                                                                                                                                                                                                                                        |
-| **Clasificación**       | Especializado                                                                                                                                                                                                                                              |
-| **Nivel**               | Especializado                                                                                                                                                                                                                                              |
-| **Normativo**           | Sí                                                                                                                                                                                                                                                         |
-| **Versión**             | v1.2.0                                                                                                                                                                                                                                                     |
-| **Estado**              | Congelado                                                                                                                                                                                                                                                  |
-| **Propietario**         | Equipo de Arquitectura                                                                                                                                                                                                                                     |
-| **Documento padre**     | EE-DOC-004 — Engineering Architecture (conceptual)                                                                                                                                                                                                         |
-| **Serie implementable** | EE-DOC-006 — Repository Structure (padre físico serie 006–015)                                                                                                                                                                                             |
-| **Dependencias**        | EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-DOC-005, EE-DOC-006, EE-DOC-007, EE-DOC-008, EE-DOC-009, EE-DOC-010, EE-DOC-011, EE-DOC-012, EE-DOC-013, EE-DOC-014, EE-ADR-001, EE-ADR-002, EE-ADR-003, EE-ADR-004, EE-ADR-005, EE-RFC-001, EE-RFC-002 |
-| **Aprobado por**        | Equipo de Arquitectura                                                                                                                                                                                                                                     |
-| **Audiencia**           | Arquitectura, Desarrollo, QA, DevOps, IA                                                                                                                                                                                                                   |
-| **Fecha de creación**   | 2026-10-06                                                                                                                                                                                                                                                 |
-| **Última revisión**     | 2026-11-04                                                                                                                                                                                                                                                 |
-| **Próxima revisión**    | No aplica — Documento Congelado                                                                                                                                                                                                                            |
+| Campo                   | Valor                                                                          |
+| :---------------------- | :----------------------------------------------------------------------------- |
+| **ID**                  | EE-DOC-015                                                                     |
+| **Documento**           | Engineering Ecosystem Validation                                               |
+| **Código corto**        | DOC-015                                                                        |
+| **Tipo**                | Documento Normativo                                                            |
+| **Clasificación**       | Especializado                                                                  |
+| **Nivel**               | Operativo                                                                      |
+| **Normativo**           | Sí                                                                             |
+| **Versión**             | v1.3.0                                                                         |
+| **Estado**              | Congelado                                                                      |
+| **Propietario**         | Equipo de Arquitectura                                                         |
+| **Documento padre**     | EE-DOC-004 — Engineering Architecture (conceptual)                             |
+| **Serie implementable** | EE-DOC-006 — Repository Structure (padre físico serie 006–015)                 |
+| **Dependencias**        | contenido=EE-DOC-001…EE-DOC-014, EE-ADR-001…EE-ADR-005, EE-RFC-001, EE-RFC-002 |
+| **Aprobado por**        | Equipo de Arquitectura                                                         |
+| **Audiencia**           | Arquitectura, Desarrollo, QA, DevOps, IA                                       |
+| **Fecha de creación**   | 2026-10-06                                                                     |
+| **Última revisión**     | 2026-11-04                                                                     |
+| **Próxima revisión**    | No aplica — Documento Congelado                                                |
 
 > **Precedente de roadmap (EE-DOC-001):** EE-DOC-014 — Knowledge Management (Fase 3 → Fase 4).
 
@@ -184,7 +184,7 @@ Congelación de 015: dictamen ecosistema **DEGRADED** admisible si PENDING lista
 ### 04.5. Artefacto canónico de WAIVE y salida de residuales
 
 ```text
-docs/validation/waivers/EE-WAIVE-<gate_id>-<YYYYMMDD>.md
+docs/validation/waivers/EE-WAIVE-<gate_id>_<package>_<YYYYMMDD>.md
 ```
 
 Campos = EE-DOC-010 (WAIVED). **V-QG** exige archivo **vigente** (`expires_at` ≥ fecha del report).
@@ -344,12 +344,12 @@ El Validation Report debe mostrar **Result original del gate** y el **mapeo** al
 ```text
 docs/validation/
   README.md
-  reports/EE-VAL-<git-sha-short>-<YYYYMMDD>.md
-  waivers/EE-WAIVE-<gate_id>-<YYYYMMDD>.md
+  reports/EE-VAL-<git-sha-short>_<scope>_<YYYYMMDD>.md
+  waivers/EE-WAIVE-<gate_id>_<package>_<YYYYMMDD>.md
   evidence/layers/<git-sha-short>.md
 ```
 
-Autorizada en el árbol de **EE-DOC-006**. Materialización física: **P01** (scaffold) + reports formales en **P05**. Plantillas de idioma EE-VAL / EE-WAIVE: evolución en **EE-DOC-002** cuando se formalicen (Tipo A/B); hasta entonces el contenido mínimo es el de §06.2.
+Autorizada en el árbol de **EE-DOC-006**. Los nombres siguen EE-DOC-002 §§16 y 18.6: `{ID}_{Nombre}_{YYYYMMDD}.md`; el ID es `EE-VAL-<git-sha-short>` o `EE-WAIVE-<gate_id>`, y el nombre identifica el alcance o paquete. Materialización física: **P01** (scaffold) + reports formales en **P05**. Plantillas de idioma EE-VAL / EE-WAIVE: evolución en **EE-DOC-002** cuando se formalicen (Tipo A/B); hasta entonces el contenido mínimo es el de §06.2.
 
 ### 06.2. Contenido mínimo
 
@@ -434,16 +434,16 @@ Ejemplos: plantillas EE-VAL/EE-WAIVE en EE-DOC-002 (A/B); `pnpm run e2e` (B/C); 
 
 ## 12. Historial de Cambios
 
-| Versión           | Fecha      | Autor                  | Aprobado por           | Motivo                              | Cambios                                                                                                                                                    | Estado                         |
-| :---------------- | :--------- | :--------------------- | :--------------------- | :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------- |
-| **v0.1.0–v0.4.0** | 2026-10-06 | Equipo de Arquitectura | —                      | Elaboración incremental             | Modelo, WAIVE, hitos, composition, smoke                                                                                                                   | En Elaboración                 |
-| **v0.5.0**        | 2026-10-06 | Equipo de Arquitectura | —                      | Re-revisión prioritaria (3 bloques) | SKIPPED≠N/A; docs/validation vía 006; QG-DOC precedencia; templates≠REPO; salida residual; build completo; agregación; sin refs por versión ajena          | **En Elaboración**             |
-| **v0.5.1**        | 2026-10-06 | Equipo de Arquitectura | —                      | Higiene agregación N/A + 006 README | Regla N/A en §04.4.3; anti-FP cuantificable; matriz config con aplicabilidad; V-GOV README raíz; templates 012 sin atribución ambigua                      | **En Revisión Arquitectónica** |
-| **v0.5.2**        | 2026-10-07 | Equipo de Arquitectura | —                      | Higiene revisión arquitectónica     | P01 README; V-QG FMT vía validate; dictamen ≠ aprobado; nota hito LAYERS/E2E                                                                               | **En Revisión Arquitectónica** |
-| **v1.0.0**        | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica           | Congelación del marco de validación de ecosistema; habilita EE-IMP-015                                                                                     | **Aprobado**                   |
-| **v1.1.0**        | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre implementación + congelación | IMP-015 P01–P05; EE-VAL-072b5e7; EE-TEC-010; dictamen DEGRADED admisible                                                                                   | **Congelado**                  |
-| **v1.1.1**        | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Fix aclaración E2E                  | §05.8 aclara que el comando root e2e existe pero el gate sigue PENDING                                                                                     | Congelado                      |
-| **v1.2.0**        | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Alcance y evidencia de V-E2E        | Distingue el gate QG de tareas workspace registradas del dominio V-E2E; exige evidencia de cobertura de las superficies aplicables antes de declarar PASS. | **Congelado**                  |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                           | Cambios                                                                                                                                                    | Estado                         |
+| :--------- | :--------- | :--------------------- | :--------------------- | :----------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------- |
+| **v0.1.0** | 2026-10-06 | Equipo de Arquitectura | —                      | Consolidated changes for the same date and state | Consolidates validation model, WAIVE, composition, smoke, SKIPPED, templates, build and E2E coverage criteria.                                             | En Elaboración                 |
+| **v0.2.0** | 2026-10-06 | Equipo de Arquitectura | —                      | Higiene agregación N/A + 006 README              | Regla N/A en §04.4.3; anti-FP cuantificable; matriz config con aplicabilidad; V-GOV README raíz; templates 012 sin atribución ambigua                      | **En Revisión Arquitectónica** |
+| **v0.3.0** | 2026-10-07 | Equipo de Arquitectura | —                      | Higiene revisión arquitectónica                  | P01 README; V-QG FMT vía validate; dictamen ≠ aprobado; nota hito LAYERS/E2E                                                                               | **En Revisión Arquitectónica** |
+| **v1.0.0** | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica                        | Congelación del marco de validación de ecosistema; habilita EE-IMP-015                                                                                     | **Aprobado**                   |
+| **v1.1.0** | 2026-10-07 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre implementación + congelación              | IMP-015 P01–P05; EE-VAL-072b5e7; EE-TEC-010; dictamen DEGRADED admisible                                                                                   | **Congelado**                  |
+| **v1.1.1** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Fix aclaración E2E                               | §05.8 aclara que el comando root e2e existe pero el gate sigue PENDING                                                                                     | Congelado                      |
+| **v1.2.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Alcance y evidencia de V-E2E                     | Distingue el gate QG de tareas workspace registradas del dominio V-E2E; exige evidencia de cobertura de las superficies aplicables antes de declarar PASS. | **Congelado**                  |
+| **v1.3.0** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | PC-003 y PN-001                                  | Metadatos alineados a DOC-002; VAL/WAIVE usan `{ID}_{Nombre}_{YYYYMMDD}.md` con guiones bajos.                                                             | **Congelado**                  |
 
 ---
 

@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | :-------------------- | :---------------------------------------------------- |
 | **ID**                | EE-IMP-007-P05                                        |
 | **Documento**         | GitHub Actions                                        |
-| **Código corto**      | EE-IMP-007-P05                                        |
+| **Código corto**      | IMP-007-P05                                           |
 | **Fase**              | Fase 5 — GitHub Actions                               |
 | **Tipo**              | Documento Técnico de Implementación                   |
 | **Clasificación**     | Implementación                                        |
@@ -20,7 +20,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Estado**            | Completado                                            |
 | **Propietario**       | Equipo de Arquitectura                                |
 | **Documento padre**   | EE-DOC-007 — GitHub Governance                        |
-| **Dependencias**      | EE-DOC-005, EE-DOC-007, EE-IMP-007-P01 … P04          |
+| **Dependencias**      | contenido=EE-DOC-005, EE-IMP-007-P01 … P04            |
 | **Aprobado por**      | Equipo de Arquitectura                                |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps                      |
 | **Fecha de creación** | 2026-09-23                                            |
@@ -317,7 +317,7 @@ Hasta P06, el merge a `main` **no** exige el check CI en el ruleset (sigue OFF).
 
 ## 08. Evidencia As-Built
 
-Las subsecciones §08.1–§08.4 conservan la evidencia histórica capturada durante el cierre original de P05. La §08.5 documenta la evolución posterior asociada a PN-030 y PN-021; sus garantías y controles requieren evidencia de validación independiente y no se consideran cubiertos por las ejecuciones históricas de CI.
+Las subsecciones §08.1, §08.3 y §08.4 conservan evidencia histórica capturada durante el cierre original de P05. Las subsecciones §08.2 y §08.6 describen el as-built vigente de CI y reconciliación de revisiones. La §08.5 documenta la evolución posterior asociada a PN-030 y PN-021; sus garantías y controles requieren evidencia de validación independiente y no se consideran cubiertos por las ejecuciones históricas de CI.
 
 ### 08.1. Scripts root
 
@@ -332,14 +332,13 @@ Las subsecciones §08.1–§08.4 conservan la evidencia histórica capturada dur
 
 ### 08.2. Workflow
 
-| Campo          | Valor as-built                                                             |
-| :------------- | :------------------------------------------------------------------------- |
-| Path           | `.github/workflows/ci.yml`                                                 |
-| `permissions`  | `contents: read`                                                           |
-| Events         | `pull_request`, `push` → `main`, `workflow_dispatch`                       |
-| Actions        | `actions/checkout@v5`, `pnpm/action-setup@v4.4.0`, `actions/setup-node@v5` |
-| Run verificado | push a `main`, job **Validate**, ~47s, **success**                         |
-| Resultado      | **✓ success**                                                              |
+| Workflow                           | Eventos as-built                                                                                                                                                                                                                                                      |
+| :--------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.github/workflows/ci.yml`         | `pull_request`; valida cambios del PR y cancela una ejecución CI anterior del mismo grupo/ref.                                                                                                                                                                        |
+| `.github/workflows/governance.yml` | `pull_request_review` usa relays sin acceso al environment protegido y con orden por número de ejecución; el más reciente puede solicitar `workflow_dispatch` en `main`. También reconcilia finalización de `CI`, comentarios y horario; cola global sin cancelación. |
+| `.github/workflows/ci-main.yml`    | `push` → `main` y ejecución manual; job `Validate Main`.                                                                                                                                                                                                              |
+
+Las reviews no inician el workflow `CI`. GitHub crea un run relay por cada evento `pull_request_review`; no hay una ventana temporal de espera. El relay no accede al environment ni a sus secretos. Usa los números de ejecución de la historia paginada para descartar señales anteriores y comprueba de nuevo el PR, el HEAD y `Validate` antes del dispatch. El nombre del dispatch incluye PR, HEAD y run de review para evitar volver a solicitar el mismo evento; un dispatch protegido pendiente para el mismo PR/HEAD ya procesará la evidencia actual. Un CI cancelado nunca satisface el gate.
 
 ### 08.3. Specialization Type B — Node 20 deprecation on Actions
 
@@ -380,6 +379,14 @@ El workflow utiliza `push` sobre `main` y determina si existe una transición de
 Tras completarse correctamente el comando de publicación, el workflow ejecuta `git push origin "v${version}"` y verifica que el tag remoto corresponda al commit esperado. El orden observado es, por tanto, publicación y creación local del tag dentro del comando A-REL, push del tag y comprobación remota posterior.
 
 La existencia de estos pasos no acredita, por sí sola, una publicación npm exitosa ni la aplicación efectiva de las protecciones remotas.
+
+### 08.6. Reconciliación de eventos de revisión
+
+`pull_request_review` (`submitted`, `edited` y `dismissed`) crea un run relay por cada webhook, sin acceso al environment protegido. La cola global del workflow mantiene serializados los relays y las reconciliaciones. Cada relay compara su `run_number` con la historia paginada del mismo PR: un evento sustituido termina como `SUPERSEDED`; si `Validate` no pasó para el HEAD actual termina como `WAITING_FOR_CI`; y si ya existe un dispatch para el mismo evento o un dispatch protegido activo para el mismo PR/HEAD termina como `ALREADY_CURRENT`. Antes de despachar vuelve a comprobar orden, PR, HEAD y `Validate`. El resultado operativo incluye estado, PR, SHA y run ID, sin imprimir credenciales. El relay solicita mediante `GITHUB_TOKEN` un `workflow_dispatch` con `ref: main`, número de PR, SHA y run de review. La ejecución protegida de `main` resuelve nuevamente el PR y verifica que el SHA solicitado siga siendo el HEAD actual antes de evaluar.
+
+El job relay instala y ejecuta el script desde un checkout de `main`, con persistencia de credenciales desactivada y sin asociarse al environment protegido. El workflow instala dependencias con `pnpm install --frozen-lockfile`. El environment `governance-main` permanece restringido a `main`; ningún job ejecutado en `refs/pull/*/merge` accede a sus secretos.
+
+El workflow `CI` se ejecuta ante cambios del Pull Request, no por cada review. Los eventos cercanos pueden crear varios runs relay visibles; el orden por run number, la serialización global y la deduplicación del dispatch evitan que señales obsoletas generen verificaciones protegidas redundantes. Un run relay que encuentre `Validate` pendiente termina sin dispatch; la finalización exitosa de CI activa la reconciliación. Si una review nueva llega después de que el dispatch anterior haya terminado, es una nueva señal y puede requerir otra evaluación. La evaluación protegida consulta de nuevo el HEAD, `Validate`, las aprobaciones vigentes y la elegibilidad de revisores. Una review nunca vuelve a ejecutar CI.
 
 ---
 

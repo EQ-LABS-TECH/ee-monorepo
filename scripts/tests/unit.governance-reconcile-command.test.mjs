@@ -53,31 +53,39 @@ function ciPullRequestEvent() {
   };
 }
 
-function workflowRunEnv(path) {
+function pullRequestReviewEvent() {
   return {
-    GITHUB_EVENT_NAME: 'workflow_run',
-    GITHUB_EVENT_PATH: path,
-    GITHUB_REPOSITORY: repository,
-    GOVERNANCE_PR_TOKEN: 'reader',
-    GOVERNANCE_EVIDENCE_TOKEN: 'evidence',
-    GOVERNANCE_PUBLISHER_TOKEN: 'publisher',
-    GOVERNANCE_APP_ID: '123',
+    action: 'submitted',
+    repository: { full_name: repository },
+    pull_request: {
+      number: 51,
+      base: { ref: 'main', repo: { full_name: repository } },
+    },
+    review: { id: 456, state: 'approved' },
   };
 }
 
-test('runs reconciliation for a trusted review signal using current API state', async () => {
-  const event = ciPullRequestEvent();
-  event.workflow_run.event = 'pull_request_review';
-
-  await withEvent(event, async (path) => {
+test('runs reconciliation directly for a trusted PR review signal', async () => {
+  await withEvent(pullRequestReviewEvent(), async (path) => {
     let received;
 
-    await main(workflowRunEnv(path), {
-      reconcile: async (context) => {
-        received = context;
-        return { status: 'SUCCESS', results: [{ number: 10, status: 'PASS' }] };
+    await main(
+      {
+        GITHUB_EVENT_NAME: 'pull_request_review',
+        GITHUB_EVENT_PATH: path,
+        GITHUB_REPOSITORY: repository,
+        GOVERNANCE_PR_TOKEN: 'reader',
+        GOVERNANCE_EVIDENCE_TOKEN: 'evidence',
+        GOVERNANCE_PUBLISHER_TOKEN: 'publisher',
+        GOVERNANCE_APP_ID: '123',
       },
-    });
+      {
+        reconcile: async (context) => {
+          received = context;
+          return { status: 'SUCCESS', results: [{ number: 10, status: 'PASS' }] };
+        },
+      },
+    );
 
     assert.deepEqual(received, {
       owner: 'EQ-LABS-TECH',

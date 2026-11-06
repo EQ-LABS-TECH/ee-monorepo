@@ -10,21 +10,21 @@ Este documento consolida la evidencia técnica de **EE-IMP-007-P01 … P07**, ej
 | :-------------------- | :----------------------------------------------- |
 | **ID**                | EE-IMP-007-P08                                   |
 | **Documento**         | Governance Validation and Consolidation          |
-| **Código corto**      | EE-IMP-007-P08                                   |
+| **Código corto**      | IMP-007-P08                                      |
 | **Fase**              | Fase 8 — Governance Validation and Consolidation |
 | **Tipo**              | Documento Técnico de Implementación              |
 | **Clasificación**     | Implementación                                   |
 | **Nivel**             | Técnico                                          |
 | **Normativo**         | No                                               |
-| **Versión**           | v1.0.0                                           |
+| **Versión**           | v1.0.1                                           |
 | **Estado**            | Completado — Validación Final conforme           |
 | **Propietario**       | Equipo de Arquitectura                           |
 | **Documento padre**   | EE-DOC-007 — GitHub Governance                   |
-| **Dependencias**      | EE-IMP-007-P01 … P07, EE-ADR-003                 |
+| **Dependencias**      | contenido=EE-IMP-007-P01 … P07, EE-ADR-003       |
 | **Aprobado por**      | Equipo de Arquitectura                           |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps                 |
 | **Fecha de creación** | 2026-09-23                                       |
-| **Última revisión**   | 2026-09-23                                       |
+| **Última revisión**   | 2026-11-04                                       |
 | **Próxima revisión**  | Tras Cierre Documental de EE-DOC-007             |
 
 ---
@@ -179,7 +179,7 @@ Ninguna desviación normativa de EE-DOC-007 queda sin clasificar.
 
 ### 06.1. Dictamen
 
-> **Validación Final de EE-DOC-007: CONFORME.**  
+> **Validación Final de EE-DOC-007: CONFORME.**
 > La implementación P01–P07, consolidada en P08 y **EE-TEC-002**, materializa la gobernanza de plataforma GitHub definida por EE-DOC-007, con excepciones de bootstrap y fronteras documentadas (EE-DOC-010 pendiente; Public temporal; bypass single-operator).
 
 ### 06.2. Listo para Cierre Documental
@@ -212,9 +212,10 @@ EE-DOC-007 puede pasar a estado **Congelado** tras el Cierre Documental formal (
 
 ## 09. Historial de Cambios
 
-| Versión    | Fecha      | Autor                                   | Motivo                                           | Estado         |
-| :--------- | :--------- | :-------------------------------------- | :----------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-09-23 | AI Engineering Assistant / Arquitectura | Consolidación P01–P07; Validación Final conforme | **Completado** |
+| Versión    | Fecha      | Autor                                   | Aprobado por | Motivo                                           | Cambios                                                                             | Estado         |
+| :--------- | :--------- | :-------------------------------------- | :----------- | :----------------------------------------------- | :---------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-09-23 | AI Engineering Assistant / Arquitectura | —            | Consolidación P01–P07; Validación Final conforme | —                                                                                   | **Completado** |
+| **v1.0.1** | 2026-11-04 | AI Engineering Assistant / Arquitectura | —            | Regularizacion PC-002                            | Historial normalizado a 7 columnas segun EE-DOC-002 §11; datos previos preservados. | **Completado** |
 
 ---
 

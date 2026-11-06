@@ -362,6 +362,15 @@ test('remote tag preflight allows publication when the tag is absent', () => {
   });
 });
 
+test('remote tag preflight accepts the internal platform tag namespace', () => {
+  assert.doesNotThrow(() => {
+    assertRemoteTagAbsent({
+      tag: 'platform-v1.2.3',
+      remoteTagRefs: () => '',
+    });
+  });
+});
+
 test('remote tag preflight rejects an existing lightweight tag', () => {
   assert.throws(() => {
     assertRemoteTagAbsent({
@@ -606,6 +615,17 @@ test('remote release tag is absent when ls-remote returns no refs', () => {
   );
 });
 
+test('remote internal release tag is inspected with the same conflict semantics', () => {
+  assert.deepEqual(
+    inspectRemoteReleaseTag({
+      tag: 'platform-v1.2.3',
+      remoteTagRefs: () => `${expectedReleaseCommit}\trefs/tags/platform-v1.2.3`,
+      expectedCommit: expectedReleaseCommit,
+    }),
+    { state: 'matches', targetCommit: expectedReleaseCommit },
+  );
+});
+
 test('remote lightweight tag matches when it points to the expected commit', () => {
   assert.deepEqual(
     inspectRemoteReleaseTag({
@@ -811,6 +831,26 @@ test('release manifest rejects duplicate package entries', () => {
         ],
       }),
     /Duplicate package/,
+  );
+});
+
+test('release manifest permits a verified private-only plan for internal release', () => {
+  const manifest = createReleaseManifest({
+    baseVersion: '1.0.0',
+    targetVersion: '1.1.0',
+    baseCommit: 'a'.repeat(40),
+    changesetIds: ['internal-release'],
+    releases: [{ name: '@eq-labs/internal', version: '1.1.0', type: 'minor' }],
+    packages: [{ name: '@eq-labs/internal', version: '1.1.0', private: true }],
+  });
+
+  assert.equal(manifest.releases.length, 1);
+  assert.throws(() => getPlannedPublicPackages(manifest), /refusing npm publication/);
+  assert.doesNotThrow(() =>
+    validateReleaseManifest(manifest, {
+      expectedVersion: '1.1.0',
+      workspacePackages: manifest.packages,
+    }),
   );
 });
 
@@ -1254,10 +1294,49 @@ test('valid prepared release transition is accepted', () => {
 
   assert.equal(result.previousVersion, '1.0.0');
   assert.equal(result.currentVersion, '1.2.0');
+  assert.equal(result.releaseType, 'public');
 
   assert.deepEqual(
     result.publicPackages.map((pkg) => pkg.name),
     ['@eq-labs/public-new'],
+  );
+});
+
+test('valid private-only prepared transition is classified as internal', () => {
+  const manifest = createReleaseManifest({
+    baseVersion: '1.0.0',
+    targetVersion: '1.2.0',
+    baseCommit: 'a'.repeat(40),
+    changesetIds: ['test-release'],
+    releases: [{ name: '@eq-labs/private', version: '1.2.0', type: 'minor' }],
+    packages: [{ name: '@eq-labs/private', version: '1.2.0', private: true }],
+  });
+  const result = validateReleaseTrigger({
+    previousVersion: '1.0.0',
+    currentVersion: '1.2.0',
+    manifestChanged: true,
+    manifest,
+  });
+
+  assert.equal(result.releaseType, 'internal');
+  assert.deepEqual(result.publicPackages, []);
+
+  assert.deepEqual(
+    validateReleaseSourcePlan({
+      manifest,
+      sourcePlan: {
+        changesetIds: ['test-release'],
+        releases: [{ name: '@eq-labs/private', type: 'minor' }],
+      },
+    }).publicPackages,
+    [],
+  );
+  assert.doesNotThrow(() =>
+    validateEffectiveSourcePlan({
+      manifest,
+      changesetIds: ['test-release'],
+      effectiveReleases: [{ name: '@eq-labs/private', version: '1.2.0', type: 'minor' }],
+    }),
   );
 });
 

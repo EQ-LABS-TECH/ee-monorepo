@@ -6,24 +6,26 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** (�
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                                                |
-| :-------------------- | :------------------------------------------------------------------------------------------------------------------- |
-| **ID**                | EE-IMP-014-P01                                                                                                       |
-| **Documento**         | Inventory and Boundaries (Knowledge Layer)                                                                           |
-| **Código corto**      | EE-IMP-014-P01                                                                                                       |
-| **Tipo**              | Documento Técnico de Implementación                                                                                  |
-| **Clasificación**     | Especializado                                                                                                        |
-| **Normativo**         | No (evidencia de implementación)                                                                                     |
-| **Versión**           | v1.1.0                                                                                                               |
-| **Estado**            | Completado                                                                                                           |
-| **Propietario**       | Equipo de Arquitectura                                                                                               |
-| **Documento padre**   | EE-DOC-014 — Knowledge Management                                                                                    |
-| **Dependencias**      | EE-DOC-006, EE-DOC-007, EE-DOC-010, EE-DOC-013, EE-ADR-001, EE-ADR-005, EE-TEC-005, EE-IMP-013-P05 (precedente D-01) |
-| **Aprobado por**      | Equipo de Arquitectura                                                                                               |
-| **Audiencia**         | Arquitectura, Desarrollo                                                                                             |
-| **Fecha de creación** | 2026-10-05                                                                                                           |
-| **Última revisión**   | 2026-10-05                                                                                                           |
-| **Unidad de fase**    | P01 de EE-DOC-014 §09.1                                                                                              |
+| Campo                 | Valor                                                                                                                    |
+| :-------------------- | :----------------------------------------------------------------------------------------------------------------------- |
+| **ID**                | EE-IMP-014-P01                                                                                                           |
+| **Documento**         | Inventory and Boundaries (Knowledge Layer)                                                                               |
+| **Código corto**      | IMP-014-P01                                                                                                              |
+| **Tipo**              | Documento Técnico de Implementación                                                                                      |
+| **Clasificación**     | Implementación                                                                                                           |
+| **Normativo**         | No (evidencia de implementación)                                                                                         |
+| **Versión**           | v1.1.0                                                                                                                   |
+| **Estado**            | Completado                                                                                                               |
+| **Propietario**       | Equipo de Arquitectura                                                                                                   |
+| **Documento padre**   | EE-DOC-014 — Knowledge Management                                                                                        |
+| **Dependencias**      | contenido=EE-DOC-006, EE-DOC-007, EE-DOC-010, EE-DOC-013, EE-DOC-014, EE-ADR-001, EE-ADR-005, EE-TEC-005, EE-IMP-013-P05 |
+| **Aprobado por**      | Equipo de Arquitectura                                                                                                   |
+| **Audiencia**         | Arquitectura, Desarrollo                                                                                                 |
+| **Fecha de creación** | 2026-10-05                                                                                                               |
+| **Última revisión**   | 2026-11-04                                                                                                               |
+| **Unidad de fase**    | P01 de EE-DOC-014 §09.1                                                                                                  |
+| **Nivel**             | Técnico                                                                                                                  |
+| **Próxima revisión**  | 2027-05-04                                                                                                               |
 
 ---
 
@@ -302,10 +304,10 @@ gh run list --workflow=ci.yml --branch main --limit 1
 
 ## 11. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                 | Cambios                                                                                                      | Estado         |
-| :--------- | :--------- | :--------------------- | :--------------------- | :--------------------- | :----------------------------------------------------------------------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-10-05 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre P01             | Inventario as-built; boundaries; KS-06 FAIL→Tipo B; QG-SEC-001; riesgo single-operator; pasos operador       | **Completado** |
-| **v1.1.0** | 2026-10-05 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación P05 + turbo | D-01 WAIVED formal (hasta 2026-10-12); validate FAIL solo D-01 = OK; turbo 2.11.7; pasos operador unificados | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                           | Cambios                                                                                                  | Estado         |
+| :--------- | :--------- | :--------------------- | :--------------------- | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-10-05 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidated changes for the same date and state | Records inventory and boundaries, formal WAIVE, Turbo baseline, validation exception and operator steps. | **Completado** |
+| **v1.1.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Regularización de metadatos PC-013               | Clasificación Implementación; Nivel Técnico; Normativo No; Próxima revisión 2027-05-04                   | **Completado** |
 
 ---
 

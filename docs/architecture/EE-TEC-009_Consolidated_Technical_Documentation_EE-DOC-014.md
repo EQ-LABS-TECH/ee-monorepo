@@ -6,25 +6,25 @@ Este documento registra la documentación técnica consolidada (estado **as-buil
 
 ## METADATOS
 
-| Campo                 | Valor                                                       |
-| :-------------------- | :---------------------------------------------------------- |
-| **ID**                | EE-TEC-009                                                  |
-| **Documento**         | Consolidated Technical Documentation — Knowledge Management |
-| **Código corto**      | EE-TEC-009                                                  |
-| **Tipo**              | Documento Técnico                                           |
-| **Clasificación**     | Implementación                                              |
-| **Nivel**             | Técnico                                                     |
-| **Normativo**         | No                                                          |
-| **Versión**           | v1.0.0                                                      |
-| **Estado**            | Aprobado                                                    |
-| **Propietario**       | Equipo de Arquitectura                                      |
-| **Documento padre**   | EE-DOC-014 — Knowledge Management                           |
-| **Dependencias**      | EE-DOC-014; EE-IMP-014-P01…P06; EE-DOC-006; EE-DOC-013      |
-| **Aprobado por**      | Equipo de Arquitectura                                      |
-| **Audiencia**         | Arquitectura, Desarrollo, Knowledge                         |
-| **Fecha de creación** | 2026-10-06                                                  |
-| **Última revisión**   | 2026-10-06                                                  |
-| **Próxima revisión**  | Al abrir nueva IMP de Knowledge Layer                       |
+| Campo                 | Valor                                                        |
+| :-------------------- | :----------------------------------------------------------- |
+| **ID**                | EE-TEC-009                                                   |
+| **Documento**         | Consolidated Technical Documentation — Knowledge Management  |
+| **Código corto**      | TEC-009                                                      |
+| **Tipo**              | Documentación Técnica Consolidada                            |
+| **Clasificación**     | Técnico / As-Built                                           |
+| **Nivel**             | Técnico                                                      |
+| **Normativo**         | No                                                           |
+| **Versión**           | v1.0.1                                                       |
+| **Estado**            | Aprobado                                                     |
+| **Propietario**       | Equipo de Arquitectura                                       |
+| **Documento padre**   | EE-DOC-014 — Knowledge Management                            |
+| **Dependencias**      | contenido=EE-IMP-014-P01, EE-DOC-006, EE-DOC-013, EE-DOC-014 |
+| **Aprobado por**      | Equipo de Arquitectura                                       |
+| **Audiencia**         | Arquitectura, Desarrollo, Knowledge                          |
+| **Fecha de creación** | 2026-10-06                                                   |
+| **Última revisión**   | 2026-11-04                                                   |
+| **Próxima revisión**  | Al abrir nueva IMP de Knowledge Layer                        |
 
 ---
 
@@ -180,9 +180,10 @@ Commits de referencia: `774cdd8`, `6a0c415`, `517fba2`, `ccc463c`.
 
 ## 11. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo         | Cambios                          | Estado       |
-| :--------- | :--------- | :--------------------- | :--------------------- | :------------- | :------------------------------- | :----------- |
-| **v1.0.0** | 2026-10-06 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre IMP-014 | As-built Knowledge Layer P01–P06 | **Aprobado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo            | Cambios                                                              | Estado       |
+| :--------- | :--------- | :--------------------- | :--------------------- | :---------------- | :------------------------------------------------------------------- | :----------- |
+| **v1.0.0** | 2026-10-06 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre IMP-014    | As-built Knowledge Layer P01–P06                                     | **Aprobado** |
+| **v1.0.1** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Correccion PC-003 | Tipo y Clasificacion alineados a EE-DOC-002 §05.1 y plantilla §18.4. | **Aprobado** |
 
 ---
 

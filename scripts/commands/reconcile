@@ -7,11 +7,16 @@ import {
   validateGovernanceSchedule,
   validateGovernanceWorkflowRun,
   validateGovernanceIssueComment,
+  validateGovernancePullRequestReview,
 } from '@eq-labs/governance/pr-governance/workflow';
 import { reconcileOpenGovernancePrs } from '../lib/pr-governance.reconcile-once.mjs';
 
 export async function main(env = process.env, { reconcile = reconcileOpenGovernancePrs } = {}) {
-  if (!['schedule', 'workflow_run', 'issue_comment'].includes(env.GITHUB_EVENT_NAME)) {
+  if (
+    !['schedule', 'workflow_run', 'issue_comment', 'pull_request_review'].includes(
+      env.GITHUB_EVENT_NAME,
+    )
+  ) {
     throw new Error('Unsupported governance reconciliation event');
   }
 
@@ -22,7 +27,11 @@ export async function main(env = process.env, { reconcile = reconcileOpenGoverna
     throw new Error('Invalid governance GitHub Actions context');
   }
 
-  if (env.GITHUB_EVENT_NAME === 'workflow_run' || env.GITHUB_EVENT_NAME === 'issue_comment') {
+  if (
+    env.GITHUB_EVENT_NAME === 'workflow_run' ||
+    env.GITHUB_EVENT_NAME === 'issue_comment' ||
+    env.GITHUB_EVENT_NAME === 'pull_request_review'
+  ) {
     if (typeof env.GITHUB_EVENT_PATH !== 'string' || !env.GITHUB_EVENT_PATH) {
       throw new Error('Invalid governance GitHub Actions context');
     }
@@ -40,8 +49,13 @@ export async function main(env = process.env, { reconcile = reconcileOpenGoverna
       if (!['pull_request', 'pull_request_review'].includes(origin.sourceEvent)) {
         throw new Error('Unsupported governance reconciliation source');
       }
-    } else {
+    } else if (env.GITHUB_EVENT_NAME === 'issue_comment') {
       validateGovernanceIssueComment({
+        event,
+        expectedRepository: env.GITHUB_REPOSITORY,
+      });
+    } else {
+      validateGovernancePullRequestReview({
         event,
         expectedRepository: env.GITHUB_REPOSITORY,
       });
@@ -72,6 +86,7 @@ export async function main(env = process.env, { reconcile = reconcileOpenGoverna
       passed: result.results.filter((item) => item.status === 'PASS').length,
       blocked: result.results.filter((item) => item.status === 'BLOCKED').length,
       errors: result.results.filter((item) => item.status === 'ERROR').length,
+      alreadyCurrent: result.results.filter((item) => item.status === 'ALREADY_CURRENT').length,
       waitingForValidation: result.results.filter(
         (item) => item.status === 'WAITING_FOR_VALIDATION',
       ).length,

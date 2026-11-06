@@ -6,7 +6,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, sep } from 'node:path';
 import { parse as parseYaml } from 'yaml';
-import { assertDocIdUnique } from './lib/plop-utils.mjs';
+import { assertDocIdUnique, getShortCodeFromEeId } from './lib/plop-utils.mjs';
 
 const ROOT = process.cwd();
 const TEMPLATES_ROOT = join(ROOT, 'templates');
@@ -194,6 +194,7 @@ export default function (plop) {
           if (meta.category === 'T-DOC') {
             assertDocIdUnique(data.docId, join(ROOT, 'docs'));
             ensureCreatedAt(data);
+            data.shortCode = getShortCodeFromEeId(data.docId);
             const title = sanitizeDocTitle(data.title);
             const baseName = `${data.docId}_${title}.md`;
             return [

@@ -6,25 +6,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 
 ## METADATOS
 
-| Campo                 | Valor                                                       |
-| :-------------------- | :---------------------------------------------------------- |
-| **ID**                | EE-DOC-008                                                  |
-| **Documento**         | Development Environment                                     |
-| **Código corto**      | EE-DOC-008                                                  |
-| **Tipo**              | Documento Normativo                                         |
-| **Clasificación**     | Especializado                                               |
-| **Nivel**             | Especializado                                               |
-| **Normativo**         | Sí                                                          |
-| **Versión**           | v1.1.1                                                      |
-| **Estado**            | Congelado                                                   |
-| **Propietario**       | Equipo de Arquitectura                                      |
-| **Documento padre**   | EE-DOC-007                                                  |
-| **Dependencias**      | EE-DOC-001 … EE-DOC-007, EE-ADR-001, EE-ADR-002, EE-ADR-003 |
-| **Aprobado por**      | Equipo de Arquitectura                                      |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                        |
-| **Fecha de creación** | 2026-09-23                                                  |
-| **Última revisión**   | 2026-09-25                                                  |
-| **Próxima revisión**  | No aplica — Documento Congelado (cambio solo vía RFC)       |
+| Campo                 | Valor                                                  |
+| :-------------------- | :----------------------------------------------------- |
+| **ID**                | EE-DOC-008                                             |
+| **Documento**         | Development Environment                                |
+| **Código corto**      | DOC-008                                                |
+| **Tipo**              | Documento Normativo                                    |
+| **Clasificación**     | Especializado                                          |
+| **Nivel**             | Operativo                                              |
+| **Normativo**         | Sí                                                     |
+| **Versión**           | v1.3.0                                                 |
+| **Estado**            | Congelado                                              |
+| **Propietario**       | Equipo de Arquitectura                                 |
+| **Documento padre**   | EE-DOC-007                                             |
+| **Dependencias**      | contenido=EE-DOC-001…EE-DOC-007, EE-ADR-001…EE-ADR-003 |
+| **Aprobado por**      | Equipo de Arquitectura                                 |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                   |
+| **Fecha de creación** | 2026-09-23                                             |
+| **Última revisión**   | 2026-11-04                                             |
+| **Próxima revisión**  | No aplica — Documento Congelado (cambio solo vía RFC)  |
 
 ---
 
@@ -270,7 +270,7 @@ ee-monorepo/
 
 ### 07.4. Frontera con EE-DOC-009
 
-Dev Container = **entorno de desarrollo**.  
+Dev Container = **entorno de desarrollo**.
 Infraestructura de producto (cluster, servicios desplegados, docker de runtime de apps) = **EE-DOC-009 — Infrastructure**.
 
 ---
@@ -375,7 +375,7 @@ flowchart TD
     P04 -.-> P05
 ```
 
-**Conformidad mínima del entorno** = P01 + P02 + P03 + P05 + P06.  
+**Conformidad mínima del entorno** = P01 + P02 + P03 + P05 + P06.
 **P04** no forma parte de la conformidad mínima. El estado (adoptado / diferido) se registra en **EE-IMP-008-P04** o en P06. Convertir Dev Containers en baseline obligatorio requiere **ADR** (§07.1).
 
 ### 12.3. Prerrequisitos de ecosistema
@@ -542,14 +542,13 @@ La evidencia de implementación se registrará en **EE-IMP-008-P0x**. La documen
 
 ## 16. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                  | Cambios                                                                                                                                                                                                                          | Estado             |
-| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------- |
-| **v0.1.0** | 2026-09-23 | AI Engineering Assistant | —                      | Creación inicial                        | Propósito, alcance, baseline Node 24/pnpm, `.vscode/`, Dev Containers, SSOT config, plan conceptual IMP                                                                                                                          | **En Elaboración** |
-| **v0.1.1** | 2026-09-23 | AI Engineering Assistant | —                      | Revisión arquitectónica                 | 10 correcciones: pnpm rango+packageManager; bootstrap doctor/validate obligatorios; `.vscode/` normativo; plan IMP con deps; format vs CI; `.env.example` condicional; P04 diferible; clasificación Especializado; TEC al cierre | **En Elaboración** |
-| **v0.1.2** | 2026-09-23 | AI Engineering Assistant | —                      | Paridad estructural 007 + roles scripts | Roles doctor vs validate; criterio paridad CI en P05; plan con detalle por unidad (P01–P06); §17 Cierre Documental con esqueleto completo (pendiente de valores)                                                                 | **En Elaboración** |
-| **v1.0.0** | 2026-09-24 | Equipo de Arquitectura   | Equipo de Arquitectura | Aprobación normativa                    | Cierre revisión arquitectónica: packageManager vs engines; `.nvmrc`=24 (ADR-003); regla CODEOWNERS sin ID IMP; P01 validar/alinear; P05 SSOT 007/010; Dev Container→obligatorio vía ADR                                          | **Aprobado**       |
-| **v1.1.0** | 2026-09-24 | Equipo de Arquitectura   | Equipo de Arquitectura | Validación Final y Congelación          | IMP P01–P06; EE-TEC-003; §17 Cierre Documental completo                                                                                                                                                                          | Congelado          |
-| **v1.1.1** | 2026-09-25 | Equipo de Arquitectura   | Equipo de Arquitectura | Type B — markdownlint                   | §06.3: exclusiones LICENSE/NOTICE; SSOT `.markdownlint.json`; sin config embebida deprecada (EE-IMP-008-P02 v1.2.0)                                                                                                              | **Congelado**      |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                           | Cambios                                                                                                                                                                                 | Estado             |
+| :--------- | :--------- | :----------------------- | :--------------------- | :----------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------- |
+| **v0.1.0** | 2026-09-23 | AI Engineering Assistant | —                      | Consolidated changes for the same date and state | Defines Node/pnpm baseline, VS Code and Dev Containers; separates doctor/validate and sets CI, secrets and deferred phases.                                                             | **En Elaboración** |
+| **v1.0.0** | 2026-09-24 | Equipo de Arquitectura   | Equipo de Arquitectura | Aprobación normativa                             | Cierre revisión arquitectónica: packageManager vs engines; `.nvmrc`=24 (ADR-003); regla CODEOWNERS sin ID IMP; P01 validar/alinear; P05 SSOT 007/010; Dev Container→obligatorio vía ADR | **Aprobado**       |
+| **v1.1.0** | 2026-09-24 | Equipo de Arquitectura   | Equipo de Arquitectura | Validación Final y Congelación                   | IMP P01–P06; EE-TEC-003; §17 Cierre Documental completo                                                                                                                                 | Congelado          |
+| **v1.2.0** | 2026-09-25 | Equipo de Arquitectura   | Equipo de Arquitectura | Type B — markdownlint                            | §06.3: exclusiones LICENSE/NOTICE; SSOT `.markdownlint.json`; sin config embebida deprecada (EE-IMP-008-P02 v1.2.0)                                                                     | **Congelado**      |
+| **v1.3.0** | 2026-11-04 | Equipo de Arquitectura   | Equipo de Arquitectura | Correccion PC-003                                | Clasificación y Nivel alineados a EE-DOC-002 §05.1 y jerarquía de EE-DOC-001.; Historial normalizado conforme a PC-010.                                                                 | **Congelado**      |
 
 ---
 

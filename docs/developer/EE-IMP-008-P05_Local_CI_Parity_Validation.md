@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                                  |
-| :-------------------- | :----------------------------------------------------- |
-| **ID**                | EE-IMP-008-P05                                         |
-| **Documento**         | Local–CI Parity Validation                             |
-| **Código corto**      | EE-IMP-008-P05                                         |
-| **Fase**              | Fase 5 — Local–CI Parity Validation                    |
-| **Tipo**              | Documento Técnico de Implementación                    |
-| **Clasificación**     | Implementación                                         |
-| **Nivel**             | Técnico                                                |
-| **Normativo**         | No                                                     |
-| **Versión**           | v1.0.0                                                 |
-| **Estado**            | Completado                                             |
-| **Propietario**       | Equipo de Arquitectura                                 |
-| **Documento padre**   | EE-DOC-008 — Development Environment                   |
-| **Dependencias**      | EE-DOC-008, EE-DOC-007, EE-IMP-008-P01, EE-IMP-007-P05 |
-| **Aprobado por**      | Equipo de Arquitectura                                 |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps                       |
-| **Fecha de creación** | 2026-09-24                                             |
-| **Última revisión**   | 2026-09-24                                             |
-| **Próxima revisión**  | 2026-12-24                                             |
+| Campo                 | Valor                                                            |
+| :-------------------- | :--------------------------------------------------------------- |
+| **ID**                | EE-IMP-008-P05                                                   |
+| **Documento**         | Local–CI Parity Validation                                       |
+| **Código corto**      | IMP-008-P05                                                      |
+| **Fase**              | Fase 5 — Local–CI Parity Validation                              |
+| **Tipo**              | Documento Técnico de Implementación                              |
+| **Clasificación**     | Implementación                                                   |
+| **Nivel**             | Técnico                                                          |
+| **Normativo**         | No                                                               |
+| **Versión**           | v1.0.0                                                           |
+| **Estado**            | Completado                                                       |
+| **Propietario**       | Equipo de Arquitectura                                           |
+| **Documento padre**   | EE-DOC-008 — Development Environment                             |
+| **Dependencias**      | contenido=EE-DOC-007, EE-DOC-008, EE-IMP-008-P01, EE-IMP-007-P05 |
+| **Aprobado por**      | Equipo de Arquitectura                                           |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                 |
+| **Fecha de creación** | 2026-09-24                                                       |
+| **Última revisión**   | 2026-09-24                                                       |
+| **Próxima revisión**  | 2026-12-24                                                       |
 
 ---
 
