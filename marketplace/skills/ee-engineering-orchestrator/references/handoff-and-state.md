@@ -32,9 +32,9 @@ Consultarlos en cada auditoría aplicable desde la misma revisión disponible:
 
 - `docs/validation/audit/EE-AUD-Criteria_Audited_Definition.md`
 - `docs/validation/audit/EE-AUD-Log_Progress_Register.md`
-- `docs/validation/audit/EE-AUD-Rules_Emerging.md`
+- `docs/validation/audit/EE-AUD-Rules_Register.md`
 
-`Criteria` define el criterio de auditoría documental; `Log` su progreso; `Rules Emerging` inventaría reglas candidatas. No usar estos archivos para redefinir Quality Gates o crear automáticamente estados documentales nuevos. Si existe hallazgo de código, relacionarlo con el área/documento afectado y dejar propuesta concreta conforme al esquema real de registros; no insertar tablas de esquema inventado. No duplicar reglas existentes ni marcar `auditado` sin satisfacer C1–C8.
+`Criteria` define el criterio de auditoría documental; `Log` su progreso; `Rules Register` inventaría reglas candidatas. No usar estos archivos para redefinir Quality Gates o crear automáticamente estados documentales nuevos. Si existe hallazgo de código, relacionarlo con el área/documento afectado y dejar propuesta concreta conforme al esquema real de registros; no insertar tablas de esquema inventado. No duplicar reglas existentes ni marcar `auditado` sin satisfacer C1–C8.
 
 ## Protocolo de finalización
 

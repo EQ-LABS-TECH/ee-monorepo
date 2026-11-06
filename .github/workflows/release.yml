@@ -133,7 +133,7 @@ jobs:
           PREVIOUS_VERSION="$previous_version" \
           CURRENT_VERSION="$current_version" \
           node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs';
+          import { appendFileSync, readFileSync } from 'node:fs';
           import {
             validateReleaseTrigger,
           } from './scripts/lib/release-integrity.mjs';
@@ -154,6 +154,10 @@ jobs:
           );
           console.log(
             `Planned public packages: ${result.publicPackages.length}`,
+          );
+          appendFileSync(
+            process.env.GITHUB_OUTPUT,
+            `release_type=${result.releaseType}\n`,
           );
           NODE
 
@@ -183,10 +187,14 @@ jobs:
           console.log(`Planned releases: ${result.releases.length}`);
           NODE
 
-      - name: Publish eligible package versions and create tag
-        if: steps.release.outputs.changed == 'true'
+      - name: Publish eligible public package versions and create tag
+        if: steps.release.outputs.changed == 'true' && steps.release.outputs.release_type == 'public'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm run release -- publish
+
+      - name: Finalize internal platform release without npm credentials
+        if: steps.release.outputs.changed == 'true' && steps.release.outputs.release_type == 'internal'
         run: pnpm run release -- publish
 
       - name: Create release publisher token
@@ -212,7 +220,11 @@ jobs:
           fi
 
           version="$(node -p "require('./package.json').version")"
-          tag="v${version}"
+          if [[ "${{ steps.release.outputs.release_type }}" == "internal" ]]; then
+            tag="platform-v${version}"
+          else
+            tag="v${version}"
+          fi
 
           auth_header="$(
             printf 'x-access-token:%s' "${RELEASE_APP_TOKEN}" | base64 -w 0
@@ -230,7 +242,11 @@ jobs:
           set -euo pipefail
 
           version="$(node -p "require('./package.json').version")"
-          tag="v${version}"
+          if [[ "${{ steps.release.outputs.release_type }}" == "internal" ]]; then
+            tag="platform-v${version}"
+          else
+            tag="v${version}"
+          fi
 
           remote_refs="$(
             git ls-remote --tags origin \

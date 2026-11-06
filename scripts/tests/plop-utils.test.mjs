@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync, chmodSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { assertDocIdUnique } from '../lib/plop-utils.mjs';
+import { assertDocIdUnique, getShortCodeFromEeId } from '../lib/plop-utils.mjs';
 
 function fixture({ files = {} } = {}) {
   const root = mkdtempSync(join(tmpdir(), 'ee-plop-utils-'));
@@ -26,6 +26,12 @@ const metaDoc = (id, title = 'X') => `# ${id} — ${title}
 | **ID** | ${id} |
 | **Código corto** | ${id} |
 `;
+
+test('derives the short code by removing only the leading EE prefix', () => {
+  assert.equal(getShortCodeFromEeId('EE-DOC-014'), 'DOC-014');
+  assert.equal(getShortCodeFromEeId('EE-IMP-006-P07'), 'IMP-006-P07');
+  assert.throws(() => getShortCodeFromEeId('DOC-014'), /valid EE identifier/);
+});
 
 test('assertDocIdUnique: available id passes on empty docs/', (t) => {
   const f = fixture();

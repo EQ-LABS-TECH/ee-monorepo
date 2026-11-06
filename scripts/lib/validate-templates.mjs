@@ -8,7 +8,7 @@
 
 import Ajv2020 from 'ajv/dist/2020.js';
 import * as nodeFs from 'node:fs';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 
 const CATEGORY_DIRS = {
   document: 'T-DOC',
@@ -38,6 +38,50 @@ function isCandidateTemplate(entries, metaStat, filesStat) {
     entries.some((entry) => entry.name === 'files') ||
     entries.some((entry) => entry.name.endsWith('.hbs'))
   );
+}
+
+function collectTemplateFiles(fsImpl, directory, prefix = '') {
+  const files = [];
+  for (const entry of fsImpl.readdirSync(directory, { withFileTypes: true })) {
+    const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
+    const fullPath = join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...collectTemplateFiles(fsImpl, fullPath, relativePath));
+    else if (entry.isFile()) files.push(relativePath.replaceAll(sep, '/'));
+  }
+  return files;
+}
+
+function templateInputReferences(fsImpl, filesPath, outputPaths, errors, templateName) {
+  const references = new Set();
+  for (const output of outputPaths) {
+    if (!output.endsWith('.hbs')) continue;
+    const templatePath = join(filesPath, ...output.split('/'));
+    let content;
+    try {
+      content = fsImpl.readFileSync(templatePath, 'utf8');
+    } catch (error) {
+      errors.push(
+        `QG-REPO-001: cannot read ${templateName} template output ${output}: ${errorMessage(error)}`,
+      );
+      continue;
+    }
+    for (const match of content.matchAll(/{{\s*([^{}]+?)\s*}}/g)) {
+      const expression = match[1].trim();
+      if (
+        expression.startsWith('!') ||
+        expression.startsWith('>') ||
+        expression === 'else' ||
+        expression.startsWith('/')
+      )
+        continue;
+      const variable =
+        expression.startsWith('#') || expression.startsWith('^')
+          ? expression.slice(1).trim().split(/\s+/)[1]
+          : expression.replace(/^[>&]\s*/, '').split(/\s+/)[0];
+      if (variable && /^[a-zA-Z_$][\w$]*$/.test(variable)) references.add(variable);
+    }
+  }
+  return references;
 }
 
 /**
@@ -185,12 +229,28 @@ export function validateTemplates({ root, fsImpl = nodeFs }) {
       }
 
       if (Array.isArray(data.outputs)) {
+        const expectedOutputs = new Set();
         for (const output of data.outputs) {
-          const expectedPath = join(filesPath, `${output}.hbs`);
+          if (
+            typeof output !== 'string' ||
+            !output ||
+            output.startsWith('/') ||
+            /^[a-zA-Z]:/.test(output) ||
+            output
+              .replaceAll('\\', '/')
+              .split('/')
+              .some((part) => !part || part === '.' || part === '..')
+          ) {
+            errors.push(`QG-REPO-001: ${category}/${entry.name} output path is unsafe`);
+            continue;
+          }
+          const normalizedOutput = output.replaceAll('\\', '/');
+          expectedOutputs.add(`${normalizedOutput}.hbs`);
+          const expectedPath = join(filesPath, ...normalizedOutput.split('/')) + '.hbs';
           const outputStat = inspectPath(
             fsImpl,
             expectedPath,
-            `templates/${category}/${entry.name}/files/${output}.hbs`,
+            `templates/${category}/${entry.name}/files/${normalizedOutput}.hbs`,
             errors,
           );
           if (outputStat === null) {
@@ -199,7 +259,43 @@ export function validateTemplates({ root, fsImpl = nodeFs }) {
             );
           } else if (outputStat && !outputStat.isFile()) {
             errors.push(
-              `QG-REPO-001: ${category}/${entry.name} output "${output}.hbs" is not a file`,
+              `QG-REPO-001: ${category}/${entry.name} output "${normalizedOutput}.hbs" is not a file`,
+            );
+          }
+        }
+
+        let actualOutputs;
+        try {
+          actualOutputs = collectTemplateFiles(fsImpl, filesPath)
+            .filter((file) => file.endsWith('.hbs'))
+            .sort();
+        } catch (error) {
+          errors.push(
+            `QG-REPO-001: cannot enumerate ${category}/${entry.name}/files/: ${errorMessage(error)}`,
+          );
+          actualOutputs = [];
+        }
+        for (const output of actualOutputs) {
+          if (!expectedOutputs.has(output)) {
+            errors.push(
+              `QG-REPO-001: ${category}/${entry.name} template file "${output}" is not declared in outputs`,
+            );
+          }
+        }
+
+        const declaredInputs = new Set((data.inputs ?? []).map((input) => input.name));
+        for (const name of templateInputReferences(
+          fsImpl,
+          filesPath,
+          actualOutputs,
+          errors,
+          `${category}/${entry.name}`,
+        )) {
+          const injectedByDocumentGenerator =
+            expectedCategory === 'T-DOC' && ['createdAt', 'shortCode'].includes(name);
+          if (!declaredInputs.has(name) && !injectedByDocumentGenerator) {
+            errors.push(
+              `QG-REPO-001: ${category}/${entry.name} template variable "${name}" is not declared in inputs`,
             );
           }
         }

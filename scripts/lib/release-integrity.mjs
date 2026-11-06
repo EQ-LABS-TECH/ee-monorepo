@@ -12,7 +12,7 @@ const RELEASE_TYPE_RANK = { patch: 0, minor: 1, major: 2 };
  * Changesets status result, not from manifest.releases.
  */
 export function validateEffectiveSourcePlan({ manifest, changesetIds, effectiveReleases }) {
-  getPlannedPublicPackages(manifest);
+  getPlannedReleasePackages(manifest);
 
   if (
     !Array.isArray(changesetIds) ||
@@ -349,14 +349,6 @@ export function createReleaseManifest({
     })
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  const publicReleases = normalizedReleases.filter(
-    ({ name }) => packageMap.get(name).private === false,
-  );
-
-  if (publicReleases.length === 0) {
-    throw new Error('No public packages in Changesets release plan. Refusing release.');
-  }
-
   return {
     schemaVersion: 2,
     releaseId: `ee-v${targetVersion}`,
@@ -443,7 +435,7 @@ export function validateReleaseManifest(manifest, { expectedVersion, workspacePa
  * interpreted as an absent tag.
  */
 export function assertRemoteTagAbsent({ tag, remoteTagRefs }) {
-  if (typeof tag !== 'string' || !/^v\d+\.\d+\.\d+$/.test(tag)) {
+  if (typeof tag !== 'string' || !/^(?:v|platform-v)\d+\.\d+\.\d+$/.test(tag)) {
     throw new Error(`Invalid release tag: ${tag}`);
   }
 
@@ -474,7 +466,7 @@ export function assertRemoteTagAbsent({ tag, remoteTagRefs }) {
  * For lightweight tags, the direct ref is the target commit.
  */
 export function inspectRemoteReleaseTag({ tag, remoteTagRefs, expectedCommit }) {
-  if (typeof tag !== 'string' || !/^v\d+\.\d+\.\d+$/.test(tag)) {
+  if (typeof tag !== 'string' || !/^(?:v|platform-v)\d+\.\d+\.\d+$/.test(tag)) {
     throw new Error(`Invalid release tag: ${tag}`);
   }
 
@@ -740,7 +732,9 @@ export function validateReleaseChangesetFiles({ manifest, baseFiles }) {
  * Dependency-derived releases are not reconstructed here.
  */
 export function validateReleaseChangesetContent({ manifest, sourceFiles }) {
-  const plannedPublicPackages = getPlannedPublicPackages(manifest);
+  const plannedPublicPackages = getPlannedReleasePackages(manifest).filter(
+    (pkg) => pkg.private === false,
+  );
 
   if (!sourceFiles || typeof sourceFiles !== 'object' || Array.isArray(sourceFiles)) {
     throw new Error('Missing Changeset source content.');
@@ -828,7 +822,7 @@ export function validateReleaseSourcePlan({ manifest, sourcePlan }) {
     throw new Error('Missing independent Changesets source plan.');
   }
 
-  const publicPackages = getPlannedPublicPackages(manifest);
+  const publicPackages = getPlannedReleasePackages(manifest).filter((pkg) => pkg.private === false);
 
   const expectedChangesets = [...new Set(sourcePlan.changesetIds)].sort();
   const actualChangesets = [...manifest.changesets].sort();
@@ -903,21 +897,31 @@ export function validateReleaseTrigger({
     );
   }
 
-  const publicPackages = getPlannedPublicPackages(manifest);
+  const { releaseType, publicPackages } = classifyReleaseManifest(manifest);
 
   return {
     previousVersion,
     currentVersion,
+    releaseType,
     publicPackages,
   };
 }
 
-export function getPlannedPublicPackages(manifest) {
-  if (!manifest || !Array.isArray(manifest.releases)) {
+function classifyReleaseManifest(manifest) {
+  const plannedPackages = getPlannedReleasePackages(manifest);
+  const publicPackages = plannedPackages.filter((pkg) => pkg.private === false);
+  return {
+    releaseType: publicPackages.length > 0 ? 'public' : 'internal',
+    publicPackages,
+  };
+}
+
+export function getPlannedReleasePackages(manifest) {
+  if (!manifest || !Array.isArray(manifest.releases) || manifest.releases.length === 0) {
     throw new Error('Missing verified release plan.');
   }
 
-  if (!Array.isArray(manifest.packages)) {
+  if (!Array.isArray(manifest.packages) || manifest.packages.length === 0) {
     throw new Error('Invalid release workspace inventory.');
   }
 
@@ -927,13 +931,14 @@ export function getPlannedPublicPackages(manifest) {
   });
 
   const packageMap = new Map(manifest.packages.map((pkg) => [pkg.name, pkg]));
+  return manifest.releases.map((release) => packageMap.get(release.name));
+}
 
-  const result = manifest.releases
-    .map((release) => packageMap.get(release.name))
-    .filter((pkg) => pkg.private === false);
+export function getPlannedPublicPackages(manifest) {
+  const result = getPlannedReleasePackages(manifest).filter((pkg) => pkg.private === false);
 
   if (result.length === 0) {
-    throw new Error('No public packages configured for this release.');
+    throw new Error('No public packages in Changesets release plan; refusing npm publication.');
   }
 
   return result;

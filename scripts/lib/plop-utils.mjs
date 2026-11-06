@@ -73,3 +73,10 @@ export function assertDocIdUnique(docId, docsRoot) {
 
   walk(docsRoot);
 }
+
+export function getShortCodeFromEeId(docId) {
+  if (typeof docId !== 'string' || !/^EE-[A-Z]+-/.test(docId)) {
+    throw new TypeError('docId must be a valid EE identifier');
+  }
+  return docId.slice(3);
+}

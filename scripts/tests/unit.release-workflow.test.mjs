@@ -60,7 +60,8 @@ test('release steps preserve the required order', () => {
     'Install dependencies',
     'Verify release manifest contract',
     'Prepare historical release dependencies',
-    'Publish eligible package versions and create tag',
+    'Publish eligible public package versions and create tag',
+    'Finalize internal platform release without npm credentials',
     'Create release publisher token',
     'Push release tag',
     'Verify remote release tag',
@@ -103,7 +104,8 @@ test('preparation has no publication credentials or effects', () => {
   const { job, steps } = getSteps();
 
   const prepare = getStep(steps, 'Prepare historical release dependencies');
-  const publish = getStep(steps, 'Publish eligible package versions and create tag');
+  const publish = getStep(steps, 'Publish eligible public package versions and create tag');
+  const internal = getStep(steps, 'Finalize internal platform release without npm credentials');
 
   assert.equal(
     job.env?.NODE_AUTH_TOKEN,
@@ -116,6 +118,10 @@ test('preparation has no publication credentials or effects', () => {
   assert.doesNotMatch(prepare.run, /NODE_AUTH_TOKEN|NPM_TOKEN|npm\s+publish|git\s+push/);
 
   assert.equal(publish.env?.NODE_AUTH_TOKEN, '${{ secrets.NPM_TOKEN }}');
+  assert.match(publish.if, /release_type == 'public'/);
+  assert.equal(internal.env?.NODE_AUTH_TOKEN, undefined);
+  assert.equal(internal.env?.NPM_TOKEN, undefined);
+  assert.match(internal.if, /release_type == 'internal'/);
 
   assert.match(publish.run, /pnpm run release -- publish/);
 });
@@ -126,7 +132,8 @@ test('publication and remote tag verification remain gated', () => {
   const required = [
     'Verify release manifest contract',
     'Prepare historical release dependencies',
-    'Publish eligible package versions and create tag',
+    'Publish eligible public package versions and create tag',
+    'Finalize internal platform release without npm credentials',
     'Create release publisher token',
     'Push release tag',
     'Verify remote release tag',
@@ -135,18 +142,16 @@ test('publication and remote tag verification remain gated', () => {
   for (const name of required) {
     const step = getStep(steps, name);
 
-    assert.equal(
-      step.if,
-      "steps.release.outputs.changed == 'true'",
-      `${name} must require an approved root version change`,
-    );
+    assert.match(step.if, /steps\.release\.outputs\.changed == 'true'/);
   }
 
   const manifest = getStep(steps, 'Verify release manifest contract');
   const verifyTag = getStep(steps, 'Verify remote release tag');
 
   assert.match(manifest.run, /validateReleaseTrigger/);
+  assert.match(manifest.run, /release_type=\$\{result\.releaseType\}/);
   assert.match(verifyTag.run, /inspectRemoteReleaseTag/);
+  assert.match(verifyTag.run, /platform-v\$\{version\}/);
 });
 
 test('release publication precedes tag push and remote verification', () => {
@@ -154,18 +159,23 @@ test('release publication precedes tag push and remote verification', () => {
 
   const names = steps.map((step) => step.name);
 
-  const publishIndex = names.indexOf('Publish eligible package versions and create tag');
+  const publishIndex = names.indexOf('Publish eligible public package versions and create tag');
+  const internalIndex = names.indexOf('Finalize internal platform release without npm credentials');
   const pushIndex = names.indexOf('Push release tag');
   const verifyIndex = names.indexOf('Verify remote release tag');
 
   assert.ok(publishIndex >= 0, 'Publication step must exist');
-  assert.ok(pushIndex > publishIndex, 'Tag push must follow publication');
+  assert.ok(
+    pushIndex > publishIndex && pushIndex > internalIndex,
+    'Tag push must follow release finalization',
+  );
   assert.ok(verifyIndex > pushIndex, 'Remote verification must follow tag push');
 
   const push = getStep(steps, 'Push release tag');
   const verify = getStep(steps, 'Verify remote release tag');
 
   assert.match(push.run, /git -c credential\.helper= push origin/);
+  assert.match(push.run, /platform-v\$\{version\}/);
   assert.match(verify.run, /git ls-remote --tags origin/);
   assert.match(verify.run, /inspectRemoteReleaseTag/);
 });
@@ -173,12 +183,15 @@ test('release publication precedes tag push and remote verification', () => {
 test('npm publication token is scoped to the publication step', () => {
   const { job, steps } = getSteps();
 
-  const publish = getStep(steps, 'Publish eligible package versions and create tag');
+  const publish = getStep(steps, 'Publish eligible public package versions and create tag');
+  const internal = getStep(steps, 'Finalize internal platform release without npm credentials');
 
   assert.equal(job.env?.NODE_AUTH_TOKEN, undefined);
   assert.equal(job.env?.NPM_TOKEN, undefined);
 
   assert.equal(publish.env?.NODE_AUTH_TOKEN, '${{ secrets.NPM_TOKEN }}');
+  assert.equal(internal.env?.NODE_AUTH_TOKEN, undefined);
+  assert.equal(internal.env?.NPM_TOKEN, undefined);
 
   for (const step of steps) {
     if (step.name === publish.name) continue;
@@ -203,7 +216,8 @@ test('checkout does not persist GitHub credentials', () => {
 test('release publisher token is scoped and created after publication', () => {
   const { job, steps } = getSteps();
 
-  const publish = getStep(steps, 'Publish eligible package versions and create tag');
+  const publish = getStep(steps, 'Publish eligible public package versions and create tag');
+  const internal = getStep(steps, 'Finalize internal platform release without npm credentials');
   const createToken = getStep(steps, 'Create release publisher token');
   const push = getStep(steps, 'Push release tag');
   const verify = getStep(steps, 'Verify remote release tag');
@@ -211,6 +225,7 @@ test('release publisher token is scoped and created after publication', () => {
   const names = steps.map((step) => step.name);
 
   assert.ok(names.indexOf(createToken.name) > names.indexOf(publish.name));
+  assert.ok(names.indexOf(createToken.name) > names.indexOf(internal.name));
   assert.ok(names.indexOf(createToken.name) < names.indexOf(push.name));
   assert.ok(names.indexOf(verify.name) > names.indexOf(push.name));
 
