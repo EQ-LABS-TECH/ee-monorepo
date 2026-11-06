@@ -6,26 +6,26 @@ Evidencia técnica de **P04** (T-PKG / T-APP / T-CON) de **EE-DOC-012 — Templa
 
 ## METADATOS
 
-| Campo                      | Valor                                                         |
-| :------------------------- | :------------------------------------------------------------ |
-| **ID**                     | EE-IMP-012-P04                                                |
-| **Documento**              | Code Templates                                                |
-| **Código corto**           | EE-IMP-012-P04                                                |
-| **Fase de implementación** | P04 — Code Templates (T-PKG, T-APP, T-CON)                    |
-| **Tipo**                   | Documento Técnico de Implementación                           |
-| **Clasificación**          | Implementación                                                |
-| **Nivel**                  | Técnico                                                       |
-| **Normativo**              | No                                                            |
-| **Versión**                | v1.1.0                                                        |
-| **Estado**                 | Completado                                                    |
-| **Propietario**            | Equipo de Arquitectura                                        |
-| **Documento padre**        | EE-DOC-012 — Templates (v0.5.0)                               |
-| **Dependencias**           | EE-IMP-012-P03 Completado, EE-DOC-006, EE-ADR-002, EE-ADR-003 |
-| **Aprobado por**           | Equipo de Arquitectura                                        |
-| **Audiencia**              | Arquitectura, Desarrollo                                      |
-| **Fecha de creación**      | 2026-10-01                                                    |
-| **Última revisión**        | 2026-10-01                                                    |
-| **Próxima revisión**       | — (fase Completada)                                           |
+| Campo                      | Valor                                                                   |
+| :------------------------- | :---------------------------------------------------------------------- |
+| **ID**                     | EE-IMP-012-P04                                                          |
+| **Documento**              | Code Templates                                                          |
+| **Código corto**           | IMP-012-P04                                                             |
+| **Fase de implementación** | P04 — Code Templates (T-PKG, T-APP, T-CON)                              |
+| **Tipo**                   | Documento Técnico de Implementación                                     |
+| **Clasificación**          | Implementación                                                          |
+| **Nivel**                  | Técnico                                                                 |
+| **Normativo**              | No                                                                      |
+| **Versión**                | v1.1.1                                                                  |
+| **Estado**                 | Completado                                                              |
+| **Propietario**            | Equipo de Arquitectura                                                  |
+| **Documento padre**        | EE-DOC-012 — Templates (v0.5.0)                                         |
+| **Dependencias**           | contenido=EE-IMP-012-P03 Completado, EE-DOC-006, EE-ADR-002, EE-ADR-003 |
+| **Aprobado por**           | Equipo de Arquitectura                                                  |
+| **Audiencia**              | Arquitectura, Desarrollo                                                |
+| **Fecha de creación**      | 2026-10-01                                                              |
+| **Última revisión**        | 2026-11-04                                                              |
+| **Próxima revisión**       | — (fase Completada)                                                     |
 
 ---
 
@@ -486,10 +486,11 @@ git push origin main
 
 ## 10. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Motivo                                                                  | Estado         |
-| :--------- | :--------- | :--------------------- | :---------------------------------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-10-01 | Equipo de Arquitectura | Apertura P04 tras cierre P03                                            | Borrador       |
-| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Cierre: 3 code templates en main (`6ec3e7c`), 8 ids, validate + CI PASS | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                                                                  | Cambios                                                                             | Estado         |
+| :--------- | :--------- | :--------------------- | :----------- | :---------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-10-01 | Equipo de Arquitectura | —            | Apertura P04 tras cierre P03                                            | —                                                                                   | Borrador       |
+| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | —            | Cierre: 3 code templates en main (`6ec3e7c`), 8 ids, validate + CI PASS | —                                                                                   | **Completado** |
+| **v1.1.1** | 2026-11-04 | Equipo de Arquitectura | —            | Regularizacion PC-002                                                   | Historial normalizado a 7 columnas segun EE-DOC-002 §11; datos previos preservados. | **Completado** |
 
 ---
 

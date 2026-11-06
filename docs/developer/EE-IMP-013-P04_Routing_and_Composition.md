@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | :------------------------- | :------------------------------------------------------------------ |
 | **ID**                     | EE-IMP-013-P04                                                      |
 | **Documento**              | Routing and Composition                                             |
-| **Código corto**           | EE-IMP-013-P04                                                      |
+| **Código corto**           | IMP-013-P04                                                         |
 | **Fase**                   | Fase 3 — Core Components                                            |
 | **Fase de implementación** | P04 — Routing and composition wiring (Implementación de EE-DOC-013) |
 | **Tipo**                   | Documento Técnico de Implementación                                 |
@@ -21,7 +21,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | **Estado**                 | Completado                                                          |
 | **Propietario**            | Equipo de Arquitectura                                              |
 | **Documento padre**        | EE-DOC-013 — AI Ecosystem (Aprobado)                                |
-| **Dependencias**           | EE-DOC-006; EE-DOC-013; EE-ADR-005; EE-IMP-013-P01…P03              |
+| **Dependencias**           | contenido=EE-DOC-006, EE-ADR-005, EE-IMP-013-P01…P03                |
 | **Aprobado por**           | Equipo de Arquitectura                                              |
 | **Audiencia**              | Arquitectura, Desarrollo                                            |
 | **Fecha de creación**      | 2026-10-04                                                          |

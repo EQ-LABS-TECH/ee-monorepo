@@ -6,25 +6,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 
 ## METADATOS
 
-| Campo                 | Valor                                              |
-| --------------------- | -------------------------------------------------- |
-| **ID**                | EE-DOC-003                                         |
-| **Documento**         | Engineering Ecosystem Constitution                 |
-| **Código corto**      | DOC-003                                            |
-| **Tipo**              | Documento Normativo                                |
-| **Clasificación**     | Fundacional                                        |
-| **Nivel**             | Estratégico                                        |
-| **Normativo**         | Sí                                                 |
-| **Versión**           | v1.2.0                                             |
-| **Estado**            | Congelado                                          |
-| **Propietario**       | Equipo de Arquitectura                             |
-| **Documento padre**   | EE-DOC-001                                         |
-| **Dependencias**      | padre=EE-DOC-001; contenido=EE-DOC-001, EE-DOC-002 |
-| **Aprobado por**      | Equipo de Arquitectura                             |
-| **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección            |
-| **Fecha de creación** | 2026-08-02                                         |
-| **Última revisión**   | 2026-10-14                                         |
-| **Próxima revisión**  | No aplica — Documento Congelado                    |
+| Campo                 | Valor                                   |
+| --------------------- | --------------------------------------- |
+| **ID**                | EE-DOC-003                              |
+| **Documento**         | Engineering Ecosystem Constitution      |
+| **Código corto**      | DOC-003                                 |
+| **Tipo**              | Documento Normativo                     |
+| **Clasificación**     | Fundacional                             |
+| **Nivel**             | Estratégico                             |
+| **Normativo**         | Sí                                      |
+| **Versión**           | v1.2.0                                  |
+| **Estado**            | Congelado                               |
+| **Propietario**       | Equipo de Arquitectura                  |
+| **Documento padre**   | EE-DOC-001                              |
+| **Dependencias**      | contenido=EE-DOC-001, EE-DOC-002        |
+| **Aprobado por**      | Equipo de Arquitectura                  |
+| **Audiencia**         | Arquitectura, Desarrollo, IA, Dirección |
+| **Fecha de creación** | 2026-08-02                              |
+| **Última revisión**   | 2026-10-14                              |
+| **Próxima revisión**  | No aplica — Documento Congelado         |
 
 ---
 
@@ -374,13 +374,12 @@ La interpretación de esta Constitución corresponde al Equipo de Arquitectura. 
 
 ## 18. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                        | Cambios                                                                                        | Estado        |
-| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------- | :--------------------------------------------------------------------------------------------- | :------------ |
-| **v1.0.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial              | Versión inicial de la Constitución                                                             | **Congelado** |
-| **v1.0.1** | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A post-auditoría         | SSOT estados→001; jerarquía→002 §03.1; sin duplicar roadmap; punteros 002/005; detalle RFC-003 | **Congelado** |
-| **v1.1.0** | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Minor Y + regularización C-01 | Consolida Tipo A vs 001/002; punteros §14–§15; bootstrap; vigencia; 001 §08.1; detalle RFC-003 | **Congelado** |
-| **v1.1.1** | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — referencias          | Completa §17 (001/002/006/012, IMP/TEC/VAL/WAIVE); quita fila EE-DOC-001b errónea              | **Congelado** |
-| **v1.2.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — auditoría 001/002    | §04 renumerado; Maintainer; deps padre=/contenido=; hist≤230; ref 005; AR-018/020              | **Congelado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                              | Cambios                                                                                                                                                                           | Estado        |
+| :--------- | :--------- | :--------------------- | :--------------------- | :-------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
+| **v0.1.0** | 2026-08-02 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial                                    | Versión inicial de la Constitución                                                                                                                                                | **Congelado** |
+| **v1.0.0** | 2026-10-10 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A post-auditoría                               | SSOT estados→001; jerarquía→002 §03.1; sin duplicar roadmap; punteros 002/005; detalle RFC-003                                                                                    | **Congelado** |
+| **v1.1.0** | 2026-10-11 | Equipo de Arquitectura | Equipo de Arquitectura | Minor Y + regularización C-01; Tipo A — referencias | Consolida Tipo A vs 001/002; punteros §14–§15; bootstrap; vigencia; 001 §08.1; detalle RFC-003; Completa §17 (001/002/006/012, IMP/TEC/VAL/WAIVE); quita fila EE-DOC-001b errónea | **Congelado** |
+| **v1.2.0** | 2026-10-14 | Equipo de Arquitectura | Equipo de Arquitectura | Tipo A — auditoría 001/002                          | §04 renumerado; Maintainer; deps padre=/contenido=; hist≤230; ref 005; AR-018/020                                                                                                 | **Congelado** |
 
 ---
 

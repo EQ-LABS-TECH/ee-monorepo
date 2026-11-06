@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | :------------------ | :---------------------------------- |
 | **ID**              | EE-IMP-007-P03                      |
 | **Documento**       | Branch Protection                   |
-| **Código corto**    | EE-IMP-007-P03                      |
+| **Código corto**    | IMP-007-P03                         |
 | **Fase**            | Fase 3 — Branch Protection          |
 | **Tipo**            | Documento Técnico de Implementación |
 | **Clasificación**   | Implementación                      |
@@ -21,7 +21,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Propietario**     | Equipo de Arquitectura              |
 | **Documento padre** | EE-DOC-007 — GitHub Governance      |
 
-| **Dependencias** | EE-DOC-005, EE-DOC-007, EE-IMP-007-P01, EE-IMP-007-P02 |
+| **Dependencias** | contenido=EE-DOC-005, EE-IMP-007-P01…P02 |
 | **Aprobado por** | Pendiente |
 | **Audiencia** | Arquitectura, Desarrollo, DevOps |
 | **Fecha de creación** | 2026-09-22 |
@@ -94,7 +94,7 @@ EE-DOC-005 y EE-DOC-007 exigen que la estrategia de branching se registre median
 
 ### 05.1. Branch protection rules (classic)
 
-Ruta UI: **Settings → Branches → Add branch protection rule**  
+Ruta UI: **Settings → Branches → Add branch protection rule**
 Pattern: `main`
 
 | Control GitHub                                                   | Valor P03                                                                    | Norma                                                      |

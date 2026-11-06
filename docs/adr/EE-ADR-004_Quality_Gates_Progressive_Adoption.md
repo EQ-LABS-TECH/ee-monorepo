@@ -6,29 +6,29 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 
 ## METADATOS
 
-| Campo                      | Valor                                               |
-| :------------------------- | :-------------------------------------------------- |
-| **ID**                     | EE-ADR-004                                          |
-| **Documento**              | Quality Gates Progressive Adoption                  |
-| **Código corto**           | ADR-004                                             |
-| **Fase**                   | Fase Global del Ecosistema                          |
-| **Fase de implementación** | Implementación de EE-DOC-005 / EE-DOC-010           |
-| **Tipo**                   | Architectural Decision Record                       |
-| **Clasificación**          | Arquitectura / Decisión Arquitectónica              |
-| **Nivel**                  | Arquitectónico                                      |
-| **Normativo**              | Sí                                                  |
-| **Versión**                | v1.1.0                                              |
-| **Estado**                 | Aprobado                                            |
-| **Propietario**            | Equipo de Arquitectura                              |
-| **Documento padre**        | EE-DOC-005 — Development Workflow                   |
-| **Dependencias**           | EE-DOC-005; EE-DOC-007; EE-DOC-010; EE-IMP-010      |
-| **Decisión relacionada**   | EE-ADR-002 — Engineering Ecosystem Testing Standard |
-| **Aprobado por**           | Equipo de Arquitectura                              |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps, QA                |
-| **Fecha de creación**      | 2026-09-29                                          |
-| **Última revisión**        | 2026-10-02                                          |
-| **Próxima revisión**       | Tras cambios mayores en EE-DOC-010                  |
-| **Prioridad**              | Alta                                                |
+| Campo                      | Valor                                                |
+| :------------------------- | :--------------------------------------------------- |
+| **ID**                     | EE-ADR-004                                           |
+| **Documento**              | Quality Gates Progressive Adoption                   |
+| **Código corto**           | ADR-004                                              |
+| **Fase**                   | Fase Global del Ecosistema                           |
+| **Fase de implementación** | Implementación de EE-DOC-005 / EE-DOC-010            |
+| **Tipo**                   | Architectural Decision Record                        |
+| **Clasificación**          | Arquitectura / Decisión Arquitectónica               |
+| **Nivel**                  | Arquitectónico                                       |
+| **Normativo**              | Sí                                                   |
+| **Versión**                | v1.1.0                                               |
+| **Estado**                 | Aprobado                                             |
+| **Propietario**            | Equipo de Arquitectura                               |
+| **Documento padre**        | EE-DOC-005 — Development Workflow                    |
+| **Dependencias**           | contenido=EE-DOC-007, EE-DOC-010, EE-IMP-010-P01…P05 |
+| **Decisión relacionada**   | EE-ADR-002 — Engineering Ecosystem Testing Standard  |
+| **Aprobado por**           | Equipo de Arquitectura                               |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps, QA                 |
+| **Fecha de creación**      | 2026-09-29                                           |
+| **Última revisión**        | 2026-10-02                                           |
+| **Próxima revisión**       | Tras cambios mayores en EE-DOC-010                   |
+| **Prioridad**              | Alta                                                 |
 
 ---
 
@@ -156,14 +156,14 @@ definition → implementation → invocation → result → evidence → CI → 
 
 ## 10. Referencias
 
-| Código         | Documento                | Descripción                                |
-| :------------- | :----------------------- | :----------------------------------------- |
-| **EE-DOC-002** | Document Design Template | Plantilla §18.2 ADR                        |
-| **EE-DOC-005** | Development Workflow     | Mandatory Gates; §10.4 régimen transitorio |
-| **EE-DOC-007** | GitHub Governance        | Enforcement de merge                       |
-| **EE-DOC-010** | Quality Gates            | Availability, Severity, Result             |
-| **EE-IMP-010** | Implementación QG        | Transiciones PENDING → ACTIVE              |
-| **EE-ADR-002** | Testing Standard         | Suites que alimentan gates de test         |
+| Código                 | Documento                | Descripción                                |
+| :--------------------- | :----------------------- | :----------------------------------------- |
+| **EE-DOC-002**         | Document Design Template | Plantilla §18.2 ADR                        |
+| **EE-DOC-005**         | Development Workflow     | Mandatory Gates; §10.4 régimen transitorio |
+| **EE-DOC-007**         | GitHub Governance        | Enforcement de merge                       |
+| **EE-DOC-010**         | Quality Gates            | Availability, Severity, Result             |
+| **EE-IMP-010-P01…P05** | Implementación QG        | Transiciones PENDING → ACTIVE              |
+| **EE-ADR-002**         | Testing Standard         | Suites que alimentan gates de test         |
 
 ---
 
@@ -171,7 +171,7 @@ definition → implementation → invocation → result → evidence → CI → 
 
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                | Cambios                                                                                           | Estado       |
 | :--------- | :--------- | :--------------------- | :--------------------- | :-------------------- | :------------------------------------------------------------------------------------------------ | :----------- |
-| **v1.0.0** | 2026-09-29 | Equipo de Arquitectura | Equipo de Arquitectura | Decisión Opción B     | Adopción progresiva Mandatory ≠ Implemented ≠ Enforced                                            | Aprobado     |
+| **v1.0.0** | 2026-09-29 | Equipo de Arquitectura | Equipo de Arquitectura | Decisión Opción B     | Adopción progresiva Mandatory ≠ Implemented ≠ Enforced                                            | **Aprobado** |
 | **v1.1.0** | 2026-10-02 | Equipo de Arquitectura | Equipo de Arquitectura | Higiene DOC-002 §18.2 | Metadatos completos; Propósito/Problema/Alcance/Justificación/Referencias; sin cambio de decisión | **Aprobado** |
 
 ---

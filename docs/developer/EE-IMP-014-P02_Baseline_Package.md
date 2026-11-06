@@ -6,25 +6,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** (�
 
 ## METADATOS
 
-| Campo                 | Valor                                                          |
-| :-------------------- | :------------------------------------------------------------- |
-| **ID**                | EE-IMP-014-P02                                                 |
-| **Documento**         | Baseline Package (`@eq-labs/knowledge`)                        |
-| **Código corto**      | EE-IMP-014-P02                                                 |
-| **Tipo**              | Documento Técnico de Implementación                            |
-| **Clasificación**     | Implementación                                                 |
-| **Nivel**             | Técnico                                                        |
-| **Normativo**         | No                                                             |
-| **Versión**           | v1.1.0                                                         |
-| **Estado**            | Completado                                                     |
-| **Propietario**       | Equipo de Arquitectura                                         |
-| **Documento padre**   | EE-DOC-014 — Knowledge Management                              |
-| **Dependencias**      | EE-DOC-006, EE-DOC-010, EE-DOC-014, EE-IMP-014-P01, EE-ADR-003 |
-| **Aprobado por**      | Equipo de Arquitectura                                         |
-| **Audiencia**         | Arquitectura, Desarrollo                                       |
-| **Fecha de creación** | 2026-10-05                                                     |
-| **Última revisión**   | 2026-10-05                                                     |
-| **Unidad de fase**    | P02 de EE-DOC-014 §09.1                                        |
+| Campo                 | Valor                                                        |
+| :-------------------- | :----------------------------------------------------------- |
+| **ID**                | EE-IMP-014-P02                                               |
+| **Documento**         | Baseline Package (`@eq-labs/knowledge`)                      |
+| **Código corto**      | IMP-014-P02                                                  |
+| **Tipo**              | Documento Técnico de Implementación                          |
+| **Clasificación**     | Implementación                                               |
+| **Nivel**             | Técnico                                                      |
+| **Normativo**         | No                                                           |
+| **Versión**           | v1.1.0                                                       |
+| **Estado**            | Completado                                                   |
+| **Propietario**       | Equipo de Arquitectura                                       |
+| **Documento padre**   | EE-DOC-014 — Knowledge Management                            |
+| **Dependencias**      | contenido=EE-DOC-006, EE-DOC-010, EE-IMP-014-P01, EE-ADR-003 |
+| **Aprobado por**      | Equipo de Arquitectura                                       |
+| **Audiencia**         | Arquitectura, Desarrollo                                     |
+| **Fecha de creación** | 2026-10-05                                                   |
+| **Última revisión**   | 2026-10-05                                                   |
+| **Unidad de fase**    | P02 de EE-DOC-014 §09.1                                      |
 
 ---
 

@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | :---------------- | :----------------------------------- |
 | **ID**            | EE-IMP-007-P01                       |
 | **Documento**     | GitHub Governance Bootstrap          |
-| **Código corto**  | EE-IMP-007-P01                       |
+| **Código corto**  | IMP-007-P01                          |
 | **Fase**          | Fase 1 — GitHub Governance Bootstrap |
 | **Tipo**          | Documento Técnico de Implementación  |
 | **Clasificación** | Implementación                       |
@@ -21,7 +21,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Propietario**   | Equipo de Arquitectura               |
 
 | **Documento padre** | EE-DOC-007 — GitHub Governance |
-| **Dependencias** | EE-DOC-002, EE-DOC-005, EE-DOC-006, EE-DOC-007 |
+| **Dependencias** | contenido=EE-DOC-002, EE-DOC-005…EE-DOC-007 |
 | **Aprobado por** | Pendiente |
 | **Audiencia** | Arquitectura, Desarrollo, DevOps |
 | **Fecha de creación** | 2026-09-22 |

@@ -10,16 +10,16 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 | :-------------------- | :------------------------------------------------- |
 | **ID**                | EE-TEC-002                                         |
 | **Documento**         | Consolidated Technical Documentation of EE-DOC-007 |
-| **Código corto**      | EE-TEC-002                                         |
-| **Tipo**              | Documento Técnico                                  |
-| **Clasificación**     | Implementación                                     |
+| **Código corto**      | TEC-002                                            |
+| **Tipo**              | Documentación Técnica Consolidada                  |
+| **Clasificación**     | Técnico / As-Built                                 |
 | **Nivel**             | Técnico                                            |
 | **Normativo**         | No                                                 |
-| **Versión**           | v1.0.1                                             |
+| **Versión**           | v1.1.0                                             |
 | **Estado**            | Congelado (as-built post Validación Final)         |
 | **Propietario**       | Equipo de Arquitectura                             |
 | **Documento padre**   | EE-DOC-007 — GitHub Governance                     |
-| **Dependencias**      | EE-DOC-007, EE-IMP-007-P01 … P08, EE-ADR-003       |
+| **Dependencias**      | contenido=EE-IMP-007-P01 … P08, EE-ADR-003         |
 | **Aprobado por**      | Equipo de Arquitectura                             |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA               |
 | **Fecha de creación** | 2026-09-23                                         |
@@ -192,16 +192,16 @@ Esta evolución no modifica retrospectivamente el dictamen de la Validación Fin
 | EE-IMP-011-P04        | Generators and Release                             |
 | EE-TEC-006            | Consolidated Technical Documentation of EE-DOC-011 |
 | EE-ADR-003            | Node.js Baseline 24 LTS                            |
-| EE-AUD-Rules_Emerging | Backlog canónico de auditoría — PN-021 y PN-030    |
+| EE-AUD-Rules_Register | Backlog canónico de auditoría — PN-021 y PN-030    |
 
 ---
 
 ## 08. Historial de Cambios
 
-| Versión    | Fecha      | Autor                                   | Cambio                                                                  | Estado    |
-| :--------- | :--------- | :-------------------------------------- | :---------------------------------------------------------------------- | :-------- |
-| **v1.0.0** | 2026-09-23 | Arquitectura / AI Engineering Assistant | As-built post Validación Final P08                                      | Congelado |
-| **v1.0.1** | 2026-11-04 | Arquitectura / AI Engineering Assistant | Sincroniza referencias al registro de auditoría con la familia `EE-AUD` | Congelado |
+| Versión    | Fecha      | Autor                                   | Aprobado por | Motivo                                   | Cambios                                                                                                                                                             | Estado    |
+| :--------- | :--------- | :-------------------------------------- | :----------- | :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------- |
+| **v1.0.0** | 2026-09-23 | Arquitectura / AI Engineering Assistant | —            | —                                        | As-built post Validación Final P08                                                                                                                                  | Congelado |
+| **v1.1.0** | 2026-11-04 | Arquitectura / AI Engineering Assistant | —            | —; PC-002/003: regularizacion documental | Sincroniza referencias al registro de auditoría con la familia `EE-AUD`; Historial 7 columnas; Tipo y Clasificacion alineados a EE-DOC-002 §05.1 y plantilla §18.4. | Congelado |
 
 ---
 

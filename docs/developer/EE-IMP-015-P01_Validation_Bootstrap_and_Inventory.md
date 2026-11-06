@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | :-------------------- | :---------------------------------------------- |
 | **ID**                | EE-IMP-015-P01                                  |
 | **Documento**         | Validation Bootstrap and Inventory              |
-| **Código corto**      | EE-IMP-015-P01                                  |
+| **Código corto**      | IMP-015-P01                                     |
 | **Fase**              | Unidad P01 — Bootstrap validación de ecosistema |
 | **Tipo**              | Documento Técnico de Implementación             |
 | **Clasificación**     | Implementación                                  |
@@ -20,7 +20,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Estado**            | Completado                                      |
 | **Propietario**       | Equipo de Arquitectura                          |
 | **Documento padre**   | EE-DOC-015 — Engineering Ecosystem Validation   |
-| **Dependencias**      | EE-DOC-015, EE-DOC-006, EE-DOC-010, EE-DOC-007  |
+| **Dependencias**      | contenido=EE-DOC-006, EE-DOC-010, EE-DOC-007    |
 | **Aprobado por**      | Equipo de Arquitectura                          |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA            |
 | **Fecha de creación** | 2026-10-07                                      |
@@ -56,8 +56,8 @@ docs/validation/
 │   └── .gitkeep
 ├── waivers/
 │   ├── .gitkeep
-│   ├── EE-WAIVE-QG-SEC-001-braces-20261007.md
-│   └── EE-WAIVE-QG-SEC-001-sprintf-js-20261007.md
+│   ├── EE-WAIVE-QG-SEC-001_braces_20261007.md
+│   └── EE-WAIVE-QG-SEC-001_sprintf-js_20261007.md
 └── evidence/
     ├── inventory-git-ls-files.txt
     └── layers/
@@ -112,8 +112,8 @@ EE-DOC-015 (norma)
 
 | Archivo                                      | gate_id    | expires_at |
 | :------------------------------------------- | :--------- | :--------- |
-| `EE-WAIVE-QG-SEC-001-braces-20261007.md`     | QG-SEC-001 | 2026-10-14 |
-| `EE-WAIVE-QG-SEC-001-sprintf-js-20261007.md` | QG-SEC-001 | 2026-10-14 |
+| `EE-WAIVE-QG-SEC-001_braces_20261007.md`     | QG-SEC-001 | 2026-10-14 |
+| `EE-WAIVE-QG-SEC-001_sprintf-js_20261007.md` | QG-SEC-001 | 2026-10-14 |
 
 ### 06.2. Descubrimiento Tipo A (registrado, no bloqueante)
 

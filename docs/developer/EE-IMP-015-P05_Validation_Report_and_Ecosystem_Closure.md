@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                                        |
-| :-------------------- | :----------------------------------------------------------- |
-| **ID**                | EE-IMP-015-P05                                               |
-| **Documento**         | Validation Report and Ecosystem Closure                      |
-| **Código corto**      | EE-IMP-015-P05                                               |
-| **Fase**              | Unidad P05 — Report canónico; EE-TEC-010; cierre             |
-| **Tipo**              | Documento Técnico de Implementación                          |
-| **Clasificación**     | Implementación                                               |
-| **Nivel**             | Técnico                                                      |
-| **Normativo**         | No                                                           |
-| **Versión**           | v1.0.0                                                       |
-| **Estado**            | Completado                                                   |
-| **Propietario**       | Equipo de Arquitectura                                       |
-| **Documento padre**   | EE-DOC-015 — Engineering Ecosystem Validation                |
-| **Dependencias**      | EE-DOC-015, EE-DOC-001, EE-DOC-002 §18.4, EE-IMP-015-P01…P04 |
-| **Aprobado por**      | Equipo de Arquitectura                                       |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA                         |
-| **Fecha de creación** | 2026-10-07                                                   |
-| **Última revisión**   | 2026-10-07                                                   |
-| **Próxima revisión**  | Tras materialización del report y TEC                        |
+| Campo                 | Valor                                                      |
+| :-------------------- | :--------------------------------------------------------- |
+| **ID**                | EE-IMP-015-P05                                             |
+| **Documento**         | Validation Report and Ecosystem Closure                    |
+| **Código corto**      | IMP-015-P05                                                |
+| **Fase**              | Unidad P05 — Report canónico; EE-TEC-010; cierre           |
+| **Tipo**              | Documento Técnico de Implementación                        |
+| **Clasificación**     | Implementación                                             |
+| **Nivel**             | Técnico                                                    |
+| **Normativo**         | No                                                         |
+| **Versión**           | v1.0.0                                                     |
+| **Estado**            | Completado                                                 |
+| **Propietario**       | Equipo de Arquitectura                                     |
+| **Documento padre**   | EE-DOC-015 — Engineering Ecosystem Validation              |
+| **Dependencias**      | contenido=EE-DOC-001, EE-DOC-002 §18.4, EE-IMP-015-P01…P04 |
+| **Aprobado por**      | Equipo de Arquitectura                                     |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA                       |
+| **Fecha de creación** | 2026-10-07                                                 |
+| **Última revisión**   | 2026-10-07                                                 |
+| **Próxima revisión**  | Tras materialización del report y TEC                      |
 
 ---
 
@@ -39,7 +39,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## 02. Alcance Implementado
 
-- Report `docs/validation/reports/EE-VAL-072b5e7-20261007.md` (contenido mínimo §06.2).
+- Report `docs/validation/reports/EE-VAL-072b5e7_Ecosystem_Validation_Report_20261007.md` (contenido mínimo §06.2).
 - EE-TEC-010 v1.0.0 emitido (as-built).
 - Dictamen ecosistema **DEGRADED** (PENDING + WAIVE; sin FAIL no gestionado).
 - Commits: report `1bbb375`; CI Validate ✓.
@@ -122,13 +122,13 @@ Tras report + TEC en fuentes:
 
 ## 07. Validaciones Ejecutadas
 
-| Comando / Pruebas           | Resultado | Detalle / Tiempo                                      |
-| :-------------------------- | :-------- | :---------------------------------------------------- |
-| Report EE-VAL en `reports/` | ✅        | `EE-VAL-072b5e7-20261007.md`                          |
-| Contenido mínimo §06.2      | ✅        | dominios, gates, WAIVE, PENDING, composition, anti-FP |
-| EE-TEC-010 emitido          | ✅        | v1.0.0                                                |
-| `pnpm run validate`         | ✅        | PASS; CI ✓ `1bbb375`                                  |
-| Sync EE-DOC-001 / 015       | ✅        | 015 → **Congelado**; matriz actualizada               |
+| Comando / Pruebas           | Resultado | Detalle / Tiempo                                         |
+| :-------------------------- | :-------- | :------------------------------------------------------- |
+| Report EE-VAL en `reports/` | ✅        | `EE-VAL-072b5e7_Ecosystem_Validation_Report_20261007.md` |
+| Contenido mínimo §06.2      | ✅        | dominios, gates, WAIVE, PENDING, composition, anti-FP    |
+| EE-TEC-010 emitido          | ✅        | v1.0.0                                                   |
+| `pnpm run validate`         | ✅        | PASS; CI ✓ `1bbb375`                                     |
+| Sync EE-DOC-001 / 015       | ✅        | 015 → **Congelado**; matriz actualizada                  |
 
 ### 07.1. Resultado de la Implementación y Estado de la Fase
 

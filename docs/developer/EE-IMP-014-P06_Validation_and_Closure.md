@@ -6,25 +6,25 @@ Este documento registra la evidencia técnica de **cierre** de la implementació
 
 ## METADATOS
 
-| Campo                 | Valor                                                  |
-| :-------------------- | :----------------------------------------------------- |
-| **ID**                | EE-IMP-014-P06                                         |
-| **Documento**         | Validation and Closure                                 |
-| **Código corto**      | EE-IMP-014-P06                                         |
-| **Tipo**              | Documento Técnico de Implementación                    |
-| **Clasificación**     | Implementación                                         |
-| **Nivel**             | Técnico                                                |
-| **Normativo**         | No                                                     |
-| **Versión**           | v1.0.0                                                 |
-| **Estado**            | Completado                                             |
-| **Propietario**       | Equipo de Arquitectura                                 |
-| **Documento padre**   | EE-DOC-014 — Knowledge Management                      |
-| **Dependencias**      | EE-IMP-014-P01…P05; EE-DOC-006; EE-DOC-010; EE-ADR-005 |
-| **Aprobado por**      | Equipo de Arquitectura                                 |
-| **Audiencia**         | Arquitectura, Desarrollo                               |
-| **Fecha de creación** | 2026-10-06                                             |
-| **Última revisión**   | 2026-10-06                                             |
-| **Unidad de fase**    | P06 de EE-DOC-014 §09.1                                |
+| Campo                 | Valor                                                            |
+| :-------------------- | :--------------------------------------------------------------- |
+| **ID**                | EE-IMP-014-P06                                                   |
+| **Documento**         | Validation and Closure                                           |
+| **Código corto**      | IMP-014-P06                                                      |
+| **Tipo**              | Documento Técnico de Implementación                              |
+| **Clasificación**     | Implementación                                                   |
+| **Nivel**             | Técnico                                                          |
+| **Normativo**         | No                                                               |
+| **Versión**           | v1.0.0                                                           |
+| **Estado**            | Completado                                                       |
+| **Propietario**       | Equipo de Arquitectura                                           |
+| **Documento padre**   | EE-DOC-014 — Knowledge Management                                |
+| **Dependencias**      | contenido=EE-IMP-014-P01…P05, EE-DOC-006, EE-DOC-010, EE-ADR-005 |
+| **Aprobado por**      | Equipo de Arquitectura                                           |
+| **Audiencia**         | Arquitectura, Desarrollo                                         |
+| **Fecha de creación** | 2026-10-06                                                       |
+| **Última revisión**   | 2026-10-06                                                       |
+| **Unidad de fase**    | P06 de EE-DOC-014 §09.1                                          |
 
 ---
 

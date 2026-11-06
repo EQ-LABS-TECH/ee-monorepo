@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                  |
-| :-------------------- | :------------------------------------------------------------------------------------- |
-| **ID**                | EE-IMP-009-P01                                                                         |
-| **Documento**         | Infra Scaffold                                                                         |
-| **Código corto**      | EE-IMP-009-P01                                                                         |
-| **Fase**              | Fase 1 — Infra Scaffold                                                                |
-| **Tipo**              | Documento Técnico de Implementación                                                    |
-| **Clasificación**     | Implementación                                                                         |
-| **Nivel**             | Técnico                                                                                |
-| **Normativo**         | No                                                                                     |
-| **Versión**           | v1.2.0                                                                                 |
-| **Estado**            | Completado                                                                             |
-| **Propietario**       | Equipo de Arquitectura                                                                 |
-| **Documento padre**   | EE-DOC-009 — Infrastructure                                                            |
-| **Dependencias**      | EE-DOC-009 v1.0.0, EE-DOC-006 v1.4.0, EE-DOC-001 v2.5.1, EE-RFC-001 v1.2.0, EE-DOC-007 |
-| **Aprobado por**      | Equipo de Arquitectura                                                                 |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                                       |
-| **Fecha de creación** | 2026-09-25                                                                             |
-| **Última revisión**   | 2026-09-26                                                                             |
-| **Próxima revisión**  | 2026-12-26                                                                             |
+| Campo                 | Valor                                                                         |
+| :-------------------- | :---------------------------------------------------------------------------- |
+| **ID**                | EE-IMP-009-P01                                                                |
+| **Documento**         | Infra Scaffold                                                                |
+| **Código corto**      | IMP-009-P01                                                                   |
+| **Fase**              | Fase 1 — Infra Scaffold                                                       |
+| **Tipo**              | Documento Técnico de Implementación                                           |
+| **Clasificación**     | Implementación                                                                |
+| **Nivel**             | Técnico                                                                       |
+| **Normativo**         | No                                                                            |
+| **Versión**           | v1.2.0                                                                        |
+| **Estado**            | Completado                                                                    |
+| **Propietario**       | Equipo de Arquitectura                                                        |
+| **Documento padre**   | EE-DOC-009 — Infrastructure                                                   |
+| **Dependencias**      | contenido=EE-DOC-006 v1.4.0, EE-DOC-001 v2.5.1, EE-RFC-001 v1.2.0, EE-DOC-007 |
+| **Aprobado por**      | Equipo de Arquitectura                                                        |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                              |
+| **Fecha de creación** | 2026-09-25                                                                    |
+| **Última revisión**   | 2026-09-26                                                                    |
+| **Próxima revisión**  | 2026-12-26                                                                    |
 
 ---
 
@@ -176,12 +176,11 @@ Conforme a **EE-DOC-009 §08 / §10 P01**, **EE-DOC-006 v1.4.0** y **EE-RFC-001*
 
 ## 10. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                      | Cambios                      | Estado            |
-| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------- | :--------------------------- | :---------------- |
-| **v1.0.0** | 2026-09-25 | AI Engineering Assistant | —                      | Creación                    | Especificación P01           | En Implementación |
-| **v1.1.0** | 2026-09-25 | AI Engineering Assistant | Equipo de Arquitectura | As-built                    | Evidencia materialización    | Completado        |
-| **v1.1.1** | 2026-09-25 | AI Engineering Assistant | Equipo de Arquitectura | W-P01-001                   | CODEOWNERS confirmado        | Completado        |
-| **v1.2.0** | 2026-09-26 | AI Engineering Assistant | Equipo de Arquitectura | Alineación EE-DOC-002 §18.3 | Reestructura al template IMP | **Completado**    |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                      | Cambios                                          | Estado            |
+| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------- | :----------------------------------------------- | :---------------- |
+| **v1.0.0** | 2026-09-25 | AI Engineering Assistant | —                      | Creación                    | Especificación P01                               | En Implementación |
+| **v1.1.0** | 2026-09-25 | AI Engineering Assistant | Equipo de Arquitectura | As-built; W-P01-001         | Evidencia materialización; CODEOWNERS confirmado | Completado        |
+| **v1.2.0** | 2026-09-26 | AI Engineering Assistant | Equipo de Arquitectura | Alineación EE-DOC-002 §18.3 | Reestructura al template IMP                     | **Completado**    |
 
 ---
 

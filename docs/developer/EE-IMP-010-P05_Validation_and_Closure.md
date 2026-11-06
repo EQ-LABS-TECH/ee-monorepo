@@ -8,27 +8,27 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 
 ## METADATOS
 
-| Campo                      | Valor                                                                                                  |
-| :------------------------- | :----------------------------------------------------------------------------------------------------- |
-| **ID**                     | EE-IMP-010-P05                                                                                         |
-| **Documento**              | Validation and Closure                                                                                 |
-| **Código corto**           | EE-IMP-010-P05                                                                                         |
-| **Fase**                   | Fase 3 — Core Components                                                                               |
-| **Fase de implementación** | P05 — Validation and Closure (Implementación de EE-DOC-010)                                            |
-| **Tipo**                   | Documento Técnico de Implementación                                                                    |
-| **Clasificación**          | Implementación                                                                                         |
-| **Nivel**                  | Técnico                                                                                                |
-| **Normativo**              | No                                                                                                     |
-| **Versión**                | v1.0.0                                                                                                 |
-| **Estado**                 | Completado                                                                                             |
-| **Propietario**            | Equipo de Arquitectura                                                                                 |
-| **Documento padre**        | EE-DOC-010 — Quality Gates (v1.4.0 Congelado)                                                          |
-| **Dependencias**           | EE-DOC-005 §04 / §10.4, EE-DOC-006, EE-DOC-007, EE-DOC-010, EE-ADR-002, EE-ADR-004, EE-IMP-010-P01…P04 |
-| **Aprobado por**           | Equipo de Arquitectura                                                                                 |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps, QA                                                                   |
-| **Fecha de creación**      | 2026-09-29                                                                                             |
-| **Última revisión**        | 2026-09-29                                                                                             |
-| **Próxima revisión**       | 2026-12-29                                                                                             |
+| Campo                      | Valor                                                                                                |
+| :------------------------- | :--------------------------------------------------------------------------------------------------- |
+| **ID**                     | EE-IMP-010-P05                                                                                       |
+| **Documento**              | Validation and Closure                                                                               |
+| **Código corto**           | IMP-010-P05                                                                                          |
+| **Fase**                   | Fase 3 — Core Components                                                                             |
+| **Fase de implementación** | P05 — Validation and Closure (Implementación de EE-DOC-010)                                          |
+| **Tipo**                   | Documento Técnico de Implementación                                                                  |
+| **Clasificación**          | Implementación                                                                                       |
+| **Nivel**                  | Técnico                                                                                              |
+| **Normativo**              | No                                                                                                   |
+| **Versión**                | v1.1.0                                                                                               |
+| **Estado**                 | Completado                                                                                           |
+| **Propietario**            | Equipo de Arquitectura                                                                               |
+| **Documento padre**        | EE-DOC-010 — Quality Gates (v1.4.0 Congelado)                                                        |
+| **Dependencias**           | contenido=EE-DOC-005 §04 / §10.4, EE-DOC-006, EE-DOC-007, EE-ADR-002, EE-ADR-004, EE-IMP-010-P01…P04 |
+| **Aprobado por**           | Equipo de Arquitectura                                                                               |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps, QA                                                                 |
+| **Fecha de creación**      | 2026-09-29                                                                                           |
+| **Última revisión**        | 2026-11-05                                                                                           |
+| **Próxima revisión**       | 2026-12-29                                                                                           |
 
 ---
 
@@ -123,16 +123,31 @@ Criterio: N1–N12 producen BLOCK; N13 produce SKIPPED. N11 no debe dejar el sec
 
 ## 06. Régimen transitorio final (EE-DOC-005 §10.4.2)
 
-> Fechas propuestas; requieren aprobación del Equipo de Arquitectura.
+> Los objetivos marcados como propuestos requieren aprobación de Arquitectura. El objetivo 2026-12-29 de V-ARCH-LAYERS fue aprobado para este régimen.
 
-| Elemento                |         Mandatory 005         | Estado                   | Plan de normalización                                 | Fecha objetivo (propuesta) | Riesgo aceptado                                       |
-| :---------------------- | :---------------------------: | :----------------------- | :---------------------------------------------------- | :------------------------- | :---------------------------------------------------- |
-| E2E (parte de TEST-001) |          Sí (§10.1)           | Sin cableado             | Script root `e2e` + tarea Turbo + step CI (dashboard) | 2026-12-29                 | Regresión UI no detectada en merge                    |
-| QG-SEC-003 (SAST)       |      Condicional (§10.2)      | PENDING                  | ADR de herramienta + IMP                              | 2026-12-29                 | Vulnerabilidades de código sin análisis estático      |
-| QG-PERF-001             |          Condicional          | PENDING                  | Publicar umbrales en 010                              | Al existir carga medible   | Bajo (sin código funcional)                           |
-| QG-COV-001              |          Condicional          | PENDING                  | Publicar umbrales tras primeras suites                | Al existir suites reales   | Bajo (0 tests)                                        |
-| ARCH: ciclos / capas    | Sí (Architecture & Structure) | Solo top-level           | Validador sobre matriz 006 §13.2                      | 2026-12-29                 | Violación de capas no detectada (paquetes vacíos hoy) |
-| Evidencia por gate (D6) |               —               | Sin reporte estructurado | Reporte JSON en `validate`                            | 2026-12-29                 | Diagnóstico menos granular                            |
+| Elemento                |    Mandatory 005    | Estado                   | Plan de normalización                                                                                                                              | Fecha objetivo / aprobación | Riesgo aceptado                                                                                                                                                                                                          |
+| :---------------------- | :-----------------: | :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E2E (parte de TEST-001) |     Sí (§10.1)      | Sin cableado             | Script root `e2e` + tarea Turbo + step CI (dashboard)                                                                                              | 2026-12-29                  | Regresión UI no detectada en merge                                                                                                                                                                                       |
+| QG-SEC-003 (SAST)       | Condicional (§10.2) | PENDING                  | ADR de herramienta + IMP                                                                                                                           | 2026-12-29                  | Vulnerabilidades de código sin análisis estático                                                                                                                                                                         |
+| QG-PERF-001             |     Condicional     | PENDING                  | Publicar umbrales en 010                                                                                                                           | Al existir carga medible    | Bajo (sin código funcional)                                                                                                                                                                                              |
+| QG-COV-001              |     Condicional     | PENDING                  | Publicar umbrales tras primeras suites                                                                                                             | Al existir suites reales    | Bajo (0 tests)                                                                                                                                                                                                           |
+| V-ARCH-LAYERS           |     Sí (§10.1)      | PENDING                  | Unidad EE-IMP-010-P05; validar imports fuente, dependencias prohibidas y ciclos según matriz 006 §13.2; pruebas negativas; cableado en validate/CI | 2026-12-29 (aprobada)       | Hasta ACTIVE pueden pasar imports entre capas o ciclos no bloqueados por los checks de top-level/manifests. Riesgo aceptado: revisión arquitectónica manual de cambios que afecten límites, hasta evidencia CI del gate. |
+| Evidencia por gate (D6) |          —          | Sin reporte estructurado | Reporte JSON en `validate`                                                                                                                         | 2026-12-29                  | Diagnóstico menos granular                                                                                                                                                                                               |
+
+### 06.1. Hitos de normalización de V-ARCH-LAYERS
+
+| Hito                         | Entregable verificable                                                                                                                                                                               |
+| :--------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| H1 — Delimitar reglas        | Inventario de paquetes y matriz de dependencias permitidas/prohibidas derivada de EE-DOC-006 §13.2.                                                                                                  |
+| H2 — Implementar enforcement | Analizador de imports/dependencias y ciclos con pruebas positivas y negativas, incluidas las violaciones de límites.                                                                                 |
+| H3 — Cablear ejecución       | Invocación desde `validate` y CI; cero tareas o falta de evidencia no producen PASS.                                                                                                                 |
+| H4 — Evidenciar activación   | Ejecución CI verificable y actualización gobernada de EE-DOC-010/015; V-ARCH-LAYERS pasa a ACTIVE solo al completar definition → implementation → invocation → result → evidence → CI → enforcement. |
+
+**Responsable:** Maintainers implementa; Arquitectura valida la matriz y acepta la revisión manual transitoria.
+
+**Fecha objetivo de transición a ACTIVE:** 2026-12-29.
+
+**Riesgo aceptado:** hasta la activación, la revisión manual es una mitigación temporal y no equivale a enforcement automático; la revisión debe concentrarse en cambios que puedan cruzar límites arquitectónicos. Si no se cumple el objetivo, V-ARCH-LAYERS permanece PENDING y requiere reevaluar el plan antes de extender el plazo.
 
 ---
 
@@ -214,12 +229,11 @@ Orden: correcciones de código → pruebas negativas → 010 v1.4.0 → EE-TEC-0
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo          | Cambios                                                                            | Estado         |
-| :--------- | :--------- | :--------------------- | :--------------------- | :-------------- | :--------------------------------------------------------------------------------- | :------------- |
-| **v0.1.0** | 2026-09-29 | Equipo de Arquitectura | —                      | Apertura P05    | Descubrimientos D1–D6, matriz, pruebas negativas, régimen transitorio              | Borrador       |
-| **v0.2.0** | 2026-09-29 | Equipo de Arquitectura | —                      | Evidencia local | validate PASS tras D1/D2; N1–N10, N12, N13 registradas; pendientes: commit/CI, N11 | Borrador       |
-| **v0.3.0** | 2026-09-29 | Equipo de Arquitectura | —                      | Evidencia CI    | Commit `e2400d3` (D1/D2) con CI Validate success; W-P05-007/008; pendiente N11     | Borrador       |
-| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre P05      | N11 PASS; EE-DOC-010 v1.4.0 Congelado; EE-TEC-005 Completado; Validación Final     | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                           | Cambios                                                                             | Estado         |
+| :--------- | :--------- | :--------------------- | :--------------------- | :----------------------------------------------- | :---------------------------------------------------------------------------------- | :------------- |
+| **v0.1.0** | 2026-09-29 | Equipo de Arquitectura | —                      | Consolidated changes for the same date and state | Records P05 findings, local/CI evidence, regressions and pending validation.        | Borrador       |
+| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre P05                                       | N11 PASS; EE-DOC-010 v1.4.0 Congelado; EE-TEC-005 Completado; Validación Final      | **Completado** |
+| **v1.1.0** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | PN-016: plan V-ARCH-LAYERS                       | Completa unidad, hitos, fecha objetivo y riesgos aceptados del régimen transitorio. | **Completado** |
 
 ---
 

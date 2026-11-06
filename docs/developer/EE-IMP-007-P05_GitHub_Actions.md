@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | :-------------------- | :---------------------------------------------------- |
 | **ID**                | EE-IMP-007-P05                                        |
 | **Documento**         | GitHub Actions                                        |
-| **Código corto**      | EE-IMP-007-P05                                        |
+| **Código corto**      | IMP-007-P05                                           |
 | **Fase**              | Fase 5 — GitHub Actions                               |
 | **Tipo**              | Documento Técnico de Implementación                   |
 | **Clasificación**     | Implementación                                        |
@@ -20,7 +20,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Estado**            | Completado                                            |
 | **Propietario**       | Equipo de Arquitectura                                |
 | **Documento padre**   | EE-DOC-007 — GitHub Governance                        |
-| **Dependencias**      | EE-DOC-005, EE-DOC-007, EE-IMP-007-P01 … P04          |
+| **Dependencias**      | contenido=EE-DOC-005, EE-IMP-007-P01 … P04            |
 | **Aprobado por**      | Equipo de Arquitectura                                |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps                      |
 | **Fecha de creación** | 2026-09-23                                            |

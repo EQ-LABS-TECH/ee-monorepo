@@ -16,20 +16,20 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                      |
 | **Nivel**             | Técnico                             |
 | **Normativo**         | No                                  |
-| **Versión**           | v1.1.0                              |
+| **Versión**           | v1.1.1                              |
 | **Estado**            | Aprobado                            |
 | **Propietario**       | Equipo de Arquitectura              |
 | **Documento padre**   | EE-DOC-006                          |
-| **Dependencias**      | EE-DOC-006                          |
+| **Dependencias**      | Ninguna                             |
 | **Aprobado por**      | Equipo de Arquitectura              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
 | **Fecha de creación** | 2026-08-21                          |
-| **Última revisión**   | 2026-10-18                          |
+| **Última revisión**   | 2026-11-05                          |
 | **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
-## 1. Objetivo
+## 01. Objetivo
 
 Documentar la implementación física de la **Fase 1 — Bootstrap del Repositorio** del Engineering Ecosystem (EE-LABS).
 
@@ -37,7 +37,7 @@ El objetivo de esta fase fue dejar creado el repositorio base, su estructura fí
 
 ---
 
-## 2. Alcance implementado
+## 02. Alcance implementado
 
 La Fase 1 comprendió:
 
@@ -51,7 +51,7 @@ La Fase 1 comprendió:
 
 ---
 
-## 3. Estructura física implementada
+## 03. Estructura física implementada
 
 ```text
 ee-monorepo/
@@ -81,9 +81,9 @@ ee-monorepo/
 
 ---
 
-## 4. Archivos implementados
+## 04. Archivos implementados
 
-### 4.1 `.editorconfig`
+### 04.1. `.editorconfig`
 
 Se implementó la configuración común de edición del repositorio. Define, entre otros:
 
@@ -95,7 +95,7 @@ Se implementó la configuración común de edición del repositorio. Define, ent
 
 La configuración de estilo de código queda delegada a las configuraciones compartidas de Prettier y ESLint que serán implementadas posteriormente.
 
-### 4.2 `.gitattributes`
+### 04.2. `.gitattributes`
 
 Se implementó la configuración de comportamiento de Git para los archivos del repositorio. Incluye:
 
@@ -107,7 +107,7 @@ Se implementó la configuración de comportamiento de Git para los archivos del 
 - Configuración de archivos de bloqueo.
 - Estrategias de merge para `package.json` y `CHANGELOG.md`.
 
-### 4.3 `.gitignore`
+### 04.3. `.gitignore`
 
 Se implementaron reglas para excluir del control de versiones:
 
@@ -120,7 +120,7 @@ Se implementaron reglas para excluir del control de versiones:
 
 _Se mantiene explícitamente `.env.example`._
 
-### 4.4 `.npmrc`
+### 04.4. `.npmrc`
 
 Se estableció PNPM como gestor oficial del repositorio y se configuró:
 
@@ -131,11 +131,11 @@ Se estableció PNPM como gestor oficial del repositorio y se configuró:
 - Preferencia offline y `save-exact`.
 - Configuración de seguridad definida para el repositorio.
 
-### 4.5 `.nvmrc`
+### 04.5. `.nvmrc`
 
 Se estableció `24` como versión principal de Node.js utilizada por el repositorio.
 
-### 4.6 `package.json`
+### 04.6. `package.json`
 
 Se creó el package.json raíz del monorepo, estableciendo la identidad del repositorio, versión, carácter privado, licencia y gestor oficial de paquetes. También se configuraron los engines de Node.js y PNPM y los scripts de orquestación mediante Turborepo.
 
@@ -153,7 +153,7 @@ También se establecieron los engines correspondientes a Node.js y PNPM y los sc
 - release
 - clean
 
-### 4.7 `pnpm-workspace.yaml`
+### 04.7. `pnpm-workspace.yaml`
 
 Se establecieron los workspaces iniciales:
 
@@ -176,7 +176,7 @@ packages:
 
 Esto establece la estructura lógica inicial del monorepo para las fases posteriores.
 
-### 4.8 `turbo.json`
+### 04.8. `turbo.json`
 
 Se creó la configuración inicial de Turborepo y sus tareas principales:
 
@@ -186,7 +186,7 @@ Se creó la configuración inicial de Turborepo y sus tareas principales:
 
 También se establecieron las dependencias entre tareas correspondientes a CI y Release.
 
-### 4.9 `README.md`
+### 04.9. `README.md`
 
 Se creó la documentación inicial del repositorio, incluyendo:
 
@@ -196,19 +196,19 @@ Se creó la documentación inicial del repositorio, incluyendo:
 - Política de package manager y Quick Start.
 - Trazabilidad, documentación oficial y licencia.
 
-### 4.10 `CHANGELOG.md`
+### 04.10. `CHANGELOG.md`
 
 Se creó el changelog inicial bajo el formato de _Keep a Changelog_ y _Semantic Versioning_. Se registró el bootstrap inicial y la política de releases del repositorio.
 
-### 4.11 `LICENSE`
+### 04.11. `LICENSE`
 
 Se incorporó la licencia Apache License 2.0.
 
-### 4.12 `NOTICE`
+### 04.12. `NOTICE`
 
 Se incorporó el archivo de atribución correspondiente a Engineering Ecosystem (EE-LABS) y EQ-LABS.
 
-### 4.13 `.github/`
+### 04.13. `.github/`
 
 Se creó la estructura base para los mecanismos de colaboración y gobierno del repositorio:
 
@@ -224,7 +224,7 @@ En esta fase no se implementaron contenidos adicionales dentro de estos elemento
 
 ---
 
-## 5. Resultado de la implementación
+## 05. Resultado de la implementación
 
 Al finalizar la Fase 1, el repositorio dispone de:
 
@@ -243,7 +243,7 @@ El resultado implementado corresponde a la estructura definida para el Bootstrap
 
 ---
 
-## 6. Validación de la fase
+## 06. Validación de la fase
 
 - **Estado:** No realizada en esta fase.
 
@@ -261,13 +261,13 @@ La validación de fase **no se ejecutó** en el momento de cierre de esta IMP (e
 
 ---
 
-## 7. Correcciones durante la implementación
+## 07. Correcciones durante la implementación
 
 No se registraron correcciones durante la Fase 1.
 
 ---
 
-## 8. Trazabilidad
+## 08. Trazabilidad
 
 | Elemento                  | Referencia                         |
 | :------------------------ | :--------------------------------- |
@@ -294,6 +294,7 @@ No se registraron correcciones durante la Fase 1.
 | :--------- | :--------- | :--------------------- | :--------------------- | :------------------------------------------------------- | :----------------------------------------------- | :----------- |
 | **v1.0.0** | 2026-08-21 | Equipo de Arquitectura | Equipo de Arquitectura | Creación del DT de la Fase 1 — Bootstrap del Repositorio | Documentar la implementación realizada           | **Aprobado** |
 | **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006                                     | As-built scripts/commands y estados documentales | **Aprobado** |
+| **v1.1.1** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Normalización PC-006                                     | Encabezados numerados a dos dígitos; sin `x.0`.  | **Aprobado** |
 
 ---
 

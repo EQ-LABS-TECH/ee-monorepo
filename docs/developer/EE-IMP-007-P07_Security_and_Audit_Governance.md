@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | :-------------------- | :------------------------------------------- |
 | **ID**                | EE-IMP-007-P07                               |
 | **Documento**         | Security and Audit Governance                |
-| **Código corto**      | EE-IMP-007-P07                               |
+| **Código corto**      | IMP-007-P07                                  |
 | **Fase**              | Fase 7 — Security and Audit Governance       |
 | **Tipo**              | Documento Técnico de Implementación          |
 | **Clasificación**     | Implementación                               |
@@ -20,7 +20,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Estado**            | Completado                                   |
 | **Propietario**       | Equipo de Arquitectura                       |
 | **Documento padre**   | EE-DOC-007 — GitHub Governance               |
-| **Dependencias**      | EE-DOC-007, EE-IMP-007-P01 … P06             |
+| **Dependencias**      | contenido=EE-IMP-007-P01 … P06               |
 | **Aprobado por**      | Pendiente                                    |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps, Seguridad  |
 | **Fecha de creación** | 2026-09-23                                   |

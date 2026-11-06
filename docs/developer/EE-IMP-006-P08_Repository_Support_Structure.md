@@ -16,15 +16,15 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                            |
 | **Nivel**             | Técnico                                   |
 | **Normativo**         | No                                        |
-| **Versión**           | v1.1.0                                    |
+| **Versión**           | v1.1.1                                    |
 | **Estado**            | Aprobado                                  |
 | **Propietario**       | Equipo de Arquitectura                    |
 | **Documento padre**   | EE-DOC-006                                |
-| **Dependencias**      | EE-DOC-006, EE-DOC-005                    |
+| **Dependencias**      | contenido=EE-DOC-005, EE-DOC-006          |
 | **Aprobado por**      | Equipo de Arquitectura                    |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps          |
 | **Fecha de creación** | 2026-09-19                                |
-| **Última revisión**   | 2026-10-18                                |
+| **Última revisión**   | 2026-11-05                                |
 | **Próxima revisión**  | No aplica — Documento Aprobado            |
 
 ---
@@ -196,7 +196,7 @@ Esta unidad no introduce un nuevo motor de ejecución ni un nuevo orquestador de
 
 Los directorios implementados constituyen **estructura física de soporte** y no workspaces ejecutables por sí mismos.
 
-La validación de la estructura se integra en el mecanismo existente de validación del repositorio mediante `scripts/validate`.
+La validación de la estructura se integra en el mecanismo existente de validación del repositorio mediante `scripts/commands/validate`.
 
 ```mermaid
 flowchart TD
@@ -208,7 +208,7 @@ flowchart TD
  B --> F["examples/"]
  B --> G["marketplace/"]
 
- A --> H["scripts/validate"]
+ A --> H["scripts/commands/validate"]
 
  H --> I["Validación de estructura"]
  H --> J["Validación de workspace"]
@@ -227,46 +227,46 @@ flowchart TD
  O --> P
 ```
 
-La función de `scripts/validate` como punto de entrada integral de validación se encuentra establecida en EE-DOC-006.
+La función de `scripts/commands/validate` como punto de entrada integral de validación se encuentra establecida en EE-DOC-006.
 
 ### 04.1. Repartición de Responsabilidades
 
-| Componente             | Responsabilidad                                                                                    |
-| :--------------------- | :------------------------------------------------------------------------------------------------- |
-| **`assets/`**          | Proporcionar la estructura física para recursos compartidos.                                       |
-| **`docs/`**            | Proporcionar la estructura física para documentación del ecosistema.                               |
-| **`data/`**            | Proporcionar la estructura física para datos del ecosistema.                                       |
-| **`examples/`**        | Proporcionar la estructura física para ejemplos técnicos.                                          |
-| **`marketplace/`**     | Proporcionar la estructura física para artefactos de extensibilidad y marketplace.                 |
-| **`scripts/validate`** | Ejecutar la validación integral de la estructura y configuración del repositorio.                  |
-| **PNPM**               | Mantener la gestión de paquetes y workspaces existentes; esta fase no incorpora nuevos workspaces. |
-| **Turborepo**          | Mantener la orquestación existente; esta fase no modifica su grafo de tareas.                      |
+| Componente                      | Responsabilidad                                                                                    |
+| :------------------------------ | :------------------------------------------------------------------------------------------------- |
+| **`assets/`**                   | Proporcionar la estructura física para recursos compartidos.                                       |
+| **`docs/`**                     | Proporcionar la estructura física para documentación del ecosistema.                               |
+| **`data/`**                     | Proporcionar la estructura física para datos del ecosistema.                                       |
+| **`examples/`**                 | Proporcionar la estructura física para ejemplos técnicos.                                          |
+| **`marketplace/`**              | Proporcionar la estructura física para artefactos de extensibilidad y marketplace.                 |
+| **`scripts/commands/validate`** | Ejecutar la validación integral de la estructura y configuración del repositorio.                  |
+| **PNPM**                        | Mantener la gestión de paquetes y workspaces existentes; esta fase no incorpora nuevos workspaces. |
+| **Turborepo**                   | Mantener la orquestación existente; esta fase no modifica su grafo de tareas.                      |
 
 ---
 
 ## 05. Especificación Técnica de Artefactos
 
-| Artefacto / Comando        | Ruta Física / CLI         | Descripción                          | Mecanismo Principal     |
-| :------------------------- | :------------------------ | :----------------------------------- | :---------------------- |
-| **Shared Assets**          | `assets/`                 | Estructura para recursos compartidos | Sistema de archivos     |
-| **Images**                 | `assets/images/`          | Recursos gráficos                    | Sistema de archivos     |
-| **Fonts**                  | `assets/fonts/`           | Fuentes compartidas                  | Sistema de archivos     |
-| **Templates**              | `assets/templates/`       | Plantillas compartidas               | Sistema de archivos     |
-| **Architecture Docs**      | `docs/architecture/`      | Documentación de arquitectura        | Sistema de archivos     |
-| **Developer Docs**         | `docs/developer/`         | Documentación para desarrolladores   | Sistema de archivos     |
-| **ADR Docs**               | `docs/adr/`               | Decisiones arquitectónicas           | Sistema de archivos     |
-| **Benchmarks**             | `data/benchmarks/`        | Datos de benchmarks                  | Sistema de archivos     |
-| **Datasets**               | `data/datasets/`          | Conjuntos de datos                   | Sistema de archivos     |
-| **Models**                 | `data/models/`            | Modelos entrenados                   | Sistema de archivos     |
-| **ERP Examples**           | `examples/erp/`           | Ejemplos de ERP                      | Sistema de archivos     |
-| **Microservices Examples** | `examples/microservices/` | Ejemplos de microservicios           | Sistema de archivos     |
-| **DDD Examples**           | `examples/ddd/`           | Ejemplos de DDD                      | Sistema de archivos     |
-| **Plugins**                | `marketplace/plugins/`    | Plugins del marketplace              | Sistema de archivos     |
-| **Agents**                 | `marketplace/agents/`     | Agentes del marketplace              | Sistema de archivos     |
-| **Prompts**                | `marketplace/prompts/`    | Prompts reutilizables                | Sistema de archivos     |
-| **Skills**                 | `marketplace/skills/`     | Skills reutilizables                 | Sistema de archivos     |
-| **Marketplace Templates**  | `marketplace/templates/`  | Plantillas del marketplace           | Sistema de archivos     |
-| **Repository Validation**  | `pnpm validate`           | Validación integral del repositorio  | PNPM + scripts/validate |
+| Artefacto / Comando        | Ruta Física / CLI         | Descripción                          | Mecanismo Principal              |
+| :------------------------- | :------------------------ | :----------------------------------- | :------------------------------- |
+| **Shared Assets**          | `assets/`                 | Estructura para recursos compartidos | Sistema de archivos              |
+| **Images**                 | `assets/images/`          | Recursos gráficos                    | Sistema de archivos              |
+| **Fonts**                  | `assets/fonts/`           | Fuentes compartidas                  | Sistema de archivos              |
+| **Templates**              | `assets/templates/`       | Plantillas compartidas               | Sistema de archivos              |
+| **Architecture Docs**      | `docs/architecture/`      | Documentación de arquitectura        | Sistema de archivos              |
+| **Developer Docs**         | `docs/developer/`         | Documentación para desarrolladores   | Sistema de archivos              |
+| **ADR Docs**               | `docs/adr/`               | Decisiones arquitectónicas           | Sistema de archivos              |
+| **Benchmarks**             | `data/benchmarks/`        | Datos de benchmarks                  | Sistema de archivos              |
+| **Datasets**               | `data/datasets/`          | Conjuntos de datos                   | Sistema de archivos              |
+| **Models**                 | `data/models/`            | Modelos entrenados                   | Sistema de archivos              |
+| **ERP Examples**           | `examples/erp/`           | Ejemplos de ERP                      | Sistema de archivos              |
+| **Microservices Examples** | `examples/microservices/` | Ejemplos de microservicios           | Sistema de archivos              |
+| **DDD Examples**           | `examples/ddd/`           | Ejemplos de DDD                      | Sistema de archivos              |
+| **Plugins**                | `marketplace/plugins/`    | Plugins del marketplace              | Sistema de archivos              |
+| **Agents**                 | `marketplace/agents/`     | Agentes del marketplace              | Sistema de archivos              |
+| **Prompts**                | `marketplace/prompts/`    | Prompts reutilizables                | Sistema de archivos              |
+| **Skills**                 | `marketplace/skills/`     | Skills reutilizables                 | Sistema de archivos              |
+| **Marketplace Templates**  | `marketplace/templates/`  | Plantillas del marketplace           | Sistema de archivos              |
+| **Repository Validation**  | `pnpm validate`           | Validación integral del repositorio  | PNPM + scripts/commands/validate |
 
 ---
 
@@ -335,7 +335,7 @@ Esta separación mantiene la distinción entre estructura de soporte y unidades 
 
 La nueva estructura queda sujeta a los mecanismos de validación existentes.
 
-EE-DOC-006 establece `scripts/validate` como mecanismo de validación de estructura, convenciones y dependencias, y establece su ejecución como requisito de cumplimiento del repositorio.
+EE-DOC-006 establece `scripts/commands/validate` como mecanismo de validación de estructura, convenciones y dependencias, y establece su ejecución como requisito de cumplimiento del repositorio.
 
 La implementación de esta fase no requirió modificar el mecanismo de validación.
 
@@ -550,10 +550,11 @@ El ciclo de vida documental y las transiciones de aprobación, validación y con
 
 ## 13. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                  | Cambios                                                                                                 | Estado       |
-| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------- | :------------------------------------------------------------------------------------------------------ | :----------- |
-| **v1.0.0** | 2026-09-19 | Equipo de Arquitectura | Equipo de Arquitectura | Creación del DT de Fase | Registro inicial de la evidencia técnica de implementación y validación de Repository Support Structure | **Aprobado** |
-| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006    | As-built scripts/commands y estados documentales merge                                                  | Aprobado     |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                       | Cambios                                                                                                 | Estado       |
+| :--------- | :--------- | :--------------------- | :--------------------- | :--------------------------- | :------------------------------------------------------------------------------------------------------ | :----------- |
+| **v1.0.0** | 2026-09-19 | Equipo de Arquitectura | Equipo de Arquitectura | Creación del DT de Fase      | Registro inicial de la evidencia técnica de implementación y validación de Repository Support Structure | **Aprobado** |
+| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006         | As-built scripts/commands y estados documentales merge                                                  | Aprobado     |
+| **v1.1.1** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Correccion de rutas as-built | Referencias vigentes alineadas a scripts/commands/validate                                              | Aprobado     |
 
 ---
 

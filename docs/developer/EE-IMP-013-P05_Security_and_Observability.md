@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | :------------------------- | :-------------------------------------------------------------- |
 | **ID**                     | EE-IMP-013-P05                                                  |
 | **Documento**              | Security and Observability                                      |
-| **Código corto**           | EE-IMP-013-P05                                                  |
+| **Código corto**           | IMP-013-P05                                                     |
 | **Fase**                   | Fase 3 — Core Components                                        |
 | **Fase de implementación** | P05 — Security and observability (Implementación de EE-DOC-013) |
 | **Tipo**                   | Documento Técnico de Implementación                             |
@@ -21,7 +21,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | **Estado**                 | Completado                                                      |
 | **Propietario**            | Equipo de Arquitectura                                          |
 | **Documento padre**        | EE-DOC-013 — AI Ecosystem (Aprobado)                            |
-| **Dependencias**           | EE-DOC-009; EE-DOC-010; EE-DOC-013; EE-IMP-013-P01…P04          |
+| **Dependencias**           | contenido=EE-DOC-009, EE-DOC-010, EE-IMP-013-P01…P04            |
 | **Aprobado por**           | Equipo de Arquitectura                                          |
 | **Audiencia**              | Arquitectura, Desarrollo, Seguridad                             |
 | **Fecha de creación**      | 2026-10-04                                                      |

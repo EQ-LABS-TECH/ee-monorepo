@@ -8,25 +8,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                                                                                                                                      |
-| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **ID**                | EE-DOC-014                                                                                                                                                                                                 |
-| **Documento**         | Knowledge Management                                                                                                                                                                                       |
-| **Código corto**      | EE-DOC-014                                                                                                                                                                                                 |
-| **Tipo**              | Documento Normativo                                                                                                                                                                                        |
-| **Clasificación**     | Especializado                                                                                                                                                                                              |
-| **Nivel**             | Especializado                                                                                                                                                                                              |
-| **Normativo**         | Sí                                                                                                                                                                                                         |
-| **Versión**           | v1.1.2                                                                                                                                                                                                     |
-| **Estado**            | Congelado                                                                                                                                                                                                  |
-| **Propietario**       | Equipo de Arquitectura                                                                                                                                                                                     |
-| **Documento padre**   | EE-DOC-004 — Engineering Architecture                                                                                                                                                                      |
-| **Dependencias**      | EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-DOC-005, EE-DOC-006, EE-DOC-007, EE-DOC-008, EE-DOC-009, EE-DOC-010, EE-DOC-011, EE-DOC-012, EE-DOC-013, EE-ADR-001, EE-ADR-002, EE-ADR-004, EE-ADR-005 |
-| **Aprobado por**      | Equipo de Arquitectura                                                                                                                                                                                     |
-| **Audiencia**         | Arquitectura, Desarrollo, Knowledge Engineering, IA                                                                                                                                                        |
-| **Fecha de creación** | 2026-10-05                                                                                                                                                                                                 |
-| **Última revisión**   | 2026-11-04                                                                                                                                                                                                 |
-| **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                                                                            |
+| Campo                 | Valor                                                                           |
+| :-------------------- | :------------------------------------------------------------------------------ |
+| **ID**                | EE-DOC-014                                                                      |
+| **Documento**         | Knowledge Management                                                            |
+| **Código corto**      | DOC-014                                                                         |
+| **Tipo**              | Documento Normativo                                                             |
+| **Clasificación**     | Especializado                                                                   |
+| **Nivel**             | Táctico                                                                         |
+| **Normativo**         | Sí                                                                              |
+| **Versión**           | v1.4.0                                                                          |
+| **Estado**            | Congelado                                                                       |
+| **Propietario**       | Equipo de Arquitectura                                                          |
+| **Documento padre**   | EE-DOC-004 — Engineering Architecture                                           |
+| **Dependencias**      | contenido=EE-DOC-001…EE-DOC-013, EE-ADR-001, EE-ADR-002, EE-ADR-004, EE-ADR-005 |
+| **Aprobado por**      | Equipo de Arquitectura                                                          |
+| **Audiencia**         | Arquitectura, Desarrollo, Knowledge Engineering, IA                             |
+| **Fecha de creación** | 2026-10-05                                                                      |
+| **Última revisión**   | 2026-11-05                                                                      |
+| **Próxima revisión**  | No aplica — Documento Congelado                                                 |
 
 ---
 
@@ -52,7 +52,7 @@ Este documento **no** redefine Quality Gates (EE-DOC-010), estructura de primer 
 | **Puertos de contrato**    | Tipos en **Foundation**; implementación en **`packages/knowledge`**                                                                      |
 | **Artefactos en `data/`**  | Política de corpus/índices/modelos de conocimiento (ver §07.2)                                                                           |
 
-### 02.1.1. Artefacto canónico del monorepo
+#### 02.1.1. Artefacto canónico del monorepo
 
 | Artefacto                        | Norma                                                                                                                |
 | :------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
@@ -372,7 +372,7 @@ Produce **propuestas**; no escribe Congelados; PR + CODEOWNERS + QG mandan. El s
 
 ## 09. Plan de Implementación y Fases
 
-> **Artefacto técnico previsto al cierre:** **EE-TEC-009** (no existe aún; se emite en P06).  
+> **Artefacto técnico previsto al cierre:** **EE-TEC-009** (no existe aún; se emite en P06).
 > Prerrequisito de IMP: EE-DOC-014 **Aprobado**.
 
 ### 09.1. Catálogo oficial de fases
@@ -486,19 +486,14 @@ Durante IMP: **prohibida** desviación silenciosa de este DOC una vez **Aprobado
 
 ## 13. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                     | Cambios                                                                                                                                                                                                                 | Estado             |
-| :--------- | :--------- | :--------------------- | :--------------------- | :------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------- |
-| **v0.1.0** | 2026-10-05 | Equipo de Arquitectura | —                      | Apertura                   | Borrador inicial                                                                                                                                                                                                        | En Elaboración     |
-| **v0.2.0** | 2026-10-05 | Equipo de Arquitectura | —                      | Revisión 1                 | B1–B4, M*, m*                                                                                                                                                                                                           | En Elaboración     |
-| **v0.2.1** | 2026-10-05 | Equipo de Arquitectura | —                      | Residuales R1–R4           | 004 Registry; Validation; Execution; nota techo                                                                                                                                                                         | En Elaboración     |
-| **v0.3.0** | 2026-10-05 | Equipo de Arquitectura | —                      | Revisión 2 (Sí/Parcial)    | B1 excepción Tipo B; B2 política ⊆ techo; B3 enforcement interim; M1 gap as-built; M2 KnowledgeError; M3 un root; M4 CatalogPort; M5 data/; M6 catálogo fases; M7 P04 hermético; m1–m6; TEC-009 previsto; cierre v0.3.0 | **En Elaboración** |
-| **v0.3.1** | 2026-10-05 | Equipo de Arquitectura | —                      | Revisión 3                 | Registry→KnowledgePort (no package); §04.7 fuentes/stores diferidos; sin Tipo A sobre 004; TEC-005 en refs; P01 CODEOWNERS; P03 ABI-only; push ingesta; job Execution dirección; fecha próxima revisión                 | **En Elaboración** |
-| **v0.3.2** | 2026-10-05 | Equipo de Arquitectura | —                      | Revisión 4 (3 bloques)     | Artefacto canónico; sin Knowledge→Execution; EmbeddingPort path; store vendor ADR; KNOWLEDGE_PORT_VERSION fijo; data candidatos P05; Mermaid; KS-06/P01; riesgo single-operator; P03 wiring mínimo                      | **En Elaboración** |
-| **v0.3.3** | 2026-10-05 | Equipo de Arquitectura | —                      | Revisión 5                 | Diagrama data/ opcional; Acquisition local vs externa; semantic/embeddings condicionados ABI; surface workspace ≠ npm; KS-06 paths finos                                                                                | **En Elaboración** |
-| **v1.0.0** | 2026-10-05 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación                 | Estado **Aprobado**; O1–O13 = IMP checklist; habilita EE-IMP-014-P01                                                                                                                                                    | Aprobado           |
-| **v1.1.0** | 2026-10-06 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre implementación      | P01–P06 Completados; EE-TEC-009 Aprobado; sin bloqueantes no gestionados (D-01 WAIVED)                                                                                                                                  | **Congelado**      |
-| **v1.1.1** | 2026-10-19 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación EE-ADR-006      | §04.5: columna Techo 006 actualizada a Prohibido para `Knowledge → Execution` y `Knowledge → Intelligence`                                                                                                              | Congelado          |
-| **v1.1.2** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Trazabilidad de EE-ADR-006 | §12 incorpora la referencia de las fronteras aplicadas en §04.5; Dependencias conserva su alcance de validez y aplicación.                                                                                              | **Congelado**      |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                           | Cambios                                                                                                                                 | Estado         |
+| :--------- | :--------- | :--------------------- | :--------------------- | :----------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- | :------------- |
+| **v0.1.0** | 2026-10-05 | Equipo de Arquitectura | —                      | Consolidated changes for the same date and state | Defines Knowledge boundaries, ports, errors, data, stores, acquisition, embeddings and ABI; excludes Knowledge-to-Execution dependency. | En Elaboración |
+| **v1.0.0** | 2026-10-05 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación                                       | Estado **Aprobado**; O1–O13 = IMP checklist; habilita EE-IMP-014-P01                                                                    | Aprobado       |
+| **v1.1.0** | 2026-10-06 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre implementación                            | P01–P06 Completados; EE-TEC-009 Aprobado; sin bloqueantes no gestionados (D-01 WAIVED)                                                  | **Congelado**  |
+| **v1.2.0** | 2026-10-19 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación EE-ADR-006                            | §04.5: columna Techo 006 actualizada a Prohibido para `Knowledge → Execution` y `Knowledge → Intelligence`                              | Congelado      |
+| **v1.3.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidated changes for the same date and state | Adds ADR-006 traceability in section 12 and aligns Classification/Level and history with DOC-002 sections 05.1 and 11.                  | **Congelado**  |
+| **v1.4.0** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Normalización PC-006                             | Jerarquía de encabezados alineada con EE-DOC-002 §06 y §07.; Historial normalizado conforme a PC-010.                                   | **Congelado**  |
 
 ---
 

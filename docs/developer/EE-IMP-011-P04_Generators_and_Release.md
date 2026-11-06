@@ -6,27 +6,27 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 
 ## METADATOS
 
-| Campo                      | Valor                                                          |
-| :------------------------- | :------------------------------------------------------------- |
-| **ID**                     | EE-IMP-011-P04                                                 |
-| **Documento**              | Generators and Release                                         |
-| **Código corto**           | EE-IMP-011-P04                                                 |
-| **Fase**                   | Fase 3 — Core Components                                       |
-| **Fase de implementación** | P04 — Generators and Release (Implementación de EE-DOC-011)    |
-| **Tipo**                   | Documento Técnico de Implementación                            |
-| **Clasificación**          | Implementación                                                 |
-| **Nivel**                  | Técnico                                                        |
-| **Normativo**              | No                                                             |
-| **Versión**                | v1.2.0                                                         |
-| **Estado**                 | Completado                                                     |
-| **Propietario**            | Equipo de Arquitectura                                         |
-| **Documento padre**        | EE-DOC-011 — Automation (v1.0.0 Aprobado)                      |
-| **Dependencias**           | EE-DOC-006, EE-DOC-010, EE-DOC-011 §07–§08, EE-IMP-011-P01…P03 |
-| **Aprobado por**           | Equipo de Arquitectura                                         |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps                               |
-| **Fecha de creación**      | 2026-09-30                                                     |
-| **Última revisión**        | 2026-10-01                                                     |
-| **Próxima revisión**       | 2026-12-30                                                     |
+| Campo                      | Valor                                                        |
+| :------------------------- | :----------------------------------------------------------- |
+| **ID**                     | EE-IMP-011-P04                                               |
+| **Documento**              | Generators and Release                                       |
+| **Código corto**           | IMP-011-P04                                                  |
+| **Fase**                   | Fase 3 — Core Components                                     |
+| **Fase de implementación** | P04 — Generators and Release (Implementación de EE-DOC-011)  |
+| **Tipo**                   | Documento Técnico de Implementación                          |
+| **Clasificación**          | Implementación                                               |
+| **Nivel**                  | Técnico                                                      |
+| **Normativo**              | No                                                           |
+| **Versión**                | v1.2.1                                                       |
+| **Estado**                 | Completado                                                   |
+| **Propietario**            | Equipo de Arquitectura                                       |
+| **Documento padre**        | EE-DOC-011 — Automation (v1.0.0 Aprobado)                    |
+| **Dependencias**           | contenido=EE-DOC-006, EE-DOC-010, EE-DOC-011, EE-IMP-011-P01 |
+| **Aprobado por**           | Equipo de Arquitectura                                       |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps                             |
+| **Fecha de creación**      | 2026-09-30                                                   |
+| **Última revisión**        | 2026-11-05                                                   |
+| **Próxima revisión**       | 2026-12-30                                                   |
 
 ---
 
@@ -200,13 +200,22 @@ El primer flujo se conserva exclusivamente como referencia histórica del cierre
 
 La evolución de A-REL responde al pendiente de auditoría **PN-021**, relacionado con preparación revisable, elegibilidad npm, integridad del release, publicación post-merge y recuperación. Su integración con los controles de GitHub se relaciona con **PN-030**, sin trasladar a este documento la responsabilidad normativa de EE-DOC-007.
 
-La preparación del release produce los cambios de versionado y changelog que deben integrarse mediante Pull Request, junto con la información necesaria para verificar posteriormente su procedencia. Esta fase no realiza publicaciones npm ni crea el tag final.
+La preparación del release produce los cambios de versionado y changelog que deben integrarse mediante Pull Request, junto con la información necesaria para verificar posteriormente su procedencia. Esta fase no realiza publicaciones npm ni crea el tag final. Changesets puede versionar paquetes privados sin crear tags por paquete; la política `private: true` de los manifests se conserva.
 
-La ejecución post-merge valida que el release solicitado corresponda a una preparación autorizada, contrasta el plan declarado con una reconstrucción independiente y determina qué versiones públicas planificadas requieren publicación. La ausencia de una versión en el registro no autoriza por sí sola a publicar un paquete ajeno al plan.
+La ejecución post-merge valida que el release solicitado corresponda a una preparación autorizada y contrasta el plan declarado con una reconstrucción independiente. Si el plan incluye paquetes públicos aprobados, aplica Public Release y determina qué versiones requieren publicación. Si el plan contiene solo paquetes privados, aplica Internal Release: ejecuta validación y build, no consulta ni publica en npm y prepara el tag `platform-vX.Y.Z`. Un plan vacío o inconsistente no produce un release ni un tag.
 
-La secuencia de publicación preserva la verificación de prerrequisitos, los Quality Gates aplicables, el build y la comprobación final del estado del repositorio antes de efectuar operaciones irreversibles. La recuperación distingue versiones ya publicadas, publicaciones pendientes y tags existentes, rechazando inconsistencias en lugar de sobrescribir estados remotos.
+Ambos tipos de release preservan la verificación de prerrequisitos, los Quality Gates aplicables, el build y la comprobación final del estado del repositorio antes de crear el tag. Public Release utiliza `vX.Y.Z`; Internal Release utiliza `platform-vX.Y.Z`. La recuperación valida y compila de nuevo, acepta un tag remoto solo si apunta al mismo commit y rechaza inconsistencias en lugar de sobrescribir estados remotos. Un fallo de push permite reintentar la finalización del mismo commit sin repetir versionado; Internal Release no requiere credenciales npm.
 
-La evolución incorpora controles para detectar alteraciones de la procedencia o del plan autorizado, así como condiciones de fallo explícitas cuando no puede demostrarse la correspondencia entre preparación y publicación. El tratamiento de releases sin paquetes públicos planificados permanece sujeto a la decisión normativa correspondiente.
+La evolución incorpora controles para detectar alteraciones de la procedencia o del plan autorizado, así como condiciones de fallo explícitas cuando no puede demostrarse la correspondencia entre preparación y finalización. La protección efectiva del tag `platform-v*` debe configurarse junto con la de `v*` antes de habilitar el flujo en GitHub.
+
+### 07.5. Contrato as-built de Internal Release — PN-021
+
+- La clasificación se basa exclusivamente en el plan Changesets reconstruido y en el estado `private` verificado de cada paquete planificado.
+- Un plan compuesto solo por paquetes `private: true` se finaliza como Internal Release; el paso de workflow correspondiente no recibe `NPM_TOKEN` ni `NODE_AUTH_TOKEN`.
+- El tag final `platform-vX.Y.Z` se crea después de Validate y Build. GitHub verifica el destino remoto y rechaza tags que apunten a otro commit.
+- Un plan con paquetes públicos elegibles conserva el camino Public Release y el tag `vX.Y.Z`; la credencial npm permanece limitada a ese paso.
+- Las pruebas de recuperación usan dependencias simuladas. No se ejecuta una publicación npm real como método de prueba.
+- El ruleset remoto debe incluir `platform-v*` con creación restringida y actualizaciones/eliminaciones bloqueadas. La política normativa ya lo exige; la configuración efectiva y su ejecución en GitHub permanecen por verificar.
 
 Esta subsección registra la evolución de implementación y no modifica retrospectivamente el dictamen histórico de cierre de P04. Los resultados de pruebas, auditoría y conformidad transversal se documentan separadamente.
 
@@ -307,11 +316,12 @@ Push a `main` con bypass de admin (single-operator; EE-DOC-007).
 
 ## 13. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                            | Cambios                                                                       | Estado         |
-| :--------- | :--------- | :--------------------- | :--------------------- | :-------------------------------- | :---------------------------------------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Apertura P04                      | Audit GEN/REL; procedimiento                                                  | Borrador       |
-| **v1.1.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre operativo                  | cls; shell; build canónico; Buffer; CI ✓                                      | Completado     |
-| **v1.2.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Revisión arquitectónica de cierre | Dictamen §11; alcance/estructura §02–§04; TEC-006 SSOT; backlog D-P04-005/006 | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                            | Cambios                                                                                                                                    | Estado         |
+| :--------- | :--------- | :--------------------- | :--------------------- | :-------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Apertura P04                      | Audit GEN/REL; procedimiento                                                                                                               | Borrador       |
+| **v1.1.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre operativo                  | cls; shell; build canónico; Buffer; CI ✓                                                                                                   | Completado     |
+| **v1.2.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Revisión arquitectónica de cierre | Dictamen §11; alcance/estructura §02–§04; TEC-006 SSOT; backlog D-P04-005/006                                                              | **Completado** |
+| **v1.2.1** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Internal Release PN-021           | §07.4–§07.5 describen clasificación privada, tag `platform-v`, controles sin npm y recuperación; reglas remotas pendientes de verificación | **Completado** |
 
 ---
 

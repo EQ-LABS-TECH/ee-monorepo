@@ -6,25 +6,25 @@ Este documento registra la documentación técnica consolidada (estado **as-buil
 
 ## METADATOS
 
-| Campo                 | Valor                                                  |
-| :-------------------- | :----------------------------------------------------- |
-| **ID**                | EE-TEC-008                                             |
-| **Documento**         | Consolidated Technical Documentation — AI Ecosystem    |
-| **Código corto**      | EE-TEC-008                                             |
-| **Tipo**              | Documento Técnico                                      |
-| **Clasificación**     | Implementación                                         |
-| **Nivel**             | Técnico                                                |
-| **Normativo**         | No                                                     |
-| **Versión**           | v1.0.1                                                 |
-| **Estado**            | Aprobado                                               |
-| **Propietario**       | Equipo de Arquitectura                                 |
-| **Documento padre**   | EE-DOC-013 — AI Ecosystem                              |
-| **Dependencias**      | EE-DOC-013; EE-IMP-013-P01…P06; EE-ADR-005; EE-DOC-006 |
-| **Aprobado por**      | Equipo de Arquitectura                                 |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                   |
-| **Fecha de creación** | 2026-10-05                                             |
-| **Última revisión**   | 2026-10-05                                             |
-| **Próxima revisión**  | Al abrir nueva IMP de AI Layer                         |
+| Campo                 | Valor                                                |
+| :-------------------- | :--------------------------------------------------- |
+| **ID**                | EE-TEC-008                                           |
+| **Documento**         | Consolidated Technical Documentation — AI Ecosystem  |
+| **Código corto**      | TEC-008                                              |
+| **Tipo**              | Documentación Técnica Consolidada                    |
+| **Clasificación**     | Técnico / As-Built                                   |
+| **Nivel**             | Técnico                                              |
+| **Normativo**         | No                                                   |
+| **Versión**           | v1.0.2                                               |
+| **Estado**            | Aprobado                                             |
+| **Propietario**       | Equipo de Arquitectura                               |
+| **Documento padre**   | EE-DOC-013 — AI Ecosystem                            |
+| **Dependencias**      | contenido=EE-IMP-013-P01…P06, EE-ADR-005, EE-DOC-006 |
+| **Aprobado por**      | Equipo de Arquitectura                               |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                 |
+| **Fecha de creación** | 2026-10-05                                           |
+| **Última revisión**   | 2026-11-04                                           |
+| **Próxima revisión**  | Al abrir nueva IMP de AI Layer                       |
 
 ---
 
@@ -165,6 +165,7 @@ Ver **EE-IMP-013-P06 §03**. Resumen:
 | :--------- | :--------- | :--------------------- | :--------------------- | :----------------------- | :------------------------------------------------------------------- | :----------- |
 | **v1.0.0** | 2026-10-05 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre IMP-013           | Consolidado P01–P06 as-built AI Layer                                | **Aprobado** |
 | **v1.0.1** | 2026-10-06 | Equipo de Arquitectura | Equipo de Arquitectura | Corrección residual D-01 | Quita fecha placeholder 2026-10-10; aclara braces vs brace-expansion | Aprobado     |
+| **v1.0.2** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Correccion PC-003        | Tipo y Clasificacion alineados a EE-DOC-002 §05.1 y plantilla §18.4. | Aprobado     |
 
 ---
 

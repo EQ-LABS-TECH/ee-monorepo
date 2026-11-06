@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                                      |
-| :-------------------- | :--------------------------------------------------------- |
-| **ID**                | EE-IMP-008-P04                                             |
-| **Documento**         | Dev Container (Condicional / Diferible)                    |
-| **Código corto**      | EE-IMP-008-P04                                             |
-| **Fase**              | Fase 4 — Dev Container                                     |
-| **Tipo**              | Documento Técnico de Implementación                        |
-| **Clasificación**     | Implementación                                             |
-| **Nivel**             | Técnico                                                    |
-| **Normativo**         | No                                                         |
-| **Versión**           | v1.1.0                                                     |
-| **Estado**            | Completado                                                 |
-| **Propietario**       | Equipo de Arquitectura                                     |
-| **Documento padre**   | EE-DOC-008 — Development Environment                       |
-| **Dependencias**      | EE-DOC-008, EE-IMP-008-P01, EE-IMP-008-P02, EE-IMP-008-P03 |
-| **Aprobado por**      | Equipo de Arquitectura                                     |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps                           |
-| **Fecha de creación** | 2026-09-24                                                 |
-| **Última revisión**   | 2026-09-24                                                 |
-| **Próxima revisión**  | Cuando se justifique adopción (requiere ADR previo)        |
+| Campo                 | Valor                                               |
+| :-------------------- | :-------------------------------------------------- |
+| **ID**                | EE-IMP-008-P04                                      |
+| **Documento**         | Dev Container (Condicional / Diferible)             |
+| **Código corto**      | IMP-008-P04                                         |
+| **Fase**              | Fase 4 — Dev Container                              |
+| **Tipo**              | Documento Técnico de Implementación                 |
+| **Clasificación**     | Implementación                                      |
+| **Nivel**             | Técnico                                             |
+| **Normativo**         | No                                                  |
+| **Versión**           | v1.0.0                                              |
+| **Estado**            | Completado                                          |
+| **Propietario**       | Equipo de Arquitectura                              |
+| **Documento padre**   | EE-DOC-008 — Development Environment                |
+| **Dependencias**      | contenido=EE-IMP-008-P01…P03                        |
+| **Aprobado por**      | Equipo de Arquitectura                              |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps                    |
+| **Fecha de creación** | 2026-09-24                                          |
+| **Última revisión**   | 2026-09-24                                          |
+| **Próxima revisión**  | Cuando se justifique adopción (requiere ADR previo) |
 
 ---
 
@@ -206,10 +206,9 @@ El deferimiento controlado no bloquea:
 
 ## 09. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                         | Cambios                                                                          | Estado         |
-| :--------- | :--------- | :----------------------- | :--------------------- | :----------------------------- | :------------------------------------------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Deferimiento de P04            | Registro de decisión sin materializar `.devcontainer/`                           | Completado     |
-| **v1.1.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Cierre + correcciones revisión | EE-DOC-005 intro; evidencia Test-Path; dependencias; typo; validaciones P04-only | **Completado** |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                              | Cambios                                                                                                                                  | Estado     |
+| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | :--------- |
+| **v1.0.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Deferimiento de P04; Cierre + correcciones revisión | Registro de decisión sin materializar `.devcontainer/`; EE-DOC-005 intro; evidencia Test-Path; dependencias; typo; validaciones P04-only | Completado |
 
 ---
 

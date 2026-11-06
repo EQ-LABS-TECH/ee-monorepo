@@ -8,26 +8,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                                                          |
-| :-------------------- | :----------------------------------------------------------------------------- |
-| **ID**                | EE-IMP-015-P04                                                                 |
-| **Documento**         | Automation, Infra, Smoke and E2E Pending                                       |
-| **Código corto**      | EE-IMP-015-P04                                                                 |
-| **Fase**              | Unidad P04 — V-AUTO / V-INFRA / V-SMOKE / V-E2E                                |
-| **Tipo**              | Documento Técnico de Implementación                                            |
-| **Clasificación**     | Implementación                                                                 |
-| **Nivel**             | Técnico                                                                        |
-| **Normativo**         | No                                                                             |
-| **Versión**           | v1.0.0                                                                         |
-| **Estado**            | Completado                                                                     |
-| **Propietario**       | Equipo de Arquitectura                                                         |
-| **Documento padre**   | EE-DOC-015 — Engineering Ecosystem Validation                                  |
-| **Dependencias**      | EE-DOC-015, EE-DOC-010, EE-DOC-011, EE-DOC-009, EE-DOC-006, EE-IMP-015-P01…P03 |
-| **Aprobado por**      | Equipo de Arquitectura                                                         |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA                                           |
-| **Fecha de creación** | 2026-10-07                                                                     |
-| **Última revisión**   | 2026-10-07                                                                     |
-| **Próxima revisión**  | Tras evidencia en monorepo                                                     |
+| Campo                 | Valor                                                                        |
+| :-------------------- | :--------------------------------------------------------------------------- |
+| **ID**                | EE-IMP-015-P04                                                               |
+| **Documento**         | Automation, Infra, Smoke and E2E Pending                                     |
+| **Código corto**      | IMP-015-P04                                                                  |
+| **Fase**              | Unidad P04 — V-AUTO / V-INFRA / V-SMOKE / V-E2E                              |
+| **Tipo**              | Documento Técnico de Implementación                                          |
+| **Clasificación**     | Implementación                                                               |
+| **Nivel**             | Técnico                                                                      |
+| **Normativo**         | No                                                                           |
+| **Versión**           | v1.0.0                                                                       |
+| **Estado**            | Completado                                                                   |
+| **Propietario**       | Equipo de Arquitectura                                                       |
+| **Documento padre**   | EE-DOC-015 — Engineering Ecosystem Validation                                |
+| **Dependencias**      | contenido=EE-DOC-010, EE-DOC-011, EE-DOC-009, EE-DOC-006, EE-IMP-015-P01…P03 |
+| **Aprobado por**      | Equipo de Arquitectura                                                       |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA                                         |
+| **Fecha de creación** | 2026-10-07                                                                   |
+| **Última revisión**   | 2026-10-07                                                                   |
+| **Próxima revisión**  | Tras evidencia en monorepo                                                   |
 
 ---
 

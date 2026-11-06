@@ -6,27 +6,27 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 
 ## METADATOS
 
-| Campo                      | Valor                                                          |
-| :------------------------- | :------------------------------------------------------------- |
-| **ID**                     | EE-IMP-011-P02                                                 |
-| **Documento**              | Scripts Hardening                                              |
-| **Código corto**           | EE-IMP-011-P02                                                 |
-| **Fase**                   | Fase 3 — Core Components                                       |
-| **Fase de implementación** | P02 — Scripts Hardening (Implementación de EE-DOC-011)         |
-| **Tipo**                   | Documento Técnico de Implementación                            |
-| **Clasificación**          | Implementación                                                 |
-| **Nivel**                  | Técnico                                                        |
-| **Normativo**              | No                                                             |
-| **Versión**                | v1.1.0                                                         |
-| **Estado**                 | Completado                                                     |
-| **Propietario**            | Equipo de Arquitectura                                         |
-| **Documento padre**        | EE-DOC-011 — Automation (v1.0.0 Aprobado)                      |
-| **Dependencias**           | EE-DOC-006, EE-DOC-010, EE-DOC-011, EE-IMP-011-P01, EE-ADR-001 |
-| **Aprobado por**           | Equipo de Arquitectura                                         |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps                               |
-| **Fecha de creación**      | 2026-09-30                                                     |
-| **Última revisión**        | 2026-09-30                                                     |
-| **Próxima revisión**       | 2026-12-30                                                     |
+| Campo                      | Valor                                                                    |
+| :------------------------- | :----------------------------------------------------------------------- |
+| **ID**                     | EE-IMP-011-P02                                                           |
+| **Documento**              | Scripts Hardening                                                        |
+| **Código corto**           | IMP-011-P02                                                              |
+| **Fase**                   | Fase 3 — Core Components                                                 |
+| **Fase de implementación** | P02 — Scripts Hardening (Implementación de EE-DOC-011)                   |
+| **Tipo**                   | Documento Técnico de Implementación                                      |
+| **Clasificación**          | Implementación                                                           |
+| **Nivel**                  | Técnico                                                                  |
+| **Normativo**              | No                                                                       |
+| **Versión**                | v1.1.0                                                                   |
+| **Estado**                 | Completado                                                               |
+| **Propietario**            | Equipo de Arquitectura                                                   |
+| **Documento padre**        | EE-DOC-011 — Automation (v1.0.0 Aprobado)                                |
+| **Dependencias**           | contenido=EE-DOC-006, EE-DOC-010, EE-DOC-011, EE-IMP-011-P01, EE-ADR-001 |
+| **Aprobado por**           | Equipo de Arquitectura                                                   |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps                                         |
+| **Fecha de creación**      | 2026-09-30                                                               |
+| **Última revisión**        | 2026-09-30                                                               |
+| **Próxima revisión**       | 2026-12-30                                                               |
 
 ---
 

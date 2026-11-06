@@ -21,7 +21,7 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 | **Estado**                 | Aprobado                                                  |
 | **Propietario**            | Equipo de Arquitectura                                    |
 | **Documento padre**        | EE-DOC-006 — Repository Structure                         |
-| **Dependencias**           | EE-DOC-005; EE-DOC-006; EE-IMP-006-P07                    |
+| **Dependencias**           | contenido=EE-DOC-005, EE-DOC-006, EE-IMP-006-P07          |
 | **Decisión relacionada**   | Ninguna (primera ADR de orquestación)                     |
 | **Aprobado por**           | Equipo de Arquitectura                                    |
 | **Audiencia**              | Arquitectura, Desarrollo, DevOps                          |
@@ -215,7 +215,7 @@ flowchart TB
     SPECIALIZED --> CHANGESETS["Changesets"]
 ```
 
-La interfaz de comandos del repositorio continúa siendo responsabilidad de los scripts root.  
+La interfaz de comandos del repositorio continúa siendo responsabilidad de los scripts root.
 La implementación interna de las tareas workspace queda delegada al orquestador correspondiente.
 
 ---
@@ -249,7 +249,7 @@ doctor    → script propio
 
 ## 09. Relación con `turbo.json`
 
-La configuración de Turbo constituye la fuente técnica para el grafo de tareas.  
+La configuración de Turbo constituye la fuente técnica para el grafo de tareas.
 Las dependencias entre tareas deberán expresarse mediante `turbo.json`.
 
 ```json
@@ -271,7 +271,7 @@ Los scripts root no deberán duplicar manualmente la lógica del grafo de depend
 
 ### 10.1. Una única capa de orquestación
 
-Turbo será el mecanismo oficial para coordinar tareas entre workspaces.  
+Turbo será el mecanismo oficial para coordinar tareas entre workspaces.
 No deberán introducirse mecanismos alternativos para el mismo grafo sin decisión arquitectónica explícita.
 
 ### 10.2. pnpm no pierde su responsabilidad
@@ -373,7 +373,7 @@ Debe confirmar: ejecución correcta; dependencias entre workspaces; sin regresio
 
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                | Cambios                                                                                                    | Estado       |
 | :--------- | :--------- | :--------------------- | :--------------------- | :-------------------- | :--------------------------------------------------------------------------------------------------------- | :----------- |
-| **v1.0.0** | 2026-08-20 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial      | Turbo como orquestador oficial de tareas workspace                                                         | Aprobado     |
+| **v1.0.0** | 2026-08-20 | Equipo de Arquitectura | Equipo de Arquitectura | Creación inicial      | Turbo como orquestador oficial de tareas workspace                                                         | **Aprobado** |
 | **v1.1.0** | 2026-10-02 | Equipo de Arquitectura | Equipo de Arquitectura | Higiene DOC-002 §18.2 | Metadatos; Propósito; Alcance 05.1/05.2; Justificación; Consecuencias; Referencias; sin cambio de decisión | **Aprobado** |
 
 ---

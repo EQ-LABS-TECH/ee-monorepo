@@ -6,26 +6,26 @@ Evidencia técnica de **P06** de **EE-DOC-012 — Templates**: consolidación de
 
 ## METADATOS
 
-| Campo                      | Valor                                                              |
-| :------------------------- | :----------------------------------------------------------------- |
-| **ID**                     | EE-IMP-012-P06                                                     |
-| **Documento**              | Validation and Closure                                             |
-| **Código corto**           | EE-IMP-012-P06                                                     |
-| **Fase de implementación** | P06 — Validation and Closure                                       |
-| **Tipo**                   | Documento Técnico de Implementación                                |
-| **Clasificación**          | Implementación                                                     |
-| **Nivel**                  | Técnico                                                            |
-| **Normativo**              | No                                                                 |
-| **Versión**                | v1.0.0                                                             |
-| **Estado**                 | Completado                                                         |
-| **Propietario**            | Equipo de Arquitectura                                             |
-| **Documento padre**        | EE-DOC-012 — Templates (v0.5.0 Aprobado)                           |
-| **Dependencias**           | EE-IMP-012-P01…P05 Completados, EE-DOC-010, EE-DOC-011, EE-RFC-002 |
-| **Aprobado por**           | Equipo de Arquitectura                                             |
-| **Audiencia**              | Arquitectura, Desarrollo                                           |
-| **Fecha de creación**      | 2026-10-02                                                         |
-| **Última revisión**        | 2026-10-02                                                         |
-| **Próxima revisión**       | — (fase Completada)                                                |
+| Campo                      | Valor                                                       |
+| :------------------------- | :---------------------------------------------------------- |
+| **ID**                     | EE-IMP-012-P06                                              |
+| **Documento**              | Validation and Closure                                      |
+| **Código corto**           | IMP-012-P06                                                 |
+| **Fase de implementación** | P06 — Validation and Closure                                |
+| **Tipo**                   | Documento Técnico de Implementación                         |
+| **Clasificación**          | Implementación                                              |
+| **Nivel**                  | Técnico                                                     |
+| **Normativo**              | No                                                          |
+| **Versión**                | v1.0.1                                                      |
+| **Estado**                 | Completado                                                  |
+| **Propietario**            | Equipo de Arquitectura                                      |
+| **Documento padre**        | EE-DOC-012 — Templates (v0.5.0 Aprobado)                    |
+| **Dependencias**           | contenido=EE-IMP-012-P01, EE-DOC-010…EE-DOC-012, EE-RFC-002 |
+| **Aprobado por**           | Equipo de Arquitectura                                      |
+| **Audiencia**              | Arquitectura, Desarrollo                                    |
+| **Fecha de creación**      | 2026-10-02                                                  |
+| **Última revisión**        | 2026-11-04                                                  |
+| **Próxima revisión**       | — (fase Completada)                                         |
 
 ---
 
@@ -206,9 +206,10 @@ Actualizar **EE-DOC-012** §26 Cierre Documental (fecha, IMP/TEC ✅) y **EE-DOC
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Motivo                                         | Estado         |
-| :--------- | :--------- | :--------------------- | :--------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-10-02 | Equipo de Arquitectura | Cierre P06 tras P05 Completado + evidencia E2E | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                                         | Cambios                                                                             | Estado         |
+| :--------- | :--------- | :--------------------- | :----------- | :--------------------------------------------- | :---------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-10-02 | Equipo de Arquitectura | —            | Cierre P06 tras P05 Completado + evidencia E2E | —                                                                                   | **Completado** |
+| **v1.0.1** | 2026-11-04 | Equipo de Arquitectura | —            | Regularizacion PC-002                          | Historial normalizado a 7 columnas segun EE-DOC-002 §11; datos previos preservados. | **Completado** |
 
 ---
 

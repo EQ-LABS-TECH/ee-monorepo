@@ -6,25 +6,25 @@ Este documento registra la documentación técnica consolidada (estado as-built)
 
 ## METADATOS
 
-| Campo                 | Valor                                                    |
-| :-------------------- | :------------------------------------------------------- |
-| **ID**                | EE-TEC-003                                               |
-| **Documento**         | Consolidated Technical Documentation of EE-DOC-008       |
-| **Código corto**      | EE-TEC-003                                               |
-| **Tipo**              | Documento Técnico                                        |
-| **Clasificación**     | Implementación                                           |
-| **Nivel**             | Técnico                                                  |
-| **Normativo**         | No                                                       |
-| **Versión**           | v1.0.1                                                   |
-| **Estado**            | Aprobado (as-built post Validación Final)                |
-| **Propietario**       | Equipo de Arquitectura                                   |
-| **Documento padre**   | EE-DOC-008 — Development Environment                     |
-| **Dependencias**      | EE-DOC-008, EE-IMP-008-P01 … P06, EE-ADR-003, EE-DOC-007 |
-| **Aprobado por**      | Equipo de Arquitectura                                   |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                     |
-| **Fecha de creación** | 2026-09-24                                               |
-| **Última revisión**   | 2026-09-24                                               |
-| **Próxima revisión**  | 2026-12-24                                               |
+| Campo                 | Valor                                                        |
+| :-------------------- | :----------------------------------------------------------- |
+| **ID**                | EE-TEC-003                                                   |
+| **Documento**         | Consolidated Technical Documentation of EE-DOC-008           |
+| **Código corto**      | TEC-003                                                      |
+| **Tipo**              | Documentación Técnica Consolidada                            |
+| **Clasificación**     | Técnico / As-Built                                           |
+| **Nivel**             | Técnico                                                      |
+| **Normativo**         | No                                                           |
+| **Versión**           | v1.0.2                                                       |
+| **Estado**            | Aprobado (as-built post Validación Final)                    |
+| **Propietario**       | Equipo de Arquitectura                                       |
+| **Documento padre**   | EE-DOC-008 — Development Environment                         |
+| **Dependencias**      | contenido=EE-IMP-008-P01, EE-ADR-003, EE-DOC-007, EE-DOC-008 |
+| **Aprobado por**      | Equipo de Arquitectura                                       |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                         |
+| **Fecha de creación** | 2026-09-24                                                   |
+| **Última revisión**   | 2026-11-04                                                   |
+| **Próxima revisión**  | 2026-12-24                                                   |
 
 ---
 
@@ -206,10 +206,11 @@ Referencia de plataforma: `.github/workflows/ci.yml` job **Validate** (EE-DOC-00
 
 ## 10. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                    | Cambios                                          | Estado       |
-| :--------- | :--------- | :--------------------- | :--------------------- | :------------------------ | :----------------------------------------------- | :----------- |
-| **v1.0.0** | 2026-09-24 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación post-IMP    | As-built P01–P06; Validación Final conforme      | Aprobado     |
-| **v1.0.1** | 2026-09-25 | Equipo de Arquitectura | Equipo de Arquitectura | Addendum P02 markdownlint | D-07; B-P02-002; artefactos `.markdownlint.json` | **Aprobado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                    | Cambios                                                              | Estado       |
+| :--------- | :--------- | :--------------------- | :--------------------- | :------------------------ | :------------------------------------------------------------------- | :----------- |
+| **v1.0.0** | 2026-09-24 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación post-IMP    | As-built P01–P06; Validación Final conforme                          | Aprobado     |
+| **v1.0.1** | 2026-09-25 | Equipo de Arquitectura | Equipo de Arquitectura | Addendum P02 markdownlint | D-07; B-P02-002; artefactos `.markdownlint.json`                     | **Aprobado** |
+| **v1.0.2** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Correccion PC-003         | Tipo y Clasificacion alineados a EE-DOC-002 §05.1 y plantilla §18.4. | **Aprobado** |
 
 ---
 
