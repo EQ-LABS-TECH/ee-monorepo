@@ -6,6 +6,7 @@ import {
   validateGovernanceSchedule,
   validateGovernanceWorkflowRun,
   validateGovernanceIssueComment,
+  validateGovernancePullRequestReview,
 } from '@eq-labs/governance/pr-governance/workflow';
 
 const repository = 'EQ-LABS-TECH/ee-monorepo';
@@ -176,6 +177,49 @@ test('accepts PR issue-comment events as trusted reevaluation signals', () => {
     number: 28,
     sourceEvent: 'issue_comment',
   });
+});
+
+test('accepts submitted reviews for pull requests targeting main', () => {
+  const event = {
+    action: 'submitted',
+    repository: { full_name: repository },
+    pull_request: {
+      number: 51,
+      base: { ref: 'main', repo: { full_name: repository } },
+    },
+    review: { id: 456, state: 'approved' },
+  };
+
+  assert.deepEqual(validateGovernancePullRequestReview({ event, expectedRepository: repository }), {
+    repository,
+    number: 51,
+    sourceEvent: 'pull_request_review',
+  });
+});
+
+test('rejects review signals for another repository or non-main pull requests', () => {
+  const event = {
+    action: 'submitted',
+    repository: { full_name: repository },
+    pull_request: {
+      number: 51,
+      base: { ref: 'develop', repo: { full_name: repository } },
+    },
+    review: { id: 456, state: 'approved' },
+  };
+
+  assert.throws(
+    () => validateGovernancePullRequestReview({ event, expectedRepository: repository }),
+    /Invalid governance PR review context/,
+  );
+  assert.throws(
+    () =>
+      validateGovernancePullRequestReview({
+        event: { ...event, repository: { full_name: 'OTHER/repo' } },
+        expectedRepository: repository,
+      }),
+    /Invalid governance PR review context/,
+  );
 });
 
 test('rejects issue comments that are not for a pull request in the trusted repository', () => {

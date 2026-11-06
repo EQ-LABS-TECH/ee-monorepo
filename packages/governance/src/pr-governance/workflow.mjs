@@ -107,3 +107,30 @@ export function validateGovernanceIssueComment({ event, expectedRepository }) {
     sourceEvent: 'issue_comment',
   };
 }
+
+export function validateGovernancePullRequestReview({ event, expectedRepository }) {
+  const repository = REPOSITORY.exec(expectedRepository ?? '');
+  const pullRequest = event?.pull_request;
+  const number = Number.isSafeInteger(pullRequest?.number) ? pullRequest.number : null;
+
+  if (
+    !repository ||
+    !event ||
+    !['submitted', 'edited', 'dismissed'].includes(event.action) ||
+    event.repository?.full_name?.toLowerCase() !== expectedRepository.toLowerCase() ||
+    number === null ||
+    number < 1 ||
+    pullRequest.base?.ref !== 'main' ||
+    pullRequest.base?.repo?.full_name?.toLowerCase() !== expectedRepository.toLowerCase() ||
+    !Number.isSafeInteger(event.review?.id) ||
+    event.review.id < 1
+  ) {
+    throw new TypeError('Invalid governance PR review context');
+  }
+
+  return {
+    repository: expectedRepository,
+    number,
+    sourceEvent: 'pull_request_review',
+  };
+}

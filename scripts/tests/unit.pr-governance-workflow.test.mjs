@@ -37,13 +37,13 @@ function getStep(job, name) {
   return matches[0];
 }
 
-test('CI and CI Main preserve separated pull request and main triggers', () => {
+test('CI and CI Main preserve validation-only triggers', () => {
   const workflow = loadWorkflow();
   const mainWorkflow = loadWorkflow(CI_MAIN_WORKFLOW_URL);
 
   assert.equal(workflow.name, 'CI');
   assert.ok(Object.hasOwn(workflow.on, 'pull_request'));
-  assert.deepEqual(workflow.on?.pull_request_review?.types, ['submitted', 'edited', 'dismissed']);
+  assert.equal(Object.hasOwn(workflow.on, 'pull_request_review'), false);
   assert.equal(Object.hasOwn(workflow.on, 'push'), false);
   assert.equal(Object.hasOwn(workflow.on, 'workflow_dispatch'), false);
   assert.deepEqual(workflow.permissions, { contents: 'read' });
@@ -104,7 +104,7 @@ test('governance advisory runs only for same-repository pull requests', () => {
   assert.equal(job['runs-on'], 'ubuntu-latest');
 
   assert.match(job.if, /github\.event_name == 'pull_request'/);
-  assert.match(job.if, /github\.event_name == 'pull_request_review'/);
+  assert.doesNotMatch(job.if, /pull_request_review/);
   assert.match(job.if, /github\.event\.pull_request\.head\.repo\.full_name == github\.repository/);
 });
 

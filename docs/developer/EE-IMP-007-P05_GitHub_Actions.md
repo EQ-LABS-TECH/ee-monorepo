@@ -317,7 +317,7 @@ Hasta P06, el merge a `main` **no** exige el check CI en el ruleset (sigue OFF).
 
 ## 08. Evidencia As-Built
 
-Las subsecciones §08.1–§08.4 conservan la evidencia histórica capturada durante el cierre original de P05. La §08.5 documenta la evolución posterior asociada a PN-030 y PN-021; sus garantías y controles requieren evidencia de validación independiente y no se consideran cubiertos por las ejecuciones históricas de CI.
+Las subsecciones §08.1, §08.3 y §08.4 conservan evidencia histórica capturada durante el cierre original de P05. Las subsecciones §08.2 y §08.6 describen el as-built vigente de CI y reconciliación de revisiones. La §08.5 documenta la evolución posterior asociada a PN-030 y PN-021; sus garantías y controles requieren evidencia de validación independiente y no se consideran cubiertos por las ejecuciones históricas de CI.
 
 ### 08.1. Scripts root
 
@@ -332,14 +332,13 @@ Las subsecciones §08.1–§08.4 conservan la evidencia histórica capturada dur
 
 ### 08.2. Workflow
 
-| Campo          | Valor as-built                                                             |
-| :------------- | :------------------------------------------------------------------------- |
-| Path           | `.github/workflows/ci.yml`                                                 |
-| `permissions`  | `contents: read`                                                           |
-| Events         | `pull_request`, `push` → `main`, `workflow_dispatch`                       |
-| Actions        | `actions/checkout@v5`, `pnpm/action-setup@v4.4.0`, `actions/setup-node@v5` |
-| Run verificado | push a `main`, job **Validate**, ~47s, **success**                         |
-| Resultado      | **✓ success**                                                              |
+| Workflow                           | Eventos as-built                                                                                            |
+| :--------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| `.github/workflows/ci.yml`         | `pull_request`; valida cambios del PR y cancela una ejecución CI anterior del mismo grupo/ref.              |
+| `.github/workflows/governance.yml` | `pull_request_review`, finalización de `CI`, comentarios, horario y ejecución manual; cola sin cancelación. |
+| `.github/workflows/ci-main.yml`    | `push` → `main` y ejecución manual; job `Validate Main`.                                                    |
+
+Las reviews ya no inician el workflow `CI`. Cada evento de review inicia directamente la reconciliación confiable de Governance; esta espera a un `Validate` satisfactorio del HEAD actual antes de publicar un resultado favorable. Un CI cancelado nunca satisface el gate. La ejecución satisfactoria de CI vuelve a iniciar la reconciliación.
 
 ### 08.3. Specialization Type B — Node 20 deprecation on Actions
 
@@ -380,6 +379,12 @@ El workflow utiliza `push` sobre `main` y determina si existe una transición de
 Tras completarse correctamente el comando de publicación, el workflow ejecuta `git push origin "v${version}"` y verifica que el tag remoto corresponda al commit esperado. El orden observado es, por tanto, publicación y creación local del tag dentro del comando A-REL, push del tag y comprobación remota posterior.
 
 La existencia de estos pasos no acredita, por sí sola, una publicación npm exitosa ni la aplicación efectiva de las protecciones remotas.
+
+### 08.6. Reconciliación directa de revisiones
+
+`pull_request_review` (`submitted`, `edited` y `dismissed`) inicia `PR Governance Reconcile` directamente desde el workflow confiable de `main`. La ejecución se serializa mediante el grupo de concurrencia de Governance, configurado sin cancelar ejecuciones activas y con cola acotada por GitHub Actions.
+
+El workflow `CI` se ejecuta ante cambios del Pull Request, no por cada review. La reconciliación vuelve a consultar el HEAD, el estado de `Validate`, las aprobaciones vigentes y la elegibilidad de los reviewers. Si `Validate` no terminó satisfactoriamente para el HEAD actual, Governance permanece en espera; el siguiente `workflow_run` exitoso de CI vuelve a reconciliar. Así, aprobaciones concurrentes no cancelan validaciones entre sí ni sustituyen el required check.
 
 ---
 
