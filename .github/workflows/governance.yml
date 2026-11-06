@@ -196,6 +196,7 @@ jobs:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GOVERNANCE_APP_ID: ${{ vars.EE_GOVERNANCE_APP_ID }}
         run: |
           set -euo pipefail
           node scripts/commands/relay

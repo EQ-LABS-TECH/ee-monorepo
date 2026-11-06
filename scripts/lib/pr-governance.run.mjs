@@ -186,13 +186,11 @@ export async function runPrGovernance({
         fetchImpl,
       });
 
-    let evaluation = await evaluate();
-
-    // A favorable decision requires fresh evidence immediately
-    // before publication. Any changed evidence is evaluated again.
-    if (evaluation.decision.status === 'PASS') {
-      evaluation = await evaluate();
-    }
+    // Re-read all review and classification evidence immediately before
+    // publishing either outcome. The Checks API is not atomic with review
+    // changes, so this narrows but cannot eliminate the final race window.
+    await evaluate();
+    const evaluation = await evaluate();
 
     phase = 'publication';
     const completed = await completePrGovernanceCheck({

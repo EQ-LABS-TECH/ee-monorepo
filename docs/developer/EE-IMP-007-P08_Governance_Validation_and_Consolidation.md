@@ -208,6 +208,18 @@ EE-DOC-007 puede pasar a estado **Congelado** tras el Cierre Documental formal (
 | Elaborar EE-DOC-010 y refinar required checks   | Alta (roadmap)        |
 | Require review from Code Owners (opcional)      | Baja                  |
 
+### 08.1. Seguimiento de EE-RFC-004 — reconciliación de reviews PN-017
+
+| Elemento                           | Evidencia local                                                                                                                                                              | Estado                                    |
+| :--------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------- |
+| `BLOCKED` en Governance            | `PR Governance` conserva conclusión `failure`; una evaluación y publicación técnicamente correctas finalizan el workflow con código cero.                                    | Implementado en rama; pendiente CI remoto |
+| Aprobaciones parciales             | El relay solo conserva el `BLOCKED` del mismo HEAD cuando una revisión del check y las reviews actuales demuestran que los approvals humanos vigentes siguen bajo el umbral. | Implementado en rama; pendiente CI remoto |
+| Umbral alcanzado / `PASS` revocado | La cota bruta nunca certifica elegibilidad; al llegar al umbral se despacha a `main`. Un `PASS` anterior no suprime el evento `dismissed`.                                   | Cubierto por pruebas unitarias locales    |
+| Evidencia local                    | 44 pruebas dirigidas PN-017 pasaron el 2026-11-06; `git diff --check` pasó. El lint dirigido no pudo ejecutarse porque ESLint no está instalado/resuelto en este checkout.   | Parcial                                   |
+| Aceptación de plataforma           | Falta ejecutar CI del PR y comprobar eventos reales de `1/2 → espera`, `2/2 → una evaluación` y revocación.                                                                  | **PENDING**                               |
+
+La cota de approvals consulta el estado más reciente por usuario, cuenta solo revisiones `APPROVED` ligadas al HEAD actual y excluye al autor y bots. No demuestra permisos, membresía, CODEOWNERS ni cualificación. Si no se puede leer o validar la evidencia, el relay falla y no conserva el check por deduplicación.
+
 ---
 
 ## 09. Historial de Cambios

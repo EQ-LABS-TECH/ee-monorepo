@@ -79,24 +79,24 @@ test('PASS returns zero and does not expose credentials', async () => {
   }
 });
 
-test('BLOCKED returns nonzero', async () => {
+test('BLOCKED publishes a failing check but returns zero for a successful workflow operation', async () => {
   const exitCode = await executeGovernanceCommand({
     env,
     run: async () => result('BLOCKED', 'CRITICAL'),
     log: () => {},
   });
 
-  assert.equal(exitCode, 1);
+  assert.equal(exitCode, 0);
 });
 
-test('pending classification never returns zero', async () => {
+test('pending classification remains a policy block but is operationally successful', async () => {
   const exitCode = await executeGovernanceCommand({
     env,
     run: async () => result('BLOCKED', 'PENDING_REVIEW'),
     log: () => {},
   });
 
-  assert.equal(exitCode, 1);
+  assert.equal(exitCode, 0);
 });
 
 test('waits for Validate without publishing a governance result', async () => {
@@ -119,26 +119,28 @@ test('waits for Validate without publishing a governance result', async () => {
   });
 });
 
-test('rejects the obsolete silent waiting-for-approvals result', async () => {
-  await assert.rejects(
-    executeGovernanceCommand({
-      env: { ...env, GOVERNANCE_WAIT_FOR_APPROVALS: 'true' },
-      run: async () => ({
-        mode: 'WAITING_FOR_APPROVALS',
-        headSha: sha,
-        classification: 'ORDINARY',
-        ownershipEvidenceVerified: true,
-        decision: {
-          status: 'BLOCKED',
-          reasons: ['insufficient-qualified-approvals'],
-          qualifiedApprovalCount: 0,
-          requiredCount: 1,
-        },
-      }),
-      log: () => {},
+test('WAITING_FOR_APPROVALS preserves the existing blocked check and succeeds operationally', async () => {
+  const messages = [];
+  const exitCode = await executeGovernanceCommand({
+    env,
+    run: async () => ({
+      mode: 'WAITING_FOR_APPROVALS',
+      headSha: sha,
+      checkRunId: 321,
+      approvalCount: 1,
+      required: 2,
     }),
-    /Invalid PN-017 execution result/,
-  );
+    log: (message) => messages.push(message),
+  });
+
+  assert.equal(exitCode, 0);
+  assert.deepEqual(JSON.parse(messages[0]), {
+    status: 'WAITING_FOR_APPROVALS',
+    headSha: sha,
+    checkRunId: 321,
+    approvalCount: 1,
+    required: 2,
+  });
 });
 
 test('inconsistent evaluation result is rejected', async () => {
