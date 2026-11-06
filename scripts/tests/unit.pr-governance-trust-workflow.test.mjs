@@ -42,6 +42,11 @@ test('CI validation and Governance review triggers remain isolated', () => {
   assert.deepEqual(governance.on.workflow_run.workflows, ['CI']);
   assert.deepEqual(governance.on.workflow_run.types, ['completed']);
   assert.deepEqual(governance.on.pull_request_review.types, ['submitted', 'edited', 'dismissed']);
+  assert.equal(
+    Object.keys(governance.on.workflow_dispatch.inputs).filter((key) => key === 'review_run_number')
+      .length,
+    1,
+  );
 });
 
 test('governance reevaluates completed CI, reviews and PR comments', () => {
@@ -71,8 +76,11 @@ test('governance reevaluates completed CI, reviews and PR comments', () => {
     'pull-requests': 'read',
     checks: 'read',
   });
-  assert.match(reviewRelay.steps[0].run, /actions\/workflows\/governance\.yml\/dispatches/);
-  assert.match(reviewRelay.steps[0].run, /--arg ref main/);
+  assert.match(reviewRelay.steps[0].run, /node scripts\/commands\/relay/);
+  assert.equal(reviewRelay.steps[0].env.GITHUB_EVENT_NAME, '${{ github.event_name }}');
+  assert.equal(reviewRelay.steps[0].env.GITHUB_EVENT_PATH, '${{ github.event_path }}');
+  assert.equal(reviewRelay.steps[0].env.GITHUB_RUN_ID, '${{ github.run_id }}');
+  assert.equal(reviewRelay.steps[0].env.GITHUB_RUN_NUMBER, '${{ github.run_number }}');
   assert.equal(reviewRelay.steps[0].env.PR_NUMBER, '${{ github.event.pull_request.number }}');
   assert.equal(reviewRelay.steps[0].env.PR_HEAD_SHA, '${{ github.event.pull_request.head.sha }}');
 });
@@ -205,7 +213,7 @@ test('automatic governance triggers do not silently enable required-check enforc
   );
   assert.equal(workflow.jobs['dispatch-review'].environment, undefined);
   assert.equal(workflow.jobs['dispatch-review'].permissions.actions, 'write');
-  assert.match(workflow.jobs['dispatch-review'].steps[0].run, /\/dispatches/);
+  assert.match(workflow.jobs['dispatch-review'].steps[0].run, /node scripts\/commands\/relay/);
   assert.match(workflow.jobs.reconcile.if, /github\.event_name == 'issue_comment'/);
   assert.match(workflow.jobs.reconcile.if, /github\.event\.issue\.pull_request != null/);
   assert.equal(workflow.jobs.reconcile.environment, 'governance-main');
