@@ -76,13 +76,29 @@ test('governance reevaluates completed CI, reviews and PR comments', () => {
     'pull-requests': 'read',
     checks: 'read',
   });
-  assert.match(reviewRelay.steps[0].run, /node scripts\/commands\/relay/);
-  assert.equal(reviewRelay.steps[0].env.GITHUB_EVENT_NAME, '${{ github.event_name }}');
-  assert.equal(reviewRelay.steps[0].env.GITHUB_EVENT_PATH, '${{ github.event_path }}');
-  assert.equal(reviewRelay.steps[0].env.GITHUB_RUN_ID, '${{ github.run_id }}');
-  assert.equal(reviewRelay.steps[0].env.GITHUB_RUN_NUMBER, '${{ github.run_number }}');
-  assert.equal(reviewRelay.steps[0].env.PR_NUMBER, '${{ github.event.pull_request.number }}');
-  assert.equal(reviewRelay.steps[0].env.PR_HEAD_SHA, '${{ github.event.pull_request.head.sha }}');
+  assert.equal(reviewRelay.environment, undefined);
+
+  const relaySteps = reviewRelay.steps;
+  const checkout = relaySteps[0];
+  assert.equal(checkout.name, 'Checkout trusted main implementation');
+  assert.equal(checkout.with.ref, 'main');
+  assert.equal(checkout.with['persist-credentials'], false);
+  assert.equal(relaySteps[1].name, 'Setup pnpm');
+  assert.equal(relaySteps[2].name, 'Setup Node.js');
+  assert.equal(relaySteps[2].with['node-version-file'], '.nvmrc');
+  assert.equal(relaySteps[3].run, 'pnpm install --frozen-lockfile');
+
+  const relay = relaySteps[4];
+  assert.equal(relay.name, 'Dispatch governance verification on main');
+  assert.match(relay.run, /node scripts\/commands\/relay/);
+  assert.equal(relay.env.GITHUB_EVENT_NAME, '${{ github.event_name }}');
+  assert.equal(relay.env.GITHUB_EVENT_PATH, '${{ github.event_path }}');
+  assert.equal(relay.env.GITHUB_RUN_ID, '${{ github.run_id }}');
+  assert.equal(relay.env.GITHUB_RUN_NUMBER, '${{ github.run_number }}');
+  assert.equal(relay.env.PR_NUMBER, '${{ github.event.pull_request.number }}');
+  assert.equal(relay.env.PR_HEAD_SHA, '${{ github.event.pull_request.head.sha }}');
+  assert.equal(Object.hasOwn(relay.env, 'GOVERNANCE_PUBLISHER_TOKEN'), false);
+  assert.equal(Object.hasOwn(relay.env, 'GOVERNANCE_EVIDENCE_TOKEN'), false);
 });
 
 test('workflow serializes governance executions with a bounded queue', () => {
@@ -213,7 +229,12 @@ test('automatic governance triggers do not silently enable required-check enforc
   );
   assert.equal(workflow.jobs['dispatch-review'].environment, undefined);
   assert.equal(workflow.jobs['dispatch-review'].permissions.actions, 'write');
-  assert.match(workflow.jobs['dispatch-review'].steps[0].run, /node scripts\/commands\/relay/);
+  assert.match(
+    workflow.jobs['dispatch-review'].steps.find(
+      (step) => step.name === 'Dispatch governance verification on main',
+    ).run,
+    /node scripts\/commands\/relay/,
+  );
   assert.match(workflow.jobs.reconcile.if, /github\.event_name == 'issue_comment'/);
   assert.match(workflow.jobs.reconcile.if, /github\.event\.issue\.pull_request != null/);
   assert.equal(workflow.jobs.reconcile.environment, 'governance-main');
