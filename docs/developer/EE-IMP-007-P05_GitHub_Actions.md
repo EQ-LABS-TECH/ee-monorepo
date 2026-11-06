@@ -332,13 +332,13 @@ Las subsecciones §08.1, §08.3 y §08.4 conservan evidencia histórica capturad
 
 ### 08.2. Workflow
 
-| Workflow                           | Eventos as-built                                                                                            |
-| :--------------------------------- | :---------------------------------------------------------------------------------------------------------- |
-| `.github/workflows/ci.yml`         | `pull_request`; valida cambios del PR y cancela una ejecución CI anterior del mismo grupo/ref.              |
-| `.github/workflows/governance.yml` | `pull_request_review`, finalización de `CI`, comentarios, horario y ejecución manual; cola sin cancelación. |
-| `.github/workflows/ci-main.yml`    | `push` → `main` y ejecución manual; job `Validate Main`.                                                    |
+| Workflow                           | Eventos as-built                                                                                                                                                                   |
+| :--------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.github/workflows/ci.yml`         | `pull_request`; valida cambios del PR y cancela una ejecución CI anterior del mismo grupo/ref.                                                                                     |
+| `.github/workflows/governance.yml` | `pull_request_review` usa un relay mínimo que solicita `workflow_dispatch` en `main`; además, finalización de `CI`, comentarios, horario y ejecución manual; cola sin cancelación. |
+| `.github/workflows/ci-main.yml`    | `push` → `main` y ejecución manual; job `Validate Main`.                                                                                                                           |
 
-Las reviews ya no inician el workflow `CI`. Cada evento de review inicia directamente la reconciliación confiable de Governance; esta espera a un `Validate` satisfactorio del HEAD actual antes de publicar un resultado favorable. Un CI cancelado nunca satisface el gate. La ejecución satisfactoria de CI vuelve a iniciar la reconciliación.
+Las reviews ya no inician el workflow `CI`. Cada evento de review inicia un relay sin acceso al environment ni a sus secretos. El relay solicita una ejecución `workflow_dispatch` en `main`; allí, el job protegido consulta el estado actual y espera un `Validate` satisfactorio para el HEAD antes de publicar un resultado favorable. Un CI cancelado nunca satisface el gate. La ejecución satisfactoria de CI vuelve a iniciar la reconciliación.
 
 ### 08.3. Specialization Type B — Node 20 deprecation on Actions
 
@@ -380,11 +380,11 @@ Tras completarse correctamente el comando de publicación, el workflow ejecuta `
 
 La existencia de estos pasos no acredita, por sí sola, una publicación npm exitosa ni la aplicación efectiva de las protecciones remotas.
 
-### 08.6. Reconciliación directa de revisiones
+### 08.6. Reconciliación de eventos de revisión
 
-`pull_request_review` (`submitted`, `edited` y `dismissed`) inicia `PR Governance Reconcile` directamente desde el workflow confiable de `main`. La ejecución se serializa mediante el grupo de concurrencia de Governance, configurado sin cancelar ejecuciones activas y con cola acotada por GitHub Actions.
+`pull_request_review` (`submitted`, `edited` y `dismissed`) inicia un job relay sin secretos, que solicita mediante `GITHUB_TOKEN` una ejecución `workflow_dispatch` con `ref: main`, número de PR y SHA observado. La ejecución protegida de `main` resuelve nuevamente el PR y verifica que el SHA solicitado siga siendo el HEAD actual antes de evaluar. El environment `governance-main` permanece restringido a `main`; ningún job ejecutado en `refs/pull/*/merge` accede a sus secretos.
 
-El workflow `CI` se ejecuta ante cambios del Pull Request, no por cada review. La reconciliación vuelve a consultar el HEAD, el estado de `Validate`, las aprobaciones vigentes y la elegibilidad de los reviewers. Si `Validate` no terminó satisfactoriamente para el HEAD actual, Governance permanece en espera; el siguiente `workflow_run` exitoso de CI vuelve a reconciliar. Así, aprobaciones concurrentes no cancelan validaciones entre sí ni sustituyen el required check.
+El workflow `CI` se ejecuta ante cambios del Pull Request, no por cada review. Cada review genera un relay ligero y una ejecución protegida de Governance en `main`, serializada sin cancelación mediante la cola configurada. La evaluación vuelve a consultar el HEAD, el estado de `Validate`, las aprobaciones vigentes y la elegibilidad de los reviewers. Si `Validate` no terminó satisfactoriamente para el HEAD actual, Governance permanece en espera; el siguiente `workflow_run` exitoso de CI vuelve a reconciliar. Así, aprobaciones concurrentes no cancelan validaciones entre sí ni sustituyen el required check.
 
 ---
 
