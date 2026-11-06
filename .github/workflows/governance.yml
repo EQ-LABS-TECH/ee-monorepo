@@ -217,7 +217,7 @@ jobs:
           fi
 
           validate_checks=$(api_get "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$current_head_sha/check-runs?check_name=Validate&app_id=15368&filter=latest&per_page=100")
-          validate_ready=$(jq -er '[.check_runs[] | select(.name == "Validate" and .app.id == 15368 and .status == "completed" and .conclusion == "success")] | length > 0' <<< "$validate_checks")
+          validate_ready=$(jq -r '[.check_runs[] | select(.name == "Validate" and .app.id == 15368 and .status == "completed" and .conclusion == "success")] | length > 0' <<< "$validate_checks")
 
           if [[ "$validate_ready" != "true" ]]; then
             echo "Validate has not passed for the current HEAD; its successful CI completion will reconcile governance."
@@ -225,7 +225,7 @@ jobs:
           fi
 
           governance_checks=$(api_get "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$current_head_sha/check-runs?check_name=PR%20Governance&app_id=$GOVERNANCE_APP_ID&filter=latest&per_page=100")
-          governance_already_current=$(jq -er \
+          governance_already_current=$(jq -r \
             --argjson app_id "$GOVERNANCE_APP_ID" \
             --arg latest_review_run "$latest_review_run" \
             '[.check_runs[] | select(.name == "PR Governance" and .app.id == $app_id and .created_at >= $latest_review_run and ((.status != "completed") or (.conclusion == "success")))] | length > 0' \
