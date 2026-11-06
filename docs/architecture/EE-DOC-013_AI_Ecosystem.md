@@ -8,25 +8,25 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template** y 
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                                                                                                                          |
-| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **ID**                | EE-DOC-013                                                                                                                                                                                     |
-| **Documento**         | AI Ecosystem                                                                                                                                                                                   |
-| **Código corto**      | EE-DOC-013                                                                                                                                                                                     |
-| **Tipo**              | Documento Normativo                                                                                                                                                                            |
-| **Clasificación**     | Especializado                                                                                                                                                                                  |
-| **Nivel**             | Especializado                                                                                                                                                                                  |
-| **Normativo**         | Sí                                                                                                                                                                                             |
-| **Versión**           | v1.1.2                                                                                                                                                                                         |
-| **Estado**            | Congelado                                                                                                                                                                                      |
-| **Propietario**       | Equipo de Arquitectura                                                                                                                                                                         |
-| **Documento padre**   | EE-DOC-004 — Engineering Architecture                                                                                                                                                          |
-| **Dependencias**      | EE-DOC-001, EE-DOC-002, EE-DOC-003, EE-DOC-004, EE-DOC-005, EE-DOC-006, EE-DOC-007, EE-DOC-009, EE-DOC-010, EE-DOC-011, EE-DOC-012, EE-ADR-001, EE-ADR-002, EE-ADR-003, EE-ADR-004, EE-ADR-005 |
-| **Aprobado por**      | Equipo de Arquitectura                                                                                                                                                                         |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                                                                                                                                       |
-| **Fecha de creación** | 2026-10-02                                                                                                                                                                                     |
-| **Última revisión**   | 2026-11-04                                                                                                                                                                                     |
-| **Próxima revisión**  | No aplica — Documento Congelado                                                                                                                                                                |
+| Campo                 | Valor                                                                         |
+| :-------------------- | :---------------------------------------------------------------------------- |
+| **ID**                | EE-DOC-013                                                                    |
+| **Documento**         | AI Ecosystem                                                                  |
+| **Código corto**      | DOC-013                                                                       |
+| **Tipo**              | Documento Normativo                                                           |
+| **Clasificación**     | Especializado                                                                 |
+| **Nivel**             | Estratégico                                                                   |
+| **Normativo**         | Sí                                                                            |
+| **Versión**           | v1.3.0                                                                        |
+| **Estado**            | Congelado                                                                     |
+| **Propietario**       | Equipo de Arquitectura                                                        |
+| **Documento padre**   | EE-DOC-004 — Engineering Architecture                                         |
+| **Dependencias**      | contenido=EE-DOC-001…EE-DOC-007, EE-DOC-009…EE-DOC-012, EE-ADR-001…EE-ADR-005 |
+| **Aprobado por**      | Equipo de Arquitectura                                                        |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA                                      |
+| **Fecha de creación** | 2026-10-02                                                                    |
+| **Última revisión**   | 2026-11-04                                                                    |
+| **Próxima revisión**  | No aplica — Documento Congelado                                               |
 
 > **Jerarquía documental:**
 >
@@ -660,21 +660,15 @@ Clasificación A/B/C/D (EE-DOC-005). Ejemplos:
 
 ## 16. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                    | Cambios                                                                                                                                                                                         | Estado                         |
-| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------- |
-| **v0.1.0** | 2026-10-02 | Equipo de Arquitectura | —                      | Apertura                                  | Borrador inicial AI Ecosystem                                                                                                                                                                   | En Elaboración                 |
-| **v0.2.0** | 2026-10-02 | Equipo de Arquitectura | —                      | 1ª revisión arquitectónica                | Alineación 004/006; planos; contratos                                                                                                                                                           | En Elaboración                 |
-| **v0.3.0** | 2026-10-02 | Equipo de Arquitectura | —                      | 3 bloques revisión                        | B1 capas/puertos; B2 ADR-005; B3 plano asistido; Mermaid; P04∥P05                                                                                                                               | En Elaboración                 |
-| **v0.3.1** | 2026-10-02 | Equipo de Arquitectura | —                      | …08                                       | PR-07 boundary; Local vs Remote backend; Evaluation≠Learning; embeddings §04.8; §07.1 Registry→Router; §09.3 default sin raw; RT-07 precedencia; desglose P03/P04                               | En Elaboración                 |
-| **v0.4.0** | 2026-10-02 | Equipo de Arquitectura | —                      | N1 + cierre grafo SPI                     | SPI/tipos Inference/Generation/Error SSOT en Foundation (sin «o»); PR-08 import connectors; PR-09 composition root; Local ubicación diferida a ADR; catalog port degradación; criterios P02/P06 | En Elaboración                 |
-| **v0.5.0** | 2026-10-03 | Equipo de Arquitectura | —                      | Sync 006/ADR-005                          | PR-08 redacción dependencia hacia Foundation; PR-09 un root/runtime + wiring→IMP; ABI mínimo P03; DRY §06+ADR SSOT; Foundation contracts as-built; alineación EE-DOC-006 v1.6.1 §13.2           | **En Elaboración**             |
-| **v0.6.0** | 2026-10-03 | Equipo de Arquitectura | —                      | Revisión final pre-IMP + ADR-005 Aprobado | Config tooling; composition root sin SDK; dependencia connector clarificada; SSOT decisión = ADR-005; P03 criterio imports; ownership data/models; DRY/prohibiciones alineadas a 006; fechas    | En Elaboración                 |
-| **v0.7.0** | 2026-10-03 | Equipo de Arquitectura | —                      | Revisión arquitectónica (Sí/Parcial)      | Mermaid sin SDK; PR-08 §13.2/§13.3; §05→PR-08; §09.2 fusionado; §11 renumerado; P03/P04/P05 criterios; estado **En Revisión Arquitectónica**; 006 v1.7.0                                        | **En Revisión Arquitectónica** |
-| **v0.7.1** | 2026-10-03 | Equipo de Arquitectura | —                      | Revisión (Sí/Parcial)                     | Composition root `apps/*` + 006 §13.5; sin “sin o”; §07.2 Degradation policy; constraint Local Runtime; sync ADR-005 v1.3.1                                                                     | **En Revisión Arquitectónica** |
-| **v1.0.0** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación                                | Estado **Aprobado**; OBS-02/03 (ADR sin pin de versión en §17.3; PR-08 → §13.2/§13.4)                                                                                                           | **Aprobado**                   |
-| **v1.1.0** | 2026-10-05 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre IMP                                | EE-IMP-013-P01…P06 + EE-TEC-008; estado **Congelado**                                                                                                                                           | **Congelado**                  |
-| **v1.1.1** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación con EE-ADR-006                 | §04.2: Intelligence ya no lista Execution en la matriz de imports.                                                                                                                              | Congelado                      |
-| **v1.1.2** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Trazabilidad de EE-ADR-006                | §15 incorpora la referencia de la decisión aplicada en §04.2; Dependencias conserva su alcance de validez y aplicación.                                                                         | **Congelado**                  |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                           | Cambios                                                                                                                              | Estado                         |
+| :--------- | :--------- | :--------------------- | :--------------------- | :----------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- | :----------------------------- |
+| **v0.1.0** | 2026-10-02 | Equipo de Arquitectura | —                      | Consolidated changes for the same date and state | Defines AI layers and ports, SPI/connectors, local/remote runtime, evaluation, errors, data, boundaries and implementation criteria. | En Elaboración                 |
+| **v0.2.0** | 2026-10-03 | Equipo de Arquitectura | —                      | Consolidated changes for the same date and state | Clarifies Connectors and composition root without SDK; sets ADR-005 as SSOT, ABI, ownership and dependency limits.                   | **En Elaboración**             |
+| **v0.3.0** | 2026-10-03 | Equipo de Arquitectura | —                      | Consolidated changes for the same date and state | Aligns diagrams, `apps/*` composition, Connectors and Local Runtime; updates criteria and review status.                             | **En Revisión Arquitectónica** |
+| **v1.0.0** | 2026-10-03 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación                                       | Estado **Aprobado**; OBS-02/03 (ADR sin pin de versión en §17.3; PR-08 → §13.2/§13.4)                                                | **Aprobado**                   |
+| **v1.1.0** | 2026-10-05 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre IMP                                       | EE-IMP-013-P01…P06 + EE-TEC-008; estado **Congelado**                                                                                | **Congelado**                  |
+| **v1.2.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Alineación con EE-ADR-006                        | §04.2: Intelligence ya no lista Execution en la matriz de imports.                                                                   | Congelado                      |
+| **v1.3.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidated changes for the same date and state | Adds ADR-006 traceability in section 15 and aligns Classification/Level and history with DOC-002 sections 05.1 and 11.               | **Congelado**                  |
 
 ---
 

@@ -16,20 +16,20 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                      |
 | **Nivel**             | Técnico                             |
 | **Normativo**         | No                                  |
-| **Versión**           | v1.1.0                              |
+| **Versión**           | v1.1.1                              |
 | **Estado**            | Aprobado                            |
 | **Propietario**       | Equipo de Arquitectura              |
 | **Documento padre**   | EE-DOC-006                          |
-| **Dependencias**      | EE-DOC-006, EE-IMP-006-P03          |
+| **Dependencias**      | contenido=EE-IMP-006-P03            |
 | **Aprobado por**      | Equipo de Arquitectura              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
 | **Fecha de creación** | 2026-08-29                          |
-| **Última revisión**   | 2026-10-18                          |
+| **Última revisión**   | 2026-11-05                          |
 | **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
-## 1. Objetivo
+## 01. Objetivo
 
 Documentar la implementación y validación de la **Fase 4 — Core Packages Structure** del Engineering Ecosystem (EE-LABS).
 
@@ -39,7 +39,7 @@ La fase también estableció la integración de estos paquetes con la infraestru
 
 ---
 
-## 2. Alcance implementado
+## 02. Alcance implementado
 
 La Fase 4 comprendió la creación de los siguientes nueve paquetes:
 
@@ -67,7 +67,7 @@ No se implementó lógica funcional de negocio, infraestructura, dominio o aplic
 
 ---
 
-## 3. Estructura física implementada
+## 03. Estructura física implementada
 
 La estructura resultante de `packages/` quedó establecida de la siguiente manera:
 
@@ -149,9 +149,9 @@ El directorio `packages/config/` mantiene su función de contenedor administrati
 
 ---
 
-## 4. Paquetes implementados
+## 04. Paquetes implementados
 
-### 4.1 `@eq-labs/foundation`
+### 04.1. `@eq-labs/foundation`
 
 Se creó el paquete:
 
@@ -186,7 +186,7 @@ El punto de entrada contiene únicamente:
 export {};
 ```
 
-### 4.2 `@eq-labs/shared`
+### 04.2. `@eq-labs/shared`
 
 Se creó el paquete:
 
@@ -221,7 +221,7 @@ El punto de entrada contiene únicamente:
 export {};
 ```
 
-### 4.3 `@eq-labs/execution`
+### 04.3. `@eq-labs/execution`
 
 Se creó el paquete:
 
@@ -250,7 +250,7 @@ packages/execution/
 └── tsconfig.json
 ```
 
-### 4.4 `@eq-labs/intelligence`
+### 04.4. `@eq-labs/intelligence`
 
 Se creó el paquete:
 
@@ -279,7 +279,7 @@ packages/intelligence/
 └── tsconfig.json
 ```
 
-### 4.5 `@eq-labs/knowledge`
+### 04.5. `@eq-labs/knowledge`
 
 Se creó el paquete:
 
@@ -308,7 +308,7 @@ packages/knowledge/
 └── tsconfig.json
 ```
 
-### 4.6 `@eq-labs/governance`
+### 04.6. `@eq-labs/governance`
 
 Se creó el paquete:
 
@@ -337,7 +337,7 @@ packages/governance/
 └── tsconfig.json
 ```
 
-### 4.7 `@eq-labs/integration`
+### 04.7. `@eq-labs/integration`
 
 Se creó el paquete:
 
@@ -366,7 +366,7 @@ packages/integration/
 └── tsconfig.json
 ```
 
-### 4.8 `@eq-labs/registry`
+### 04.8. `@eq-labs/registry`
 
 Se creó el paquete:
 
@@ -395,7 +395,7 @@ packages/registry/
 └── tsconfig.json
 ```
 
-### 4.9 `@eq-labs/sdk`
+### 04.9. `@eq-labs/sdk`
 
 Se creó el paquete:
 
@@ -426,7 +426,7 @@ packages/sdk/
 
 ---
 
-## 5. Configuración común de los paquetes
+## 05. Configuración común de los paquetes
 
 Los nueve paquetes utilizan la configuración TypeScript compartida:
 
@@ -449,7 +449,7 @@ Esta integración depende de que los directorios de los paquetes estén definido
 
 ---
 
-## 6. Configuración TypeScript
+## 06. Configuración TypeScript
 
 Cada paquete contiene un `tsconfig.json` con la siguiente estructura:
 
@@ -475,7 +475,7 @@ La configuración `noEmit` evita generar artefactos durante el proceso de typech
 
 ---
 
-## 7. Scripts de paquete
+## 07. Scripts de paquete
 
 Cada paquete implementa los scripts:
 
@@ -494,7 +494,7 @@ Esta configuración proporciona una interfaz homogénea para la validación téc
 
 ---
 
-## 8. Integración con pnpm Workspaces
+## 08. Integración con pnpm Workspaces
 
 Durante la implementación se identificó que los nueve paquetes de esta fase deben declararse como workspaces individuales.
 
@@ -529,7 +529,7 @@ desde los nueve paquetes de la fase.
 
 ---
 
-## 9. Corrección realizada durante la implementación
+## 09. Corrección realizada durante la implementación
 
 Durante la implementación se presentó un error de resolución de la configuración:
 
@@ -626,7 +626,7 @@ pnpm -r typecheck
 pnpm -r build
 ```
 
-### 12.1 `pnpm install`
+### 12.1. `pnpm install`
 
 Resultado:
 
@@ -837,6 +837,7 @@ El documento permanece en estado **Aprobado** como documento técnico de impleme
 | :--------- | :--------- | :--------------------- | :--------------------- | :------------------------------------------------------------ | :----------------------------------------------------- | :----------- |
 | **v1.0.0** | 2026-08-29 | Equipo de Arquitectura | Equipo de Arquitectura | Creación de EE-IMP-006-P04 y documentación de los 9 paquetes. | Registrar la implementación y validación de la Fase 4. | **Aprobado** |
 | **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006                                          | As-built scripts/commands y estados documentales merge | Aprobado     |
+| **v1.1.1** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Normalización PC-006                                          | Encabezados numerados a dos dígitos; sin `x.0`.        | Aprobado     |
 
 ---
 

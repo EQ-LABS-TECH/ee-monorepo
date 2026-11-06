@@ -6,27 +6,27 @@ Este documento registra la evidencia técnica de **cierre** de la implementació
 
 ## METADATOS
 
-| Campo                      | Valor                                                  |
-| :------------------------- | :----------------------------------------------------- |
-| **ID**                     | EE-IMP-013-P06                                         |
-| **Documento**              | Validation and Closure                                 |
-| **Código corto**           | EE-IMP-013-P06                                         |
-| **Fase**                   | Fase 3 — Core Components                               |
-| **Fase de implementación** | P06 — Closure (Implementación de EE-DOC-013)           |
-| **Tipo**                   | Documento Técnico de Implementación                    |
-| **Clasificación**          | Implementación                                         |
-| **Nivel**                  | Técnico                                                |
-| **Normativo**              | No                                                     |
-| **Versión**                | v1.0.0                                                 |
-| **Estado**                 | Completado                                             |
-| **Propietario**            | Equipo de Arquitectura                                 |
-| **Documento padre**        | EE-DOC-013 — AI Ecosystem (Aprobado)                   |
-| **Dependencias**           | EE-IMP-013-P01…P05; EE-ADR-005; EE-DOC-006; EE-DOC-010 |
-| **Aprobado por**           | Equipo de Arquitectura                                 |
-| **Audiencia**              | Arquitectura, Desarrollo                               |
-| **Fecha de creación**      | 2026-10-05                                             |
-| **Última revisión**        | 2026-10-05                                             |
-| **Próxima revisión**       | EE-TEC-008 / post-congelación 013                      |
+| Campo                      | Valor                                                            |
+| :------------------------- | :--------------------------------------------------------------- |
+| **ID**                     | EE-IMP-013-P06                                                   |
+| **Documento**              | Validation and Closure                                           |
+| **Código corto**           | IMP-013-P06                                                      |
+| **Fase**                   | Fase 3 — Core Components                                         |
+| **Fase de implementación** | P06 — Closure (Implementación de EE-DOC-013)                     |
+| **Tipo**                   | Documento Técnico de Implementación                              |
+| **Clasificación**          | Implementación                                                   |
+| **Nivel**                  | Técnico                                                          |
+| **Normativo**              | No                                                               |
+| **Versión**                | v1.0.0                                                           |
+| **Estado**                 | Completado                                                       |
+| **Propietario**            | Equipo de Arquitectura                                           |
+| **Documento padre**        | EE-DOC-013 — AI Ecosystem (Aprobado)                             |
+| **Dependencias**           | contenido=EE-IMP-013-P01…P05, EE-ADR-005, EE-DOC-006, EE-DOC-010 |
+| **Aprobado por**           | Equipo de Arquitectura                                           |
+| **Audiencia**              | Arquitectura, Desarrollo                                         |
+| **Fecha de creación**      | 2026-10-05                                                       |
+| **Última revisión**        | 2026-10-05                                                       |
+| **Próxima revisión**       | EE-TEC-008 / post-congelación 013                                |
 
 ---
 

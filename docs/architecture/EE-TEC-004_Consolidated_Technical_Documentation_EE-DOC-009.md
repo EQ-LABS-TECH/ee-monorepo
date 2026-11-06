@@ -6,25 +6,25 @@ Este documento registra la documentación técnica consolidada (estado as-built)
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                                                                                        |
-| :-------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **ID**                | EE-TEC-004                                                                                                                                                   |
-| **Documento**         | Consolidated Technical Documentation (EE-DOC-009)                                                                                                            |
-| **Código corto**      | EE-TEC-004                                                                                                                                                   |
-| **Tipo**              | Documento Técnico                                                                                                                                            |
-| **Clasificación**     | Implementación                                                                                                                                               |
-| **Nivel**             | Técnico                                                                                                                                                      |
-| **Normativo**         | No                                                                                                                                                           |
-| **Versión**           | v1.1.0                                                                                                                                                       |
-| **Estado**            | Aprobado                                                                                                                                                     |
-| **Propietario**       | Equipo de Arquitectura                                                                                                                                       |
-| **Documento padre**   | EE-DOC-009 — Infrastructure                                                                                                                                  |
-| **Dependencias**      | EE-DOC-009 v1.0.0, EE-IMP-009-P01 v1.2.0, EE-IMP-009-P02 v1.2.0, EE-IMP-009-P03 v1.2.0, EE-IMP-009-P04 v1.2.0, EE-IMP-009-P05 v1.1.0, EE-ADR-003, EE-RFC-001 |
-| **Aprobado por**      | Equipo de Arquitectura                                                                                                                                       |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                                                                                                         |
-| **Fecha de creación** | 2026-09-26                                                                                                                                                   |
-| **Última revisión**   | 2026-09-26                                                                                                                                                   |
-| **Próxima revisión**  | 2026-12-26                                                                                                                                                   |
+| Campo                 | Valor                                                                                                                                               |
+| :-------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ID**                | EE-TEC-004                                                                                                                                          |
+| **Documento**         | Consolidated Technical Documentation (EE-DOC-009)                                                                                                   |
+| **Código corto**      | TEC-004                                                                                                                                             |
+| **Tipo**              | Documentación Técnica Consolidada                                                                                                                   |
+| **Clasificación**     | Técnico / As-Built                                                                                                                                  |
+| **Nivel**             | Técnico                                                                                                                                             |
+| **Normativo**         | No                                                                                                                                                  |
+| **Versión**           | v1.1.1                                                                                                                                              |
+| **Estado**            | Aprobado                                                                                                                                            |
+| **Propietario**       | Equipo de Arquitectura                                                                                                                              |
+| **Documento padre**   | EE-DOC-009 — Infrastructure                                                                                                                         |
+| **Dependencias**      | contenido=EE-IMP-009-P01 v1.2.0, EE-IMP-009-P02 v1.2.0, EE-IMP-009-P03 v1.2.0, EE-IMP-009-P04 v1.2.0, EE-IMP-009-P05 v1.1.0, EE-ADR-003, EE-RFC-001 |
+| **Aprobado por**      | Equipo de Arquitectura                                                                                                                              |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                                                                                                |
+| **Fecha de creación** | 2026-09-26                                                                                                                                          |
+| **Última revisión**   | 2026-11-04                                                                                                                                          |
+| **Próxima revisión**  | 2026-12-26                                                                                                                                          |
 
 ---
 
@@ -487,6 +487,7 @@ flowchart LR
 | :--------- | :--------- | :----------------------- | :--------------------- | :----------------------- | :---------------------------------------------------------------------------------- | :----------- |
 | **v1.0.0** | 2026-09-26 | AI Engineering Assistant | —                      | Consolidación de P01-P05 | Documentación técnica completa; estado as-built; matriz de conformidad              | Borrador     |
 | **v1.1.0** | 2026-09-26 | Equipo de Arquitectura   | Equipo de Arquitectura | Cierre TEC               | Versiones IMP §18.3; corrección EE-TEC-004 (no TEC-009); OBS-002; dictamen Aprobado | **Aprobado** |
+| **v1.1.1** | 2026-11-04 | Equipo de Arquitectura   | Equipo de Arquitectura | Correccion PC-003        | Tipo y Clasificacion alineados a EE-DOC-002 §05.1 y plantilla §18.4.                | **Aprobado** |
 
 ---
 

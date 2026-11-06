@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                     |
-| :-------------------- | :---------------------------------------- |
-| **ID**                | EE-IMP-008-P01                            |
-| **Documento**         | Runtime and Local Bootstrap               |
-| **Código corto**      | EE-IMP-008-P01                            |
-| **Fase**              | Fase 1 — Runtime and Local Bootstrap      |
-| **Tipo**              | Documento Técnico de Implementación       |
-| **Clasificación**     | Implementación                            |
-| **Nivel**             | Técnico                                   |
-| **Normativo**         | No                                        |
-| **Versión**           | v1.1.0                                    |
-| **Estado**            | Completado                                |
-| **Propietario**       | Equipo de Arquitectura                    |
-| **Documento padre**   | EE-DOC-008 — Development Environment      |
-| **Dependencias**      | EE-DOC-008 v1.0.0, EE-ADR-003, EE-DOC-006 |
-| **Aprobado por**      | Equipo de Arquitectura                    |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps          |
-| **Fecha de creación** | 2026-09-24                                |
-| **Última revisión**   | 2026-09-24                                |
-| **Próxima revisión**  | 2026-12-24                                |
+| Campo                 | Valor                                |
+| :-------------------- | :----------------------------------- |
+| **ID**                | EE-IMP-008-P01                       |
+| **Documento**         | Runtime and Local Bootstrap          |
+| **Código corto**      | IMP-008-P01                          |
+| **Fase**              | Fase 1 — Runtime and Local Bootstrap |
+| **Tipo**              | Documento Técnico de Implementación  |
+| **Clasificación**     | Implementación                       |
+| **Nivel**             | Técnico                              |
+| **Normativo**         | No                                   |
+| **Versión**           | v1.0.0                               |
+| **Estado**            | Completado                           |
+| **Propietario**       | Equipo de Arquitectura               |
+| **Documento padre**   | EE-DOC-008 — Development Environment |
+| **Dependencias**      | contenido=EE-ADR-003, EE-DOC-006     |
+| **Aprobado por**      | Equipo de Arquitectura               |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps     |
+| **Fecha de creación** | 2026-09-24                           |
+| **Última revisión**   | 2026-09-24                           |
+| **Próxima revisión**  | 2026-12-24                           |
 
 ---
 
@@ -173,11 +173,10 @@ Conforme a **EE-DOC-008 §04, §05, §12.4** y **EE-ADR-003**. Ciclo documental 
 
 ## 10. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                      | Cambios                                         | Estado     |
-| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------- | :---------------------------------------------- | :--------- |
-| **v0.1.0** | 2026-09-24 | AI Engineering Assistant | —                      | Creación del DT de Fase     | Plan de validación runtime                      | Borrador   |
-| **v1.0.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Cierre P01                  | Evidencia install/doctor/validate pass          | Completado |
-| **v1.1.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Alineación EE-DOC-002 §18.3 | Reestructura metadatos y cuerpo al template IMP | Completado |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                  | Cambios                                                                                 | Estado     |
+| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------------------- | :-------------------------------------------------------------------------------------- | :--------- |
+| **v0.1.0** | 2026-09-24 | AI Engineering Assistant | —                      | Creación del DT de Fase                 | Plan de validación runtime                                                              | Borrador   |
+| **v1.0.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Cierre P01; Alineación EE-DOC-002 §18.3 | Evidencia install/doctor/validate pass; Reestructura metadatos y cuerpo al template IMP | Completado |
 
 ---
 

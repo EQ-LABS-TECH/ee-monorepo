@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                                          |
-| :-------------------- | :------------------------------------------------------------- |
-| **ID**                | EE-IMP-009-P02                                                 |
-| **Documento**         | Product Containers                                             |
-| **Código corto**      | EE-IMP-009-P02                                                 |
-| **Fase**              | Fase 2 — Product Containers                                    |
-| **Tipo**              | Documento Técnico de Implementación                            |
-| **Clasificación**     | Implementación                                                 |
-| **Nivel**             | Técnico                                                        |
-| **Normativo**         | No                                                             |
-| **Versión**           | v1.2.0                                                         |
-| **Estado**            | Completado                                                     |
-| **Propietario**       | Equipo de Arquitectura                                         |
-| **Documento padre**   | EE-DOC-009 — Infrastructure                                    |
-| **Dependencias**      | EE-DOC-009, EE-IMP-009-P01, EE-ADR-003, EE-DOC-006, EE-DOC-008 |
-| **Aprobado por**      | Equipo de Arquitectura                                         |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps                               |
-| **Fecha de creación** | 2026-09-25                                                     |
-| **Última revisión**   | 2026-09-26                                                     |
-| **Próxima revisión**  | 2026-12-26                                                     |
+| Campo                 | Valor                                                                    |
+| :-------------------- | :----------------------------------------------------------------------- |
+| **ID**                | EE-IMP-009-P02                                                           |
+| **Documento**         | Product Containers                                                       |
+| **Código corto**      | IMP-009-P02                                                              |
+| **Fase**              | Fase 2 — Product Containers                                              |
+| **Tipo**              | Documento Técnico de Implementación                                      |
+| **Clasificación**     | Implementación                                                           |
+| **Nivel**             | Técnico                                                                  |
+| **Normativo**         | No                                                                       |
+| **Versión**           | v1.2.0                                                                   |
+| **Estado**            | Completado                                                               |
+| **Propietario**       | Equipo de Arquitectura                                                   |
+| **Documento padre**   | EE-DOC-009 — Infrastructure                                              |
+| **Dependencias**      | contenido=EE-IMP-009-P01, EE-ADR-003, EE-DOC-006, EE-DOC-008, EE-DOC-009 |
+| **Aprobado por**      | Equipo de Arquitectura                                                   |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps                                         |
+| **Fecha de creación** | 2026-09-25                                                               |
+| **Última revisión**   | 2026-09-26                                                               |
+| **Próxima revisión**  | 2026-12-26                                                               |
 
 ---
 
@@ -162,8 +162,7 @@ Conforme a **EE-DOC-009 §06.1 / §10 P02**, **EE-ADR-003** y frontera **EE-DOC-
 | Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                      | Cambios                      | Estado            |
 | :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------- | :--------------------------- | :---------------- |
 | **v1.0.0** | 2026-09-25 | AI Engineering Assistant | —                      | Creación                    | Especificación P02           | En Implementación |
-| **v1.1.0** | 2026-09-25 | AI Engineering Assistant | Equipo de Arquitectura | As-built                    | Tree + validate              | Completado        |
-| **v1.1.1** | 2026-09-25 | AI Engineering Assistant | Equipo de Arquitectura | Commit                      | `f4ad84b`                    | Completado        |
+| **v1.1.0** | 2026-09-25 | AI Engineering Assistant | Equipo de Arquitectura | As-built; Commit            | Tree + validate; `f4ad84b`   | Completado        |
 | **v1.2.0** | 2026-09-26 | AI Engineering Assistant | Equipo de Arquitectura | Alineación EE-DOC-002 §18.3 | Reestructura al template IMP | **Completado**    |
 
 ---

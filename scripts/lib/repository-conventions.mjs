@@ -113,6 +113,27 @@ function isEeDocument(file) {
   return /^EE-(?:DOC|ADR|RFC|IMP|TEC|VAL|WAIVE|AUD)-.+\.md$/.test(file);
 }
 
+function isEeDocumentTemplate(path) {
+  const standardDocumentTemplates = [
+    ['ee-adr', 'EE-ADR'],
+    ['ee-doc', 'EE-DOC'],
+    ['ee-rfc', 'EE-RFC'],
+    ['ee-tec', 'EE-TEC'],
+  ];
+  if (
+    standardDocumentTemplates.some(([directory, prefix]) =>
+      new RegExp(
+        `^templates/document/${directory}/files/${prefix}-XXX_[A-Za-z][A-Za-z0-9_]*\\.md\\.hbs$`,
+      ).test(path),
+    )
+  ) {
+    return true;
+  }
+  return /^templates\/document\/ee-imp\/files\/EE-IMP-XXX-PXX_[A-Za-z][A-Za-z0-9_]*\.md\.hbs$/.test(
+    path,
+  );
+}
+
 function isCodexSkillEntrypoint(path) {
   return /^marketplace\/skills\/[a-z0-9]+(?:-[a-z0-9]+)*\/SKILL\.md$/.test(path);
 }
@@ -159,7 +180,12 @@ export function validateRepositoryFileNames(paths, { isExistingTest = isExisting
       violations.push({ path, code: 'directory-not-kebab-case' });
       continue;
     }
-    if (ROOT_FILE_EXCEPTIONS.has(file) || isEeDocument(file) || isCodexSkillEntrypoint(path))
+    if (
+      ROOT_FILE_EXCEPTIONS.has(file) ||
+      isEeDocument(file) ||
+      isEeDocumentTemplate(path) ||
+      isCodexSkillEntrypoint(path)
+    )
       continue;
     if (file.startsWith('.')) {
       if (

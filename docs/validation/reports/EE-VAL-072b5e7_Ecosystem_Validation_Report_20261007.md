@@ -1,4 +1,4 @@
-﻿# EE-VAL-072b5e7-20261007 — Ecosystem Validation Report
+﻿# EE-VAL-072b5e7_Ecosystem_Validation_Report_20261007 — Ecosystem Validation Report
 
 | Campo       | Valor                                                   |
 | :---------- | :------------------------------------------------------ |
@@ -41,8 +41,8 @@
 
 | File                                       | gate_id    | expires_at |
 | :----------------------------------------- | :--------- | :--------- |
-| EE-WAIVE-QG-SEC-001-braces-20261007.md     | QG-SEC-001 | 2026-10-14 |
-| EE-WAIVE-QG-SEC-001-sprintf-js-20261007.md | QG-SEC-001 | 2026-10-14 |
+| EE-WAIVE-QG-SEC-001_braces_20261007.md     | QG-SEC-001 | 2026-10-14 |
+| EE-WAIVE-QG-SEC-001_sprintf-js_20261007.md | QG-SEC-001 | 2026-10-14 |
 
 ## 4. PENDING list
 
@@ -73,3 +73,11 @@
 ## 8. Refs
 
 EE-DOC-015, EE-DOC-010, EE-IMP-015-P01..P05, EE-TEC-010
+
+---
+
+## 09. Historial de Cambios
+
+| Versión | Fecha      | Autor | Aprobado por | Motivo                        | Cambios                                                                                        | Estado |
+| :------ | :--------- | :---- | :----------- | :---------------------------- | :--------------------------------------------------------------------------------------------- | :----- |
+| —       | 2026-11-04 | —     | —            | PC-002: formato del historial | Se registra el requisito de siete columnas; la procedencia anterior no consta en el artefacto. | —      |

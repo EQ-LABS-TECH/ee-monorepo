@@ -8,25 +8,25 @@ Este documento registra la documentación técnica consolidada (estado **as-buil
 
 ## METADATOS
 
-| Campo                 | Valor                                                                                                  |
-| :-------------------- | :----------------------------------------------------------------------------------------------------- |
-| **ID**                | EE-TEC-006                                                                                             |
-| **Documento**         | Consolidated Technical Documentation of EE-DOC-011                                                     |
-| **Código corto**      | EE-TEC-006                                                                                             |
-| **Tipo**              | Documento Técnico                                                                                      |
-| **Clasificación**     | Implementación                                                                                         |
-| **Nivel**             | Técnico                                                                                                |
-| **Normativo**         | No                                                                                                     |
-| **Versión**           | v1.1.1                                                                                                 |
-| **Estado**            | Completado                                                                                             |
-| **Propietario**       | Equipo de Arquitectura                                                                                 |
-| **Documento padre**   | EE-DOC-011 — Automation (v1.0.0 Aprobado)                                                              |
-| **Dependencias**      | EE-DOC-005, EE-DOC-006, EE-DOC-007, EE-DOC-010, EE-DOC-011, EE-IMP-011-P01…P05, EE-ADR-001, EE-ADR-003 |
-| **Aprobado por**      | Equipo de Arquitectura                                                                                 |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                                                   |
-| **Fecha de creación** | 2026-09-30                                                                                             |
-| **Última revisión**   | 2026-11-04                                                                                             |
-| **Próxima revisión**  | 2026-12-30                                                                                             |
+| Campo                 | Valor                                                                                           |
+| :-------------------- | :---------------------------------------------------------------------------------------------- |
+| **ID**                | EE-TEC-006                                                                                      |
+| **Documento**         | Consolidated Technical Documentation of EE-DOC-011                                              |
+| **Código corto**      | TEC-006                                                                                         |
+| **Tipo**              | Documentación Técnica Consolidada                                                               |
+| **Clasificación**     | Técnico / As-Built                                                                              |
+| **Nivel**             | Técnico                                                                                         |
+| **Normativo**         | No                                                                                              |
+| **Versión**           | v1.2.1                                                                                          |
+| **Estado**            | Completado                                                                                      |
+| **Propietario**       | Equipo de Arquitectura                                                                          |
+| **Documento padre**   | EE-DOC-011 — Automation (v1.0.0 Aprobado)                                                       |
+| **Dependencias**      | contenido=EE-DOC-005…EE-DOC-007, EE-DOC-010, EE-DOC-011, EE-IMP-011-P01, EE-ADR-001, EE-ADR-003 |
+| **Aprobado por**      | Equipo de Arquitectura                                                                          |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                                            |
+| **Fecha de creación** | 2026-09-30                                                                                      |
+| **Última revisión**   | 2026-11-05                                                                                      |
+| **Próxima revisión**  | 2026-12-30                                                                                      |
 
 ---
 
@@ -332,9 +332,9 @@ La siguiente matriz recoge la conformidad documentada durante el cierre original
 
 ### 13.2. Dictamen
 
-> **EE-TEC-006 se declara Cerrado (Completado) v1.1.0.**  
-> La evidencia as-built de automatización (P01–P05) es **completa y coherente** con EE-DOC-011, EE-DOC-010 y EE-DOC-006.  
-> Este TEC es **apto como entrada a la Validación Final** de EE-DOC-011.  
+> **EE-TEC-006 se declara Cerrado (Completado) v1.1.0.**
+> La evidencia as-built de automatización (P01–P05) es **completa y coherente** con EE-DOC-011, EE-DOC-010 y EE-DOC-006.
+> Este TEC es **apto como entrada a la Validación Final** de EE-DOC-011.
 > Pendientes legítimos (no bloquean el TEC): **EE-DOC-012**, D-P04-005, D-P04-006.
 
 ### 13.3. Evolución as-built posterior — PN-021: Integridad del release
@@ -343,14 +343,14 @@ La evolución asociada al pendiente de auditoría **PN-021** introduce una front
 
 #### 13.3.1. Componentes y responsabilidades
 
-| Componente lógico          | Responsabilidad                                                                                                     |
-| :------------------------- | :------------------------------------------------------------------------------------------------------------------ |
-| Preparación del release    | Producir cambios de versionado revisables y registrar la procedencia del plan                                       |
-| Contrato de procedencia    | Asociar el plan de release con la versión objetivo, el estado de origen y los Changesets correspondientes           |
-| Verificación independiente | Reconstruir el plan esperado a partir de su origen y comprobar que coincide con el plan declarado                   |
-| Evaluación de publicación  | Limitar las operaciones npm a las versiones públicas comprendidas en el plan autorizado y pendientes en el registro |
-| Finalización del release   | Verificar las condiciones exigidas antes de publicar y establecer el tag final                                      |
-| Recuperación               | Reconciliar el estado remoto sin repetir publicaciones ni sustituir tags inconsistentes                             |
+| Componente lógico          | Responsabilidad                                                                                                 |
+| :------------------------- | :-------------------------------------------------------------------------------------------------------------- |
+| Preparación del release    | Producir cambios de versionado revisables y registrar la procedencia del plan                                   |
+| Contrato de procedencia    | Asociar el plan de release con la versión objetivo, el estado de origen y los Changesets correspondientes       |
+| Verificación independiente | Reconstruir el plan esperado a partir de su origen y comprobar que coincide con el plan declarado               |
+| Evaluación de publicación  | Public Release: limitar npm a paquetes públicos autorizados. Internal Release: no consultar ni publicar en npm. |
+| Finalización del release   | Tras Validate/Build, crear `vX.Y.Z` público o `platform-vX.Y.Z` interno según el plan verificado                |
+| Recuperación               | Revalidar y recompilar; aceptar tags solo si apuntan al mismo commit; nunca mover tags                          |
 
 #### 13.3.2. Flujo de integridad
 
@@ -364,9 +364,11 @@ flowchart TD
     F -->|No| X[Bloquear publicación]
     F -->|Sí| G[Validación y build]
     G --> H[Verificación final de precondiciones]
-    H --> I[Evaluación del estado npm]
-    I --> J[Publicación pendiente autorizada]
-    J --> K[Tag final]
+    H --> I{¿Paquete público planificado?}
+    I -->|Sí| J[Comprobar npm y publicar versiones autorizadas]
+    I -->|No, solo privados| K[No contactar npm]
+    J --> L[Tag vX.Y.Z]
+    K --> M[Tag platform-vX.Y.Z]
 ```
 
 La reconstrucción independiente utiliza el estado histórico correspondiente al origen del release y debe aislar sus operaciones del árbol de trabajo que será publicado. La comprobación se realiza antes de autorizar efectos remotos.
@@ -383,9 +385,9 @@ La reconstrucción independiente utiliza el estado histórico correspondiente al
 
 #### 13.3.4. Límites de conformidad
 
-La arquitectura as-built incorpora controles de procedencia e integridad, pero su conformidad transversal permanece sujeta a la resolución de **PN-021** y a la verificación de los criterios aplicables. En particular, debe reconciliarse el tratamiento de releases sin paquetes públicos planificados con el contrato normativo de EE-DOC-011 §08.2. Este apartado no establece por sí mismo una nueva política de publicación.
+La implementación as-built clasifica el plan Changesets reconstruido en Public Release o Internal Release. Un plan con paquetes públicos elegibles conserva la publicación npm y su tag `vX.Y.Z`; uno compuesto solo por paquetes privados ejecuta Validate/Build, no accede a npm y genera `platform-vX.Y.Z`. Los planes vacíos o inconsistentes fallan sin crear tags. Internal Release no recibe credenciales npm.
 
-La configuración efectiva de permisos, credenciales y protección de tags pertenece a GitHub Governance y debe documentarse en su superficie técnica correspondiente. La existencia de un diseño de publicación no constituye evidencia de publicación real ni de configuración OIDC activa.
+La configuración efectiva de permisos, credenciales y protección de tags pertenece a GitHub Governance. El ruleset debe proteger ambos patrones, `v*` y `platform-v*`; la configuración efectiva de `platform-v*` y su ejecución por GitHub siguen pendientes de evidencia. La existencia de la implementación no constituye evidencia de una publicación real ni autoriza publicación npm de paquetes privados.
 
 El dictamen histórico de §13.2 permanece referido a la consolidación original de EE-DOC-011. Esta evolución posterior requiere su propia trazabilidad y verificación, sin reabrir ficticiamente las validaciones de octubre de 2026.
 
@@ -404,17 +406,18 @@ El dictamen histórico de §13.2 permanece referido a la consolidación original
 | EE-IMP-011-P01…P05    | Fases de implementación                        |
 | EE-ADR-001            | Workspace Task Orchestration                   |
 | EE-ADR-003            | Node 24 LTS                                    |
-| EE-AUD-Rules_Emerging | Backlog canónico de auditoría; PN-021 y PN-030 |
+| EE-AUD-Rules_Register | Backlog canónico de auditoría; PN-021 y PN-030 |
 
 ---
 
 ## 15. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                   | Cambios                                                                                 | Estado         |
-| :--------- | :--------- | :--------------------- | :--------------------- | :--------------------------------------- | :-------------------------------------------------------------------------------------- | :------------- |
-| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación inicial                    | Integración P01–P05                                                                     | Completado     |
-| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Revisión arquitectónica                  | Diferidos reales; DEC-003 acotado; commits/CI; dictamen §13; encabezados; IMP versiones | **Completado** |
-| **v1.1.1** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización del registro de auditoría | Actualiza la referencia al registro de auditoría a la familia `EE-AUD`.                 | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                                      | Cambios                                                                                                                                       | Estado         |
+| :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación inicial                                       | Integración P01–P05                                                                                                                           | Completado     |
+| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Equipo de Arquitectura | Revisión arquitectónica                                     | Diferidos reales; DEC-003 acotado; commits/CI; dictamen §13; encabezados; IMP versiones                                                       | **Completado** |
+| **v1.2.0** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Sincronización del registro de auditoría; Correccion PC-003 | Actualiza la referencia al registro de auditoría a la familia `EE-AUD`.; Tipo y Clasificacion alineados a EE-DOC-002 §05.1 y plantilla §18.4. | **Completado** |
+| **v1.2.1** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Internal Release PN-021                                     | §13.3 distingue releases públicos e internos, tags, credenciales y recuperación; protección remota `platform-v*` pendiente de evidencia.      | **Completado** |
 
 ---
 

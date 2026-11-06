@@ -3,7 +3,7 @@
 Aplicar `audit-modes.md` primero y evaluar solo controles pertinentes a los artefactos inspeccionados.
 
 1. Fijar `main` SHA y obtener datos efectivos de GitHub, o usar respaldo acotado de `source-resolution.md`.
-2. Comprobar documentos AUDIT (tres archivos) y las normas pertinentes sin confundir resumen de skill con norma vigente.
+2. Comprobar los cuatro registros AUDIT y las normas pertinentes sin confundir resumen de skill con norma vigente.
 3. Revisar archivos, workspaces, paquetes, contratos y dependencias existentes antes de proponer módulos o APIs.
 4. Código: tipos, comportamiento, seguridad, APIs, errores, observabilidad y regresiones. Distinguir defecto real de preferencia.
 5. Arquitectura: frontera EE-LABS vs Product Ecosystem/Business Application; dependencias permitidas, ausencia de ciclos y ADR/RFC vigentes.

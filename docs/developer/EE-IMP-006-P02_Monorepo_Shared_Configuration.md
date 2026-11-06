@@ -16,20 +16,20 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                      |
 | **Nivel**             | Técnico                             |
 | **Normativo**         | No                                  |
-| **Versión**           | v1.1.0                              |
+| **Versión**           | v1.1.1                              |
 | **Estado**            | Aprobado                            |
 | **Propietario**       | Equipo de Arquitectura              |
 | **Documento padre**   | EE-DOC-006                          |
-| **Dependencias**      | EE-DOC-006                          |
+| **Dependencias**      | Ninguna                             |
 | **Aprobado por**      | Equipo de Arquitectura              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
 | **Fecha de creación** | 2026-08-21                          |
-| **Última revisión**   | 2026-10-18                          |
+| **Última revisión**   | 2026-11-05                          |
 | **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
-## 1. Objetivo
+## 01. Objetivo
 
 Documentar la implementación física de la **Fase 2 — Configuración Compartida** del Engineering Ecosystem (EE-LABS).
 
@@ -43,7 +43,7 @@ Por tanto, EE-IMP-006-P02 documenta la implementación de origen de la Fase 2, m
 
 ---
 
-## 2. Alcance implementado
+## 02. Alcance implementado
 
 La Fase 2 comprendió la implementación inicial del sistema de configuraciones compartidas ubicado bajo:
 
@@ -81,7 +81,7 @@ Los cambios posteriores sobre la estructura física no modifican el propósito o
 
 ---
 
-## 3. Estructura física implementada
+## 03. Estructura física implementada
 
 La siguiente estructura corresponde a la **implementación física original de la Fase 2**:
 
@@ -138,9 +138,9 @@ La estructura vigente y las decisiones que justifican estas modificaciones se en
 
 ---
 
-## 4. Implementación del paquete `@eq-labs/config`
+## 04. Implementación del paquete `@eq-labs/config`
 
-### 4.1 `package.json`
+### 04.1. `package.json`
 
 Se creó el package raíz:
 
@@ -197,7 +197,7 @@ La eventual publicación externa de configuraciones deberá evaluarse individual
 
 La arquitectura vigente mantiene los paquetes de configuración como componentes internos del monorepo y separa claramente el contenedor administrativo de los paquetes consumibles.
 
-### 4.2 `README.md`
+### 04.2. `README.md`
 
 Se creó la documentación principal del paquete.
 
@@ -236,9 +236,9 @@ El README establece claramente que los consumidores deben utilizar estas rutas p
 
 ---
 
-## 5. Configuración TypeScript
+## 05. Configuración TypeScript
 
-### 5.1 Estructura
+### 05.1. Estructura
 
 ```text
 packages/config/typescript/
@@ -249,7 +249,7 @@ packages/config/typescript/
 └── README.md
 ```
 
-### 5.2 `base.json`
+### 05.2. `base.json`
 
 Se implementó la configuración base de TypeScript.
 
@@ -271,7 +271,7 @@ La configuración establece:
 
 La configuración constituye la base común para las variantes especializadas.
 
-### 5.3 `node.json`
+### 05.3. `node.json`
 
 Se implementó la configuración específica para Node.js.
 
@@ -288,7 +288,7 @@ Y establece:
 }
 ```
 
-### 5.4 `react.json
+### 05.4. `react.json
 
 Se implementó la configuración destinada a proyectos React.
 
@@ -304,7 +304,7 @@ Y establece:
 }
 ```
 
-### 5.5 `package.json`
+### 05.5. `package.json`
 
 Se creó el paquete:
 
@@ -316,7 +316,7 @@ Con exportaciones:
 - `@eq-labs/config-typescript/node`
 - `@eq-labs/config-typescript/react`
 
-### 5.6 `README.md`
+### 05.6. `README.md`
 
 Se documentaron:
 
@@ -337,9 +337,9 @@ La documentación cubre tres perfiles de configuración:
 
 ---
 
-## 6. Configuración ESLint
+## 06. Configuración ESLint
 
-### 6.1 Estructura
+### 06.1. Estructura
 
 ```text
 packages/config/eslint/
@@ -349,7 +349,7 @@ packages/config/eslint/
 └── README.md
 ```
 
-### 6.2 `base.mjs`
+### 06.2. `base.mjs`
 
 Se implementó la configuración base de ESLint.
 
@@ -369,7 +369,7 @@ Entre las reglas implementadas se encuentran:
 | `no-duplicate-imports` | `error` | Mantiene limpias las declaraciones de importación.                                                                                                                                                                                                    |
 | `no-unused-vars`       | `error` | Previene variables no utilizadas; el patrón `^_` se ignora para marcadores intencionales.                                                                                                                                                             |
 
-### 6.3 `typescript.mjs`
+### 06.3. `typescript.mjs`
 
 Se implementó la configuración especializada para TypeScript.
 
@@ -390,7 +390,7 @@ La configuración no activa `parserOptions.projectService`. Esta decisión es de
 - Si en el futuro se requieren reglas type-aware, esta decisión podrá revisarse mediante una actualización documentada y controlada del estándar compartido.
 - Por el momento, el análisis de proyecto no forma parte del estándar de linting del Engineering Ecosystem.
 
-### 6.4 `package.json`
+### 06.4. `package.json`
 
 Se creó:
 
@@ -398,7 +398,7 @@ Se creó:
 
 Con dependencia y peer dependency para ESLint y TypeScript ESLint.
 
-### 6.5 `README.md`
+### 06.5. `README.md`
 
 Se documentaron:
 
@@ -414,9 +414,9 @@ Se establece explícitamente que el repositorio utiliza ESLint Flat Config y no 
 
 ---
 
-## 7. Configuración Prettier
+## 07. Configuración Prettier
 
-### 7.1 Estructura
+### 07.1. Estructura
 
 ```text
 packages/config/prettier/
@@ -425,7 +425,7 @@ packages/config/prettier/
 └── README.md
 ```
 
-### 7.2 `index.mjs`
+### 07.2. `index.mjs`
 
 Se implementó la configuración centralizada de Prettier.
 
@@ -453,7 +453,7 @@ El parámetro `endOfLine: "lf"` establece el estándar de final de línea para P
 
 Cada capa se configura y mantiene de forma independiente. La consistencia entre ellas debe verificarse a nivel de repositorio, pero no se asume automáticamente en la documentación del paquete de configuración.
 
-### 7.3 `package.json`
+### 07.3. `package.json`
 
 Se creó:
 
@@ -461,7 +461,7 @@ Se creó:
 
 Con Prettier definido como peer dependency.
 
-### 7.4 `README.md`
+### 07.4. `README.md`
 
 Se documentó:
 
@@ -475,9 +475,9 @@ Se documentó:
 
 ---
 
-## 8. Configuración Vite
+## 08. Configuración Vite
 
-### 8.1 Estructura
+### 08.1. Estructura
 
 ```text
 packages/config/vite/
@@ -488,7 +488,7 @@ packages/config/vite/
 └── README.md
 ```
 
-### 8.2 `base.mjs`
+### 08.2. `base.mjs`
 
 Se implementó la configuración base de Vite.
 
@@ -499,7 +499,7 @@ Incluye:
 - `strictPort` para desarrollo.
 - `strictPort` para preview.
 
-### 8.3 `library.mjs`
+### 08.3. `library.mjs`
 
 Se implementó una configuración especializada para librerías.
 
@@ -512,7 +512,7 @@ Extiende la configuración base y establece:
 **Convención de entry point:**  
 El valor `src/index.ts` es la convención estándar del Engineering Ecosystem para el punto de entrada de librerías. Esta convención se aplica a todos los paquetes del monorepo que produzcan librerías reutilizables. Si un workspace requiere una estructura diferente, debe extender esta configuración y sobrescribir el entry point localmente.
 
-### 8.4 `react.mjs`
+### 08.4. `react.mjs`
 
 Se implementó la configuración especializada para React.
 
@@ -525,7 +525,7 @@ El plugin oficial de React se declara como dependencia del paquete `@eq-labs/con
 **Dependencia del plugin:**  
 El plugin `@vitejs/plugin-react` es una dependencia de `@eq-labs/config-vite` y forma parte de la implementación del preset React. Los workspaces que consuman exclusivamente los presets base o library no utilizan esta dependencia, pero se incluye para garantizar que el preset React esté disponible cuando sea necesario.
 
-### 8.5 `package.json`
+### 08.5. `package.json`
 
 Se creó:
 
@@ -533,7 +533,7 @@ Se creó:
 
 Con Vite como peer dependency y el plugin oficial de React como dependencia.
 
-### 8.6 `README.md`
+### 08.6. `README.md`
 
 Se documentaron las configuraciones:
 
@@ -545,9 +545,9 @@ También se estableció la separación entre configuración compartida y configu
 
 ---
 
-## 9. Configuración Jest
+## 09. Configuración Jest
 
-### 9.1 Estructura
+### 09.1. Estructura
 
 ```text
 packages/config/jest/
@@ -557,7 +557,7 @@ packages/config/jest/
 └── README.md
 ```
 
-### 9.2 `base.mjs`
+### 09.2. `base.mjs`
 
 Se implementó la configuración base de Jest.
 
@@ -573,7 +573,7 @@ Incluye:
 **Coverage en el preset base:**  
 El patrón `collectCoverageFrom` está deliberadamente configurado para archivos JavaScript. El preset TypeScript (Sección 9.3) reemplaza este patrón por `.ts` y `.tsx`. Esta separación refleja la decisión de mantener el preset base independiente de TypeScript.
 
-### 9.3 `typescript.mjs`
+### 09.3. `typescript.mjs`
 
 Se implementó la variante para TypeScript.
 
@@ -585,7 +585,7 @@ La configuración ajusta:
 **Limitación explícita:**  
 La configuración TypeScript de Jest establece las convenciones de descubrimiento y cobertura para archivos TypeScript, pero **no define el mecanismo de transformación o ejecución de TypeScript**. Esta configuración no habilita a Jest para ejecutar archivos TypeScript directamente. El mecanismo de transformación permanece bajo responsabilidad del workspace consumidor o de un futuro estándar de testing del Engineering Ecosystem.
 
-### 9.4 `package.json`
+### 09.4. `package.json`
 
 Se creó:
 
@@ -593,7 +593,7 @@ Se creó:
 
 Con Jest como peer dependency.
 
-### 9.5 `README.md`
+### 09.5. `README.md`
 
 Se documentaron:
 
@@ -610,7 +610,7 @@ Se documentaron:
 
 ## 10. Configuración Vitest
 
-### 10.1 Estructura
+### 10.1. Estructura
 
 ```text
 packages/config/vitest/
@@ -625,7 +625,7 @@ packages/config/playwright/
 └── README.md
 ```
 
-### 10.2 `base.mjs`
+### 10.2. `base.mjs`
 
 Se implementó la configuración base de Vitest.
 
@@ -641,7 +641,7 @@ Incluye:
 **Coverage con V8:**  
 La configuración utiliza `coverage.provider: "v8"`. El proveedor V8 está integrado en Vitest y no requiere paquetes adicionales para la recolección básica de cobertura. No obstante, dependiendo de la versión de Vitest y de la configuración del workspace, el workspace consumidor puede necesitar instalar dependencias adicionales para el funcionamiento completo del coverage. La definición precisa de estas dependencias se establecerá cuando el estándar de instalación de Vitest del monorepo quede fijado.
 
-### 10.3 `react.mjs`
+### 10.3. `react.mjs`
 
 Se implementó una configuración especializada para React.
 
@@ -658,7 +658,7 @@ pnpm add -D jsdom
 
 El README del paquete ya documenta este requisito. La configuración no incorpora directamente React Testing Library ni jsdom como dependencia del paquete.
 
-### 10.4 `package.json`
+### 10.4. `package.json`
 
 Se creó:
 
@@ -666,7 +666,7 @@ Se creó:
 
 Con Vitest como peer dependency.
 
-### 10.5 `README.md`
+### 10.5. `README.md`
 
 Se documentaron:
 
@@ -875,6 +875,7 @@ Estas modificaciones forman parte del ciclo de implementación, validación y do
 | :--------- | :--------- | :--------------------- | :--------------------- | :----------------------------------------------------------------------------------------------- | :------------------------------------------------------ | :----------- |
 | **v1.0.0** | 2026-08-21 | Equipo de Arquitectura | Equipo de Arquitectura | Creación del DT de la Fase 2 — Configuración Compartida                                          | Documentar la implementación realizada                  | **Aprobado** |
 | **v1.1.0** | 2026-08-28 | Equipo de Arquitectura | Equipo de Arquitectura | Actualización de estructura y trazabilidad; se retiró `src/index.ts` y se añadió EE-IMP-006-P03. | Alinear la Fase 2 con cambios posteriores de la Fase 3. | **Aprobado** |
+| **v1.1.1** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Normalización PC-006                                                                             | Encabezados numerados a dos dígitos; sin `x.0`.         | **Aprobado** |
 
 ---
 

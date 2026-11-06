@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | :------------------------- | :------------------------------------------------------------------ |
 | **ID**                     | EE-IMP-011-P01                                                      |
 | **Documento**              | Inventory and Command Contract                                      |
-| **Código corto**           | EE-IMP-011-P01                                                      |
+| **Código corto**           | IMP-011-P01                                                         |
 | **Fase**                   | Fase 3 — Core Components                                            |
 | **Fase de implementación** | P01 — Inventory and Command Contract (Implementación de EE-DOC-011) |
 | **Tipo**                   | Documento Técnico de Implementación                                 |
@@ -21,7 +21,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 | **Estado**                 | Completado                                                          |
 | **Propietario**            | Equipo de Arquitectura                                              |
 | **Documento padre**        | EE-DOC-011 — Automation (v1.0.0 Aprobado)                           |
-| **Dependencias**           | EE-DOC-005, EE-DOC-006 §12, EE-DOC-007, EE-DOC-011, EE-ADR-001      |
+| **Dependencias**           | contenido=EE-DOC-005, EE-DOC-006 §12, EE-DOC-007, EE-ADR-001        |
 | **Aprobado por**           | Equipo de Arquitectura                                              |
 | **Audiencia**              | Arquitectura, Desarrollo, DevOps                                    |
 | **Fecha de creación**      | 2026-09-30                                                          |

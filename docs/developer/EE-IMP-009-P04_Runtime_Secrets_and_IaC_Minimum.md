@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                      |
-| :-------------------- | :----------------------------------------- |
-| **ID**                | EE-IMP-009-P04                             |
-| **Documento**         | Runtime Secrets and IaC Minimum            |
-| **Código corto**      | EE-IMP-009-P04                             |
-| **Fase**              | Fase 4 — Runtime Secrets and IaC Minimum   |
-| **Tipo**              | Documento Técnico de Implementación        |
-| **Clasificación**     | Implementación                             |
-| **Nivel**             | Técnico                                    |
-| **Normativo**         | No                                         |
-| **Versión**           | v1.2.0                                     |
-| **Estado**            | Completado                                 |
-| **Propietario**       | Equipo de Arquitectura                     |
-| **Documento padre**   | EE-DOC-009 — Infrastructure                |
-| **Dependencias**      | EE-DOC-009, EE-IMP-009-P01…P03, EE-DOC-007 |
-| **Aprobado por**      | Equipo de Arquitectura                     |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps           |
-| **Fecha de creación** | 2026-09-26                                 |
-| **Última revisión**   | 2026-09-26                                 |
-| **Próxima revisión**  | 2026-12-26                                 |
+| Campo                 | Valor                                    |
+| :-------------------- | :--------------------------------------- |
+| **ID**                | EE-IMP-009-P04                           |
+| **Documento**         | Runtime Secrets and IaC Minimum          |
+| **Código corto**      | IMP-009-P04                              |
+| **Fase**              | Fase 4 — Runtime Secrets and IaC Minimum |
+| **Tipo**              | Documento Técnico de Implementación      |
+| **Clasificación**     | Implementación                           |
+| **Nivel**             | Técnico                                  |
+| **Normativo**         | No                                       |
+| **Versión**           | v1.1.0                                   |
+| **Estado**            | Completado                               |
+| **Propietario**       | Equipo de Arquitectura                   |
+| **Documento padre**   | EE-DOC-009 — Infrastructure              |
+| **Dependencias**      | contenido=EE-IMP-009-P01…P03, EE-DOC-007 |
+| **Aprobado por**      | Equipo de Arquitectura                   |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps         |
+| **Fecha de creación** | 2026-09-26                               |
+| **Última revisión**   | 2026-09-26                               |
+| **Próxima revisión**  | 2026-12-26                               |
 
 ---
 
@@ -154,11 +154,10 @@ Conforme a **EE-DOC-009 §06.4 / §10 P04** y frontera **EE-DOC-007**. Ciclo **E
 
 ## 10. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                      | Cambios                      | Estado            |
-| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------- | :--------------------------- | :---------------- |
-| **v1.0.0** | 2026-09-26 | AI Engineering Assistant | —                      | Creación                    | Especificación P04           | En Implementación |
-| **v1.1.0** | 2026-09-26 | AI Engineering Assistant | Equipo de Arquitectura | As-built                    | Commit `e21ef3b`             | Completado        |
-| **v1.2.0** | 2026-09-26 | AI Engineering Assistant | Equipo de Arquitectura | Alineación EE-DOC-002 §18.3 | Reestructura al template IMP | **Completado**    |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                | Cambios                                        | Estado            |
+| :--------- | :--------- | :----------------------- | :--------------------- | :------------------------------------ | :--------------------------------------------- | :---------------- |
+| **v1.0.0** | 2026-09-26 | AI Engineering Assistant | —                      | Creación                              | Especificación P04                             | En Implementación |
+| **v1.1.0** | 2026-09-26 | AI Engineering Assistant | Equipo de Arquitectura | As-built; Alineación EE-DOC-002 §18.3 | Commit `e21ef3b`; Reestructura al template IMP | Completado        |
 
 ---
 

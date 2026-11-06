@@ -16,20 +16,20 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                      |
 | **Nivel**             | Técnico                             |
 | **Normativo**         | No                                  |
-| **Versión**           | v1.1.0                              |
+| **Versión**           | v1.1.1                              |
 | **Estado**            | Aprobado                            |
 | **Propietario**       | Equipo de Arquitectura              |
 | **Documento padre**   | EE-DOC-006                          |
-| **Dependencias**      | EE-DOC-006, EE-IMP-006-P04          |
+| **Dependencias**      | contenido=EE-IMP-006-P04            |
 | **Aprobado por**      | Equipo de Arquitectura              |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps    |
 | **Fecha de creación** | 2026-08-29                          |
-| **Última revisión**   | 2026-10-18                          |
+| **Última revisión**   | 2026-11-05                          |
 | **Próxima revisión**  | No aplica — Documento Aprobado      |
 
 ---
 
-## 1. Objetivo
+## 01. Objetivo
 
 Documentar la implementación y validación de la **Fase 5 — Apps** del Engineering Ecosystem (EE-LABS).
 
@@ -47,7 +47,7 @@ La implementación se mantuvo deliberadamente mínima, sin incorporar todavía f
 
 ---
 
-## 2. Alcance implementado
+## 02. Alcance implementado
 
 La Fase 5 comprendió la creación del directorio:
 
@@ -92,7 +92,7 @@ La fase no implementó:
 
 ---
 
-## 3. Estructura física implementada
+## 03. Estructura física implementada
 
 La estructura resultante de `apps/` quedó establecida de la siguiente manera:
 
@@ -137,9 +137,9 @@ Cada aplicación mantiene responsabilidades independientes y utiliza la configur
 
 ---
 
-## 4. Apps implementadas
+## 04. Apps implementadas
 
-### 4.1 `@eq-labs/cli`
+### 04.1. `@eq-labs/cli`
 
 Se creó el paquete:
 
@@ -229,7 +229,7 @@ y establece:
 
 La aplicación dispone de una implementación funcional mínima y queda preparada para futuras capacidades de CLI.
 
-### 4.2 `@eq-labs/dashboard`
+### 04.2. `@eq-labs/dashboard`
 
 Se creó el paquete:
 
@@ -345,7 +345,7 @@ y:
 
 La aplicación genera correctamente el bundle de producción mediante Vite.
 
-### 4.3 `@eq-labs/extensions`
+### 04.3. `@eq-labs/extensions`
 
 Se creó el paquete:
 
@@ -393,7 +393,7 @@ La aplicación queda establecida como punto estructural para futuras implementac
 
 ---
 
-## 5. Configuración de las aplicaciones
+## 05. Configuración de las aplicaciones
 
 Las aplicaciones fueron configuradas como workspaces independientes dentro del monorepo.
 
@@ -438,7 +438,7 @@ Esta integración permite que las aplicaciones consuman los paquetes de configur
 
 ---
 
-## 6. Configuración de `@eq-labs/config-vite`
+## 06. Configuración de `@eq-labs/config-vite`
 
 Durante la implementación del dashboard fue necesario completar la exposición pública del preset React de Vite.
 
@@ -509,11 +509,11 @@ La inclusión de las declaraciones `.d.ts` permite además que TypeScript pueda 
 
 ---
 
-## 7. Correcciones realizadas durante la implementación
+## 07. Correcciones realizadas durante la implementación
 
 Durante la implementación de la Fase 5 se identificaron y resolvieron varios aspectos técnicos.
 
-### 7.1 Entry point del CLI
+### 07.1. Entry point del CLI
 
 La configuración inicial del CLI utilizaba un `start` que apuntaba a:
 
@@ -541,7 +541,7 @@ El script fue corregido a:
 
 Esto alinea el comando de ejecución con el artefacto real generado por TypeScript.
 
-### 7.2 Resolución de `@eq-labs/config-vite/react`
+### 07.2. Resolución de `@eq-labs/config-vite/react`
 
 El dashboard inicialmente presentó un error relacionado con la resolución del módulo:
 
@@ -562,7 +562,7 @@ La solución consistió en definir explícitamente:
 
 en los `exports` del paquete.
 
-### 7.3 Declaraciones TypeScript para `config-vite`
+### 07.3. Declaraciones TypeScript para `config-vite`
 
 TypeScript inicialmente reportó:
 
@@ -586,7 +586,7 @@ y exponerlo mediante:
 
 Esto permitió que TypeScript reconociera el módulo compartido con sus declaraciones correspondientes.
 
-### 7.4 Tipado del entorno Vite
+### 07.4. Tipado del entorno Vite
 
 Para el dashboard se creó:
 
@@ -604,7 +604,7 @@ Este archivo permite que TypeScript reconozca los tipos proporcionados por Vite 
 
 ---
 
-## 8. Política de versiones
+## 08. Política de versiones
 
 Las aplicaciones implementadas respetan la política establecida para las dependencias externas mediante versiones explícitas.
 
@@ -628,7 +628,7 @@ Esta separación permite mantener:
 
 ---
 
-## 9. Integración con pnpm Workspaces
+## 09. Integración con pnpm Workspaces
 
 Las tres aplicaciones fueron incorporadas como workspaces bajo:
 
@@ -1067,6 +1067,7 @@ El documento permanece en estado **Aprobado** como documento técnico de impleme
 | :--------- | :--------- | :--------------------- | :--------------------- | :------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------- | :----------- |
 | **v1.0.0** | 2026-08-29 | Equipo de Arquitectura | Equipo de Arquitectura | Creación de EE-IMP-006-P05 y documentación de la implementación de `apps/cli`, `apps/dashboard` y `apps/extensions`. | Registrar la implementación y validación de la Fase 5. | **Aprobado** |
 | **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006                                                                                                 | As-built scripts/commands y estados documentales merge | Aprobado     |
+| **v1.1.1** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Normalización PC-006                                                                                                 | Encabezados numerados a dos dígitos; sin `x.0`.        | Aprobado     |
 
 ---
 

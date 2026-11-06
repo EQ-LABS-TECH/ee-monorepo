@@ -6,26 +6,26 @@ Este documento registra la evidencia técnica de la implementación física y va
 
 ## METADATOS
 
-| Campo                 | Valor                                  |
-| :-------------------- | :------------------------------------- |
-| **ID**                | EE-IMP-008-P02                         |
-| **Documento**         | VS Code Workspace Governance           |
-| **Código corto**      | EE-IMP-008-P02                         |
-| **Fase**              | Fase 2 — VS Code Workspace Governance  |
-| **Tipo**              | Documento Técnico de Implementación    |
-| **Clasificación**     | Implementación                         |
-| **Nivel**             | Técnico                                |
-| **Normativo**         | No                                     |
-| **Versión**           | v1.2.0                                 |
-| **Estado**            | Completado                             |
-| **Propietario**       | Equipo de Arquitectura                 |
-| **Documento padre**   | EE-DOC-008 — Development Environment   |
-| **Dependencias**      | EE-DOC-008, EE-IMP-008-P01, EE-DOC-006 |
-| **Aprobado por**      | Equipo de Arquitectura                 |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps       |
-| **Fecha de creación** | 2026-09-24                             |
-| **Última revisión**   | 2026-09-25                             |
-| **Próxima revisión**  | 2026-12-24                             |
+| Campo                 | Valor                                 |
+| :-------------------- | :------------------------------------ |
+| **ID**                | EE-IMP-008-P02                        |
+| **Documento**         | VS Code Workspace Governance          |
+| **Código corto**      | IMP-008-P02                           |
+| **Fase**              | Fase 2 — VS Code Workspace Governance |
+| **Tipo**              | Documento Técnico de Implementación   |
+| **Clasificación**     | Implementación                        |
+| **Nivel**             | Técnico                               |
+| **Normativo**         | No                                    |
+| **Versión**           | v1.1.0                                |
+| **Estado**            | Completado                            |
+| **Propietario**       | Equipo de Arquitectura                |
+| **Documento padre**   | EE-DOC-008 — Development Environment  |
+| **Dependencias**      | contenido=EE-IMP-008-P01, EE-DOC-006  |
+| **Aprobado por**      | Equipo de Arquitectura                |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps      |
+| **Fecha de creación** | 2026-09-24                            |
+| **Última revisión**   | 2026-09-25                            |
+| **Próxima revisión**  | 2026-12-24                            |
 
 ---
 
@@ -199,12 +199,11 @@ Conforme a **EE-DOC-008 §06 / §12.5**. Ciclo según **EE-DOC-005**.
 
 ## 10. Historial de Cambios
 
-| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                      | Cambios                                                                                                     | Estado         |
-| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------- | :---------------------------------------------------------------------------------------------------------- | :------------- |
-| **v0.1.0** | 2026-09-24 | AI Engineering Assistant | —                      | Creación del DT de Fase     | Plan extensions/settings                                                                                    | Borrador       |
-| **v1.0.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Cierre P02                  | Alineación as-built + tsdk                                                                                  | Completado     |
-| **v1.1.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Alineación EE-DOC-002 §18.3 | Reestructura al template IMP                                                                                | Completado     |
-| **v1.2.0** | 2026-09-25 | AI Engineering Assistant | Equipo de Arquitectura | Type B markdownlint         | `.markdownlint.json`; ignores LICENSE/NOTICE; MD024 siblings_only; MD013 off; sin config embebida deprecada | **Completado** |
+| Versión    | Fecha      | Autor                    | Aprobado por           | Motivo                                  | Cambios                                                                                                     | Estado         |
+| :--------- | :--------- | :----------------------- | :--------------------- | :-------------------------------------- | :---------------------------------------------------------------------------------------------------------- | :------------- |
+| **v0.1.0** | 2026-09-24 | AI Engineering Assistant | —                      | Creación del DT de Fase                 | Plan extensions/settings                                                                                    | Borrador       |
+| **v1.0.0** | 2026-09-24 | AI Engineering Assistant | Equipo de Arquitectura | Cierre P02; Alineación EE-DOC-002 §18.3 | Alineación as-built + tsdk; Reestructura al template IMP                                                    | Completado     |
+| **v1.1.0** | 2026-09-25 | AI Engineering Assistant | Equipo de Arquitectura | Type B markdownlint                     | `.markdownlint.json`; ignores LICENSE/NOTICE; MD024 siblings_only; MD013 off; sin config embebida deprecada | **Completado** |
 
 ---
 

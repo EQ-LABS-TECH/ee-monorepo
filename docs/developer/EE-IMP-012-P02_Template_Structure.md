@@ -6,26 +6,26 @@ Evidencia técnica de la fase **P02** de **EE-DOC-012 — Templates** (EE-DOC-00
 
 ## METADATOS
 
-| Campo                      | Valor                                                                            |
-| :------------------------- | :------------------------------------------------------------------------------- |
-| **ID**                     | EE-IMP-012-P02                                                                   |
-| **Documento**              | Template Structure                                                               |
-| **Código corto**           | EE-IMP-012-P02                                                                   |
-| **Fase de implementación** | P02 — Template Structure (EE-DOC-012)                                            |
-| **Tipo**                   | Documento Técnico de Implementación                                              |
-| **Clasificación**          | Implementación                                                                   |
-| **Nivel**                  | Técnico                                                                          |
-| **Normativo**              | No                                                                               |
-| **Versión**                | v1.1.0                                                                           |
-| **Estado**                 | Completado                                                                       |
-| **Propietario**            | Equipo de Arquitectura                                                           |
-| **Documento padre**        | EE-DOC-012 — Templates (v0.4.0)                                                  |
-| **Dependencias**           | EE-IMP-012-P01 Completado, EE-DOC-006 v1.5.0, EE-RFC-002, EE-DOC-010, EE-DOC-011 |
-| **Aprobado por**           | Equipo de Arquitectura                                                           |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps                                                 |
-| **Fecha de creación**      | 2026-10-01                                                                       |
-| **Última revisión**        | 2026-10-01                                                                       |
-| **Próxima revisión**       | Tras materialización y validate PASS                                             |
+| Campo                      | Valor                                                                   |
+| :------------------------- | :---------------------------------------------------------------------- |
+| **ID**                     | EE-IMP-012-P02                                                          |
+| **Documento**              | Template Structure                                                      |
+| **Código corto**           | IMP-012-P02                                                             |
+| **Fase de implementación** | P02 — Template Structure (EE-DOC-012)                                   |
+| **Tipo**                   | Documento Técnico de Implementación                                     |
+| **Clasificación**          | Implementación                                                          |
+| **Nivel**                  | Técnico                                                                 |
+| **Normativo**              | No                                                                      |
+| **Versión**                | v1.1.1                                                                  |
+| **Estado**                 | Completado                                                              |
+| **Propietario**            | Equipo de Arquitectura                                                  |
+| **Documento padre**        | EE-DOC-012 — Templates (v0.4.0)                                         |
+| **Dependencias**           | contenido=EE-IMP-012-P01, EE-DOC-006, EE-DOC-010…EE-DOC-012, EE-RFC-002 |
+| **Aprobado por**           | Equipo de Arquitectura                                                  |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps                                        |
+| **Fecha de creación**      | 2026-10-01                                                              |
+| **Última revisión**        | 2026-11-04                                                              |
+| **Próxima revisión**       | Tras materialización y validate PASS                                    |
 
 ---
 
@@ -267,10 +267,11 @@ No añadir dependencia JSON Schema runtime en P02 (validación estructural manua
 
 ## 09. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Motivo                                 | Estado         |
-| :--------- | :--------- | :--------------------- | :------------------------------------- | :------------- |
-| **v1.0.0** | 2026-10-01 | Equipo de Arquitectura | Apertura P02                           | Borrador       |
-| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | Cierre P02; validate + prueba negativa | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                                 | Cambios                                                                             | Estado         |
+| :--------- | :--------- | :--------------------- | :----------- | :------------------------------------- | :---------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-10-01 | Equipo de Arquitectura | —            | Apertura P02                           | —                                                                                   | Borrador       |
+| **v1.1.0** | 2026-10-01 | Equipo de Arquitectura | —            | Cierre P02; validate + prueba negativa | —                                                                                   | **Completado** |
+| **v1.1.1** | 2026-11-04 | Equipo de Arquitectura | —            | Regularizacion PC-002                  | Historial normalizado a 7 columnas segun EE-DOC-002 §11; datos previos preservados. | **Completado** |
 
 ---
 

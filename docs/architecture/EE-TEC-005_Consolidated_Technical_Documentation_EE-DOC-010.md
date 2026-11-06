@@ -6,25 +6,25 @@ Este documento registra la documentación técnica consolidada (estado as-built)
 
 ## METADATOS
 
-| Campo                 | Valor                                               |
-| :-------------------- | :-------------------------------------------------- |
-| **ID**                | EE-TEC-005                                          |
-| **Documento**         | Consolidated Technical Documentation of EE-DOC-010  |
-| **Código corto**      | EE-TEC-005                                          |
-| **Tipo**              | Documento Técnico                                   |
-| **Clasificación**     | Implementación                                      |
-| **Nivel**             | Técnico                                             |
-| **Normativo**         | No                                                  |
-| **Versión**           | v1.0.0                                              |
-| **Estado**            | Completado                                          |
-| **Propietario**       | Equipo de Arquitectura                              |
-| **Documento padre**   | EE-DOC-010 — Quality Gates                          |
-| **Dependencias**      | EE-DOC-010 v1.4.0, EE-IMP-010-P01 … P05, EE-ADR-004 |
-| **Aprobado por**      | Equipo de Arquitectura                              |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA            |
-| **Fecha de creación** | 2026-09-30                                          |
-| **Última revisión**   | 2026-09-30                                          |
-| **Próxima revisión**  | 2026-12-29                                          |
+| Campo                 | Valor                                              |
+| :-------------------- | :------------------------------------------------- |
+| **ID**                | EE-TEC-005                                         |
+| **Documento**         | Consolidated Technical Documentation of EE-DOC-010 |
+| **Código corto**      | TEC-005                                            |
+| **Tipo**              | Documentación Técnica Consolidada                  |
+| **Clasificación**     | Técnico / As-Built                                 |
+| **Nivel**             | Técnico                                            |
+| **Normativo**         | No                                                 |
+| **Versión**           | v1.0.1                                             |
+| **Estado**            | Completado                                         |
+| **Propietario**       | Equipo de Arquitectura                             |
+| **Documento padre**   | EE-DOC-010 — Quality Gates                         |
+| **Dependencias**      | contenido=EE-IMP-010-P01 … P05, EE-ADR-004         |
+| **Aprobado por**      | Equipo de Arquitectura                             |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, QA, IA           |
+| **Fecha de creación** | 2026-09-30                                         |
+| **Última revisión**   | 2026-11-04                                         |
+| **Próxima revisión**  | 2026-12-29                                         |
 
 ---
 
@@ -194,6 +194,7 @@ Observaciones no bloqueantes: W-P05-001…008 (EE-IMP-010-P05 §07), incluidos e
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                     | Cambios                                                                                 | Estado         |
 | :--------- | :--------- | :--------------------- | :--------------------- | :------------------------- | :-------------------------------------------------------------------------------------- | :------------- |
 | **v1.0.0** | 2026-09-30 | Equipo de Arquitectura | Equipo de Arquitectura | Consolidación y cierre P05 | Estado as-built P01–P05; decisiones D-01…D-06; entrada a Validación Final de EE-DOC-010 | **Completado** |
+| **v1.0.1** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Correccion PC-003          | Tipo y Clasificacion alineados a EE-DOC-002 §05.1 y plantilla §18.4.                    | **Completado** |
 
 ---
 

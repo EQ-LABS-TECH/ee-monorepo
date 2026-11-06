@@ -27,9 +27,9 @@ Este documento **no es norma EE-DOC ni redefine EE-DOC-005/010/015**. Es el cont
 
 ## 3. Trazabilidad de auditoría
 
-- Leer desde la misma revisión los tres artefactos: `docs/validation/audit/EE-AUD-Criteria_Audited_Definition.md`, `EE-AUD-Log_Progress_Register.md`, `EE-AUD-Rules_Emerging.md`.
+- Leer desde la misma revisión los tres artefactos: `docs/validation/audit/EE-AUD-Criteria_Audited_Definition.md`, `EE-AUD-Log_Progress_Register.md`, `EE-AUD-Rules_Register.md`.
 - Todo descubrimiento relevante de auditoría termina en modificación local o propuesta de modificación **concreta** del AUDIT correspondiente. No escribir una observación solo en el chat; no inventar nuevos IDs ni duplicar reglas existentes.
-- `Criteria` contiene el criterio de `Auditado` y no se modifica para registrar un hallazgo ordinario; `Log` registra progreso y enlaza el reporte de cada ejecución; `Rules Emerging` conserva reglas emergentes y backlog, no el detalle completo de hallazgos. Para hallazgos de código, usar la sección **Auditorías técnicas y artefactos** del `Log` y vincular el informe; actualizar `Rules` solo si corresponde a una regla o acción de backlog.
+- `Criteria` contiene el criterio de `Auditado` y no se modifica para registrar un hallazgo ordinario; `Log` registra progreso y enlaza el reporte de cada ejecución; `Rules Register` conserva reglas emergentes y backlog, no el detalle completo de hallazgos. Para hallazgos de código, usar la sección **Auditorías técnicas y artefactos** del `Log` y vincular el informe; actualizar `Rules` solo si corresponde a una regla o acción de backlog.
 - Estado de persistencia: `PROPUESTO_LOCAL` (solo borrador), `LOCAL_WRITE` (comprobado en checkout), `EXPORTADO` (ZIP disponible), `PR_VERIFICADO` (si el usuario prueba PR después), `PUBLICADO_VERIFICADO` (solo lectura comprobada de `main`). Ninguna de estas etiquetas aprueba norma por sí misma.
 
 ## 4. Handoff e integridad

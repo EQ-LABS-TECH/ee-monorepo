@@ -97,6 +97,13 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 
 **Prohibido:** commits directos de correcciones normativas en `main` eludiendo PR.
 
+### 4.1. Identificación de campañas de auditoría
+
+- Cada auditoría completa recibe un identificador secuencial `AUD-NNN`, comenzando por `AUD-001`; el identificador no se reutiliza.
+- Todas las fases y sus informes conservan el mismo identificador de campaña. El prefijo físico `EE-AUD-NNN` de los informes incorpora la familia documental y no cambia el identificador `AUD-NNN`.
+- Cada fila `PC-*`, `PN-*` o `PA-*` del backlog registra su campaña de origen. Una auditoría posterior que reevalúe un pendiente existente añade evidencia de seguimiento a ese mismo ítem; no crea un duplicado.
+- Los hallazgos nuevos de una auditoría posterior reciben nuevos IDs `PC-*`, `PN-*` o `PA-*` y el `AUD-NNN` de esa campaña.
+
 ---
 
 ## 5. Referencias
@@ -111,4 +118,4 @@ Todos deben evaluarse. Marcar N/A solo si el tipo de documento no aplica el íte
 
 ## Reglas emergentes
 
-Las reglas detectadas en auditoría (aún no necesariamente volcadas a EE-DOC) se registran en **`EE-AUD-Rules_Emerging.md`** de esta misma carpeta.
+Las reglas detectadas en auditoría (aún no necesariamente volcadas a EE-DOC) se registran en **`EE-AUD-Rules_Register.md`** de esta misma carpeta. Las acciones que requieren seguimiento se registran por separado en **`EE-AUD-Backlog_Register.md`** mediante IDs `PC-*`, `PN-*` o `PA-*`.

@@ -16,20 +16,20 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Clasificación**     | Implementación                       |
 | **Nivel**             | Técnico                              |
 | **Normativo**         | No                                   |
-| **Versión**           | v1.1.0                               |
+| **Versión**           | v1.1.1                               |
 | **Estado**            | Aprobado                             |
 | **Propietario**       | Equipo de Arquitectura               |
 | **Documento padre**   | EE-DOC-006                           |
-| **Dependencias**      | EE-DOC-006                           |
+| **Dependencias**      | Ninguna                              |
 | **Aprobado por**      | Equipo de Arquitectura               |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps     |
 | **Fecha de creación** | 2026-08-28                           |
-| **Última revisión**   | 2026-10-18                           |
+| **Última revisión**   | 2026-11-05                           |
 | **Próxima revisión**  | No aplica — Documento Aprobado       |
 
 ---
 
-## 1. Propósito
+## 01. Propósito
 
 Documentar la implementación y validación de la **Fase 3 — Workspaces** del Engineering Ecosystem (EE-LABS), registrando las configuraciones, modificaciones estructurales, decisiones técnicas, incidencias y resultados obtenidos durante su ejecución.
 
@@ -39,7 +39,7 @@ El presente documento constituye la evidencia técnica de la implementación y v
 
 ---
 
-## 2. Alcance
+## 02. Alcance
 
 La Fase 3 comprendió:
 
@@ -61,7 +61,7 @@ La Fase 3 no comprende la validación integral de cumplimiento de **EE-DOC-006**
 
 ---
 
-## 3. Objetivos de la Fase
+## 03. Objetivos de la Fase
 
 | #     | Objetivo                                                                                       | Estado |
 | ----- | :--------------------------------------------------------------------------------------------- | :----: |
@@ -77,7 +77,7 @@ La Fase 3 no comprende la validación integral de cumplimiento de **EE-DOC-006**
 
 ---
 
-## 4. Ciclo de la Fase
+## 04. Ciclo de la Fase
 
 La Fase 3 se ejecutó bajo el ciclo establecido por el Engineering Ecosystem: **Implementación → Validación → Documentación**.
 
@@ -91,9 +91,9 @@ La validación integral del cumplimiento de EE-DOC-006 no forma parte del alcanc
 
 ---
 
-## 5. Implementación Realizada
+## 05. Implementación Realizada
 
-### 5.1. pnpm
+### 05.1. pnpm
 
 Se configuró **pnpm** como gestor oficial de paquetes del monorepo mediante la propiedad `packageManager` definida en el `package.json` raíz, estableciendo `pnpm@10.16.1` como versión del gestor utilizada por el repositorio.
 
@@ -101,7 +101,7 @@ La configuración del workspace se estableció mediante `pnpm-workspace.yaml`, u
 
 La configuración fue validada mediante la ejecución de `pnpm install`, que reportó `Scope: all 8 workspace projects`. Este resultado corresponde al proyecto raíz privado y los siete paquetes especializados de configuración. El contenedor administrativo `packages/config/` no fue identificado como workspace independiente.
 
-### 5.2. Workspace Configuration
+### 05.2. Workspace Configuration
 
 El archivo `pnpm-workspace.yaml` fue configurado con los siguientes patrones:
 
@@ -129,7 +129,7 @@ Esta decisión evita convertir una estructura organizativa del repositorio en un
 
 Los directorios `connectors/community/` y `connectors/experimental/` permanecen fuera del workspace mientras no contengan paquetes Node.js reales, conforme a la definición establecida en EE-DOC-006.
 
-### 5.3. Turborepo
+### 05.3. Turborepo
 
 Turborepo fue incorporado al monorepo como dependencia de desarrollo del proyecto raíz mediante una versión exacta:
 
@@ -147,7 +147,7 @@ Durante esta fase se verificó la instalación de Turborepo mediante `pnpm insta
 
 La ejecución de `pnpm -r build` corresponde a una ejecución **recursiva de scripts `build` de cada workspace** y **no** es equivalente a `turbo run build`. La validación de la orquestación Turborepo se realiza con `pnpm exec turbo run <task>` (o el script root que la invoque).
 
-### 5.4. Root package.json
+### 05.4. Root package.json
 
 El `package.json` raíz establece la identidad y configuración base del monorepo.
 
@@ -164,7 +164,7 @@ La configuración as-built incluye:
 
 La raíz es el punto de entrada de tareas globales; no es un paquete de librería publicable.
 
-### 5.5. packages/config/
+### 05.5. packages/config/
 
 El directorio `packages/config/` permanece en el repositorio como **contenedor administrativo** de los paquetes de configuración especializados.
 
@@ -204,7 +204,7 @@ Los workspaces especializados son:
 | `@eq-labs/config-vite`       | `packages/config/vite/`       |
 | `@eq-labs/config-vitest`     | `packages/config/vitest/`     |
 
-### 5.6. workspace:\*
+### 05.6. workspace:\*
 
 La política de **EE-DOC-006 §11.4** obliga a declarar con `workspace:*` toda dependencia entre paquetes internos del monorepo.
 
@@ -213,7 +213,7 @@ La política de **EE-DOC-006 §11.4** obliga a declarar con `workspace:*` toda d
 
 La fase documentó la ausencia de `workspace:*` **entre paquetes de configuración**. Eso no contradice el uso as-built de `workspace:*` desde root u otros workspaces hacia paquetes internos.
 
-### 5.7. Política de Versiones
+### 05.7. Política de Versiones
 
 Durante la Fase 3 se aplicó la política de versiones definida en **EE-DOC-006 §11.2**.
 
@@ -223,7 +223,7 @@ Las dependencias declaradas en `peerDependencies` pueden conservar rangos de com
 
 La aplicación de esta política fue realizada sobre los paquetes de configuración implementados durante la fase y constituye una aplicación de la norma definida en EE-DOC-006, no una modificación de dicha norma.
 
-### 5.8. Scripts build de validación de los paquetes de configuración
+### 05.8. Scripts build de validación de los paquetes de configuración
 
 Los paquetes de configuración no requieren una etapa de compilación tradicional debido a que sus contenidos son archivos directamente consumibles por las herramientas correspondientes.
 
@@ -245,7 +245,7 @@ El script `build` no genera archivos de salida, no realiza bundling y no produce
 
 ---
 
-## 6. Decisiones Arquitectónicas Tomadas
+## 06. Decisiones Arquitectónicas Tomadas
 
 | Decisión                                             | Justificación                                                                                                                                                                                                                |
 | :--------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -262,9 +262,9 @@ El script `build` no genera archivos de salida, no realiza bundling y no produce
 
 ---
 
-## 7. Validación Ejecutada
+## 07. Validación Ejecutada
 
-### 7.1. pnpm install
+### 07.1. pnpm install
 
 La instalación del monorepo fue ejecutada mediante:
 
@@ -294,7 +294,7 @@ La instalación resolvió e instaló un total de 416 paquetes en el árbol de de
 | **Versión de pnpm**       |             10.16.1              |
 | **Turbo instalado**       |              2.11.7              |
 
-### 7.2. Validación recursiva de scripts build
+### 07.2. Validación recursiva de scripts build
 
 La validación recursiva de los scripts `build` fue ejecutada mediante:
 
@@ -320,7 +320,7 @@ El resultado de esta ejecución valida los scripts `build` de los workspaces par
 
 ---
 
-## 8. Warnings Observados
+## 08. Warnings Observados
 
 | Warning                                                          | Tipo                             | Tratamiento                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | :--------------------------------------------------------------- | :------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -328,7 +328,7 @@ El resultado de esta ejecución valida los scripts `build` de los workspaces par
 | `glob@10.5.0 deprecated`                                         | Subdependencia deprecated        | La advertencia corresponde a una dependencia transitiva del árbol instalado. No se modifica directamente desde el paquete mientras la dependencia directa que la incorpora no requiera una actualización compatible.                                                                                                                                                                                                                                                 |
 | `Ignored build scripts: @parcel/watcher, esbuild, unrs-resolver` | Advertencia de seguridad de pnpm | pnpm 10.16.1 informó que determinados scripts de instalación fueron bloqueados por el mecanismo de aprobación de build scripts. La instalación y las validaciones ejecutadas durante esta fase finalizaron correctamente, pero el warning no permite concluir por sí mismo que dichos scripts sean innecesarios. Su eventual aprobación deberá determinarse posteriormente según las herramientas que los consuman y los requisitos reales de ejecución del entorno. |
 
-### 8.1. Tratamiento de los warnings
+### 08.1. Tratamiento de los warnings
 
 Los warnings registrados durante `pnpm install` no impidieron completar la instalación ni las validaciones ejecutadas durante la Fase 3. Por esta razón, no se clasifican como fallos de implementación de la fase.
 
@@ -338,7 +338,7 @@ La existencia de estos warnings no modifica el resultado exitoso de las validaci
 
 ---
 
-## 9. Estado de la Fase
+## 09. Estado de la Fase
 
 | Aspecto            |                   Estado                    |
 | :----------------- | :-----------------------------------------: |
@@ -401,6 +401,7 @@ EE-IMP-006-P03 no sustituye ni modifica el contenido normativo de EE-DOC-006. La
 | :--------- | :--------- | :--------------------- | :--------------------- | :---------------------------------------- | :----------------------------------------------------- | :----------- |
 | **v1.0.0** | 2026-08-28 | Equipo de Arquitectura | Equipo de Arquitectura | Creación del DT de la Fase 3 — Workspaces | Documentar la implementación realizada                 | **Aprobado** |
 | **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Auditoría EE-DOC-006                      | As-built scripts/commands y estados documentales merge | Aprobado     |
+| **v1.1.1** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Normalización PC-006                      | Encabezados numerados a dos dígitos; sin `x.0`.        | Aprobado     |
 
 ---
 

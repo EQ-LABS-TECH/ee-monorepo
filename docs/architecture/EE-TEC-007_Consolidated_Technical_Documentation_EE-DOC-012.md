@@ -8,25 +8,25 @@ Documentación técnica consolidada (**as-built**) de la implementación de **EE
 
 ## METADATOS
 
-| Campo                 | Valor                                                  |
-| :-------------------- | :----------------------------------------------------- |
-| **ID**                | EE-TEC-007                                             |
-| **Documento**         | Consolidated Technical Documentation of EE-DOC-012     |
-| **Código corto**      | EE-TEC-007                                             |
-| **Tipo**              | Documento Técnico                                      |
-| **Clasificación**     | Implementación                                         |
-| **Nivel**             | Técnico                                                |
-| **Normativo**         | No                                                     |
-| **Versión**           | v1.0.0                                                 |
-| **Estado**            | Completado                                             |
-| **Propietario**       | Equipo de Arquitectura                                 |
-| **Documento padre**   | EE-DOC-012 — Templates (v0.5.0 Aprobado)               |
-| **Dependencias**      | EE-DOC-006, EE-DOC-011, EE-RFC-002, EE-IMP-012-P01…P06 |
-| **Aprobado por**      | Equipo de Arquitectura                                 |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                   |
-| **Fecha de creación** | 2026-10-02                                             |
-| **Última revisión**   | 2026-10-02                                             |
-| **Próxima revisión**  | 2026-12-31                                             |
+| Campo                 | Valor                                                                    |
+| :-------------------- | :----------------------------------------------------------------------- |
+| **ID**                | EE-TEC-007                                                               |
+| **Documento**         | Consolidated Technical Documentation of EE-DOC-012                       |
+| **Código corto**      | TEC-007                                                                  |
+| **Tipo**              | Documentación Técnica Consolidada                                        |
+| **Clasificación**     | Técnico / As-Built                                                       |
+| **Nivel**             | Técnico                                                                  |
+| **Normativo**         | No                                                                       |
+| **Versión**           | v1.0.1                                                                   |
+| **Estado**            | Completado                                                               |
+| **Propietario**       | Equipo de Arquitectura                                                   |
+| **Documento padre**   | EE-DOC-012 — Templates (v0.5.0 Aprobado)                                 |
+| **Dependencias**      | contenido=EE-DOC-006, EE-DOC-011, EE-DOC-012, EE-RFC-002, EE-IMP-012-P01 |
+| **Aprobado por**      | Equipo de Arquitectura                                                   |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                     |
+| **Fecha de creación** | 2026-10-02                                                               |
+| **Última revisión**   | 2026-11-04                                                               |
+| **Próxima revisión**  | 2026-12-31                                                               |
 
 ---
 
@@ -205,9 +205,10 @@ El sistema de templates está **implementado y validado** en el alcance inicial 
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Motivo                     | Estado         |
-| :--------- | :--------- | :--------------------- | :------------------------- | :------------- |
-| **v1.0.0** | 2026-10-02 | Equipo de Arquitectura | Consolidación post P01–P06 | **Completado** |
+| Versión    | Fecha      | Autor                  | Aprobado por | Motivo                                | Cambios                                                                                    | Estado         |
+| :--------- | :--------- | :--------------------- | :----------- | :------------------------------------ | :----------------------------------------------------------------------------------------- | :------------- |
+| **v1.0.0** | 2026-10-02 | Equipo de Arquitectura | —            | Consolidación post P01–P06            | —                                                                                          | **Completado** |
+| **v1.0.1** | 2026-11-04 | Equipo de Arquitectura | —            | PC-002/003: regularizacion documental | Historial 7 columnas; Tipo y Clasificacion alineados a EE-DOC-002 §05.1 y plantilla §18.4. | **Completado** |
 
 ---
 

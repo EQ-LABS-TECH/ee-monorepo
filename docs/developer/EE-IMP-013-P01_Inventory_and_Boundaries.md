@@ -6,27 +6,27 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 
 ## METADATOS
 
-| Campo                      | Valor                                                         |
-| :------------------------- | :------------------------------------------------------------ |
-| **ID**                     | EE-IMP-013-P01                                                |
-| **Documento**              | Inventory and Boundaries                                      |
-| **Código corto**           | EE-IMP-013-P01                                                |
-| **Fase**                   | Fase 3 — Core Components                                      |
-| **Fase de implementación** | P01 — Inventory and Boundaries (Implementación de EE-DOC-013) |
-| **Tipo**                   | Documento Técnico de Implementación                           |
-| **Clasificación**          | Implementación                                                |
-| **Nivel**                  | Técnico                                                       |
-| **Normativo**              | No                                                            |
-| **Versión**                | v1.1.0                                                        |
-| **Estado**                 | Completado                                                    |
-| **Propietario**            | Equipo de Arquitectura                                        |
-| **Documento padre**        | EE-DOC-013 — AI Ecosystem (Aprobado)                          |
-| **Dependencias**           | EE-DOC-004; EE-DOC-006; EE-DOC-010; EE-ADR-005; EE-DOC-001    |
-| **Aprobado por**           | Equipo de Arquitectura                                        |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps, IA                          |
-| **Fecha de creación**      | 2026-10-03                                                    |
-| **Última revisión**        | 2026-10-03                                                    |
-| **Próxima revisión**       | EE-IMP-013-P02                                                |
+| Campo                      | Valor                                                                |
+| :------------------------- | :------------------------------------------------------------------- |
+| **ID**                     | EE-IMP-013-P01                                                       |
+| **Documento**              | Inventory and Boundaries                                             |
+| **Código corto**           | IMP-013-P01                                                          |
+| **Fase**                   | Fase 3 — Core Components                                             |
+| **Fase de implementación** | P01 — Inventory and Boundaries (Implementación de EE-DOC-013)        |
+| **Tipo**                   | Documento Técnico de Implementación                                  |
+| **Clasificación**          | Implementación                                                       |
+| **Nivel**                  | Técnico                                                              |
+| **Normativo**              | No                                                                   |
+| **Versión**                | v1.1.0                                                               |
+| **Estado**                 | Completado                                                           |
+| **Propietario**            | Equipo de Arquitectura                                               |
+| **Documento padre**        | EE-DOC-013 — AI Ecosystem (Aprobado)                                 |
+| **Dependencias**           | contenido=EE-DOC-004, EE-DOC-006, EE-DOC-010, EE-ADR-005, EE-DOC-001 |
+| **Aprobado por**           | Equipo de Arquitectura                                               |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps, IA                                 |
+| **Fecha de creación**      | 2026-10-03                                                           |
+| **Última revisión**        | 2026-10-03                                                           |
+| **Próxima revisión**       | EE-IMP-013-P02                                                       |
 
 ---
 

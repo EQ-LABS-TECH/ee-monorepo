@@ -24,6 +24,12 @@
       "description": "Document title."
     },
     {
+      "name": "purpose",
+      "type": "string",
+      "required": false,
+      "description": "Optional purpose statement for section 01."
+    },
+    {
       "name": "relativePath",
       "type": "string",
       "required": true,

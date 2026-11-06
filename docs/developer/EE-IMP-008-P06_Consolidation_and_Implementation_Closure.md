@@ -10,7 +10,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | :-------------------- | :------------------------------------------------ |
 | **ID**                | EE-IMP-008-P06                                    |
 | **Documento**         | Consolidation and Implementation Closure          |
-| **Código corto**      | EE-IMP-008-P06                                    |
+| **Código corto**      | IMP-008-P06                                       |
 | **Fase**              | Fase 6 — Consolidation and Implementation Closure |
 | **Tipo**              | Documento Técnico de Implementación               |
 | **Clasificación**     | Implementación                                    |
@@ -20,7 +20,7 @@ Este documento registra la evidencia técnica de la implementación física y va
 | **Estado**            | Completado                                        |
 | **Propietario**       | Equipo de Arquitectura                            |
 | **Documento padre**   | EE-DOC-008 — Development Environment              |
-| **Dependencias**      | EE-DOC-008, EE-IMP-008-P01 … EE-IMP-008-P05       |
+| **Dependencias**      | contenido=EE-IMP-008-P01…P05                      |
 | **Aprobado por**      | Equipo de Arquitectura                            |
 | **Audiencia**         | Arquitectura, Desarrollo, DevOps                  |
 | **Fecha de creación** | 2026-09-24                                        |

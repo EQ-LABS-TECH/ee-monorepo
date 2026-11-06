@@ -6,25 +6,25 @@ Este documento sigue el estándar **EE-DOC-002 §18.3** y materializa la unidad 
 
 ## METADATOS
 
-| Campo                 | Valor                                              |
-| :-------------------- | :------------------------------------------------- |
-| **ID**                | EE-IMP-014-P04                                     |
-| **Documento**         | Minimum Capability (Knowledge)                     |
-| **Código corto**      | EE-IMP-014-P04                                     |
-| **Tipo**              | Documento Técnico de Implementación                |
-| **Clasificación**     | Implementación                                     |
-| **Nivel**             | Técnico                                            |
-| **Normativo**         | No                                                 |
-| **Versión**           | v1.1.0                                             |
-| **Estado**            | Completado                                         |
-| **Propietario**       | Equipo de Arquitectura                             |
-| **Documento padre**   | EE-DOC-014 — Knowledge Management                  |
-| **Dependencias**      | EE-DOC-014, EE-ADR-002, EE-DOC-010, EE-IMP-014-P03 |
-| **Aprobado por**      | Equipo de Arquitectura                             |
-| **Audiencia**         | Arquitectura, Desarrollo                           |
-| **Fecha de creación** | 2026-10-06                                         |
-| **Última revisión**   | 2026-10-06                                         |
-| **Unidad de fase**    | P04 de EE-DOC-014 §09.1                            |
+| Campo                 | Valor                                            |
+| :-------------------- | :----------------------------------------------- |
+| **ID**                | EE-IMP-014-P04                                   |
+| **Documento**         | Minimum Capability (Knowledge)                   |
+| **Código corto**      | IMP-014-P04                                      |
+| **Tipo**              | Documento Técnico de Implementación              |
+| **Clasificación**     | Implementación                                   |
+| **Nivel**             | Técnico                                          |
+| **Normativo**         | No                                               |
+| **Versión**           | v1.1.0                                           |
+| **Estado**            | Completado                                       |
+| **Propietario**       | Equipo de Arquitectura                           |
+| **Documento padre**   | EE-DOC-014 — Knowledge Management                |
+| **Dependencias**      | contenido=EE-ADR-002, EE-DOC-010, EE-IMP-014-P03 |
+| **Aprobado por**      | Equipo de Arquitectura                           |
+| **Audiencia**         | Arquitectura, Desarrollo                         |
+| **Fecha de creación** | 2026-10-06                                       |
+| **Última revisión**   | 2026-10-06                                       |
+| **Unidad de fase**    | P04 de EE-DOC-014 §09.1                          |
 
 ---
 

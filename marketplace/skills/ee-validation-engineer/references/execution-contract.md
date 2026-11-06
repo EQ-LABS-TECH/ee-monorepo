@@ -12,7 +12,7 @@ Nunca escribir al remoto ni a `main`. Solo `LOCAL_WRITE` en checkout local autor
 
 ## Hallazgos y evidencias
 
-Rutas/IDs deben existir o quedar `NO_VERIFICABLE`. Registrar descubrimientos de auditoría en propuestas de los tres artefactos canónicos `EE-AUD-Criteria_Audited_Definition.md`, `EE-AUD-Log_Progress_Register.md`, `EE-AUD-Rules_Emerging.md`, según finalidad; no añadir reglas emergentes duplicadas ni alterar criterios normativos sin gobernanza. `PROPUESTO_LOCAL`, `EXPORTADO` y `PUBLICADO_VERIFICADO` son diferentes.
+Rutas/IDs deben existir o quedar `NO_VERIFICABLE`. Registrar descubrimientos de auditoría en propuestas de los tres artefactos canónicos `EE-AUD-Criteria_Audited_Definition.md`, `EE-AUD-Log_Progress_Register.md`, `EE-AUD-Rules_Register.md`, según finalidad; no añadir reglas emergentes duplicadas ni alterar criterios normativos sin gobernanza. `PROPUESTO_LOCAL`, `EXPORTADO` y `PUBLICADO_VERIFICADO` son diferentes.
 
 ## Gobernanza
 

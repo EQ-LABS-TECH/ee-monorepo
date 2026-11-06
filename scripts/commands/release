@@ -28,6 +28,11 @@ import {
   executeVerifiedRelease,
   verifyReconstructedReleasePlan,
 } from '../lib/reconstruct-release-plan.mjs';
+import {
+  classifyReleasePlan,
+  finalizeInternalRelease,
+  getReleaseTag,
+} from '../lib/internal-release.mjs';
 
 const ROOT = process.cwd();
 const DEFAULT_BRANCHES = new Set(['main', 'master']);
@@ -276,7 +281,7 @@ async function prepareRelease() {
   const currentPackages = readWorkspacePackages(ROOT, readWorkspacePackageList());
   const currentPackageMap = new Map(currentPackages.map((pkg) => [pkg.name, pkg]));
 
-  const publicPlannedReleases = releasePlan.releases.filter((release) => {
+  const plannedReleases = releasePlan.releases.filter((release) => {
     const pkg = currentPackageMap.get(release.name);
 
     if (!pkg) {
@@ -286,16 +291,14 @@ async function prepareRelease() {
     return pkg.private === false;
   });
 
-  if (publicPlannedReleases.length === 0) {
-    throw new Error(
-      'Changesets contains no public package releases. ' +
-        'Release preparation stopped without Git mutations.',
-    );
-  }
-
   const nextVersion = calculateNextRootVersion(previousVersion, releasePlan.releaseType);
-  const tag = `v${nextVersion}`;
-  const releaseBranch = `release/${tag}`;
+  const releaseType = plannedReleases.some(
+    (release) => currentPackageMap.get(release.name).private === false,
+  )
+    ? 'public'
+    : 'internal';
+  const tag = getReleaseTag(releaseType, nextVersion);
+  const releaseBranch = `release/v${nextVersion}`;
 
   assertNoTagConflict(tag);
   assertRemoteTagDoesNotExist(tag);
@@ -314,7 +317,7 @@ async function prepareRelease() {
     throw new Error(`Local branch ${releaseBranch} already exists; inspect it before retrying`);
   }
 
-  console.log(`\nPreparing ${tag} on ${releaseBranch}`);
+  console.log(`\nPreparing ${releaseType} release ${tag} on ${releaseBranch}`);
   console.log(`  Changesets: ${changesets.length}`);
   console.log(`  Release type: ${releasePlan.releaseType}`);
 
@@ -489,10 +492,7 @@ async function publishRelease() {
   assertCleanWorkingTree();
 
   const version = getRootVersion();
-  const tag = `v${version}`;
   const head = captureCommand('git', ['rev-parse', 'HEAD'], 'Resolving release commit');
-
-  assertNoTagConflict(tag);
 
   const workspaceList = readWorkspacePackageList();
   const packages = readWorkspacePackages(ROOT, workspaceList);
@@ -516,7 +516,11 @@ async function publishRelease() {
     workspacePackages: packages,
   });
 
-  const plannedPackages = getPlannedPublicPackages(manifest);
+  const { releaseType } = classifyReleasePlan(manifest);
+  const plannedPackages = releaseType === 'public' ? getPlannedPublicPackages(manifest) : [];
+  const tag = getReleaseTag(releaseType, version);
+
+  assertNoTagConflict(tag);
 
   const baseCommitCheck = spawnSync(
     'git',
@@ -653,6 +657,27 @@ async function publishRelease() {
         throw new Error(
           `Remote release tag ${tag} points to ${remoteState.targetCommit}, not HEAD ${head}. Refusing to publish or move the tag.`,
         );
+      }
+
+      if (releaseType === 'internal') {
+        const result = await finalizeInternalRelease({
+          validate: () => execCommand('pnpm', ['validate'], 'Running validation'),
+          build: () => execCommand('pnpm', ['run', 'build'], 'Building workspaces'),
+          inspectTag,
+          createTag: () => createTag(tag),
+        });
+
+        console.log(
+          result.state === 'already-complete'
+            ? '\nInternal release already completed; verified existing remote tag.'
+            : '\nInternal release finalized; no npm package was published.',
+        );
+        console.log(`  Version: ${version}`);
+        console.log(`  Tag: ${tag}`);
+        if (result.state === 'created') {
+          console.log(`\nPush the tag only after this command succeeds:\n  git push origin ${tag}`);
+        }
+        return;
       }
 
       if (remoteState.state === 'matches') {

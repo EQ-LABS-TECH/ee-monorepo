@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+import { scanDocumentationCorpus } from '../lib/documentation-conformance.mjs';
+
+const root = process.cwd();
+
+try {
+  const result = scanDocumentationCorpus(root);
+  console.log('PA-001 documentation baseline (informational; not a quality gate)');
+  console.log(`Core governed documents scanned: ${result.filesScanned}`);
+  console.log(
+    `VAL/WAIVE records deferred to their type-specific contract: ${result.specialFilesDeferred}`,
+  );
+  console.log(`Deterministic findings: ${result.findings.length}`);
+
+  for (const finding of result.findings) {
+    const location = finding.line ? `${finding.path}:${finding.line}` : finding.path;
+    console.log(`${finding.code}: ${location} — ${finding.detail}`);
+  }
+
+  console.log(
+    'This scan does not issue a corpus conformance verdict. Content, hierarchy, links, diagrams, and implementation consistency still require governed review.',
+  );
+  console.log('Exit 0 means the inventory completed; it does not mean PASS.');
+} catch (error) {
+  console.error(
+    `PA-001 documentation baseline could not complete: ${error instanceof Error ? error.message : String(error)}`,
+  );
+  process.exitCode = 1;
+}

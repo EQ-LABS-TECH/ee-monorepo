@@ -12,3 +12,11 @@
 | **expires_at**         | 2026-10-14                                                                                                  |
 | **normalization_plan** | Re-audit when sprintf-js patches or jest drops the path; track GHSA-hp3w-g68c-fv3c                          |
 | **Refs**               | EE-DOC-010, EE-DOC-015, EE-IMP-015-P01                                                                      |
+
+---
+
+## 06. Historial de Cambios
+
+| Versión | Fecha      | Autor | Aprobado por | Motivo                        | Cambios                                                                                        | Estado |
+| :------ | :--------- | :---- | :----------- | :---------------------------- | :--------------------------------------------------------------------------------------------- | :----- |
+| —       | 2026-11-04 | —     | —            | PC-002: formato del historial | Se registra el requisito de siete columnas; la procedencia anterior no consta en el artefacto. | —      |

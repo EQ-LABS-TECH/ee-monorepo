@@ -6,29 +6,29 @@ Este documento registra la decisión arquitectónica correspondiente para el Eng
 
 ## METADATOS
 
-| Campo                      | Valor                                                                      |
-| -------------------------- | -------------------------------------------------------------------------- |
-| **ID**                     | EE-ADR-006                                                                 |
-| **Documento**              | Workflow-AI Interaction via Injected Ports                                 |
-| **Código corto**           | ADR-006                                                                    |
-| **Tipo**                   | Architectural Decision Record                                              |
-| **Clasificación**          | Arquitectura / Decisión Arquitectónica                                     |
-| **Nivel**                  | Estratégico                                                                |
-| **Normativo**              | Sí                                                                         |
-| **Versión**                | v1.0.0                                                                     |
-| **Estado**                 | Aprobado                                                                   |
-| **Propietario**            | Equipo de Arquitectura                                                     |
-| **Documento padre**        | EE-DOC-004                                                                 |
-| **Dependencias**           | padre=EE-DOC-004; contenido=EE-DOC-004, EE-DOC-006, EE-DOC-013, EE-DOC-014 |
-| **Fase**                   | —                                                                          |
-| **Fase de implementación** | —                                                                          |
-| **Decisión relacionada**   | EE-ADR-005 — AI Provider SPI and Connector Adapters                        |
-| **Prioridad**              | Alta                                                                       |
-| **Aprobado por**           | Equipo de Arquitectura                                                     |
-| **Audiencia**              | Arquitectura, Desarrollo, IA                                               |
-| **Fecha de creación**      | 2026-10-18                                                                 |
-| **Última revisión**        | 2026-10-18                                                                 |
-| **Próxima revisión**       | —                                                                          |
+| Campo                      | Valor                                               |
+| -------------------------- | --------------------------------------------------- |
+| **ID**                     | EE-ADR-006                                          |
+| **Documento**              | Workflow-AI Interaction via Injected Ports          |
+| **Código corto**           | ADR-006                                             |
+| **Tipo**                   | Architectural Decision Record                       |
+| **Clasificación**          | Arquitectura / Decisión Arquitectónica              |
+| **Nivel**                  | Estratégico                                         |
+| **Normativo**              | Sí                                                  |
+| **Versión**                | v1.0.0                                              |
+| **Estado**                 | Aprobado                                            |
+| **Propietario**            | Equipo de Arquitectura                              |
+| **Documento padre**        | EE-DOC-004                                          |
+| **Dependencias**           | contenido=EE-DOC-006, EE-DOC-013, EE-DOC-014        |
+| **Fase**                   | —                                                   |
+| **Fase de implementación** | —                                                   |
+| **Decisión relacionada**   | EE-ADR-005 — AI Provider SPI and Connector Adapters |
+| **Prioridad**              | Alta                                                |
+| **Aprobado por**           | Equipo de Arquitectura                              |
+| **Audiencia**              | Arquitectura, Desarrollo, IA                        |
+| **Fecha de creación**      | 2026-10-18                                          |
+| **Última revisión**        | 2026-10-18                                          |
+| **Próxima revisión**       | —                                                   |
 
 ---
 
@@ -246,10 +246,10 @@ No se introduce ningún puerto nuevo en este ADR. El ADR fija la regla de no imp
 
 ## 12. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                    | Cambios                                                                                             | Estado    |
-| ---------- | ---------- | ---------------------- | ---------------------- | ------------------------- | --------------------------------------------------------------------------------------------------- | --------- |
-| **v0.1.0** | 2026-10-18 | Equipo de Arquitectura | —                      | Creación inicial          | Resolución de contradicción 004 ↔ 006 sobre aristas Intelligence-Execution y Knowledge-Intelligence | Propuesto |
-| **v1.0.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica | ADR aprobado; habilita implementación de los cambios en 004, 006 y 013                              | Aprobado  |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                    | Cambios                                                                                             | Estado        |
+| ---------- | ---------- | ---------------------- | ---------------------- | ------------------------- | --------------------------------------------------------------------------------------------------- | ------------- |
+| **v0.1.0** | 2026-10-18 | Equipo de Arquitectura | —                      | Creación inicial          | Resolución de contradicción 004 ↔ 006 sobre aristas Intelligence-Execution y Knowledge-Intelligence | **Propuesto** |
+| **v1.0.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación arquitectónica | ADR aprobado; habilita implementación de los cambios en 004, 006 y 013                              | **Aprobado**  |
 
 ---
 

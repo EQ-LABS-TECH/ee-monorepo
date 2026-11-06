@@ -6,25 +6,25 @@ Este documento sigue el estándar **EE-DOC-002 §18.3** y materializa la unidad 
 
 ## METADATOS
 
-| Campo                 | Valor                                                                          |
-| :-------------------- | :----------------------------------------------------------------------------- |
-| **ID**                | EE-IMP-014-P03                                                                 |
-| **Documento**         | Knowledge Port ABI                                                             |
-| **Código corto**      | EE-IMP-014-P03                                                                 |
-| **Tipo**              | Documento Técnico de Implementación                                            |
-| **Clasificación**     | Implementación                                                                 |
-| **Nivel**             | Técnico                                                                        |
-| **Normativo**         | No                                                                             |
-| **Versión**           | v1.1.0                                                                         |
-| **Estado**            | Completado                                                                     |
-| **Propietario**       | Equipo de Arquitectura                                                         |
-| **Documento padre**   | EE-DOC-014 — Knowledge Management                                              |
-| **Dependencias**      | EE-DOC-006, EE-DOC-013, EE-DOC-014, EE-IMP-014-P01, EE-IMP-014-P02, EE-ADR-005 |
-| **Aprobado por**      | Equipo de Arquitectura                                                         |
-| **Audiencia**         | Arquitectura, Desarrollo                                                       |
-| **Fecha de creación** | 2026-10-06                                                                     |
-| **Última revisión**   | 2026-10-06                                                                     |
-| **Unidad de fase**    | P03 de EE-DOC-014 §09.1                                                        |
+| Campo                 | Valor                                                                        |
+| :-------------------- | :--------------------------------------------------------------------------- |
+| **ID**                | EE-IMP-014-P03                                                               |
+| **Documento**         | Knowledge Port ABI                                                           |
+| **Código corto**      | IMP-014-P03                                                                  |
+| **Tipo**              | Documento Técnico de Implementación                                          |
+| **Clasificación**     | Implementación                                                               |
+| **Nivel**             | Técnico                                                                      |
+| **Normativo**         | No                                                                           |
+| **Versión**           | v1.1.0                                                                       |
+| **Estado**            | Completado                                                                   |
+| **Propietario**       | Equipo de Arquitectura                                                       |
+| **Documento padre**   | EE-DOC-014 — Knowledge Management                                            |
+| **Dependencias**      | contenido=EE-DOC-006, EE-DOC-013, EE-DOC-014, EE-IMP-014-P01…P02, EE-ADR-005 |
+| **Aprobado por**      | Equipo de Arquitectura                                                       |
+| **Audiencia**         | Arquitectura, Desarrollo                                                     |
+| **Fecha de creación** | 2026-10-06                                                                   |
+| **Última revisión**   | 2026-10-06                                                                   |
+| **Unidad de fase**    | P03 de EE-DOC-014 §09.1                                                      |
 
 ---
 

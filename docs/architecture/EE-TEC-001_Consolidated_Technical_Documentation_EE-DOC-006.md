@@ -6,25 +6,25 @@ Este documento sigue el estándar EE-DOC-002 — Document Design Template y regi
 
 ## METADATOS
 
-| Campo                 | Valor                                                               |
-| --------------------- | ------------------------------------------------------------------- |
-| **ID**                | EE-TEC-001                                                          |
-| **Documento**         | Consolidated Technical Documentation of EE-DOC-006                  |
-| **Código corto**      | TEC-001                                                             |
-| **Tipo**              | Documento Técnico                                                   |
-| **Clasificación**     | Implementación                                                      |
-| **Nivel**             | Técnico                                                             |
-| **Normativo**         | No                                                                  |
-| **Versión**           | v1.1.0                                                              |
-| **Estado**            | Congelado                                                           |
-| **Propietario**       | Equipo de Arquitectura                                              |
-| **Documento padre**   | EE-DOC-006                                                          |
-| **Dependencias**      | EE-DOC-006, EE-IMP-006-P01 … EE-IMP-006-P08, EE-ADR-001, EE-ADR-002 |
-| **Aprobado por**      | Equipo de Arquitectura                                              |
-| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                                |
-| **Fecha de creación** | 2026-09-20                                                          |
-| **Última revisión**   | 2026-10-19                                                          |
-| **Próxima revisión**  | No aplica — Documento Congelado                                     |
+| Campo                 | Valor                                                |
+| --------------------- | ---------------------------------------------------- |
+| **ID**                | EE-TEC-001                                           |
+| **Documento**         | Consolidated Technical Documentation of EE-DOC-006   |
+| **Código corto**      | TEC-001                                              |
+| **Tipo**              | Documentación Técnica Consolidada                    |
+| **Clasificación**     | Técnico / As-Built                                   |
+| **Nivel**             | Técnico                                              |
+| **Normativo**         | No                                                   |
+| **Versión**           | v1.1.2                                               |
+| **Estado**            | Congelado                                            |
+| **Propietario**       | Equipo de Arquitectura                               |
+| **Documento padre**   | EE-DOC-006                                           |
+| **Dependencias**      | contenido=EE-IMP-006-P01…P08, EE-ADR-001, EE-ADR-002 |
+| **Aprobado por**      | Equipo de Arquitectura                               |
+| **Audiencia**         | Arquitectura, Desarrollo, DevOps, IA                 |
+| **Fecha de creación** | 2026-09-20                                           |
+| **Última revisión**   | 2026-11-05                                           |
+| **Próxima revisión**  | No aplica — Documento Congelado                      |
 
 ---
 
@@ -129,6 +129,11 @@ ee-monorepo/
 │       └── notebooklm/
 ├── data/                                 # Layout: benchmarks/, datasets/, models/
 ├── docs/                                 # EE-DOC / ADR / IMP / RFC / validation (repo de trabajo)
+│   └── validation/
+│       ├── audit/
+│       ├── evidence/
+│       ├── reports/
+│       └── waivers/
 ├── examples/                             # Layout: ddd/, erp/, microservices/
 ├── infra/                                # EE-RFC-001
 │   ├── containers/
@@ -536,10 +541,12 @@ La validación integral de estructura se ejecuta mediante `pnpm validate` (Fases
 
 ## 17. Historial de Cambios
 
-| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                  | Cambios                                                           | Estado    |
-| :--------- | :--------- | :--------------------- | :--------------------- | :-------------------------------------- | :---------------------------------------------------------------- | :-------- |
-| **v1.0.0** | 2026-09-20 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre documentación técnica EE-DOC-006 | Consolidación IMP-006-P01…P08 e inventario                        | Congelado |
-| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | As-built auditoría 006                  | §04 árbol commands/playwright/tops; Node 24; Código corto TEC-001 | Congelado |
+| Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                  | Cambios                                                                          | Estado    |
+| :--------- | :--------- | :--------------------- | :--------------------- | :-------------------------------------- | :------------------------------------------------------------------------------- | :-------- |
+| **v1.0.0** | 2026-09-20 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre documentación técnica EE-DOC-006 | Consolidación IMP-006-P01…P08 e inventario                                       | Congelado |
+| **v1.1.0** | 2026-10-18 | Equipo de Arquitectura | Equipo de Arquitectura | As-built auditoría 006                  | §04 árbol commands/playwright/tops; Node 24; Código corto TEC-001                | Congelado |
+| **v1.1.1** | 2026-11-04 | Equipo de Arquitectura | Equipo de Arquitectura | Correccion PC-003                       | Tipo y Clasificacion alineados a EE-DOC-002 §05.1 y plantilla §18.4.             | Congelado |
+| **v1.1.2** | 2026-11-05 | Equipo de Arquitectura | Equipo de Arquitectura | Cierre PN-031                           | Arbol as-built incorpora audit, evidence, reports y waivers bajo docs/validation | Congelado |
 
 ---
 

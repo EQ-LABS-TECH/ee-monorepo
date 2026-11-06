@@ -6,27 +6,27 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 
 ## METADATOS
 
-| Campo                      | Valor                                                                                        |
-| :------------------------- | :------------------------------------------------------------------------------------------- |
-| **ID**                     | EE-IMP-010-P02                                                                               |
-| **Documento**              | Core Gates Activation                                                                        |
-| **Código corto**           | EE-IMP-010-P02                                                                               |
-| **Fase**                   | Fase 3 — Core Components                                                                     |
-| **Fase de implementación** | P02 — Core Gates Activation (Implementación de EE-DOC-010)                                   |
-| **Tipo**                   | Documento Técnico de Implementación                                                          |
-| **Clasificación**          | Implementación                                                                               |
-| **Nivel**                  | Técnico                                                                                      |
-| **Normativo**              | No                                                                                           |
-| **Versión**                | v1.1.0                                                                                       |
-| **Estado**                 | Completado                                                                                   |
-| **Propietario**            | Equipo de Arquitectura                                                                       |
-| **Documento padre**        | EE-DOC-010 — Quality Gates (v1.1.0 Aprobado)                                                 |
-| **Dependencias**           | EE-DOC-005 §10.4, EE-DOC-006, EE-DOC-007, EE-DOC-010, EE-ADR-002, EE-ADR-004, EE-IMP-010-P01 |
-| **Aprobado por**           | Equipo de Arquitectura                                                                       |
-| **Audiencia**              | Arquitectura, Desarrollo, DevOps, QA                                                         |
-| **Fecha de creación**      | 2026-09-29                                                                                   |
-| **Última revisión**        | 2026-09-29                                                                                   |
-| **Próxima revisión**       | 2026-12-29                                                                                   |
+| Campo                      | Valor                                                                                      |
+| :------------------------- | :----------------------------------------------------------------------------------------- |
+| **ID**                     | EE-IMP-010-P02                                                                             |
+| **Documento**              | Core Gates Activation                                                                      |
+| **Código corto**           | IMP-010-P02                                                                                |
+| **Fase**                   | Fase 3 — Core Components                                                                   |
+| **Fase de implementación** | P02 — Core Gates Activation (Implementación de EE-DOC-010)                                 |
+| **Tipo**                   | Documento Técnico de Implementación                                                        |
+| **Clasificación**          | Implementación                                                                             |
+| **Nivel**                  | Técnico                                                                                    |
+| **Normativo**              | No                                                                                         |
+| **Versión**                | v1.1.0                                                                                     |
+| **Estado**                 | Completado                                                                                 |
+| **Propietario**            | Equipo de Arquitectura                                                                     |
+| **Documento padre**        | EE-DOC-010 — Quality Gates (v1.1.0 Aprobado)                                               |
+| **Dependencias**           | contenido=EE-DOC-005 §10.4, EE-DOC-006, EE-DOC-007, EE-ADR-002, EE-ADR-004, EE-IMP-010-P01 |
+| **Aprobado por**           | Equipo de Arquitectura                                                                     |
+| **Audiencia**              | Arquitectura, Desarrollo, DevOps, QA                                                       |
+| **Fecha de creación**      | 2026-09-29                                                                                 |
+| **Última revisión**        | 2026-09-29                                                                                 |
+| **Próxima revisión**       | 2026-12-29                                                                                 |
 
 ---
 
