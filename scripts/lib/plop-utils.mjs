@@ -35,6 +35,7 @@ export function assertDocIdUnique(docId, docsRoot) {
         `cannot read ${dir} while checking docId ${docId}: ${
           err instanceof Error ? err.message : String(err)
         }`,
+        { cause: err },
       );
     }
 
@@ -61,6 +62,7 @@ export function assertDocIdUnique(docId, docsRoot) {
           `cannot read ${full} while checking docId ${docId}: ${
             err instanceof Error ? err.message : String(err)
           }`,
+          { cause: err },
         );
       }
       const match = text.match(ID_FIELD);

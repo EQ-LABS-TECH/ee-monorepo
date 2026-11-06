@@ -118,7 +118,7 @@ Shared configurations are implemented as ECMAScript modules.
 
 ## Dependencies
 
-The package uses ESLint 9 and the modern `typescript-eslint` configuration model.
+The package uses ESLint 10 and the modern `typescript-eslint` configuration model. It resolves the TypeScript 6 API for lint tooling while workspaces can use the TypeScript 7 compiler.
 
 The consuming workspace is responsible for providing the ESLint runtime.
 

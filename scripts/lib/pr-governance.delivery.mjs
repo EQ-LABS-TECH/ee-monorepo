@@ -102,12 +102,13 @@ export async function processPrGovernanceDelivery({
       const release = await store.release(id, claimToken);
 
       if (release?.status !== 'RELEASED') {
-        throw new Error('PN-017 delivery release was not confirmed');
+        throw new Error('PN-017 delivery release was not confirmed', { cause: error });
       }
     } catch (releaseError) {
       throw new AggregateError(
         [error, releaseError],
         'PN-017 delivery execution and lease release failed',
+        { cause: releaseError },
       );
     }
 
