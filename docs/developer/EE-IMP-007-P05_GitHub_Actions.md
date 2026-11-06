@@ -332,13 +332,13 @@ Las subsecciones §08.1, §08.3 y §08.4 conservan evidencia histórica capturad
 
 ### 08.2. Workflow
 
-| Workflow                           | Eventos as-built                                                                                                                                                                                                                             |
-| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.github/workflows/ci.yml`         | `pull_request`; valida cambios del PR y cancela una ejecución CI anterior del mismo grupo/ref.                                                                                                                                               |
-| `.github/workflows/governance.yml` | `pull_request_review` usa relays sin secretos con orden por número de ejecución; el más reciente puede solicitar `workflow_dispatch` en `main`. También reconcilia finalización de `CI`, comentarios y horario; cola global sin cancelación. |
-| `.github/workflows/ci-main.yml`    | `push` → `main` y ejecución manual; job `Validate Main`.                                                                                                                                                                                     |
+| Workflow                           | Eventos as-built                                                                                                                                              |
+| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `.github/workflows/ci.yml`         | `pull_request` y `pull_request_review`; en fase 1 las reviews aún ejecutan CI.                                                                                |
+| `.github/workflows/governance.yml` | Reconcilia finalización de `CI`, comentarios y horario; cola global sin cancelación. La activación del relay de revisiones queda para la segunda integración. |
+| `.github/workflows/ci-main.yml`    | `push` → `main` y ejecución manual; job `Validate Main`.                                                                                                      |
 
-Las reviews no inician el workflow `CI`. GitHub crea un run relay por cada evento `pull_request_review`; no hay una ventana temporal de espera. El relay no accede al environment ni a sus secretos. Usa los números de ejecución de la historia paginada para descartar señales anteriores y comprueba de nuevo el PR, el HEAD y `Validate` antes del dispatch. El nombre del dispatch incluye PR, HEAD y run de review para evitar volver a solicitar el mismo evento; un dispatch protegido pendiente para el mismo PR/HEAD ya procesará la evidencia actual. Un CI cancelado nunca satisface el gate.
+Durante la primera integración, las reviews todavía inician `CI`; ese trigger se retirará en la segunda integración, cuando el relay esté disponible en `main` y pueda sustituirlo.
 
 ### 08.3. Specialization Type B — Node 20 deprecation on Actions
 
@@ -382,11 +382,11 @@ La existencia de estos pasos no acredita, por sí sola, una publicación npm exi
 
 ### 08.6. Reconciliación de eventos de revisión
 
-`pull_request_review` (`submitted`, `edited` y `dismissed`) crea un run relay sin secretos por cada webhook. La cola global del workflow mantiene serializados los relays y las reconciliaciones. Cada relay compara su `run_number` con la historia paginada del mismo PR: un evento sustituido termina como `SUPERSEDED`; si `Validate` no pasó para el HEAD actual termina como `WAITING_FOR_CI`; y si ya existe un dispatch para el mismo evento o un dispatch protegido activo para el mismo PR/HEAD termina como `ALREADY_CURRENT`. Antes de despachar vuelve a comprobar orden, PR, HEAD y `Validate`. El resultado operativo incluye estado, PR, SHA y run ID, sin secretos. El relay solicita mediante `GITHUB_TOKEN` un `workflow_dispatch` con `ref: main`, número de PR, SHA y run de review. La ejecución protegida de `main` resuelve nuevamente el PR y verifica que el SHA solicitado siga siendo el HEAD actual antes de evaluar. El environment `governance-main` permanece restringido a `main`; ningún job ejecutado en `refs/pull/*/merge` accede a sus secretos.
+La primera integración incorpora la implementación confiable del relay (`scripts/commands/relay` y sus dependencias) y sus regresiones, pero no activa un trigger nuevo. El flujo operativo permanece igual durante esta fase: `CI` recibe eventos de revisión y Governance reconcilia al terminar `CI`.
 
-El job relay instala y ejecuta el script desde un checkout de `main`, con persistencia de credenciales desactivada y sin asociarse al environment protegido. Como `pull_request_review` usa el workflow del branch predeterminado, el primer despliegue debe integrar juntos el workflow y el script confiable; esta implementación entra en vigor para los eventos posteriores a esa integración.
+La segunda integración activará `pull_request_review` y el job relay. Este hará checkout de `main`, desactivará la persistencia de credenciales e instalará dependencias con `pnpm install --frozen-lockfile`; no se asociará al environment protegido. Solo después de integrar la primera fase estará disponible el script ejecutado por ese job. La segunda fase retirará el trigger de review de `CI`, evitando que cada aprobación vuelva a ejecutar la validación completa.
 
-El workflow `CI` se ejecuta ante cambios del Pull Request, no por cada review. Los eventos cercanos pueden crear varios runs relay visibles; el orden por run number, la serialización global y la deduplicación del dispatch evitan que señales obsoletas generen verificaciones protegidas redundantes. Un run relay que encuentre `Validate` pendiente termina sin dispatch; la finalización exitosa de CI activa la reconciliación. Si una review nueva llega después de que el dispatch anterior haya terminado, es una nueva señal y puede requerir otra evaluación. La evaluación protegida consulta de nuevo el HEAD, `Validate`, las aprobaciones vigentes y la elegibilidad de revisores. Una review nunca vuelve a ejecutar CI.
+La prueba real de eventos `dismissed` y de dos aprobaciones cercanas corresponde a la validación posterior a la segunda integración. Las pruebas de la primera fase cubren la lógica del relay y sus estados, pero no afirman que el evento esté activo en GitHub.
 
 ---
 
