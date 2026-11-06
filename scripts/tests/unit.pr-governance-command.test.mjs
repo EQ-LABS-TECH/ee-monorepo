@@ -119,6 +119,28 @@ test('waits for Validate without publishing a governance result', async () => {
   });
 });
 
+test('rejects the obsolete silent waiting-for-approvals result', async () => {
+  await assert.rejects(
+    executeGovernanceCommand({
+      env: { ...env, GOVERNANCE_WAIT_FOR_APPROVALS: 'true' },
+      run: async () => ({
+        mode: 'WAITING_FOR_APPROVALS',
+        headSha: sha,
+        classification: 'ORDINARY',
+        ownershipEvidenceVerified: true,
+        decision: {
+          status: 'BLOCKED',
+          reasons: ['insufficient-qualified-approvals'],
+          qualifiedApprovalCount: 0,
+          requiredCount: 1,
+        },
+      }),
+      log: () => {},
+    }),
+    /Invalid PN-017 execution result/,
+  );
+});
+
 test('inconsistent evaluation result is rejected', async () => {
   await assert.rejects(
     executeGovernanceCommand({

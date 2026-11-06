@@ -247,7 +247,7 @@ function successfulFixture({
     },
   };
 
-  const reviews = reviewEvents ?? [
+  let reviews = reviewEvents ?? [
     {
       user: { login: 'architect' },
       state: 'APPROVED',
@@ -261,6 +261,7 @@ function successfulFixture({
   ];
 
   let reviewReadCount = 0;
+  let governanceChecks = [];
 
   const fetchImpl = async (url, init) => {
     const method = init.method;
@@ -328,16 +329,8 @@ function successfulFixture({
       };
     } else if (method === 'GET' && url.includes('/commits/') && url.includes('/check-runs?')) {
       data = {
-        total_count: 1,
-        check_runs: [
-          {
-            id: 456,
-            app: { id: 789 },
-            name: 'PR Governance',
-            head_sha: headSha,
-            started_at: '2026-10-30T12:00:00Z',
-          },
-        ],
+        total_count: governanceChecks.length,
+        check_runs: governanceChecks,
       };
     } else if (url.endsWith('/check-runs/456') && method === 'GET') {
       data = {
@@ -362,6 +355,14 @@ function successfulFixture({
         head_sha: headSha,
         status: 'in_progress',
       };
+      governanceChecks.unshift({
+        id: 456,
+        app: { id: 789 },
+        name: 'PR Governance',
+        head_sha: headSha,
+        status: 'in_progress',
+        started_at: '2026-10-30T12:00:00Z',
+      });
     } else if (url.endsWith('/check-runs/456') && method === 'PATCH') {
       const payload = JSON.parse(init.body);
 
@@ -372,6 +373,11 @@ function successfulFixture({
         id: 456,
         name: 'PR Governance',
         head_sha: headSha,
+        status: 'completed',
+        conclusion: payload.conclusion,
+      };
+      governanceChecks[0] = {
+        ...governanceChecks[0],
         status: 'completed',
         conclusion: payload.conclusion,
       };
@@ -396,7 +402,13 @@ function successfulFixture({
     };
   };
 
-  return { fetchImpl, calls };
+  return {
+    fetchImpl,
+    calls,
+    setReviews(nextReviews) {
+      reviews = nextReviews;
+    },
+  };
 }
 
 test('ordinary governance completes the same check with success', async () => {
@@ -438,6 +450,61 @@ test('critical governance with one approval completes as failure', async () => {
   assert.equal(mock.calls.filter(({ method }) => method === 'POST').length, 1);
 
   assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 1);
+});
+
+test('publishes an approval block immediately and passes after a later approval', async () => {
+  const mock = successfulFixture({ reviewEvents: [] });
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      waitForApprovalReadiness: true,
+      deduplicateSuccessfulChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  const blocked = await reconcile();
+
+  assert.equal(blocked.mode, 'EVALUATION_AND_PUBLICATION');
+  assert.equal(blocked.classification, 'ORDINARY');
+  assert.equal(blocked.decision.status, 'BLOCKED');
+  assert.equal(blocked.conclusion, 'failure');
+  assert.equal(mock.calls.filter(({ method }) => method === 'POST').length, 1);
+  assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 1);
+
+  const blockedPayload = mock.calls.find(({ method }) => method === 'PATCH').body;
+  assert.equal(blockedPayload.output.title, 'PN-017 governance blocked');
+  assert.match(blockedPayload.output.summary, /Qualified approvals: 0 \/ 1/);
+  assert.match(
+    blockedPayload.output.summary,
+    /The qualified approval threshold has not been met\./,
+  );
+
+  mock.setReviews([
+    {
+      user: { login: 'architect' },
+      state: 'APPROVED',
+      commit_id: headSha,
+      submitted_at: '2026-10-29T00:00:00Z',
+      body: 'Approved after initial block',
+    },
+  ]);
+
+  const passed = await reconcile();
+
+  assert.equal(passed.mode, 'EVALUATION_AND_PUBLICATION');
+  assert.equal(passed.classification, 'ORDINARY');
+  assert.equal(passed.decision.status, 'PASS');
+  assert.equal(passed.conclusion, 'success');
+  assert.equal(mock.calls.filter(({ method }) => method === 'POST').length, 2);
+  assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 2);
+
+  const completedPayloads = mock.calls
+    .filter(({ method }) => method === 'PATCH')
+    .map(({ body }) => body);
+  assert.deepEqual(
+    completedPayloads.map(({ conclusion }) => conclusion),
+    ['failure', 'success'],
+  );
 });
 
 test('missing trusted App identity prevents all API calls', async () => {
