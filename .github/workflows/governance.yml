@@ -156,6 +156,8 @@ jobs:
     permissions:
       actions: write
       contents: read
+      pull-requests: read
+      checks: read
 
     steps:
       - name: Dispatch governance verification on main
@@ -165,8 +167,75 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+          GOVERNANCE_APP_ID: ${{ vars.EE_GOVERNANCE_APP_ID }}
         run: |
           set -euo pipefail
+
+          api_get() {
+            curl --fail-with-body --silent --show-error \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H 'Accept: application/vnd.github+json' \
+              -H 'X-GitHub-Api-Version: 2022-11-28' "$1"
+          }
+
+          runs_url="https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/governance.yml/runs?event=pull_request_review&per_page=100"
+          runs=$(api_get "$runs_url")
+
+          latest_review_run=$(jq -er \
+            --argjson pr_number "$PR_NUMBER" \
+            '[.workflow_runs[] | select(any(.pull_requests[]?; .number == $pr_number)) | .created_at] | max // error("No review workflow run found for this PR")' \
+            <<< "$runs")
+          latest_review_epoch=$(date -u -d "$latest_review_run" +%s)
+          current_epoch=$(date -u +%s)
+          quiet_window_remaining=$((30 - (current_epoch - latest_review_epoch)))
+
+          if (( quiet_window_remaining > 0 )); then
+            sleep "$quiet_window_remaining"
+          fi
+
+          runs=$(api_get "$runs_url")
+          newer_review_runs=$(jq -er \
+            --argjson current_run "$GITHUB_RUN_NUMBER" \
+            --argjson pr_number "$PR_NUMBER" \
+            '[.workflow_runs[] | select(.run_number > $current_run) | select(any(.pull_requests[]?; .number == $pr_number)) | select(.status != "completed" or .conclusion == "success")] | length' \
+            <<< "$runs")
+
+          if (( newer_review_runs > 0 )); then
+            echo "A newer review event superseded this relay; it will dispatch the consolidated governance run."
+            exit 0
+          fi
+
+          pull_request=$(api_get "https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER")
+          current_head_sha=$(jq -er '.head.sha | strings' <<< "$pull_request")
+          base_ref=$(jq -er '.base.ref | strings' <<< "$pull_request")
+          base_repository=$(jq -er '.base.repo.full_name | strings' <<< "$pull_request")
+
+          if [[ "$base_ref" != "main" || "$base_repository" != "$GITHUB_REPOSITORY" || "$current_head_sha" != "$PR_HEAD_SHA" ]]; then
+            echo "The review relay is stale or the pull request is outside the trusted base; a later CI or review event will reconcile current state."
+            exit 0
+          fi
+
+          validate_checks=$(api_get "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$current_head_sha/check-runs?check_name=Validate&app_id=15368&filter=latest&per_page=100")
+          validate_ready=$(jq -er '[.check_runs[] | select(.name == "Validate" and .app.id == 15368 and .status == "completed" and .conclusion == "success")] | length > 0' <<< "$validate_checks")
+
+          if [[ "$validate_ready" != "true" ]]; then
+            echo "Validate has not passed for the current HEAD; its successful CI completion will reconcile governance."
+            exit 0
+          fi
+
+          governance_checks=$(api_get "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$current_head_sha/check-runs?check_name=PR%20Governance&app_id=$GOVERNANCE_APP_ID&filter=latest&per_page=100")
+          governance_already_current=$(jq -er \
+            --argjson app_id "$GOVERNANCE_APP_ID" \
+            --arg latest_review_run "$latest_review_run" \
+            '[.check_runs[] | select(.name == "PR Governance" and .app.id == $app_id and .created_at >= $latest_review_run and ((.status != "completed") or (.conclusion == "success")))] | length > 0' \
+            <<< "$governance_checks")
+
+          if [[ "$governance_already_current" == "true" ]]; then
+            echo "A current PR Governance check already includes the latest review event."
+            exit 0
+          fi
+
           payload=$(jq -n \
             --arg ref main \
             --arg pr_number "$PR_NUMBER" \

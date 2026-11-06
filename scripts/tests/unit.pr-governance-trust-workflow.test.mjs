@@ -65,7 +65,12 @@ test('governance reevaluates completed CI, reviews and PR comments', () => {
   assert.ok(reviewRelay);
   assert.match(reviewRelay.if, /github\.event_name == 'pull_request_review'/);
   assert.equal(reviewRelay.environment, undefined);
-  assert.deepEqual(reviewRelay.permissions, { actions: 'write', contents: 'read' });
+  assert.deepEqual(reviewRelay.permissions, {
+    actions: 'write',
+    contents: 'read',
+    'pull-requests': 'read',
+    checks: 'read',
+  });
   assert.match(reviewRelay.steps[0].run, /actions\/workflows\/governance\.yml\/dispatches/);
   assert.match(reviewRelay.steps[0].run, /--arg ref main/);
   assert.equal(reviewRelay.steps[0].env.PR_NUMBER, '${{ github.event.pull_request.number }}');
