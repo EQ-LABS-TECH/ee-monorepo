@@ -1,5 +1,9 @@
 import { evaluatePrGovernance } from './pr-governance.evaluate.mjs';
-import { startPrGovernanceCheck, completePrGovernanceCheck } from './pr-governance.publish.mjs';
+import {
+  findCurrentSuccessfulPrGovernanceCheck,
+  startPrGovernanceCheck,
+  completePrGovernanceCheck,
+} from './pr-governance.publish.mjs';
 import { readValidateReadiness } from './pr-governance.ci.mjs';
 import { getGitHubRequestId } from './pr-governance.github-error.mjs';
 
@@ -39,6 +43,29 @@ function getHttpStatus(error, seen = new Set()) {
   return undefined;
 }
 
+function isWaitingOnQualifiedApprovals(evaluation) {
+  const { decision, ownershipEvidence } = evaluation;
+  const allowedReasons = new Set([
+    'codeowner-eligibility-not-verified',
+    'insufficient-qualified-approvals',
+  ]);
+  const coverage = ownershipEvidence?.coverage;
+
+  return (
+    ['CRITICAL', 'ORDINARY'].includes(evaluation.classification) &&
+    decision?.status === 'BLOCKED' &&
+    Array.isArray(decision.reasons) &&
+    decision.reasons.includes('insufficient-qualified-approvals') &&
+    decision.reasons.every((reason) => allowedReasons.has(reason)) &&
+    Number.isSafeInteger(decision.requiredCount) &&
+    Number.isSafeInteger(decision.qualifiedApprovalCount) &&
+    decision.qualifiedApprovalCount < decision.requiredCount &&
+    Array.isArray(coverage) &&
+    coverage.length > 0 &&
+    coverage.every((entry) => Array.isArray(entry.eligibleTeams) && entry.eligibleTeams.length > 0)
+  );
+}
+
 /**
  * Trusted orchestration only.
  * The caller supplies the PR identity, expected HEAD and separate tokens.
@@ -53,6 +80,8 @@ export async function runPrGovernance({
   token,
   governanceToken,
   publisherToken,
+  waitForApprovalReadiness = false,
+  deduplicateSuccessfulChecks = false,
   fetchImpl = fetch,
 }) {
   if (
@@ -104,6 +133,90 @@ export async function runPrGovernance({
       headSha: expectedHeadSha.toLowerCase(),
       validationCheckRunId: validation.checkRunId,
     };
+  }
+
+  let initialEvaluation;
+  if (waitForApprovalReadiness || deduplicateSuccessfulChecks) {
+    phase = 'evaluation';
+    try {
+      initialEvaluation = await evaluatePrGovernance({
+        owner,
+        repo,
+        number,
+        token,
+        governanceToken,
+        fetchImpl,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      }
+      throw error;
+    }
+
+    if (initialEvaluation.headSha?.toLowerCase() !== expectedHeadSha.toLowerCase()) {
+      const error = new Error('PR governance evaluation returned a superseded HEAD');
+      error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      throw error;
+    }
+  }
+
+  if (
+    waitForApprovalReadiness &&
+    initialEvaluation &&
+    isWaitingOnQualifiedApprovals(initialEvaluation)
+  ) {
+    phase = 'check-deduplication';
+    try {
+      const existing = await findCurrentSuccessfulPrGovernanceCheck({
+        owner,
+        repo,
+        expectedHeadSha,
+        expectedAppId,
+        token: publisherToken,
+        fetchImpl,
+      });
+      if (!existing) {
+        return {
+          mode: 'WAITING_FOR_APPROVALS',
+          headSha: expectedHeadSha.toLowerCase(),
+          classification: initialEvaluation.classification,
+          decision: initialEvaluation.decision,
+          ownershipEvidenceVerified: true,
+        };
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      }
+      throw error;
+    }
+  }
+
+  if (initialEvaluation?.decision.status === 'PASS' && deduplicateSuccessfulChecks) {
+    phase = 'check-deduplication';
+    try {
+      const existing = await findCurrentSuccessfulPrGovernanceCheck({
+        owner,
+        repo,
+        expectedHeadSha,
+        expectedAppId,
+        token: publisherToken,
+        fetchImpl,
+      });
+      if (existing) {
+        return {
+          mode: 'ALREADY_CURRENT',
+          headSha: existing.headSha,
+          checkId: existing.checkId,
+        };
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      }
+      throw error;
+    }
   }
 
   phase = 'check-start';

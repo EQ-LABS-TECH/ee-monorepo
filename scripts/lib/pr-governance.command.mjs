@@ -49,6 +49,8 @@ export function readGovernanceCommandContext(env) {
     token,
     governanceToken,
     publisherToken,
+    waitForApprovalReadiness: env?.GOVERNANCE_WAIT_FOR_APPROVALS === 'true',
+    deduplicateSuccessfulChecks: env?.GOVERNANCE_DEDUPLICATE_CHECKS === 'true',
   };
 }
 
@@ -67,6 +69,51 @@ export async function executeGovernanceCommand({ env, run = runPrGovernance, log
         status: 'WAITING_FOR_VALIDATION',
         headSha: result.headSha,
         validationCheckRunId: result.validationCheckRunId,
+      }),
+    );
+    return 0;
+  }
+
+  if (
+    result?.mode === 'WAITING_FOR_APPROVALS' &&
+    context.waitForApprovalReadiness &&
+    result.headSha?.toLowerCase() === context.expectedHeadSha &&
+    ['CRITICAL', 'ORDINARY'].includes(result.classification) &&
+    result.ownershipEvidenceVerified === true &&
+    result.decision?.status === 'BLOCKED' &&
+    Array.isArray(result.decision.reasons) &&
+    result.decision.reasons.includes('insufficient-qualified-approvals') &&
+    result.decision.reasons.every((reason) =>
+      ['codeowner-eligibility-not-verified', 'insufficient-qualified-approvals'].includes(reason),
+    ) &&
+    Number.isSafeInteger(result.decision.requiredCount) &&
+    Number.isSafeInteger(result.decision.qualifiedApprovalCount) &&
+    result.decision.qualifiedApprovalCount < result.decision.requiredCount
+  ) {
+    log(
+      JSON.stringify({
+        status: 'WAITING_FOR_APPROVALS',
+        headSha: result.headSha,
+        classification: result.classification,
+        qualifiedApprovalCount: result.decision.qualifiedApprovalCount,
+        requiredCount: result.decision.requiredCount,
+      }),
+    );
+    return 0;
+  }
+
+  if (
+    result?.mode === 'ALREADY_CURRENT' &&
+    context.deduplicateSuccessfulChecks &&
+    result.headSha?.toLowerCase() === context.expectedHeadSha &&
+    Number.isSafeInteger(result.checkId) &&
+    result.checkId > 0
+  ) {
+    log(
+      JSON.stringify({
+        status: 'ALREADY_CURRENT',
+        headSha: result.headSha,
+        checkId: result.checkId,
       }),
     );
     return 0;

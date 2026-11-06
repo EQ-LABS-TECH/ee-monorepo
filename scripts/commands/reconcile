@@ -86,9 +86,12 @@ export async function main(env = process.env, { reconcile = reconcileOpenGoverna
       passed: result.results.filter((item) => item.status === 'PASS').length,
       blocked: result.results.filter((item) => item.status === 'BLOCKED').length,
       errors: result.results.filter((item) => item.status === 'ERROR').length,
+      alreadyCurrent: result.results.filter((item) => item.status === 'ALREADY_CURRENT').length,
       waitingForValidation: result.results.filter(
         (item) => item.status === 'WAITING_FOR_VALIDATION',
       ).length,
+      waitingForApprovals: result.results.filter((item) => item.status === 'WAITING_FOR_APPROVALS')
+        .length,
     }),
   );
 

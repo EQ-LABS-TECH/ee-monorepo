@@ -194,6 +194,76 @@ export async function startPrGovernanceCheck({
   };
 }
 
+export async function findCurrentSuccessfulPrGovernanceCheck({
+  owner,
+  repo,
+  expectedHeadSha,
+  expectedAppId,
+  token,
+  fetchImpl = fetch,
+}) {
+  if (
+    !OWNER.test(owner ?? '') ||
+    !REPO.test(repo ?? '') ||
+    !SHA.test(expectedHeadSha ?? '') ||
+    !Number.isSafeInteger(expectedAppId) ||
+    expectedAppId < 1 ||
+    typeof token !== 'string' ||
+    !token ||
+    typeof fetchImpl !== 'function'
+  ) {
+    throw new TypeError('Invalid PR governance check lookup request');
+  }
+
+  const url =
+    `https://api.github.com/repos/${owner}/${repo}/commits/${expectedHeadSha.toLowerCase()}/check-runs` +
+    `?check_name=${encodeURIComponent(PR_GOVERNANCE_CHECK_NAME)}` +
+    `&app_id=${expectedAppId}&filter=latest&per_page=100`;
+  const response = await fetchImpl(url, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+
+  if (!response.ok || response.status !== 200) {
+    throw createGitHubHttpError(response, 'GitHub governance check lookup');
+  }
+
+  const result = await response.json();
+  if (
+    !result ||
+    !Number.isSafeInteger(result.total_count) ||
+    !Array.isArray(result.check_runs) ||
+    result.check_runs.length > 100
+  ) {
+    throw new TypeError('Malformed GitHub governance check lookup response');
+  }
+
+  const checks = result.check_runs;
+  for (const check of checks) {
+    if (
+      !check ||
+      !Number.isSafeInteger(check.id) ||
+      check.id < 1 ||
+      check.name !== PR_GOVERNANCE_CHECK_NAME ||
+      check.app?.id !== expectedAppId ||
+      check.head_sha?.toLowerCase() !== expectedHeadSha.toLowerCase() ||
+      !['queued', 'in_progress', 'completed'].includes(check.status) ||
+      (check.status === 'completed' && typeof check.conclusion !== 'string')
+    ) {
+      throw new TypeError('Malformed GitHub governance check run');
+    }
+  }
+
+  const latest = checks[0];
+  return latest?.status === 'completed' && latest.conclusion === 'success'
+    ? { checkId: latest.id, headSha: expectedHeadSha.toLowerCase() }
+    : null;
+}
+
 export async function completePrGovernanceCheck({
   owner,
   repo,

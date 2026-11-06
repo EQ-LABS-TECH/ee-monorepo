@@ -141,6 +141,8 @@ jobs:
           GOVERNANCE_PR_TOKEN: ${{ github.token }}
           GOVERNANCE_EVIDENCE_TOKEN: ${{ steps.governance-token.outputs.token }}
           GOVERNANCE_PUBLISHER_TOKEN: ${{ steps.governance-token.outputs.token }}
+          GOVERNANCE_WAIT_FOR_APPROVALS: 'true'
+          GOVERNANCE_DEDUPLICATE_CHECKS: 'true'
         run: |
           set -euo pipefail
           node scripts/commands/enforce
@@ -186,13 +188,6 @@ jobs:
             --argjson pr_number "$PR_NUMBER" \
             '[.workflow_runs[] | select(any(.pull_requests[]?; .number == $pr_number)) | .created_at] | max // error("No review workflow run found for this PR")' \
             <<< "$runs")
-          latest_review_epoch=$(date -u -d "$latest_review_run" +%s)
-          current_epoch=$(date -u +%s)
-          quiet_window_remaining=$((30 - (current_epoch - latest_review_epoch)))
-
-          if (( quiet_window_remaining > 0 )); then
-            sleep "$quiet_window_remaining"
-          fi
 
           runs=$(api_get "$runs_url")
           newer_review_runs=$(jq -er \

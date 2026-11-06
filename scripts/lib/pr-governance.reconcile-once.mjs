@@ -124,6 +124,8 @@ export async function reconcileOpenGovernancePrs({
         token,
         governanceToken,
         publisherToken,
+        waitForApprovalReadiness: true,
+        deduplicateSuccessfulChecks: true,
         fetchImpl,
       });
 
@@ -134,6 +136,37 @@ export async function reconcileOpenGovernancePrs({
           (Number.isSafeInteger(result.validationCheckRunId) && result.validationCheckRunId > 0))
       ) {
         results.push({ number, status: 'WAITING_FOR_VALIDATION' });
+        continue;
+      }
+
+      if (
+        result?.mode === 'WAITING_FOR_APPROVALS' &&
+        result.headSha?.toLowerCase() === resolved.expectedHeadSha.toLowerCase() &&
+        ['CRITICAL', 'ORDINARY'].includes(result.classification) &&
+        result.ownershipEvidenceVerified === true &&
+        result.decision?.status === 'BLOCKED' &&
+        Array.isArray(result.decision.reasons) &&
+        result.decision.reasons.includes('insufficient-qualified-approvals') &&
+        result.decision.reasons.every((reason) =>
+          ['codeowner-eligibility-not-verified', 'insufficient-qualified-approvals'].includes(
+            reason,
+          ),
+        ) &&
+        Number.isSafeInteger(result.decision.requiredCount) &&
+        Number.isSafeInteger(result.decision.qualifiedApprovalCount) &&
+        result.decision.qualifiedApprovalCount < result.decision.requiredCount
+      ) {
+        results.push({ number, status: 'WAITING_FOR_APPROVALS' });
+        continue;
+      }
+
+      if (
+        result?.mode === 'ALREADY_CURRENT' &&
+        result.headSha?.toLowerCase() === resolved.expectedHeadSha.toLowerCase() &&
+        Number.isSafeInteger(result.checkId) &&
+        result.checkId > 0
+      ) {
+        results.push({ number, status: 'ALREADY_CURRENT' });
         continue;
       }
 
