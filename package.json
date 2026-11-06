@@ -32,6 +32,7 @@
     "@changesets/cli": "3.0.3",
     "@eq-labs/config-prettier": "workspace:*",
     "@eq-labs/governance": "workspace:*",
+    "typescript": "npm:@typescript/typescript6@6.0.2",
     "@typescript-eslint/typescript-estree": "8.72.1",
     "ajv": "8.20.0",
     "plop": "4.0.5",

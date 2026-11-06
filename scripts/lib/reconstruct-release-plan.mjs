@@ -207,6 +207,7 @@ export function reconstructReleasePlan({
           : [removalError, inspectionError],
         'Release worktree cleanup failed and registration could not be verified. ' +
           `Temporary directory preserved at: ${temporaryDirectory}`,
+        { cause: inspectionError },
       );
     }
 
@@ -228,6 +229,7 @@ export function reconstructReleasePlan({
     throw new AggregateError(
       operationError ? [operationError, cleanupError] : [cleanupError],
       `Release temporary directory cleanup failed: ${temporaryDirectory}`,
+      { cause: cleanupError },
     );
   }
 
