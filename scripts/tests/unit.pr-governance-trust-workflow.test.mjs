@@ -18,14 +18,14 @@ function readWorkflow(url = workflowUrl) {
   return document.toJS();
 }
 
-test('CI and CI Main triggers remain isolated for PR Governance', () => {
+test('phase one keeps existing CI review triggers while preparing the relay code', () => {
   const ci = readWorkflow(ciWorkflowUrl);
   const ciMain = readWorkflow(ciMainWorkflowUrl);
   const governance = readWorkflow();
 
   assert.equal(ci.name, 'CI');
   assert.ok(Object.hasOwn(ci.on, 'pull_request'));
-  assert.ok(Object.hasOwn(ci.on, 'pull_request_review'));
+  assert.deepEqual(ci.on.pull_request_review.types, ['submitted', 'edited', 'dismissed']);
   assert.equal(Object.hasOwn(ci.on, 'push'), false);
   assert.equal(Object.hasOwn(ci.on, 'workflow_dispatch'), false);
   assert.equal(ci.jobs.validate.name, 'Validate');
@@ -41,9 +41,12 @@ test('CI and CI Main triggers remain isolated for PR Governance', () => {
 
   assert.deepEqual(governance.on.workflow_run.workflows, ['CI']);
   assert.deepEqual(governance.on.workflow_run.types, ['completed']);
+  assert.equal(Object.hasOwn(governance.on, 'pull_request_review'), false);
+  assert.equal(Object.hasOwn(governance.jobs, 'dispatch-review'), false);
+  assert.equal(Object.hasOwn(governance.on.workflow_dispatch.inputs, 'review_run_number'), false);
 });
 
-test('governance evaluation waits for completed CI or a PR comment signal', () => {
+test('phase one keeps governance reconciliation on completed CI and PR comments', () => {
   const workflow = readWorkflow();
 
   assert.deepEqual(Object.keys(workflow.on), [
@@ -58,6 +61,12 @@ test('governance evaluation waits for completed CI or a PR comment signal', () =
   assert.equal(Object.hasOwn(workflow.on, 'pull_request_review'), false);
   assert.match(workflow.jobs.verify.if, /github\.event_name == 'workflow_dispatch'/);
   assert.equal(workflow.jobs.verify.name, 'PR Governance Verify');
+  assert.equal(Object.hasOwn(workflow.jobs, 'dispatch-review'), false);
+  const verify = workflow.jobs.verify.steps.find(
+    (step) => step.name === 'Execute trusted governance',
+  );
+  assert.equal(verify.env.GOVERNANCE_WAIT_FOR_APPROVALS, 'true');
+  assert.equal(verify.env.GOVERNANCE_DEDUPLICATE_CHECKS, 'true');
 });
 
 test('workflow serializes governance executions with a bounded queue', () => {
@@ -181,6 +190,8 @@ test('automatic governance triggers do not silently enable required-check enforc
     workflow.jobs.reconcile.if,
     /github\.event\.workflow_run\.event == 'pull_request_review'/,
   );
+  assert.doesNotMatch(workflow.jobs.reconcile.if, /github\.event_name == 'pull_request_review'/);
+  assert.equal(Object.hasOwn(workflow.jobs, 'dispatch-review'), false);
   assert.match(workflow.jobs.reconcile.if, /github\.event_name == 'issue_comment'/);
   assert.match(workflow.jobs.reconcile.if, /github\.event\.issue\.pull_request != null/);
   assert.equal(workflow.jobs.reconcile.environment, 'governance-main');

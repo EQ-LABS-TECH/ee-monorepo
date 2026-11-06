@@ -37,13 +37,13 @@ function getStep(job, name) {
   return matches[0];
 }
 
-test('CI and CI Main preserve separated pull request and main triggers', () => {
+test('phase one preserves existing CI triggers until relay activation', () => {
   const workflow = loadWorkflow();
   const mainWorkflow = loadWorkflow(CI_MAIN_WORKFLOW_URL);
 
   assert.equal(workflow.name, 'CI');
   assert.ok(Object.hasOwn(workflow.on, 'pull_request'));
-  assert.deepEqual(workflow.on?.pull_request_review?.types, ['submitted', 'edited', 'dismissed']);
+  assert.deepEqual(workflow.on.pull_request_review.types, ['submitted', 'edited', 'dismissed']);
   assert.equal(Object.hasOwn(workflow.on, 'push'), false);
   assert.equal(Object.hasOwn(workflow.on, 'workflow_dispatch'), false);
   assert.deepEqual(workflow.permissions, { contents: 'read' });
@@ -96,7 +96,7 @@ test('Validate preserves its existing quality gates', () => {
   assert.match(getStep(job, 'Secret detection (QG-SEC-002)').run, /gitleaks detect/);
 });
 
-test('governance advisory runs only for same-repository pull requests', () => {
+test('governance advisory runs for same-repository PR and review events during phase one', () => {
   const workflow = loadWorkflow();
   const job = getJob(workflow, 'pr-governance-advisory');
 

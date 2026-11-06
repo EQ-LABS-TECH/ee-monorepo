@@ -317,7 +317,7 @@ Hasta P06, el merge a `main` **no** exige el check CI en el ruleset (sigue OFF).
 
 ## 08. Evidencia As-Built
 
-Las subsecciones §08.1–§08.4 conservan la evidencia histórica capturada durante el cierre original de P05. La §08.5 documenta la evolución posterior asociada a PN-030 y PN-021; sus garantías y controles requieren evidencia de validación independiente y no se consideran cubiertos por las ejecuciones históricas de CI.
+Las subsecciones §08.1, §08.3 y §08.4 conservan evidencia histórica capturada durante el cierre original de P05. Las subsecciones §08.2 y §08.6 describen el as-built vigente de CI y reconciliación de revisiones. La §08.5 documenta la evolución posterior asociada a PN-030 y PN-021; sus garantías y controles requieren evidencia de validación independiente y no se consideran cubiertos por las ejecuciones históricas de CI.
 
 ### 08.1. Scripts root
 
@@ -332,14 +332,13 @@ Las subsecciones §08.1–§08.4 conservan la evidencia histórica capturada dur
 
 ### 08.2. Workflow
 
-| Campo          | Valor as-built                                                             |
-| :------------- | :------------------------------------------------------------------------- |
-| Path           | `.github/workflows/ci.yml`                                                 |
-| `permissions`  | `contents: read`                                                           |
-| Events         | `pull_request`, `push` → `main`, `workflow_dispatch`                       |
-| Actions        | `actions/checkout@v5`, `pnpm/action-setup@v4.4.0`, `actions/setup-node@v5` |
-| Run verificado | push a `main`, job **Validate**, ~47s, **success**                         |
-| Resultado      | **✓ success**                                                              |
+| Workflow                           | Eventos as-built                                                                                                                                              |
+| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `.github/workflows/ci.yml`         | `pull_request` y `pull_request_review`; en fase 1 las reviews aún ejecutan CI.                                                                                |
+| `.github/workflows/governance.yml` | Reconcilia finalización de `CI`, comentarios y horario; cola global sin cancelación. La activación del relay de revisiones queda para la segunda integración. |
+| `.github/workflows/ci-main.yml`    | `push` → `main` y ejecución manual; job `Validate Main`.                                                                                                      |
+
+Durante la primera integración, las reviews todavía inician `CI`; ese trigger se retirará en la segunda integración, cuando el relay esté disponible en `main` y pueda sustituirlo.
 
 ### 08.3. Specialization Type B — Node 20 deprecation on Actions
 
@@ -380,6 +379,14 @@ El workflow utiliza `push` sobre `main` y determina si existe una transición de
 Tras completarse correctamente el comando de publicación, el workflow ejecuta `git push origin "v${version}"` y verifica que el tag remoto corresponda al commit esperado. El orden observado es, por tanto, publicación y creación local del tag dentro del comando A-REL, push del tag y comprobación remota posterior.
 
 La existencia de estos pasos no acredita, por sí sola, una publicación npm exitosa ni la aplicación efectiva de las protecciones remotas.
+
+### 08.6. Reconciliación de eventos de revisión
+
+La primera integración incorpora la implementación confiable del relay (`scripts/commands/relay` y sus dependencias) y sus regresiones, pero no activa un trigger nuevo. El flujo operativo permanece igual durante esta fase: `CI` recibe eventos de revisión y Governance reconcilia al terminar `CI`.
+
+La segunda integración activará `pull_request_review` y el job relay. Este hará checkout de `main`, desactivará la persistencia de credenciales e instalará dependencias con `pnpm install --frozen-lockfile`; no se asociará al environment protegido. Solo después de integrar la primera fase estará disponible el script ejecutado por ese job. La segunda fase retirará el trigger de review de `CI`, evitando que cada aprobación vuelva a ejecutar la validación completa.
+
+La prueba real de eventos `dismissed` y de dos aprobaciones cercanas corresponde a la validación posterior a la segunda integración. Las pruebas de la primera fase cubren la lógica del relay y sus estados, pero no afirman que el evento esté activo en GitHub.
 
 ---
 
