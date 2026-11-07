@@ -21,6 +21,8 @@ function fixture({
   startRequestId,
   patchStatus = 200,
   validateConclusion = 'success',
+  validateRunStatus = 'completed',
+  validateHttpStatus = 200,
 } = {}) {
   const calls = [];
 
@@ -34,8 +36,8 @@ function fixture({
 
     if (init.method === 'GET' && url.includes('/check-runs?check_name=Validate')) {
       return {
-        ok: true,
-        status: 200,
+        ok: validateHttpStatus === 200,
+        status: validateHttpStatus,
         json: async () => ({
           total_count: 1,
           check_runs: [
@@ -43,9 +45,9 @@ function fixture({
               id: 111,
               app: { id: 15368 },
               name: 'Validate',
-              status: 'completed',
-              conclusion: validateConclusion,
-              started_at: '2026-10-30T12:00:00Z',
+              status: validateRunStatus,
+              conclusion: validateRunStatus === 'completed' ? validateConclusion : null,
+              started_at: validateRunStatus === 'queued' ? null : '2026-10-30T12:00:00Z',
             },
           ],
         }),
@@ -182,14 +184,12 @@ test('check start error includes safe GitHub request context', async () => {
 });
 
 test('Validate lookup errors carry a sanitized readiness diagnostic', async () => {
+  const mock = fixture({ validateHttpStatus: 403 });
+
   await assert.rejects(
     runPrGovernance({
       ...options,
-      fetchImpl: async () => ({
-        ok: false,
-        status: 403,
-        json: async () => ({ message: 'private response content' }),
-      }),
+      fetchImpl: mock.fetchImpl,
     }),
     (error) => {
       assert.deepEqual(error.governanceDiagnostic, {
@@ -202,6 +202,149 @@ test('Validate lookup errors carry a sanitized readiness diagnostic', async () =
       assert.equal(JSON.stringify(error.governanceDiagnostic).includes('private response'), false);
       return true;
     },
+  );
+});
+
+test('Validate pending returns WAITING_FOR_VALIDATION without starting a governance check', async () => {
+  const mock = fixture({ validateRunStatus: 'in_progress' });
+
+  const result = await runPrGovernance({
+    ...options,
+    fetchImpl: mock.fetchImpl,
+  });
+
+  assert.equal(result.mode, 'WAITING_FOR_VALIDATION');
+  assert.equal(result.validationCheckRunId, 111);
+  assert.equal(
+    mock.calls.some(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')),
+    false,
+  );
+});
+
+test('Validate HTTP error after a same-HEAD PASS publishes a failed governance check', async () => {
+  const mock = successfulFixture();
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  const passed = await reconcile();
+  mock.setValidateHttpStatus(403);
+
+  await assert.rejects(reconcile(), (error) => {
+    assert.match(error.message, /HTTP 403/);
+    assert.equal(error.governanceDiagnostic.phase, 'validate-readiness');
+    assert.doesNotMatch(error.message, /private response content/);
+    return true;
+  });
+
+  assert.equal(passed.decision.status, 'PASS');
+  assert.equal(
+    mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
+    2,
+  );
+  assert.deepEqual(
+    mock.getGovernanceChecks().map(({ status, conclusion }) => [status, conclusion]),
+    [
+      ['completed', 'failure'],
+      ['completed', 'success'],
+    ],
+  );
+});
+
+test('Validate and failure-check PATCH errors are aggregated while the new check stays in progress', async () => {
+  const mock = successfulFixture();
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  await reconcile();
+  mock.setValidateHttpStatus(403);
+  mock.setPatchStatus(403);
+
+  await assert.rejects(reconcile(), (error) => {
+    assert.ok(error instanceof AggregateError);
+    assert.equal(error.governanceDiagnostic.code, 'failure-publication-failed');
+    assert.equal(error.governanceDiagnostic.phase, 'validate-readiness-failure-publication');
+    assert.match(error.errors[0].message, /HTTP 403/);
+    assert.match(error.errors[1].message, /check completion returned HTTP 403/);
+    assert.doesNotMatch(error.message, /private response content/);
+    return true;
+  });
+
+  assert.deepEqual(
+    mock.getGovernanceChecks().map(({ status, conclusion }) => [status, conclusion]),
+    [
+      ['in_progress', undefined],
+      ['completed', 'success'],
+    ],
+  );
+});
+
+test('Validate error with a changed HEAD does not publish a failure check on stale evidence', async () => {
+  const mock = successfulFixture();
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  await reconcile();
+  mock.setValidateHttpStatus(403);
+  mock.setCurrentHeadSha('b'.repeat(40));
+
+  await assert.rejects(reconcile(), (error) => {
+    assert.ok(error instanceof AggregateError);
+    assert.equal(error.governanceDiagnostic.code, 'failure-publication-failed');
+    assert.match(error.errors[0].message, /HTTP 403/);
+    assert.match(error.errors[1].message, /identity changed before check start/);
+    return true;
+  });
+
+  assert.equal(
+    mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
+    1,
+  );
+  assert.deepEqual(
+    mock.getGovernanceChecks().map(({ status, conclusion }) => [status, conclusion]),
+    [['completed', 'success']],
+  );
+});
+
+test('Validate error with a closed PR does not publish a failure check', async () => {
+  const mock = successfulFixture();
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  await reconcile();
+  mock.setValidateHttpStatus(403);
+  mock.setPullRequestState('closed');
+
+  await assert.rejects(reconcile(), (error) => {
+    assert.ok(error instanceof AggregateError);
+    assert.equal(error.governanceDiagnostic.code, 'failure-publication-failed');
+    assert.match(error.errors[0].message, /HTTP 403/);
+    assert.match(error.errors[1].message, /identity changed before check start/);
+    return true;
+  });
+
+  assert.equal(
+    mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
+    1,
+  );
+  assert.deepEqual(
+    mock.getGovernanceChecks().map(({ status, conclusion }) => [status, conclusion]),
+    [['completed', 'success']],
   );
 });
 
@@ -233,6 +376,10 @@ function successfulFixture({
   architectActive = true,
   deactivateArchitectAfterCheckLookup = false,
   patchStatus = 200,
+  validateHttpStatus = 200,
+  validateRunStatus = 'completed',
+  validateConclusion = 'success',
+  pullRequestState = 'open',
 } = {}) {
   const calls = [];
   const baseSha = 'b'.repeat(40);
@@ -241,7 +388,7 @@ function successfulFixture({
 
   const pullRequest = {
     number: 42,
-    state: 'open',
+    state: pullRequestState,
     user: { login: 'author' },
     head: {
       sha: headSha,
@@ -322,6 +469,7 @@ function successfulFixture({
       status = membershipErrorStatus ?? (architectActive ? 200 : 404);
       data = status === 200 ? { state: 'active', role: 'member' } : undefined;
     } else if (method === 'GET' && url.includes('/check-runs?check_name=Validate')) {
+      status = validateHttpStatus;
       data = {
         total_count: 1,
         check_runs: [
@@ -329,9 +477,9 @@ function successfulFixture({
             id: 123,
             app: { id: 15368 },
             name: 'Validate',
-            status: 'completed',
-            conclusion: 'success',
-            started_at: '2026-10-30T12:00:00Z',
+            status: validateRunStatus,
+            conclusion: validateRunStatus === 'completed' ? validateConclusion : null,
+            started_at: validateRunStatus === 'queued' ? null : '2026-10-30T12:00:00Z',
           },
         ],
       };
@@ -380,23 +528,27 @@ function successfulFixture({
       assert.equal(payload.status, 'completed');
       assert.ok(['success', 'failure'].includes(payload.conclusion));
 
-      data = {
-        id: 456,
-        name: 'PR Governance',
-        head_sha: headSha,
-        status: 'completed',
-        conclusion: payload.conclusion,
-        external_id: payload.external_id,
-        output: payload.output,
-      };
       status = currentPatchStatus;
-      governanceChecks[0] = {
-        ...governanceChecks[0],
-        status: 'completed',
-        conclusion: payload.conclusion,
-        external_id: payload.external_id,
-        output: payload.output,
-      };
+      if (status === 200) {
+        data = {
+          id: 456,
+          name: 'PR Governance',
+          head_sha: headSha,
+          status: 'completed',
+          conclusion: payload.conclusion,
+          external_id: payload.external_id,
+          output: payload.output,
+        };
+        governanceChecks[0] = {
+          ...governanceChecks[0],
+          status: 'completed',
+          conclusion: payload.conclusion,
+          external_id: payload.external_id,
+          output: payload.output,
+        };
+      } else {
+        data = { message: 'private response content' };
+      }
     } else {
       throw new Error(`Unexpected GitHub request: ${method} ${url}`);
     }
@@ -441,6 +593,18 @@ function successfulFixture({
     },
     setPatchStatus(status) {
       currentPatchStatus = status;
+    },
+    setValidateHttpStatus(status) {
+      validateHttpStatus = status;
+    },
+    setCurrentHeadSha(sha) {
+      pullRequest.head.sha = sha;
+    },
+    setPullRequestState(state) {
+      pullRequest.state = state;
+    },
+    getGovernanceChecks() {
+      return structuredClone(governanceChecks);
     },
   };
 }

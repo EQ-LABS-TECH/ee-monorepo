@@ -43,9 +43,9 @@ function getHttpStatus(error, seen = new Set()) {
   return undefined;
 }
 
-async function publishInitialEvaluationFailure(publication, context, evaluationError) {
-  const diagnostic = diagnosticFor(evaluationError, 'evaluation', context);
-  if (evaluationError instanceof Error) evaluationError.governanceDiagnostic = diagnostic;
+async function publishPreStartFailure(publication, context, phase, originalError) {
+  const diagnostic = diagnosticFor(originalError, phase, context);
+  if (originalError instanceof Error) originalError.governanceDiagnostic = diagnostic;
 
   try {
     const failedCheck = await startPrGovernanceCheck(publication);
@@ -57,12 +57,12 @@ async function publishInitialEvaluationFailure(publication, context, evaluationE
     });
   } catch (publicationError) {
     const aggregate = new AggregateError(
-      [evaluationError, publicationError],
-      'PR governance evaluation failed and its failure check could not be published',
+      [originalError, publicationError],
+      'PR governance pre-check failed and its failure check could not be published',
     );
     aggregate.governanceDiagnostic = {
       ...diagnostic,
-      phase: 'evaluation-failure-publication',
+      phase: `${phase}-failure-publication`,
       code: 'failure-publication-failed',
     };
     throw aggregate;
@@ -124,6 +124,7 @@ export async function runPrGovernance({
       fetchImpl,
     });
   } catch (error) {
+    await publishPreStartFailure(publication, { number, expectedHeadSha }, phase, error);
     if (error instanceof Error) {
       error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
     }
@@ -151,7 +152,7 @@ export async function runPrGovernance({
         fetchImpl,
       });
     } catch (error) {
-      await publishInitialEvaluationFailure(publication, { number, expectedHeadSha }, error);
+      await publishPreStartFailure(publication, { number, expectedHeadSha }, phase, error);
       if (error instanceof Error) {
         error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       }
@@ -206,7 +207,7 @@ export async function runPrGovernance({
         }
       }
     } catch (error) {
-      await publishInitialEvaluationFailure(publication, { number, expectedHeadSha }, error);
+      await publishPreStartFailure(publication, { number, expectedHeadSha }, phase, error);
       if (error instanceof Error) {
         error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       }
