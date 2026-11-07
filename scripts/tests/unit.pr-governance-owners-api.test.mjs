@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readCodeownersEvidence } from '../lib/pr-governance.owners-api.mjs';
 
 const baseSha = 'a'.repeat(40);
@@ -61,6 +62,7 @@ test('resolves CODEOWNERS from the exact base commit', async () => {
 
   assert.equal(result.status, 'RESOLVED');
   assert.equal(result.baseSha, baseSha);
+  assert.equal(result.sourceSha256, createHash('sha256').update(source).digest('hex'));
   assert.deepEqual(
     result.requirements.map((entry) => entry.eligibleTeams),
     [

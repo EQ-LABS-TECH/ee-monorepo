@@ -1,6 +1,6 @@
 import { evaluatePrGovernance } from './pr-governance.evaluate.mjs';
 import {
-  findCurrentSuccessfulPrGovernanceCheck,
+  findCurrentPrGovernanceCheck,
   startPrGovernanceCheck,
   completePrGovernanceCheck,
 } from './pr-governance.publish.mjs';
@@ -58,7 +58,7 @@ export async function runPrGovernance({
   governanceToken,
   publisherToken,
   waitForApprovalReadiness = false,
-  deduplicateSuccessfulChecks = false,
+  deduplicateCurrentChecks = false,
   fetchImpl = fetch,
 }) {
   if (
@@ -113,7 +113,7 @@ export async function runPrGovernance({
   }
 
   let initialEvaluation;
-  if (waitForApprovalReadiness || deduplicateSuccessfulChecks) {
+  if (waitForApprovalReadiness || deduplicateCurrentChecks) {
     phase = 'evaluation';
     try {
       initialEvaluation = await evaluatePrGovernance({
@@ -138,23 +138,45 @@ export async function runPrGovernance({
     }
   }
 
-  if (initialEvaluation?.decision.status === 'PASS' && deduplicateSuccessfulChecks) {
+  if (initialEvaluation && deduplicateCurrentChecks) {
     phase = 'check-deduplication';
     try {
-      const existing = await findCurrentSuccessfulPrGovernanceCheck({
+      const expectedConclusion =
+        initialEvaluation.decision.status === 'PASS' ? 'success' : 'failure';
+      const existing = await findCurrentPrGovernanceCheck({
         owner,
         repo,
         expectedHeadSha,
         expectedAppId,
+        expectedConclusion,
+        evidenceFingerprint: initialEvaluation.evidenceFingerprint,
         token: publisherToken,
         fetchImpl,
       });
       if (existing) {
-        return {
-          mode: 'ALREADY_CURRENT',
-          headSha: existing.headSha,
-          checkId: existing.checkId,
-        };
+        const confirmedEvaluation = await evaluatePrGovernance({
+          owner,
+          repo,
+          number,
+          token,
+          governanceToken,
+          fetchImpl,
+        });
+
+        if (
+          confirmedEvaluation.headSha?.toLowerCase() !== expectedHeadSha.toLowerCase() ||
+          confirmedEvaluation.evidenceFingerprint !== initialEvaluation.evidenceFingerprint ||
+          confirmedEvaluation.decision.status !== initialEvaluation.decision.status
+        ) {
+          initialEvaluation = confirmedEvaluation;
+        } else {
+          return {
+            mode: 'ALREADY_CURRENT',
+            headSha: existing.headSha,
+            checkId: existing.checkId,
+            conclusion: existing.conclusion,
+          };
+        }
       }
     } catch (error) {
       if (error instanceof Error) {

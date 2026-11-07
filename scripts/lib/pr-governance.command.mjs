@@ -50,7 +50,7 @@ export function readGovernanceCommandContext(env) {
     governanceToken,
     publisherToken,
     waitForApprovalReadiness: env?.GOVERNANCE_WAIT_FOR_APPROVALS === 'true',
-    deduplicateSuccessfulChecks: env?.GOVERNANCE_DEDUPLICATE_CHECKS === 'true',
+    deduplicateCurrentChecks: env?.GOVERNANCE_DEDUPLICATE_CHECKS === 'true',
   };
 }
 
@@ -98,7 +98,7 @@ export async function executeGovernanceCommand({ env, run = runPrGovernance, log
 
   if (
     result?.mode === 'ALREADY_CURRENT' &&
-    context.deduplicateSuccessfulChecks &&
+    context.deduplicateCurrentChecks &&
     result.headSha?.toLowerCase() === context.expectedHeadSha &&
     Number.isSafeInteger(result.checkId) &&
     result.checkId > 0

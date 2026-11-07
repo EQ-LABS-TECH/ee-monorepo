@@ -877,6 +877,8 @@ La GitHub App de gobernanza tendrá una identidad independiente de la automatiza
 
 El resultado se asociará al HEAD evaluado y verificará clasificación, aprobaciones, elegibilidad de revisores, CODEOWNERS y evidencias vigentes. Ante errores o evidencia insuficiente no se emitirá conformidad.
 
+La reconciliación periódica volverá a consultar las fuentes completas de evidencia, aunque exista un check para el mismo HEAD. La publicación será idempotente cuando el último check de la App corresponda al HEAD actual, tenga la misma conclusión y lleve la misma huella SHA-256 versionada de la evidencia verificada. La huella cubre, como mínimo, el estado de PR/HEAD/base/rutas, reviews y comentarios de clasificación, el hash de la fuente CODEOWNERS y sus requisitos resueltos, permisos de revisores y equipos, membresías/visibilidad de equipos y la versión de política. Se almacenará como `external_id` opaco del check, nunca como permisos o membresías visibles. Un check anterior sin huella, una huella distinta o evidencia incompleta no se deduplican; los errores operativos siguen fallando de forma cerrada. La huella reduce publicaciones repetidas, pero no constituye una transacción atómica con GitHub.
+
 Los errores operativos emitirán diagnósticos estructurados con fase, código interno estable y estado HTTP cuando exista. Los logs no incluirán mensajes externos, respuestas completas de API, tokens ni secretos. La distinción entre bloqueo de política y error operativo deberá conservarse en el resultado de reconciliación.
 
 **Eventos, invalidación y reconciliación.**

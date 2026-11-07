@@ -227,10 +227,14 @@ function successfulFixture({
   paths = ['README.md'],
   reviewEvents,
   revokeAfterFirstEvaluation = false,
+  owners = '* @EQ-LABS-TECH/architecture',
+  teamWritable = true,
+  teamVisible = true,
+  architectActive = true,
+  deactivateArchitectAfterCheckLookup = false,
 } = {}) {
   const calls = [];
   const baseSha = 'b'.repeat(40);
-  const owners = '* @EQ-LABS-TECH/architecture';
 
   const pullRequest = {
     number: 42,
@@ -307,12 +311,13 @@ function successfulFixture({
     } else if (url.includes('/teams/architecture/repos/')) {
       data = {
         full_name: 'EQ-LABS-TECH/ee-monorepo',
-        permissions: { pull: true, push: true, admin: false },
+        permissions: { pull: true, push: teamWritable, admin: false },
       };
     } else if (url.endsWith('/orgs/EQ-LABS-TECH/teams/architecture')) {
-      data = { slug: 'architecture', privacy: 'closed' };
+      data = { slug: 'architecture', privacy: teamVisible ? 'closed' : 'secret' };
     } else if (url.includes('/teams/architecture/memberships/architect')) {
-      data = { state: 'active', role: 'member' };
+      status = architectActive ? 200 : 404;
+      data = architectActive ? { state: 'active', role: 'member' } : undefined;
     } else if (method === 'GET' && url.includes('/check-runs?check_name=Validate')) {
       data = {
         total_count: 1,
@@ -332,6 +337,9 @@ function successfulFixture({
         total_count: governanceChecks.length,
         check_runs: governanceChecks,
       };
+      if (deactivateArchitectAfterCheckLookup && governanceChecks.length > 0) {
+        architectActive = false;
+      }
     } else if (url.endsWith('/check-runs/456') && method === 'GET') {
       data = {
         id: 456,
@@ -375,11 +383,15 @@ function successfulFixture({
         head_sha: headSha,
         status: 'completed',
         conclusion: payload.conclusion,
+        external_id: payload.external_id,
+        output: payload.output,
       };
       governanceChecks[0] = {
         ...governanceChecks[0],
         status: 'completed',
         conclusion: payload.conclusion,
+        external_id: payload.external_id,
+        output: payload.output,
       };
     } else {
       throw new Error(`Unexpected GitHub request: ${method} ${url}`);
@@ -407,6 +419,18 @@ function successfulFixture({
     calls,
     setReviews(nextReviews) {
       reviews = nextReviews;
+    },
+    setOwners(nextOwners) {
+      owners = nextOwners;
+    },
+    setTeamWritable(nextWritable) {
+      teamWritable = nextWritable;
+    },
+    setTeamVisible(nextVisible) {
+      teamVisible = nextVisible;
+    },
+    setArchitectActive(nextActive) {
+      architectActive = nextActive;
     },
   };
 }
@@ -458,7 +482,7 @@ test('publishes an approval block immediately and passes after a later approval'
     runPrGovernance({
       ...options,
       waitForApprovalReadiness: true,
-      deduplicateSuccessfulChecks: true,
+      deduplicateCurrentChecks: true,
       fetchImpl: mock.fetchImpl,
     });
 
@@ -505,6 +529,133 @@ test('publishes an approval block immediately and passes after a later approval'
     completedPayloads.map(({ conclusion }) => conclusion),
     ['failure', 'success'],
   );
+});
+
+test('reuses an identical current BLOCKED check after a complete fresh evaluation', async () => {
+  const mock = successfulFixture({ reviewEvents: [] });
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  const first = await reconcile();
+  const repeated = await reconcile();
+
+  assert.equal(first.decision.status, 'BLOCKED');
+  assert.equal(first.conclusion, 'failure');
+  assert.equal(repeated.mode, 'ALREADY_CURRENT');
+  assert.equal(repeated.conclusion, 'failure');
+  assert.equal(
+    mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
+    1,
+  );
+  assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 1);
+});
+
+test('reuses an identical current PASS check after a complete fresh evaluation', async () => {
+  const mock = successfulFixture();
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  const first = await reconcile();
+  const repeated = await reconcile();
+
+  assert.equal(first.decision.status, 'PASS');
+  assert.equal(first.conclusion, 'success');
+  assert.equal(repeated.mode, 'ALREADY_CURRENT');
+  assert.equal(repeated.conclusion, 'success');
+  assert.equal(
+    mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
+    1,
+  );
+  assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 1);
+});
+
+test('publishes a new BLOCKED check when same-HEAD authority evidence changes', async () => {
+  const mock = successfulFixture({
+    paths: ['.github/workflows/governance.yml'],
+    reviewEvents: [
+      {
+        user: { login: 'architect' },
+        state: 'APPROVED',
+        commit_id: headSha,
+        submitted_at: '2026-10-29T00:00:00Z',
+        body: 'Approved',
+      },
+    ],
+  });
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  const first = await reconcile();
+  mock.setArchitectActive(false);
+  const changed = await reconcile();
+
+  assert.equal(first.decision.status, 'BLOCKED');
+  assert.equal(changed.mode, 'EVALUATION_AND_PUBLICATION');
+  assert.equal(changed.decision.status, 'BLOCKED');
+  assert.equal(
+    mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
+    2,
+  );
+  assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 2);
+});
+
+test('publishes a new check when the same decision has a different CODEOWNERS source', async () => {
+  const mock = successfulFixture({ reviewEvents: [] });
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  const first = await reconcile();
+  mock.setOwners('* @EQ-LABS-TECH/architecture\n# source revision');
+  const changed = await reconcile();
+
+  assert.equal(first.decision.status, 'BLOCKED');
+  assert.equal(changed.mode, 'EVALUATION_AND_PUBLICATION');
+  assert.equal(changed.decision.status, 'BLOCKED');
+  assert.equal(
+    mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
+    2,
+  );
+});
+
+test('does not reuse a check when authority changes during deduplication confirmation', async () => {
+  const mock = successfulFixture({
+    deactivateArchitectAfterCheckLookup: true,
+  });
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  const first = await reconcile();
+  const changedDuringConfirmation = await reconcile();
+
+  assert.equal(first.decision.status, 'PASS');
+  assert.equal(changedDuringConfirmation.mode, 'EVALUATION_AND_PUBLICATION');
+  assert.equal(changedDuringConfirmation.decision.status, 'BLOCKED');
+  assert.equal(changedDuringConfirmation.conclusion, 'failure');
+  assert.equal(
+    mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
+    2,
+  );
+  assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 2);
 });
 
 test('missing trusted App identity prevents all API calls', async () => {

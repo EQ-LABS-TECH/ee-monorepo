@@ -63,6 +63,7 @@ function fixture({
   writableTeams = ['architecture', 'repository-admin', 'maintainers'],
   secretTeams = [],
   changeHead = false,
+  owners = codeowners,
 } = {}) {
   let prReads = 0;
 
@@ -102,8 +103,8 @@ function fixture({
         type: 'file',
         path: '.github/CODEOWNERS',
         encoding: 'base64',
-        size: Buffer.byteLength(codeowners),
-        content: Buffer.from(codeowners).toString('base64'),
+        size: Buffer.byteLength(owners),
+        content: Buffer.from(owners).toString('base64'),
       };
     } else if (url.includes('/collaborators/')) {
       const reviewer = url.split('/collaborators/')[1].split('/permission')[0];
@@ -153,6 +154,35 @@ test('ordinary classification passes with authorized architecture reviewer', asy
   assert.equal(result.classification, 'ORDINARY');
   assert.equal(result.decision.status, 'PASS');
   assert.equal(result.decision.requiredCount, 1);
+  assert.match(result.evidenceFingerprint, /^[a-f0-9]{64}$/);
+});
+
+test('fingerprint is stable for an identical complete evidence snapshot', async () => {
+  const first = await evaluatePrGovernance({ ...options, fetchImpl: fixture() });
+  const second = await evaluatePrGovernance({ ...options, fetchImpl: fixture() });
+
+  assert.equal(first.evidenceFingerprint, second.evidenceFingerprint);
+});
+
+test('fingerprint changes when CODEOWNERS source changes without changing its decision', async () => {
+  const baseline = await evaluatePrGovernance({ ...options, fetchImpl: fixture() });
+  const changedSource = await evaluatePrGovernance({
+    ...options,
+    fetchImpl: fixture({ owners: `${codeowners}\n# reviewed policy source` }),
+  });
+
+  assert.equal(baseline.decision.status, changedSource.decision.status);
+  assert.notEqual(baseline.evidenceFingerprint, changedSource.evidenceFingerprint);
+});
+
+test('fingerprint changes when team visibility changes without an API error', async () => {
+  const baseline = await evaluatePrGovernance({ ...options, fetchImpl: fixture() });
+  const changedAuthority = await evaluatePrGovernance({
+    ...options,
+    fetchImpl: fixture({ secretTeams: ['architecture'] }),
+  });
+
+  assert.notEqual(baseline.evidenceFingerprint, changedAuthority.evidenceFingerprint);
 });
 
 test('ordinary-looking change passes without Architecture declaration', async () => {
