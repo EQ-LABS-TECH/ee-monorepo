@@ -103,6 +103,8 @@ function validateGovernanceCheckList(result, expectedAppId, headSha) {
   }
 
   for (const check of result.check_runs) {
+    const validTimestamp = (value) =>
+      value === null || (typeof value === 'string' && Number.isFinite(Date.parse(value)));
     if (
       !check ||
       check.name !== PR_GOVERNANCE_CHECK ||
@@ -114,8 +116,10 @@ function validateGovernanceCheckList(result, expectedAppId, headSha) {
       (check.conclusion !== null &&
         check.conclusion !== undefined &&
         typeof check.conclusion !== 'string') ||
-      typeof check.created_at !== 'string' ||
-      !Number.isFinite(Date.parse(check.created_at)) ||
+      !validTimestamp(check.started_at) ||
+      !validTimestamp(check.completed_at) ||
+      (check.status === 'completed' && typeof check.completed_at !== 'string') ||
+      (check.status !== 'completed' && check.completed_at !== null) ||
       (check.status === 'completed' &&
         (!check.output ||
           typeof check.output.title !== 'string' ||
@@ -125,14 +129,26 @@ function validateGovernanceCheckList(result, expectedAppId, headSha) {
     }
   }
 
-  return (
-    result.check_runs
-      .filter(
-        (check) =>
-          check.app.id === expectedAppId && check.head_sha?.toLowerCase() === headSha.toLowerCase(),
-      )
-      .sort((left, right) => Date.parse(right.created_at) - Date.parse(left.created_at))[0] ?? null
+  const candidates = result.check_runs.filter(
+    (check) =>
+      check.app.id === expectedAppId && check.head_sha?.toLowerCase() === headSha.toLowerCase(),
   );
+  if (!candidates.length) return null;
+
+  // An active check may still publish a newer decision; never reuse a completed
+  // BLOCKED result while that outcome is unresolved or its relative age is unclear.
+  if (candidates.some((check) => check.status !== 'completed')) return null;
+
+  const sorted = [...candidates].sort(
+    (left, right) => Date.parse(right.completed_at) - Date.parse(left.completed_at),
+  );
+  if (
+    sorted.length > 1 &&
+    Date.parse(sorted[0].completed_at) === Date.parse(sorted[1].completed_at)
+  ) {
+    return null;
+  }
+  return sorted[0];
 }
 
 async function currentGovernanceDecision({ owner, repo, headSha, appId, token, fetchImpl }) {
