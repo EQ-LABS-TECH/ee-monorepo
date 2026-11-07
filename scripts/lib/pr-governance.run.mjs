@@ -43,6 +43,32 @@ function getHttpStatus(error, seen = new Set()) {
   return undefined;
 }
 
+async function publishInitialEvaluationFailure(publication, context, evaluationError) {
+  const diagnostic = diagnosticFor(evaluationError, 'evaluation', context);
+  if (evaluationError instanceof Error) evaluationError.governanceDiagnostic = diagnostic;
+
+  try {
+    const failedCheck = await startPrGovernanceCheck(publication);
+    await completePrGovernanceCheck({
+      ...publication,
+      checkId: failedCheck.checkId,
+      expectedAppId: failedCheck.appId,
+      failureReason: 'evaluation-error',
+    });
+  } catch (publicationError) {
+    const aggregate = new AggregateError(
+      [evaluationError, publicationError],
+      'PR governance evaluation failed and its failure check could not be published',
+    );
+    aggregate.governanceDiagnostic = {
+      ...diagnostic,
+      phase: 'evaluation-failure-publication',
+      code: 'failure-publication-failed',
+    };
+    throw aggregate;
+  }
+}
+
 /**
  * Trusted orchestration only.
  * The caller supplies the PR identity, expected HEAD and separate tokens.
@@ -125,6 +151,7 @@ export async function runPrGovernance({
         fetchImpl,
       });
     } catch (error) {
+      await publishInitialEvaluationFailure(publication, { number, expectedHeadSha }, error);
       if (error instanceof Error) {
         error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       }
@@ -179,6 +206,7 @@ export async function runPrGovernance({
         }
       }
     } catch (error) {
+      await publishInitialEvaluationFailure(publication, { number, expectedHeadSha }, error);
       if (error instanceof Error) {
         error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       }
@@ -208,10 +236,9 @@ export async function runPrGovernance({
         fetchImpl,
       });
 
-    // Re-read all review and classification evidence immediately before
-    // publishing either outcome. The Checks API is not atomic with review
-    // changes, so this narrows but cannot eliminate the final race window.
-    await evaluate();
+    // Re-read and confirm all evidence immediately before publishing either
+    // outcome. The Checks API is not atomic with evidence changes, so this
+    // narrows but cannot eliminate the final race window.
     const evaluation = await evaluate();
 
     phase = 'publication';

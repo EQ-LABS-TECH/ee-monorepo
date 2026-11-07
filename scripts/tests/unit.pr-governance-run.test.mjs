@@ -232,9 +232,12 @@ function successfulFixture({
   teamVisible = true,
   architectActive = true,
   deactivateArchitectAfterCheckLookup = false,
+  patchStatus = 200,
 } = {}) {
   const calls = [];
   const baseSha = 'b'.repeat(40);
+  let currentPatchStatus = patchStatus;
+  let membershipErrorStatus = null;
 
   const pullRequest = {
     number: 42,
@@ -316,8 +319,8 @@ function successfulFixture({
     } else if (url.endsWith('/orgs/EQ-LABS-TECH/teams/architecture')) {
       data = { slug: 'architecture', privacy: teamVisible ? 'closed' : 'secret' };
     } else if (url.includes('/teams/architecture/memberships/architect')) {
-      status = architectActive ? 200 : 404;
-      data = architectActive ? { state: 'active', role: 'member' } : undefined;
+      status = membershipErrorStatus ?? (architectActive ? 200 : 404);
+      data = status === 200 ? { state: 'active', role: 'member' } : undefined;
     } else if (method === 'GET' && url.includes('/check-runs?check_name=Validate')) {
       data = {
         total_count: 1,
@@ -386,6 +389,7 @@ function successfulFixture({
         external_id: payload.external_id,
         output: payload.output,
       };
+      status = currentPatchStatus;
       governanceChecks[0] = {
         ...governanceChecks[0],
         status: 'completed',
@@ -431,6 +435,12 @@ function successfulFixture({
     },
     setArchitectActive(nextActive) {
       architectActive = nextActive;
+    },
+    setMembershipError(status) {
+      membershipErrorStatus = status;
+    },
+    setPatchStatus(status) {
+      currentPatchStatus = status;
     },
   };
 }
@@ -577,6 +587,29 @@ test('reuses an identical current PASS check after a complete fresh evaluation',
   assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 1);
 });
 
+test('performs only one complete evaluation after starting a new check', async () => {
+  const mock = successfulFixture();
+
+  const result = await runPrGovernance({
+    ...options,
+    deduplicateCurrentChecks: true,
+    fetchImpl: mock.fetchImpl,
+  });
+
+  assert.equal(result.decision.status, 'PASS');
+  const checkStartIndex = mock.calls.findIndex(
+    ({ method, url }) => method === 'POST' && url.endsWith('/check-runs'),
+  );
+  const callsAfterStart = mock.calls.slice(checkStartIndex + 1);
+  assert.equal(
+    callsAfterStart.filter(
+      ({ method, url, authorization }) =>
+        method === 'GET' && url.endsWith('/pulls/42') && authorization === 'Bearer pr-token',
+    ).length,
+    6,
+  );
+});
+
 test('publishes a new BLOCKED check when same-HEAD authority evidence changes', async () => {
   const mock = successfulFixture({
     paths: ['.github/workflows/governance.yml'],
@@ -631,6 +664,79 @@ test('publishes a new check when the same decision has a different CODEOWNERS so
     mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
     2,
   );
+});
+
+test('changes a same-HEAD PASS to BLOCKED when reviewer authority is revoked', async () => {
+  const mock = successfulFixture();
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  const passed = await reconcile();
+  mock.setArchitectActive(false);
+  const blocked = await reconcile();
+
+  assert.equal(passed.headSha, blocked.headSha);
+  assert.equal(passed.decision.status, 'PASS');
+  assert.equal(blocked.mode, 'EVALUATION_AND_PUBLICATION');
+  assert.equal(blocked.decision.status, 'BLOCKED');
+  assert.equal(blocked.conclusion, 'failure');
+  assert.equal(
+    mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
+    2,
+  );
+  assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 2);
+});
+
+test('publishes a failure for a new evidence error after a same-HEAD PASS', async () => {
+  const mock = successfulFixture();
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  const passed = await reconcile();
+  mock.setMembershipError(403);
+
+  await assert.rejects(reconcile(), /HTTP 403/);
+
+  assert.equal(passed.decision.status, 'PASS');
+  assert.equal(
+    mock.calls.filter(({ method, url }) => method === 'POST' && url.endsWith('/check-runs')).length,
+    2,
+  );
+  const patches = mock.calls.filter(({ method }) => method === 'PATCH');
+  assert.equal(patches.length, 2);
+  assert.equal(patches[1].body.conclusion, 'failure');
+  assert.equal(patches[1].body.output.title, 'PR Governance evaluation failed');
+});
+
+test('keeps evaluation and failure-publication errors distinct after a same-HEAD PASS', async () => {
+  const mock = successfulFixture();
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  await reconcile();
+  mock.setMembershipError(403);
+  mock.setPatchStatus(403);
+
+  await assert.rejects(reconcile(), (error) => {
+    assert.ok(error instanceof AggregateError);
+    assert.equal(error.governanceDiagnostic.code, 'failure-publication-failed');
+    assert.equal(error.governanceDiagnostic.phase, 'evaluation-failure-publication');
+    assert.match(error.errors[0].message, /HTTP 403/);
+    assert.match(error.errors[1].message, /check completion returned HTTP 403/);
+    return true;
+  });
 });
 
 test('does not reuse a check when authority changes during deduplication confirmation', async () => {

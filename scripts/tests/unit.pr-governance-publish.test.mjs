@@ -159,6 +159,7 @@ test('does not deduplicate old checks or checks with different evidence', async 
   for (const externalId of [
     null,
     `pr-governance-evidence-v1:pr-governance-policy-v1:${'e'.repeat(64)}`,
+    `pr-governance-evidence-v1:pr-governance-policy-v0:${'d'.repeat(64)}`,
   ]) {
     const result = await findCurrentPrGovernanceCheck({
       owner: options.owner,
