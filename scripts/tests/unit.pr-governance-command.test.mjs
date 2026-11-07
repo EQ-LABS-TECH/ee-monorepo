@@ -119,30 +119,6 @@ test('waits for Validate without publishing a governance result', async () => {
   });
 });
 
-test('WAITING_FOR_APPROVALS preserves the existing blocked check and succeeds operationally', async () => {
-  const messages = [];
-  const exitCode = await executeGovernanceCommand({
-    env,
-    run: async () => ({
-      mode: 'WAITING_FOR_APPROVALS',
-      headSha: sha,
-      checkRunId: 321,
-      approvalCount: 1,
-      required: 2,
-    }),
-    log: (message) => messages.push(message),
-  });
-
-  assert.equal(exitCode, 0);
-  assert.deepEqual(JSON.parse(messages[0]), {
-    status: 'WAITING_FOR_APPROVALS',
-    headSha: sha,
-    checkRunId: 321,
-    approvalCount: 1,
-    required: 2,
-  });
-});
-
 test('inconsistent evaluation result is rejected', async () => {
   await assert.rejects(
     executeGovernanceCommand({

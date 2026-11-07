@@ -10,7 +10,6 @@ const owner = 'EQ-LABS-TECH';
 const repo = 'ee-monorepo';
 const number = 52;
 const headSha = 'a'.repeat(40);
-const governanceAppId = 5555805;
 
 function apiResponse(body, status = 200) {
   return {
@@ -37,10 +36,6 @@ function fixture({
   validateReady = true,
   currentHeadSha = headSha,
   dispatchStatus = 204,
-  governanceDecision = null,
-  governanceCheckRuns = null,
-  governanceCheckStatus = 200,
-  reviews = [],
   currentRunId = 101,
   currentRunNumber = 165,
 } = {}) {
@@ -69,38 +64,6 @@ function fixture({
     }
 
     if (url.pathname.endsWith(`/commits/${headSha}/check-runs`)) {
-      if (url.searchParams.get('check_name') === 'PR Governance') {
-        if (governanceCheckStatus !== 200) return apiResponse({}, governanceCheckStatus);
-        const defaultGovernanceChecks = governanceDecision
-          ? [
-              {
-                id: 900,
-                name: 'PR Governance',
-                head_sha: headSha,
-                app: { id: governanceAppId },
-                status: 'completed',
-                conclusion: governanceDecision.status === 'PASS' ? 'success' : 'failure',
-                started_at: '2026-11-06T17:00:00Z',
-                completed_at: '2026-11-06T17:01:00Z',
-                output: {
-                  title:
-                    governanceDecision.status === 'PASS'
-                      ? 'PR Governance verified'
-                      : 'PR Governance blocked',
-                  summary: [
-                    `Classification: ${governanceDecision.classification}`,
-                    `Decision: ${governanceDecision.status}`,
-                    `Qualified approvals: ${governanceDecision.qualified} / ${governanceDecision.required}`,
-                  ].join('\n'),
-                },
-              },
-            ]
-          : [];
-        return apiResponse({
-          total_count: governanceCheckRuns?.length ?? defaultGovernanceChecks.length,
-          check_runs: governanceCheckRuns ?? defaultGovernanceChecks,
-        });
-      }
       return apiResponse({
         total_count: 1,
         check_runs: validateReady
@@ -119,8 +82,6 @@ function fixture({
       });
     }
 
-    if (url.pathname.endsWith(`/pulls/${number}/reviews`)) return apiResponse(reviews);
-
     if (url.pathname.endsWith('/actions/workflows/governance.yml/dispatches')) {
       return apiResponse(null, dispatchStatus);
     }
@@ -138,7 +99,6 @@ function fixture({
       expectedHeadSha: headSha,
       currentRunId,
       currentRunNumber,
-      expectedAppId: governanceAppId,
       token: 'test-token',
       fetchImpl,
     },
@@ -152,19 +112,18 @@ test('uses an explicit review run identity for workflow dispatch names', () => {
   );
 });
 
-test('supersedes a dismissed relay when a newer review event exists for the same PR', async () => {
+test('dispatches each review event even when a newer event for the same PR exists', async () => {
   const setup = fixture({
     reviewPages: [[run({ id: 102, runNumber: 166 }), run({ id: 101, runNumber: 165 })]],
   });
 
   const result = await runGovernanceReviewRelay(setup.context);
 
-  assert.deepEqual(result, {
-    status: 'SUPERSEDED',
-    newerRunId: 102,
-    newerRunNumber: 166,
-  });
-  assert.equal(setup.requests.length, 1);
+  assert.equal(result.status, 'DISPATCHED');
+  assert.deepEqual(
+    JSON.parse(setup.requests.find((request) => request.method === 'POST').body).inputs,
+    { pr_number: String(number), head_sha: headSha, review_run_number: '165' },
+  );
 });
 
 test('paginates review runs and ignores newer events from other PRs', async () => {
@@ -214,70 +173,8 @@ test('dispatches once after CI success and sends the review run number', async (
   });
 });
 
-test('keeps a current BLOCKED check and waits when raw approvals remain below its threshold', async () => {
-  const setup = fixture({
-    governanceDecision: {
-      status: 'BLOCKED',
-      classification: 'CRITICAL',
-      qualified: 0,
-      required: 2,
-    },
-    reviews: [],
-  });
-
-  const result = await runGovernanceReviewRelay(setup.context);
-
-  assert.equal(result.status, 'WAITING_FOR_APPROVALS');
-  assert.equal(result.approvalCount, 0);
-  assert.equal(result.required, 2);
-  assert.equal(
-    setup.requests.some((request) => request.method === 'POST'),
-    false,
-  );
-});
-
-test('accepts a completed PR Governance check without created_at', async () => {
-  const setup = fixture({
-    governanceDecision: {
-      status: 'BLOCKED',
-      classification: 'CRITICAL',
-      qualified: 0,
-      required: 2,
-    },
-    reviews: [],
-  });
-
-  const result = await runGovernanceReviewRelay(setup.context);
-
-  assert.equal(result.status, 'WAITING_FOR_APPROVALS');
-  assert.equal(
-    setup.requests.some((request) => request.method === 'POST'),
-    false,
-  );
-});
-
-test('does not reuse an in-progress governance check without started_at', async () => {
-  const setup = fixture({
-    governanceDecision: {
-      status: 'BLOCKED',
-      classification: 'CRITICAL',
-      qualified: 0,
-      required: 2,
-    },
-    governanceCheckRuns: [
-      {
-        id: 901,
-        name: 'PR Governance',
-        head_sha: headSha,
-        app: { id: governanceAppId },
-        status: 'queued',
-        conclusion: null,
-        started_at: null,
-        completed_at: null,
-      },
-    ],
-    reviews: [],
-  });
+test('dispatches a trusted reevaluation after the first approval even below the threshold', async () => {
+  const setup = fixture();
 
   const result = await runGovernanceReviewRelay(setup.context);
 
@@ -288,223 +185,21 @@ test('does not reuse an in-progress governance check without started_at', async 
   );
 });
 
-test('does not reuse an older BLOCKED check when a newer governance check is pending', async () => {
+test('reevaluates every distinct review event so Governance can publish the latest qualified count', async () => {
   const setup = fixture({
-    governanceDecision: {
-      status: 'BLOCKED',
-      classification: 'CRITICAL',
-      qualified: 0,
-      required: 2,
-    },
-    governanceCheckRuns: [
-      {
-        id: 901,
-        name: 'PR Governance',
-        head_sha: headSha,
-        app: { id: governanceAppId },
-        status: 'in_progress',
-        conclusion: null,
-        started_at: '2026-11-06T17:02:00Z',
-        completed_at: null,
-      },
-      {
-        id: 900,
-        name: 'PR Governance',
-        head_sha: headSha,
-        app: { id: governanceAppId },
-        status: 'completed',
-        conclusion: 'failure',
-        started_at: '2026-11-06T17:00:00Z',
-        completed_at: '2026-11-06T17:01:00Z',
-        output: {
-          title: 'PR Governance blocked',
-          summary: [
-            'Classification: CRITICAL',
-            'Decision: BLOCKED',
-            'Qualified approvals: 0 / 2',
-          ].join('\n'),
-        },
-      },
-    ],
-    reviews: [],
+    reviewPages: [[run({ id: 102, runNumber: 166 })]],
+    currentRunId: 102,
+    currentRunNumber: 166,
   });
 
   const result = await runGovernanceReviewRelay(setup.context);
 
   assert.equal(result.status, 'DISPATCHED');
-  assert.equal(
-    setup.requests.some((request) => request.method === 'POST'),
-    true,
+  assert.deepEqual(
+    JSON.parse(setup.requests.find((request) => request.method === 'POST').body).inputs,
+    { pr_number: String(number), head_sha: headSha, review_run_number: '166' },
   );
 });
-
-test('does not dispatch for 1/2 after a current CRITICAL BLOCKED check', async () => {
-  const setup = fixture({
-    governanceDecision: {
-      status: 'BLOCKED',
-      classification: 'CRITICAL',
-      qualified: 0,
-      required: 2,
-    },
-    reviews: [
-      {
-        id: 501,
-        user: { login: 'architect' },
-        state: 'APPROVED',
-        commit_id: headSha,
-        submitted_at: '2026-11-06T17:02:00Z',
-      },
-    ],
-  });
-
-  const result = await runGovernanceReviewRelay(setup.context);
-
-  assert.equal(result.status, 'WAITING_FOR_APPROVALS');
-  assert.equal(result.approvalCount, 1);
-  assert.equal(
-    setup.requests.some((request) => request.method === 'POST'),
-    false,
-  );
-});
-
-test('reevaluates instead of suppressing when the current check has pending classification', async () => {
-  const setup = fixture({
-    governanceDecision: {
-      status: 'BLOCKED',
-      classification: 'PENDING_REVIEW',
-      qualified: 0,
-      required: 2,
-    },
-  });
-
-  const result = await runGovernanceReviewRelay(setup.context);
-
-  assert.equal(result.status, 'DISPATCHED');
-});
-
-test('dispatches when raw approval count reaches the minimum; main qualifies reviewers', async () => {
-  const setup = fixture({
-    governanceDecision: {
-      status: 'BLOCKED',
-      classification: 'CRITICAL',
-      qualified: 0,
-      required: 2,
-    },
-    reviews: ['architect', 'maintainer'].map((login, index) => ({
-      id: 501 + index,
-      user: { login },
-      state: 'APPROVED',
-      commit_id: headSha,
-      submitted_at: `2026-11-06T17:0${2 + index}:00Z`,
-    })),
-  });
-
-  const result = await runGovernanceReviewRelay(setup.context);
-
-  assert.equal(result.status, 'DISPATCHED');
-  assert.equal(
-    setup.requests.some((request) => request.method === 'POST'),
-    true,
-  );
-});
-
-test('does not preserve a prior PASS when an approval is dismissed', async () => {
-  const setup = fixture({
-    governanceDecision: {
-      status: 'PASS',
-      classification: 'ORDINARY',
-      qualified: 1,
-      required: 1,
-    },
-    reviews: [
-      {
-        id: 501,
-        user: { login: 'maintainer' },
-        state: 'DISMISSED',
-        commit_id: headSha,
-        submitted_at: '2026-11-06T17:02:00Z',
-      },
-    ],
-  });
-
-  const result = await runGovernanceReviewRelay(setup.context);
-
-  assert.equal(result.status, 'DISPATCHED');
-  assert.equal(
-    setup.requests.some((request) => request.method === 'POST'),
-    true,
-  );
-});
-
-test('fails closed when the current governance check cannot be verified', async () => {
-  const setup = fixture({
-    governanceCheckStatus: 503,
-    governanceDecision: {
-      status: 'BLOCKED',
-      classification: 'CRITICAL',
-      qualified: 0,
-      required: 2,
-    },
-  });
-
-  await assert.rejects(runGovernanceReviewRelay(setup.context), (error) => {
-    assert.match(error.message, /HTTP 503/);
-    assert.equal(error.phase, 'approval-evidence');
-    assert.equal(error.code, 'github-http-error');
-    return true;
-  });
-  assert.equal(
-    setup.requests.some((request) => request.method === 'POST'),
-    false,
-  );
-});
-
-test('does not count approvals on an older HEAD, bot approvals, or a superseded reviewer approval', async () => {
-  const setup = fixture({
-    governanceDecision: {
-      status: 'BLOCKED',
-      classification: 'CRITICAL',
-      qualified: 0,
-      required: 2,
-    },
-    reviews: [
-      {
-        id: 501,
-        user: { login: 'architect' },
-        state: 'APPROVED',
-        commit_id: headSha,
-        submitted_at: '2026-11-06T17:02:00Z',
-      },
-      {
-        id: 502,
-        user: { login: 'ARCHITECT' },
-        state: 'COMMENTED',
-        commit_id: headSha,
-        submitted_at: '2026-11-06T17:03:00Z',
-      },
-      {
-        id: 503,
-        user: { login: 'dependabot[bot]' },
-        state: 'APPROVED',
-        commit_id: headSha,
-        submitted_at: '2026-11-06T17:04:00Z',
-      },
-      {
-        id: 504,
-        user: { login: 'old-reviewer' },
-        state: 'APPROVED',
-        commit_id: 'b'.repeat(40),
-        submitted_at: '2026-11-06T17:05:00Z',
-      },
-    ],
-  });
-
-  const result = await runGovernanceReviewRelay(setup.context);
-
-  assert.equal(result.status, 'WAITING_FOR_APPROVALS');
-  assert.equal(result.approvalCount, 0);
-});
-
 test('does not dispatch when the PR HEAD changed after the review event', async () => {
   const setup = fixture({ currentHeadSha: 'b'.repeat(40) });
 
