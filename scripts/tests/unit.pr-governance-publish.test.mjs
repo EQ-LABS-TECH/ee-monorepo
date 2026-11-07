@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   publishPrGovernanceCheck,
   startPrGovernanceCheck,
+  findCurrentPrGovernanceCheck,
   completePrGovernanceCheck,
 } from '../lib/pr-governance.publish.mjs';
 
@@ -20,6 +21,7 @@ const options = {
     headSha,
     classification: 'ORDINARY',
     decision: { status: 'PASS' },
+    evidenceFingerprint: 'c'.repeat(64),
   },
 };
 
@@ -70,6 +72,7 @@ function fixture({
           head_sha: resultHeadSha,
           status: payload.status,
           conclusion: payload.conclusion,
+          external_id: payload.external_id,
         }),
       };
     }
@@ -98,6 +101,97 @@ test('publishes governance success for the exact current HEAD', async () => {
     mock.calls.map((call) => call.method),
     ['GET', 'POST'],
   );
+
+  const payload = JSON.parse(mock.calls.find((call) => call.method === 'POST').body);
+  assert.match(
+    payload.external_id,
+    /^pr-governance-evidence-v1:pr-governance-policy-v1:[a-f0-9]{64}$/,
+  );
+  assert.equal(
+    JSON.stringify(payload.output).includes(options.evaluation.evidenceFingerprint),
+    false,
+  );
+});
+
+test('deduplicates a completed PASS or BLOCKED only with matching evidence metadata', async () => {
+  const fingerprint = 'd'.repeat(64);
+  const externalId = `pr-governance-evidence-v1:pr-governance-policy-v1:${fingerprint}`;
+
+  for (const [decision, conclusion, title] of [
+    ['PASS', 'success', 'PR Governance verified'],
+    ['BLOCKED', 'failure', 'PR Governance blocked'],
+  ]) {
+    const result = await findCurrentPrGovernanceCheck({
+      owner: options.owner,
+      repo: options.repo,
+      expectedHeadSha: headSha,
+      expectedAppId: 789,
+      expectedConclusion: conclusion,
+      evidenceFingerprint: fingerprint,
+      token: options.token,
+      fetchImpl: async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          total_count: 1,
+          check_runs: [
+            {
+              id: 456,
+              app: { id: 789 },
+              name: 'PR Governance',
+              head_sha: headSha,
+              status: 'completed',
+              conclusion,
+              external_id: externalId,
+              output: { title },
+            },
+          ],
+        }),
+      }),
+    });
+
+    assert.deepEqual(result, { checkId: 456, headSha, conclusion });
+    assert.equal(decision === 'PASS', conclusion === 'success');
+  }
+});
+
+test('does not deduplicate old checks or checks with different evidence', async () => {
+  for (const externalId of [
+    null,
+    `pr-governance-evidence-v1:pr-governance-policy-v1:${'e'.repeat(64)}`,
+    `pr-governance-evidence-v1:pr-governance-policy-v0:${'d'.repeat(64)}`,
+  ]) {
+    const result = await findCurrentPrGovernanceCheck({
+      owner: options.owner,
+      repo: options.repo,
+      expectedHeadSha: headSha,
+      expectedAppId: 789,
+      expectedConclusion: 'failure',
+      evidenceFingerprint: 'd'.repeat(64),
+      token: options.token,
+      fetchImpl: async () => ({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          total_count: 1,
+          check_runs: [
+            {
+              id: 456,
+              app: { id: 789 },
+              name: 'PR Governance',
+              head_sha: headSha,
+              status: 'completed',
+              conclusion: 'failure',
+              external_id: externalId,
+              output: { title: 'PR Governance blocked' },
+            },
+          ],
+        }),
+      }),
+    });
+
+    assert.equal(result, null);
+  }
 });
 
 test('publishes BLOCKED as failure', async () => {
@@ -410,6 +504,7 @@ function completionFixture({
           head_sha: headSha,
           status: 'completed',
           conclusion: payload.conclusion,
+          external_id: payload.external_id,
         }),
       };
     }

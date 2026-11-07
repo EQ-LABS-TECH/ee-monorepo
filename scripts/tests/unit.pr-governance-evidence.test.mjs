@@ -71,6 +71,9 @@ const locator = { owner: 'EQ-LABS-TECH', repo: 'ee-monorepo', number: 27, token:
 test('normalizes PR files and reviews from GitHub without write calls', async () => {
   const evidence = await readPullRequestEvidence({ ...locator, fetchImpl: mockFetch() });
   assert.equal(evidence.author, 'contributor');
+  assert.equal(evidence.headRepository, 'contributor/ee-monorepo');
+  assert.equal(evidence.baseRef, 'main');
+  assert.equal(evidence.baseSha, baseSha);
   assert.deepEqual(evidence.paths, ['.github/CODEOWNERS']);
   assert.deepEqual(evidence.reviews[0], {
     login: 'reviewer',

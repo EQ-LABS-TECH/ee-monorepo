@@ -3,6 +3,7 @@ import {
   PR_GOVERNANCE_CHECK_NAME,
 } from '@eq-labs/governance/pr-governance/check';
 import { createGitHubHttpError } from './pr-governance.github-error.mjs';
+import { isPrGovernanceExternalId, prGovernanceExternalId } from './pr-governance.fingerprint.mjs';
 
 const SHA = /^[0-9a-f]{40}$/i;
 const OWNER = /^[a-z\d](?:[a-z\d-]{0,38}[a-z\d])?$/i;
@@ -34,6 +35,7 @@ export async function publishPrGovernanceCheck({
     evaluation,
     expectedHeadSha,
   });
+  payload.external_id = prGovernanceExternalId(evaluation.evidenceFingerprint);
 
   const headers = {
     Accept: 'application/vnd.github+json',
@@ -83,7 +85,8 @@ export async function publishPrGovernanceCheck({
     result.name !== payload.name ||
     result.head_sha?.toLowerCase() !== payload.head_sha ||
     result.status !== 'completed' ||
-    result.conclusion !== payload.conclusion
+    result.conclusion !== payload.conclusion ||
+    result.external_id !== payload.external_id
   ) {
     throw new TypeError('Malformed GitHub governance check publication response');
   }
@@ -194,11 +197,13 @@ export async function startPrGovernanceCheck({
   };
 }
 
-export async function findCurrentSuccessfulPrGovernanceCheck({
+export async function findCurrentPrGovernanceCheck({
   owner,
   repo,
   expectedHeadSha,
   expectedAppId,
+  expectedConclusion,
+  evidenceFingerprint,
   token,
   fetchImpl = fetch,
 }) {
@@ -208,6 +213,9 @@ export async function findCurrentSuccessfulPrGovernanceCheck({
     !SHA.test(expectedHeadSha ?? '') ||
     !Number.isSafeInteger(expectedAppId) ||
     expectedAppId < 1 ||
+    !['success', 'failure'].includes(expectedConclusion) ||
+    typeof evidenceFingerprint !== 'string' ||
+    !/^[a-f0-9]{64}$/.test(evidenceFingerprint) ||
     typeof token !== 'string' ||
     !token ||
     typeof fetchImpl !== 'function'
@@ -252,15 +260,25 @@ export async function findCurrentSuccessfulPrGovernanceCheck({
       check.app?.id !== expectedAppId ||
       check.head_sha?.toLowerCase() !== expectedHeadSha.toLowerCase() ||
       !['queued', 'in_progress', 'completed'].includes(check.status) ||
-      (check.status === 'completed' && typeof check.conclusion !== 'string')
+      (check.status === 'completed' && typeof check.conclusion !== 'string') ||
+      (check.external_id != null && typeof check.external_id !== 'string')
     ) {
       throw new TypeError('Malformed GitHub governance check run');
     }
   }
 
   const latest = checks[0];
-  return latest?.status === 'completed' && latest.conclusion === 'success'
-    ? { checkId: latest.id, headSha: expectedHeadSha.toLowerCase() }
+  const expectedTitle =
+    expectedConclusion === 'success' ? 'PR Governance verified' : 'PR Governance blocked';
+  return latest?.status === 'completed' &&
+    latest.conclusion === expectedConclusion &&
+    latest.output?.title === expectedTitle &&
+    isPrGovernanceExternalId(latest.external_id, evidenceFingerprint)
+    ? {
+        checkId: latest.id,
+        headSha: expectedHeadSha.toLowerCase(),
+        conclusion: expectedConclusion,
+      }
     : null;
 }
 
@@ -311,10 +329,13 @@ export async function completePrGovernanceCheck({
             summary: 'The governance evidence could not be verified.',
           },
         }
-      : createPrGovernanceCheckPayload({
-          evaluation,
-          expectedHeadSha,
-        });
+      : {
+          ...createPrGovernanceCheckPayload({
+            evaluation,
+            expectedHeadSha,
+          }),
+          external_id: prGovernanceExternalId(evaluation.evidenceFingerprint),
+        };
 
   const headers = {
     Accept: 'application/vnd.github+json',
@@ -423,6 +444,7 @@ export async function completePrGovernanceCheck({
       status: 'completed',
       conclusion: payload.conclusion,
       output: payload.output,
+      ...(payload.external_id ? { external_id: payload.external_id } : {}),
     }),
   });
 
@@ -437,7 +459,8 @@ export async function completePrGovernanceCheck({
     result?.name !== PR_GOVERNANCE_CHECK_NAME ||
     result?.head_sha?.toLowerCase() !== payload.head_sha ||
     result?.status !== 'completed' ||
-    result?.conclusion !== payload.conclusion
+    result?.conclusion !== payload.conclusion ||
+    (payload.external_id && result?.external_id !== payload.external_id)
   ) {
     throw new TypeError('Malformed GitHub governance check completion response');
   }

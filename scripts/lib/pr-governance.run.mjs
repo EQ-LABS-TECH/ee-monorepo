@@ -1,6 +1,6 @@
 import { evaluatePrGovernance } from './pr-governance.evaluate.mjs';
 import {
-  findCurrentSuccessfulPrGovernanceCheck,
+  findCurrentPrGovernanceCheck,
   startPrGovernanceCheck,
   completePrGovernanceCheck,
 } from './pr-governance.publish.mjs';
@@ -43,6 +43,32 @@ function getHttpStatus(error, seen = new Set()) {
   return undefined;
 }
 
+async function publishPreStartFailure(publication, context, phase, originalError) {
+  const diagnostic = diagnosticFor(originalError, phase, context);
+  if (originalError instanceof Error) originalError.governanceDiagnostic = diagnostic;
+
+  try {
+    const failedCheck = await startPrGovernanceCheck(publication);
+    await completePrGovernanceCheck({
+      ...publication,
+      checkId: failedCheck.checkId,
+      expectedAppId: failedCheck.appId,
+      failureReason: 'evaluation-error',
+    });
+  } catch (publicationError) {
+    const aggregate = new AggregateError(
+      [originalError, publicationError],
+      'PR governance pre-check failed and its failure check could not be published',
+    );
+    aggregate.governanceDiagnostic = {
+      ...diagnostic,
+      phase: `${phase}-failure-publication`,
+      code: 'failure-publication-failed',
+    };
+    throw aggregate;
+  }
+}
+
 /**
  * Trusted orchestration only.
  * The caller supplies the PR identity, expected HEAD and separate tokens.
@@ -58,7 +84,7 @@ export async function runPrGovernance({
   governanceToken,
   publisherToken,
   waitForApprovalReadiness = false,
-  deduplicateSuccessfulChecks = false,
+  deduplicateCurrentChecks = false,
   fetchImpl = fetch,
 }) {
   if (
@@ -98,6 +124,7 @@ export async function runPrGovernance({
       fetchImpl,
     });
   } catch (error) {
+    await publishPreStartFailure(publication, { number, expectedHeadSha }, phase, error);
     if (error instanceof Error) {
       error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
     }
@@ -113,7 +140,7 @@ export async function runPrGovernance({
   }
 
   let initialEvaluation;
-  if (waitForApprovalReadiness || deduplicateSuccessfulChecks) {
+  if (waitForApprovalReadiness || deduplicateCurrentChecks) {
     phase = 'evaluation';
     try {
       initialEvaluation = await evaluatePrGovernance({
@@ -125,6 +152,7 @@ export async function runPrGovernance({
         fetchImpl,
       });
     } catch (error) {
+      await publishPreStartFailure(publication, { number, expectedHeadSha }, phase, error);
       if (error instanceof Error) {
         error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       }
@@ -138,25 +166,48 @@ export async function runPrGovernance({
     }
   }
 
-  if (initialEvaluation?.decision.status === 'PASS' && deduplicateSuccessfulChecks) {
+  if (initialEvaluation && deduplicateCurrentChecks) {
     phase = 'check-deduplication';
     try {
-      const existing = await findCurrentSuccessfulPrGovernanceCheck({
+      const expectedConclusion =
+        initialEvaluation.decision.status === 'PASS' ? 'success' : 'failure';
+      const existing = await findCurrentPrGovernanceCheck({
         owner,
         repo,
         expectedHeadSha,
         expectedAppId,
+        expectedConclusion,
+        evidenceFingerprint: initialEvaluation.evidenceFingerprint,
         token: publisherToken,
         fetchImpl,
       });
       if (existing) {
-        return {
-          mode: 'ALREADY_CURRENT',
-          headSha: existing.headSha,
-          checkId: existing.checkId,
-        };
+        const confirmedEvaluation = await evaluatePrGovernance({
+          owner,
+          repo,
+          number,
+          token,
+          governanceToken,
+          fetchImpl,
+        });
+
+        if (
+          confirmedEvaluation.headSha?.toLowerCase() !== expectedHeadSha.toLowerCase() ||
+          confirmedEvaluation.evidenceFingerprint !== initialEvaluation.evidenceFingerprint ||
+          confirmedEvaluation.decision.status !== initialEvaluation.decision.status
+        ) {
+          initialEvaluation = confirmedEvaluation;
+        } else {
+          return {
+            mode: 'ALREADY_CURRENT',
+            headSha: existing.headSha,
+            checkId: existing.checkId,
+            conclusion: existing.conclusion,
+          };
+        }
       }
     } catch (error) {
+      await publishPreStartFailure(publication, { number, expectedHeadSha }, phase, error);
       if (error instanceof Error) {
         error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       }
@@ -186,10 +237,9 @@ export async function runPrGovernance({
         fetchImpl,
       });
 
-    // Re-read all review and classification evidence immediately before
-    // publishing either outcome. The Checks API is not atomic with review
-    // changes, so this narrows but cannot eliminate the final race window.
-    await evaluate();
+    // Re-read and confirm all evidence immediately before publishing either
+    // outcome. The Checks API is not atomic with evidence changes, so this
+    // narrows but cannot eliminate the final race window.
     const evaluation = await evaluate();
 
     phase = 'publication';

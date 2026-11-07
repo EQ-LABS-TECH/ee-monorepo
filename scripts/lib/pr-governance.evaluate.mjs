@@ -6,6 +6,7 @@ import {
   resolvePrGovernanceClassification,
 } from '@eq-labs/governance/pr-governance/authority';
 import { readCodeownersEvidence } from './pr-governance.owners-api.mjs';
+import { createPrGovernanceEvidenceFingerprint } from './pr-governance.fingerprint.mjs';
 import { evaluatePrOwnership } from '@eq-labs/governance/pr-governance/ownership';
 import {
   readPullRequestEvidence,
@@ -21,7 +22,9 @@ function sameSnapshot(first, second) {
   return (
     first.author === second.author &&
     first.headSha === second.headSha &&
+    first.headRepository === second.headRepository &&
     first.baseSha === second.baseSha &&
+    first.baseRef === second.baseRef &&
     JSON.stringify(first.paths) === JSON.stringify(second.paths) &&
     JSON.stringify(first.reviews) === JSON.stringify(second.reviews) &&
     JSON.stringify(first.classificationComments) === JSON.stringify(second.classificationComments)
@@ -264,7 +267,7 @@ export async function evaluatePrGovernance({
     throw new Error('PR governance evidence changed during final verification');
   }
 
-  return composePrGovernanceEvaluation({
+  const evaluation = composePrGovernanceEvaluation({
     pullRequestEvidence: evidence,
     criticalIndicators: indicators,
     approvalEvidence: approvals,
@@ -273,4 +276,24 @@ export async function evaluatePrGovernance({
     memberships,
     evidenceCurrent: true,
   });
+
+  evaluation.evidenceFingerprint = createPrGovernanceEvidenceFingerprint({
+    repository: { owner: owner.toLowerCase(), repo: repo.toLowerCase(), number },
+    pullRequest: evidence,
+    criticalIndicators: indicators,
+    codeowners: {
+      baseSha: codeowners.baseSha,
+      sourcePath: codeowners.sourcePath,
+      sourceSha256: codeowners.sourceSha256,
+      requirements: codeowners.requirements,
+    },
+    codeownerTeamPermissions: teamPermissions,
+    reviewerAuthority: authorityEvidence,
+    classification,
+    approvals,
+    ownership,
+    decision: evaluation.decision,
+  });
+
+  return evaluation;
 }

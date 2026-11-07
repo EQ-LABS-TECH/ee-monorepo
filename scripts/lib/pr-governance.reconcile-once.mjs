@@ -125,7 +125,7 @@ export async function reconcileOpenGovernancePrs({
         governanceToken,
         publisherToken,
         waitForApprovalReadiness: true,
-        deduplicateSuccessfulChecks: true,
+        deduplicateCurrentChecks: true,
         fetchImpl,
       });
 

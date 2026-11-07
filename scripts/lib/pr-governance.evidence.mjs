@@ -188,7 +188,9 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
   return {
     author: pr.user.login,
     headSha: pr.head.sha,
+    headRepository: pr.head.repo.full_name.toLowerCase(),
     baseSha: pr.base.sha.toLowerCase(),
+    baseRef: pr.base.ref,
     paths,
     reviews: normalizedReviews,
     classificationComments,

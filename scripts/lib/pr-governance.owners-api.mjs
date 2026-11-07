@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { parseCodeowners, resolveCodeowners } from '@eq-labs/governance/pr-governance/codeowners';
 import { createGitHubHttpError } from './pr-governance.github-error.mjs';
 
@@ -96,6 +97,7 @@ export async function readCodeownersEvidence({
   return {
     baseSha: baseSha.toLowerCase(),
     sourcePath: '.github/CODEOWNERS',
+    sourceSha256: createHash('sha256').update(bytes).digest('hex'),
     status: 'RESOLVED',
     requirements,
   };

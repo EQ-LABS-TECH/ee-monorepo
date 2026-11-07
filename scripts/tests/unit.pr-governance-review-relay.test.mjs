@@ -38,6 +38,7 @@ function fixture({
   currentHeadSha = headSha,
   dispatchStatus = 204,
   governanceDecision = null,
+  governanceCheckRuns = null,
   governanceCheckStatus = 200,
   reviews = [],
   currentRunId = 101,
@@ -70,33 +71,34 @@ function fixture({
     if (url.pathname.endsWith(`/commits/${headSha}/check-runs`)) {
       if (url.searchParams.get('check_name') === 'PR Governance') {
         if (governanceCheckStatus !== 200) return apiResponse({}, governanceCheckStatus);
-        return apiResponse({
-          total_count: governanceDecision ? 1 : 0,
-          check_runs: governanceDecision
-            ? [
-                {
-                  id: 900,
-                  name: 'PR Governance',
-                  head_sha: headSha,
-                  app: { id: governanceAppId },
-                  status: 'completed',
-                  conclusion: governanceDecision.status === 'PASS' ? 'success' : 'failure',
-                  created_at: '2026-11-06T17:01:00Z',
-                  completed_at: '2026-11-06T17:01:00Z',
-                  output: {
-                    title:
-                      governanceDecision.status === 'PASS'
-                        ? 'PR Governance verified'
-                        : 'PR Governance blocked',
-                    summary: [
-                      `Classification: ${governanceDecision.classification}`,
-                      `Decision: ${governanceDecision.status}`,
-                      `Qualified approvals: ${governanceDecision.qualified} / ${governanceDecision.required}`,
-                    ].join('\n'),
-                  },
+        const defaultGovernanceChecks = governanceDecision
+          ? [
+              {
+                id: 900,
+                name: 'PR Governance',
+                head_sha: headSha,
+                app: { id: governanceAppId },
+                status: 'completed',
+                conclusion: governanceDecision.status === 'PASS' ? 'success' : 'failure',
+                started_at: '2026-11-06T17:00:00Z',
+                completed_at: '2026-11-06T17:01:00Z',
+                output: {
+                  title:
+                    governanceDecision.status === 'PASS'
+                      ? 'PR Governance verified'
+                      : 'PR Governance blocked',
+                  summary: [
+                    `Classification: ${governanceDecision.classification}`,
+                    `Decision: ${governanceDecision.status}`,
+                    `Qualified approvals: ${governanceDecision.qualified} / ${governanceDecision.required}`,
+                  ].join('\n'),
                 },
-              ]
-            : [],
+              },
+            ]
+          : [];
+        return apiResponse({
+          total_count: governanceCheckRuns?.length ?? defaultGovernanceChecks.length,
+          check_runs: governanceCheckRuns ?? defaultGovernanceChecks,
         });
       }
       return apiResponse({
@@ -231,6 +233,108 @@ test('keeps a current BLOCKED check and waits when raw approvals remain below it
   assert.equal(
     setup.requests.some((request) => request.method === 'POST'),
     false,
+  );
+});
+
+test('accepts a completed PR Governance check without created_at', async () => {
+  const setup = fixture({
+    governanceDecision: {
+      status: 'BLOCKED',
+      classification: 'CRITICAL',
+      qualified: 0,
+      required: 2,
+    },
+    reviews: [],
+  });
+
+  const result = await runGovernanceReviewRelay(setup.context);
+
+  assert.equal(result.status, 'WAITING_FOR_APPROVALS');
+  assert.equal(
+    setup.requests.some((request) => request.method === 'POST'),
+    false,
+  );
+});
+
+test('does not reuse an in-progress governance check without started_at', async () => {
+  const setup = fixture({
+    governanceDecision: {
+      status: 'BLOCKED',
+      classification: 'CRITICAL',
+      qualified: 0,
+      required: 2,
+    },
+    governanceCheckRuns: [
+      {
+        id: 901,
+        name: 'PR Governance',
+        head_sha: headSha,
+        app: { id: governanceAppId },
+        status: 'queued',
+        conclusion: null,
+        started_at: null,
+        completed_at: null,
+      },
+    ],
+    reviews: [],
+  });
+
+  const result = await runGovernanceReviewRelay(setup.context);
+
+  assert.equal(result.status, 'DISPATCHED');
+  assert.equal(
+    setup.requests.some((request) => request.method === 'POST'),
+    true,
+  );
+});
+
+test('does not reuse an older BLOCKED check when a newer governance check is pending', async () => {
+  const setup = fixture({
+    governanceDecision: {
+      status: 'BLOCKED',
+      classification: 'CRITICAL',
+      qualified: 0,
+      required: 2,
+    },
+    governanceCheckRuns: [
+      {
+        id: 901,
+        name: 'PR Governance',
+        head_sha: headSha,
+        app: { id: governanceAppId },
+        status: 'in_progress',
+        conclusion: null,
+        started_at: '2026-11-06T17:02:00Z',
+        completed_at: null,
+      },
+      {
+        id: 900,
+        name: 'PR Governance',
+        head_sha: headSha,
+        app: { id: governanceAppId },
+        status: 'completed',
+        conclusion: 'failure',
+        started_at: '2026-11-06T17:00:00Z',
+        completed_at: '2026-11-06T17:01:00Z',
+        output: {
+          title: 'PR Governance blocked',
+          summary: [
+            'Classification: CRITICAL',
+            'Decision: BLOCKED',
+            'Qualified approvals: 0 / 2',
+          ].join('\n'),
+        },
+      },
+    ],
+    reviews: [],
+  });
+
+  const result = await runGovernanceReviewRelay(setup.context);
+
+  assert.equal(result.status, 'DISPATCHED');
+  assert.equal(
+    setup.requests.some((request) => request.method === 'POST'),
+    true,
   );
 });
 
