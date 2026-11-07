@@ -197,6 +197,24 @@ test('accepts submitted reviews for pull requests targeting main', () => {
   });
 });
 
+test('accepts dismissed reviews with the event fields required by the trusted relay', () => {
+  const event = {
+    action: 'dismissed',
+    repository: { full_name: repository },
+    pull_request: {
+      number: 51,
+      base: { ref: 'main', repo: { full_name: repository } },
+    },
+    review: { id: 457, state: 'dismissed' },
+  };
+
+  assert.deepEqual(validateGovernancePullRequestReview({ event, expectedRepository: repository }), {
+    repository,
+    number: 51,
+    sourceEvent: 'pull_request_review',
+  });
+});
+
 test('rejects review signals for another repository or non-main pull requests', () => {
   const event = {
     action: 'submitted',

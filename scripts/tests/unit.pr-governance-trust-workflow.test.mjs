@@ -98,7 +98,7 @@ test('governance reevaluates completed CI, reviews and PR comments', () => {
   assert.equal(relay.env.GITHUB_RUN_NUMBER, '${{ github.run_number }}');
   assert.equal(relay.env.PR_NUMBER, '${{ github.event.pull_request.number }}');
   assert.equal(relay.env.PR_HEAD_SHA, '${{ github.event.pull_request.head.sha }}');
-  assert.equal(Object.hasOwn(relay.env, 'GOVERNANCE_APP_ID'), false);
+  assert.equal(relay.env.GOVERNANCE_APP_ID, '${{ vars.EE_GOVERNANCE_APP_ID }}');
   assert.equal(Object.hasOwn(relay.env, 'GOVERNANCE_PUBLISHER_TOKEN'), false);
   assert.equal(Object.hasOwn(relay.env, 'GOVERNANCE_EVIDENCE_TOKEN'), false);
 });
