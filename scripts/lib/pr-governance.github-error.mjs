@@ -4,8 +4,8 @@ export function getGitHubRequestId(error, seen = new Set()) {
   if (!(error instanceof Error) || seen.has(error)) return undefined;
   seen.add(error);
 
-  if (typeof error.pn017RequestId === 'string' && REQUEST_ID.test(error.pn017RequestId)) {
-    return error.pn017RequestId;
+  if (typeof error.githubRequestId === 'string' && REQUEST_ID.test(error.githubRequestId)) {
+    return error.githubRequestId;
   }
 
   if (error instanceof AggregateError) {
@@ -23,7 +23,7 @@ export function createGitHubHttpError(response, context) {
   const requestId = response.headers?.get?.('x-github-request-id');
 
   if (typeof requestId === 'string' && REQUEST_ID.test(requestId)) {
-    error.pn017RequestId = requestId;
+    error.githubRequestId = requestId;
   }
 
   return error;

@@ -37,7 +37,7 @@ export function readGovernanceCommandContext(env) {
     typeof publisherToken !== 'string' ||
     !publisherToken
   ) {
-    throw new TypeError('Invalid PN-017 trusted execution context');
+    throw new TypeError('Invalid PR Governance trusted execution context');
   }
 
   return {
@@ -75,6 +75,28 @@ export async function executeGovernanceCommand({ env, run = runPrGovernance, log
   }
 
   if (
+    result?.mode === 'WAITING_FOR_APPROVALS' &&
+    result.headSha?.toLowerCase() === context.expectedHeadSha &&
+    Number.isSafeInteger(result.checkRunId) &&
+    result.checkRunId > 0 &&
+    Number.isSafeInteger(result.approvalCount) &&
+    result.approvalCount >= 0 &&
+    Number.isSafeInteger(result.required) &&
+    result.required > result.approvalCount
+  ) {
+    log(
+      JSON.stringify({
+        status: 'WAITING_FOR_APPROVALS',
+        headSha: result.headSha,
+        checkRunId: result.checkRunId,
+        approvalCount: result.approvalCount,
+        required: result.required,
+      }),
+    );
+    return 0;
+  }
+
+  if (
     result?.mode === 'ALREADY_CURRENT' &&
     context.deduplicateSuccessfulChecks &&
     result.headSha?.toLowerCase() === context.expectedHeadSha &&
@@ -99,16 +121,15 @@ export async function executeGovernanceCommand({ env, run = runPrGovernance, log
     result.checkId < 1 ||
     !Number.isSafeInteger(result.checkId)
   ) {
-    throw new TypeError('Invalid PN-017 execution result');
+    throw new TypeError('Invalid PR Governance execution result');
   }
 
-  const passed =
-    result.decision.status === 'PASS' &&
-    result.conclusion === 'success' &&
-    result.classification !== 'PENDING_REVIEW';
-
-  if (!passed && result.conclusion !== 'failure') {
-    throw new TypeError('Inconsistent PN-017 check conclusion');
+  const passed = result.decision.status === 'PASS';
+  if (
+    (passed && (result.conclusion !== 'success' || result.classification === 'PENDING_REVIEW')) ||
+    (!passed && result.conclusion !== 'failure')
+  ) {
+    throw new TypeError('Inconsistent PR Governance check conclusion');
   }
 
   log(
@@ -122,5 +143,7 @@ export async function executeGovernanceCommand({ env, run = runPrGovernance, log
     }),
   );
 
-  return passed ? 0 : 1;
+  // A policy block is a valid governance outcome published on the required
+  // check. The workflow fails only when the operation itself fails.
+  return 0;
 }

@@ -7,12 +7,12 @@ try {
     env: process.env,
   });
 } catch (error) {
-  const diagnostic = error?.pn017Diagnostic ?? {};
+  const diagnostic = error?.governanceDiagnostic ?? {};
   const httpStatus =
     diagnostic.httpStatus ??
     (error instanceof Error ? /\bHTTP ([1-5]\d{2})\b/.exec(error.message)?.[1] : undefined);
   console.error(
-    'PN-017 enforcement error:',
+    'PR Governance enforcement error:',
     JSON.stringify({
       status: 'ERROR',
       ...(Number.isSafeInteger(diagnostic.number) ? { number: diagnostic.number } : {}),

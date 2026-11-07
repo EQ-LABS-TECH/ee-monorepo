@@ -166,19 +166,19 @@ export async function reconcileOpenGovernancePrs({
     } catch (error) {
       // Do not expose API responses or credentials in logs.
       const httpStatus = getHttpStatus(error);
-      const diagnosticHttpStatus = error?.pn017Diagnostic?.httpStatus ?? httpStatus;
+      const diagnosticHttpStatus = error?.governanceDiagnostic?.httpStatus ?? httpStatus;
       const requestId = getGitHubRequestId(error);
 
       console.error(
-        'PN-017 reconciliation PR failure:',
+        'PR Governance reconciliation PR failure:',
         JSON.stringify({
           number,
           status: 'ERROR',
           ...(expectedHeadSha ? { headSha: expectedHeadSha } : {}),
           ...(requestId ? { requestId } : {}),
-          phase: error?.pn017Diagnostic?.phase ?? phase,
-          code: /^[a-z0-9-]+$/.test(error?.pn017Diagnostic?.code ?? '')
-            ? error.pn017Diagnostic.code
+          phase: error?.governanceDiagnostic?.phase ?? phase,
+          code: /^[a-z0-9-]+$/.test(error?.governanceDiagnostic?.code ?? '')
+            ? error.governanceDiagnostic.code
             : httpStatus !== undefined
               ? 'github-http-error'
               : error instanceof TypeError

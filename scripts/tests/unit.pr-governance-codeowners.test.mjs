@@ -12,7 +12,7 @@ scripts/lib/pr-governance.* @EQ-LABS-TECH/architecture
 scripts/commands/enforce @EQ-LABS-TECH/architecture
 scripts/commands/reconcile @EQ-LABS-TECH/architecture
 scripts/commands/governance @EQ-LABS-TECH/architecture
-scripts/tests/pr-governance.* @EQ-LABS-TECH/architecture
+scripts/tests/*pr-governance* @EQ-LABS-TECH/architecture
 packages/ @EQ-LABS-TECH/maintainers
 packages/foundation/src/contracts/knowledge*.ts @EQ-LABS-TECH/architecture
 `;
@@ -47,7 +47,7 @@ test('resolves a single accountable team for automation scripts', () => {
   assert.deepEqual(result[0].eligibleTeams, ['maintainers']);
 });
 
-test('resolves architectural ownership for PN-017 policy implementation and tests', () => {
+test('resolves architectural ownership for PR Governance policy implementation and tests', () => {
   const result = resolveCodeowners({
     rules,
     paths: [
@@ -55,7 +55,7 @@ test('resolves architectural ownership for PN-017 policy implementation and test
       'scripts/commands/enforce',
       'scripts/commands/reconcile',
       'scripts/commands/governance',
-      'scripts/tests/pr-governance.evaluation.test.mjs',
+      'scripts/tests/unit.pr-governance-evaluation.test.mjs',
     ],
   });
 
@@ -175,7 +175,7 @@ test('repository CODEOWNERS resolves actual governance boundaries', async () => 
       'scripts/commands/enforce',
       'scripts/commands/reconcile',
       'scripts/commands/governance',
-      'scripts/tests/pr-governance.evaluation.test.mjs',
+      'scripts/tests/unit.pr-governance-evaluation.test.mjs',
       '.github/workflows/ci.yml',
       'packages/config/src/index.ts',
       'packages/knowledge/src/index.ts',
@@ -208,7 +208,7 @@ test('repository CODEOWNERS resolves actual governance boundaries', async () => 
   expectOwners('scripts/commands/enforce', ['architecture']);
   expectOwners('scripts/commands/reconcile', ['architecture']);
   expectOwners('scripts/commands/governance', ['architecture']);
-  expectOwners('scripts/tests/pr-governance.evaluation.test.mjs', ['architecture']);
+  expectOwners('scripts/tests/unit.pr-governance-evaluation.test.mjs', ['architecture']);
   expectOwners('.github/workflows/ci.yml', ['architecture']);
   expectOwners('packages/config/src/index.ts', ['architecture']);
   expectOwners('packages/knowledge/src/index.ts', ['maintainers']);

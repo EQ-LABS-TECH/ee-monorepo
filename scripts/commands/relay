@@ -26,12 +26,14 @@ function readContext(env) {
   });
   const currentRunId = readPositiveInteger(env.GITHUB_RUN_ID);
   const currentRunNumber = readPositiveInteger(env.GITHUB_RUN_NUMBER);
+  const expectedAppId = readPositiveInteger(env.GOVERNANCE_APP_ID);
   const expectedHeadSha = event.pull_request?.head?.sha;
 
   if (
     env.GITHUB_EVENT_NAME !== 'pull_request_review' ||
     currentRunId === null ||
     currentRunNumber === null ||
+    expectedAppId === null ||
     typeof expectedHeadSha !== 'string' ||
     !/^[0-9a-f]{40}$/i.test(expectedHeadSha)
   ) {
@@ -45,6 +47,7 @@ function readContext(env) {
     expectedHeadSha: expectedHeadSha.toLowerCase(),
     currentRunId,
     currentRunNumber,
+    expectedAppId,
     token: env.GITHUB_TOKEN,
   };
 }
@@ -57,7 +60,14 @@ function httpStatus(error) {
 
 let context;
 try {
-  context = readContext(process.env);
+  try {
+    context = readContext(process.env);
+  } catch (error) {
+    const diagnostic = error instanceof Error ? error : new Error('Invalid relay event context');
+    diagnostic.phase ??= 'event-context';
+    diagnostic.code ??= 'invalid-review-event';
+    throw diagnostic;
+  }
   const result = await runGovernanceReviewRelay(context);
   console.log(
     JSON.stringify({
@@ -71,6 +81,11 @@ try {
       ...(Number.isSafeInteger(result.validationCheckRunId)
         ? { validationCheckRunId: result.validationCheckRunId }
         : {}),
+      ...(Number.isSafeInteger(result.checkRunId) ? { checkRunId: result.checkRunId } : {}),
+      ...(Number.isSafeInteger(result.approvalCount)
+        ? { approvalCount: result.approvalCount }
+        : {}),
+      ...(Number.isSafeInteger(result.required) ? { required: result.required } : {}),
     }),
   );
 } catch (error) {
@@ -85,13 +100,14 @@ try {
         : {}),
       ...(Number.isSafeInteger(context?.currentRunId) ? { runId: context.currentRunId } : {}),
       ...(getGitHubRequestId(error) ? { requestId: getGitHubRequestId(error) } : {}),
-      phase: 'review-relay',
+      phase: error?.phase ?? 'review-relay',
       code:
-        error instanceof TypeError
-          ? 'invalid-review-event-or-evidence'
-          : status !== undefined
-            ? 'github-http-error'
-            : 'unexpected-operation-error',
+        error?.code ??
+        (status !== undefined
+          ? 'github-http-error'
+          : error instanceof TypeError
+            ? 'invalid-input'
+            : 'unexpected-operation-error'),
       kind: error instanceof AggregateError ? 'AggregateError' : (error?.name ?? 'Error'),
       ...(status !== undefined ? { httpStatus: status } : {}),
     }),

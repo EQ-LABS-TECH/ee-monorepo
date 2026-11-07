@@ -1,5 +1,5 @@
 /**
- * PN-017: deterministic enforcement policy evaluation.
+ * PR Governance: deterministic enforcement policy evaluation.
  *
  * Inputs must be produced by a trusted evidence adapter.
  * PASS does not bypass GitHub branch rules, CODEOWNERS or quality gates.

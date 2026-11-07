@@ -28,7 +28,7 @@ export async function receivePrGovernanceWebhook({
   });
 
   if (typeof dispatch !== 'function') {
-    throw new TypeError('Invalid PN-017 webhook dispatcher');
+    throw new TypeError('Invalid PR Governance webhook dispatcher');
   }
 
   return dispatch({

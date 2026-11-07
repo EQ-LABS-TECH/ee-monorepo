@@ -64,7 +64,7 @@ test('invalid signature cannot reach dispatcher', async () => {
         calls += 1;
       },
     }),
-    /Invalid PN-017 webhook signature/,
+    /Invalid PR Governance webhook signature/,
   );
 
   assert.equal(calls, 0);
@@ -81,7 +81,7 @@ test('modified payload cannot reach dispatcher', async () => {
         calls += 1;
       },
     }),
-    /Invalid PN-017 webhook signature/,
+    /Invalid PR Governance webhook signature/,
   );
 
   assert.equal(calls, 0);
@@ -99,7 +99,7 @@ test('authenticated flag supplied by caller cannot bypass HMAC', async () => {
         calls += 1;
       },
     }),
-    /Invalid PN-017 webhook signature/,
+    /Invalid PR Governance webhook signature/,
   );
 
   assert.equal(calls, 0);
@@ -143,6 +143,6 @@ test('invalid dispatcher is rejected after authentication', async () => {
       ...options,
       dispatch: null,
     }),
-    /Invalid PN-017 webhook dispatcher/,
+    /Invalid PR Governance webhook dispatcher/,
   );
 });

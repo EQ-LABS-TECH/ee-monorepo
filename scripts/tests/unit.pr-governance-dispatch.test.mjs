@@ -71,7 +71,7 @@ test('unauthenticated event cannot resolve or publish', async () => {
         called = true;
       },
     }),
-    /Invalid trusted PN-017 dispatch context/,
+    /Invalid trusted PR Governance dispatch context/,
   );
 
   assert.equal(called, false);
@@ -136,7 +136,7 @@ test('resolver identity mismatch prevents publication', async () => {
         published = true;
       },
     }),
-    /Invalid PN-017 resolved PR context/,
+    /Invalid PR Governance resolved PR context/,
   );
 
   assert.equal(published, false);
@@ -153,7 +153,7 @@ test('missing trusted App identity prevents all work', async () => {
         called = true;
       },
     }),
-    /Invalid trusted PN-017 dispatch context/,
+    /Invalid trusted PR Governance dispatch context/,
   );
 
   assert.equal(called, false);

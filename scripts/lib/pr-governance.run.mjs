@@ -99,7 +99,7 @@ export async function runPrGovernance({
     });
   } catch (error) {
     if (error instanceof Error) {
-      error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
     }
     throw error;
   }
@@ -126,14 +126,14 @@ export async function runPrGovernance({
       });
     } catch (error) {
       if (error instanceof Error) {
-        error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+        error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       }
       throw error;
     }
 
     if (initialEvaluation.headSha?.toLowerCase() !== expectedHeadSha.toLowerCase()) {
       const error = new Error('PR governance evaluation returned a superseded HEAD');
-      error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       throw error;
     }
   }
@@ -158,7 +158,7 @@ export async function runPrGovernance({
       }
     } catch (error) {
       if (error instanceof Error) {
-        error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+        error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       }
       throw error;
     }
@@ -169,7 +169,7 @@ export async function runPrGovernance({
     started = await startPrGovernanceCheck(publication);
   } catch (error) {
     if (error instanceof Error) {
-      error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
     }
     throw error;
   }
@@ -186,13 +186,11 @@ export async function runPrGovernance({
         fetchImpl,
       });
 
-    let evaluation = await evaluate();
-
-    // A favorable decision requires fresh evidence immediately
-    // before publication. Any changed evidence is evaluated again.
-    if (evaluation.decision.status === 'PASS') {
-      evaluation = await evaluate();
-    }
+    // Re-read all review and classification evidence immediately before
+    // publishing either outcome. The Checks API is not atomic with review
+    // changes, so this narrows but cannot eliminate the final race window.
+    await evaluate();
+    const evaluation = await evaluate();
 
     phase = 'publication';
     const completed = await completePrGovernanceCheck({
@@ -210,7 +208,7 @@ export async function runPrGovernance({
     };
   } catch (error) {
     const diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
-    if (error instanceof Error) error.pn017Diagnostic = diagnostic;
+    if (error instanceof Error) error.governanceDiagnostic = diagnostic;
     // Never turn an unsuccessful evaluation into a successful check.
     // If completion already failed, the fallback may also fail.
     try {
@@ -225,7 +223,7 @@ export async function runPrGovernance({
         [error, completionError],
         'PR governance execution and failure completion were unsuccessful',
       );
-      aggregate.pn017Diagnostic = { ...diagnostic, code: 'failure-publication-failed' };
+      aggregate.governanceDiagnostic = { ...diagnostic, code: 'failure-publication-failed' };
       throw aggregate;
     }
 

@@ -174,7 +174,7 @@ test('governance inspector receives PR context and remains advisory', () => {
   assert.equal(inspect.env?.PR_NUMBER, '${{ github.event.pull_request.number }}');
 
   assert.match(inspect.run, /\[\[ ! -f scripts\/commands\/governance \]\]/);
-  assert.match(inspect.run, /PN-017 advisory unavailable/);
+  assert.match(inspect.run, /PR Governance advisory unavailable/);
   assert.match(
     inspect.run,
     /if \[\[ ! -f scripts\/commands\/governance \]\]; then[\s\S]*?exit 0[\s\S]*?fi/,

@@ -24,7 +24,7 @@ function execute(env = {}) {
 }
 
 function withEvent(event, callback) {
-  const dir = mkdtempSync(join(tmpdir(), 'pn-017-'));
+  const dir = mkdtempSync(join(tmpdir(), 'governance-reconcile-'));
 
   try {
     const path = join(dir, 'event.json');
@@ -158,7 +158,7 @@ test('rejects unsupported event before privileged execution', () => {
   assert.equal(result.status, 1);
   assert.match(
     result.stderr,
-    /PN-017 reconciliation error: \{"phase":"reconciliation","code":"unexpected-operation-error","kind":"Error"\}/,
+    /PR Governance reconciliation error: \{"phase":"reconciliation","code":"unexpected-operation-error","kind":"Error"\}/,
   );
 });
 
@@ -171,7 +171,7 @@ test('rejects missing GitHub event path', () => {
   assert.equal(result.status, 1);
   assert.match(
     result.stderr,
-    /PN-017 reconciliation error: \{"phase":"reconciliation","code":"unexpected-operation-error","kind":"Error"\}/,
+    /PR Governance reconciliation error: \{"phase":"reconciliation","code":"unexpected-operation-error","kind":"Error"\}/,
   );
 });
 
@@ -185,7 +185,7 @@ test('rejects scheduled reconciliation outside main', () => {
   assert.equal(result.status, 1);
   assert.match(
     result.stderr,
-    /PN-017 reconciliation error: \{"phase":"reconciliation","code":"invalid-input-or-evidence","kind":"TypeError"\}/,
+    /PR Governance reconciliation error: \{"phase":"reconciliation","code":"invalid-input-or-evidence","kind":"TypeError"\}/,
   );
 });
 
@@ -203,7 +203,7 @@ test('rejects an unexpected source workflow', () => {
     assert.equal(result.status, 1);
     assert.match(
       result.stderr,
-      /PN-017 reconciliation error: \{"phase":"reconciliation","code":"unexpected-operation-error","kind":"Error"\}/,
+      /PR Governance reconciliation error: \{"phase":"reconciliation","code":"unexpected-operation-error","kind":"Error"\}/,
     );
   });
 });

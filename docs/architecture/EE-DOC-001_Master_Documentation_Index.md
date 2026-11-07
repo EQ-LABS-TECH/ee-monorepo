@@ -245,11 +245,12 @@ Ampliar esta tabla requiere cambio gobernado sobre **EE-DOC-001**.
 
 ### 09.2. Matriz de Requests for Comments (RFCs)
 
-| Código         | Documento                     | Estado                                  | Norma/Documento Padre   | Impacto Principal                                                                                                                                                                                                                    |
-| -------------- | ----------------------------- | --------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **EE-RFC-001** | Infra Top Level Directory     | Aprobado / Implementado (documentación) | EE-DOC-006 / EE-DOC-009 | Introduce `infra/` (`containers/`, `orchestration/`) en sustitución de `docker/` y `k8s/`.                                                                                                                                           |
-| **EE-RFC-002** | Templates Top Level Directory | Aprobado                                | EE-DOC-006 / EE-DOC-012 | Introduce `templates/` como top-level autorizado y sincroniza EE-DOC-006.                                                                                                                                                            |
-| **EE-RFC-003** | Documentation Standards Sync  | Aprobado / Implementado (documentación) | EE-DOC-001 / EE-DOC-002 | Vehículo Tipo D para la sincronización transversal de estándares documentales; alcance de la oleada implementado documentalmente. Los asuntos operativos con criterios propios conservan su seguimiento en el registro de auditoría. |
+| Código         | Documento                           | Estado                                  | Norma/Documento Padre   | Impacto Principal                                                                                                                                                                                                                    |
+| -------------- | ----------------------------------- | --------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **EE-RFC-001** | Infra Top Level Directory           | Aprobado / Implementado (documentación) | EE-DOC-006 / EE-DOC-009 | Introduce `infra/` (`containers/`, `orchestration/`) en sustitución de `docker/` y `k8s/`.                                                                                                                                           |
+| **EE-RFC-002** | Templates Top Level Directory       | Aprobado                                | EE-DOC-006 / EE-DOC-012 | Introduce `templates/` como top-level autorizado y sincroniza EE-DOC-006.                                                                                                                                                            |
+| **EE-RFC-003** | Documentation Standards Sync        | Aprobado / Implementado (documentación) | EE-DOC-001 / EE-DOC-002 | Vehículo Tipo D para la sincronización transversal de estándares documentales; alcance de la oleada implementado documentalmente. Los asuntos operativos con criterios propios conservan su seguimiento en el registro de auditoría. |
+| **EE-RFC-004** | PR Governance Review Reconciliation | Aprobado                                | EE-DOC-007              | Sustituye prospectivamente EE-RFC-003 §02.8.7; separa decisión, check/workflow y reconciliación de reviews sin rerun de Validate por evento.                                                                                         |
 
 > **Nota EE-RFC-003:** oleada documental cerrada. El alcance aprobado está implementado en los documentos sincronizados; los hallazgos con condiciones operativas independientes mantienen su estado en el registro de auditoría.
 
@@ -374,22 +375,23 @@ flowchart TD
 
 ## 14. Referencias
 
-| Código         | Documento                                  | Relación                                                                       |
-| -------------- | ------------------------------------------ | ------------------------------------------------------------------------------ |
-| **EE-DOC-002** | Document Design Template                   | Estándar de estructura, metadatos, plantillas y ciclo de vida documental.      |
-| **EE-DOC-006** | Repository Structure                       | Árbol físico `docs/`, top-levels y ubicación canónica de artefactos (§09.3).   |
-| **EE-DOC-005** | Development Workflow                       | Ciclo de vida, cambio gobernado (R2) y clasificación Tipo A/B/C/D.             |
-| **EE-DOC-010** | Quality Gates                              | Régimen de gates y campos de waiver (WAIVED).                                  |
-| **EE-DOC-015** | Engineering Ecosystem Validation           | Régimen PENDING listado, dictamen DEGRADED; padre típico de EE-VAL-\*.         |
-| **EE-ADR-001** | Workspace Task Orchestration Strategy      | Orquestador oficial (Turborepo) y gestor de paquetes (pnpm).                   |
-| **EE-ADR-002** | Engineering Ecosystem Testing Standard     | Estándar de testing (Vitest + Playwright).                                     |
-| **EE-ADR-003** | Node.js Baseline Upgrade to 24 LTS         | Baseline de runtime Node.js ≥ 24 &lt; 25.                                      |
-| **EE-ADR-004** | Quality Gates Progressive Adoption         | Adopción progresiva de Mandatory Gates.                                        |
-| **EE-ADR-005** | AI Provider SPI and Connector Adapters     | SPI, adapters y composition root.                                              |
-| **EE-ADR-006** | Workflow-AI Interaction via Injected Ports | Resolución de contradicción de matrices; puertos inyectados.                   |
-| **EE-RFC-001** | Infra Top Level Directory                  | Top-level `infra/`.                                                            |
-| **EE-RFC-002** | Templates Top Level Directory              | Top-level `templates/`.                                                        |
-| **EE-RFC-003** | Documentation Standards Sync               | Tipo D; sincronización transversal de estándares implementada documentalmente. |
+| Código         | Documento                                  | Relación                                                                                    |
+| -------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| **EE-DOC-002** | Document Design Template                   | Estándar de estructura, metadatos, plantillas y ciclo de vida documental.                   |
+| **EE-DOC-006** | Repository Structure                       | Árbol físico `docs/`, top-levels y ubicación canónica de artefactos (§09.3).                |
+| **EE-DOC-005** | Development Workflow                       | Ciclo de vida, cambio gobernado (R2) y clasificación Tipo A/B/C/D.                          |
+| **EE-DOC-010** | Quality Gates                              | Régimen de gates y campos de waiver (WAIVED).                                               |
+| **EE-DOC-015** | Engineering Ecosystem Validation           | Régimen PENDING listado, dictamen DEGRADED; padre típico de EE-VAL-\*.                      |
+| **EE-ADR-001** | Workspace Task Orchestration Strategy      | Orquestador oficial (Turborepo) y gestor de paquetes (pnpm).                                |
+| **EE-ADR-002** | Engineering Ecosystem Testing Standard     | Estándar de testing (Vitest + Playwright).                                                  |
+| **EE-ADR-003** | Node.js Baseline Upgrade to 24 LTS         | Baseline de runtime Node.js ≥ 24 &lt; 25.                                                   |
+| **EE-ADR-004** | Quality Gates Progressive Adoption         | Adopción progresiva de Mandatory Gates.                                                     |
+| **EE-ADR-005** | AI Provider SPI and Connector Adapters     | SPI, adapters y composition root.                                                           |
+| **EE-ADR-006** | Workflow-AI Interaction via Injected Ports | Resolución de contradicción de matrices; puertos inyectados.                                |
+| **EE-RFC-001** | Infra Top Level Directory                  | Top-level `infra/`.                                                                         |
+| **EE-RFC-002** | Templates Top Level Directory              | Top-level `templates/`.                                                                     |
+| **EE-RFC-003** | Documentation Standards Sync               | Tipo D; sincronización transversal de estándares implementada documentalmente.              |
+| **EE-RFC-004** | PR Governance Review Reconciliation        | Tipo D; decisión aprobada para reconciliar reviews PN-017 sin rerun de Validate por evento. |
 
 ---
 

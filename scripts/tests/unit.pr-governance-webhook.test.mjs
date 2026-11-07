@@ -55,7 +55,7 @@ test('rejects a modified webhook body', () => {
         eventName,
         secret,
       }),
-    /Invalid PN-017 webhook signature/,
+    /Invalid PR Governance webhook signature/,
   );
 });
 
@@ -68,7 +68,7 @@ test('rejects an incorrect webhook secret', () => {
         eventName,
         secret,
       }),
-    /Invalid PN-017 webhook signature/,
+    /Invalid PR Governance webhook signature/,
   );
 });
 
@@ -82,7 +82,7 @@ test('rejects missing or malformed signatures', () => {
           eventName,
           secret,
         }),
-      /Invalid PN-017 webhook signature/,
+      /Invalid PR Governance webhook signature/,
     );
   }
 });
@@ -98,7 +98,7 @@ test('rejects invalid JSON even with a valid signature', () => {
         eventName,
         secret,
       }),
-    /Invalid PN-017 webhook JSON/,
+    /Invalid PR Governance webhook JSON/,
   );
 });
 
@@ -113,7 +113,7 @@ test('rejects non-object JSON payloads', () => {
         eventName,
         secret,
       }),
-    /Invalid PN-017 webhook payload/,
+    /Invalid PR Governance webhook payload/,
   );
 });
 
@@ -132,7 +132,7 @@ test('rejects untrusted authentication inputs', () => {
           secret,
           ...override,
         }),
-      /Invalid PN-017 webhook authentication request/,
+      /Invalid PR Governance webhook authentication request/,
     );
   }
 });

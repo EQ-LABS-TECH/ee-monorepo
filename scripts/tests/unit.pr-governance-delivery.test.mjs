@@ -106,7 +106,7 @@ test('invalid signature cannot claim a delivery', async () => {
       signature: 'sha256=' + '0'.repeat(64),
       store: mock.store,
     }),
-    /Invalid PN-017 webhook signature/,
+    /Invalid PR Governance webhook signature/,
   );
 
   assert.equal(mock.operations.length, 0);
@@ -204,7 +204,7 @@ test('malformed delivery ID is rejected before claiming', async () => {
       deliveryId: 'invalid',
       store: mock.store,
     }),
-    /Invalid PN-017 delivery context/,
+    /Invalid PR Governance delivery context/,
   );
 
   assert.equal(mock.operations.length, 0);

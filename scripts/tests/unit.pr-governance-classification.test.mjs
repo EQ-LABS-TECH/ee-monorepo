@@ -24,6 +24,13 @@ test('identifies the governance package domain as a critical indicator', () => {
   ]);
 });
 
+test('identifies renamed PR governance policy tests as critical indicators', () => {
+  const path = 'scripts/tests/unit.pr-governance-classification.test.mjs';
+  const result = classifyCriticalChange([path]);
+
+  assert.deepEqual(result.reasons, [{ category: 'pr-governance', path }]);
+});
+
 test('identifies release, public contract and infrastructure surfaces', () => {
   const result = classifyCriticalChange([
     'scripts/commands/release',

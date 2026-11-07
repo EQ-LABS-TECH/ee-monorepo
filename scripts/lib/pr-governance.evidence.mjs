@@ -1,5 +1,5 @@
 /**
- * Read-only GitHub REST adapter for PN-017.
+ * Read-only GitHub REST adapter for PR Governance.
  * Provides evidence only: classification and merge authorization remain separate.
  */
 import { createGitHubHttpError } from './pr-governance.github-error.mjs';
