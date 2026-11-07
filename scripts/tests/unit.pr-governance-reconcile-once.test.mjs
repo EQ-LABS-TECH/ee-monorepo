@@ -85,7 +85,7 @@ test('continues after an individual failure and logs sanitized execution details
     { number: 20, status: 'PASS' },
   ]);
   assert.equal(logs.length, 1);
-  assert.equal(logs[0][0], 'PN-017 reconciliation PR failure:');
+  assert.equal(logs[0][0], 'PR Governance reconciliation PR failure:');
   assert.deepEqual(JSON.parse(logs[0][1]), {
     number: 10,
     status: 'ERROR',
@@ -132,8 +132,8 @@ test('preserves sanitized orchestration phase and stable error code', async (t) 
     discover: async () => [10],
     run: async () => {
       const error = new Error('Private response text must not be logged');
-      error.pn017Diagnostic = { phase: 'publication', code: 'check-run-conflict' };
-      error.pn017RequestId = 'ABCD:5678';
+      error.governanceDiagnostic = { phase: 'publication', code: 'check-run-conflict' };
+      error.githubRequestId = 'ABCD:5678';
       throw error;
     },
   });

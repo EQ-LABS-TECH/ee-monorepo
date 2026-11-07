@@ -37,7 +37,7 @@ export function readGovernanceCommandContext(env) {
     typeof publisherToken !== 'string' ||
     !publisherToken
   ) {
-    throw new TypeError('Invalid PN-017 trusted execution context');
+    throw new TypeError('Invalid PR Governance trusted execution context');
   }
 
   return {
@@ -121,7 +121,7 @@ export async function executeGovernanceCommand({ env, run = runPrGovernance, log
     result.checkId < 1 ||
     !Number.isSafeInteger(result.checkId)
   ) {
-    throw new TypeError('Invalid PN-017 execution result');
+    throw new TypeError('Invalid PR Governance execution result');
   }
 
   const passed = result.decision.status === 'PASS';
@@ -129,7 +129,7 @@ export async function executeGovernanceCommand({ env, run = runPrGovernance, log
     (passed && (result.conclusion !== 'success' || result.classification === 'PENDING_REVIEW')) ||
     (!passed && result.conclusion !== 'failure')
   ) {
-    throw new TypeError('Inconsistent PN-017 check conclusion');
+    throw new TypeError('Inconsistent PR Governance check conclusion');
   }
 
   log(

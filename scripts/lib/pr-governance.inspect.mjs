@@ -1,4 +1,4 @@
-/** PN-017: read-only, advisory PR governance evidence. Never authorizes a merge. */
+/** PR Governance: read-only, advisory PR governance evidence. Never authorizes a merge. */
 import { classifyCriticalChange } from '@eq-labs/governance/pr-governance/classification';
 import { evaluatePrApprovals } from '@eq-labs/governance/pr-governance/approvals';
 import { criticalEscalationCandidates } from '@eq-labs/governance/pr-governance/authority';

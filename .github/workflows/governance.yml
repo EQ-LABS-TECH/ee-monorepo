@@ -1,7 +1,7 @@
-# PN-017 — Trusted governance verification.
+# PR Governance — Trusted governance verification.
 # Automatic validation; not yet a required check.
 name: Governance Verification
-run-name: ${{ github.event_name == 'pull_request_review' && 'Governance review relay' || (github.event_name == 'workflow_dispatch' && format('PN-017 PR-{0} SHA-{1} REVIEW-{2}', inputs.pr_number, inputs.head_sha, inputs.review_run_number)) || 'Governance Verification' }}
+run-name: "${{ github.event_name == 'pull_request_review' && 'Governance review relay' || (github.event_name == 'workflow_dispatch' && format('GV PR #{0} · R{1}', inputs.pr_number, inputs.review_run_number)) || 'Governance Verification' }}"
 
 on:
   workflow_run:

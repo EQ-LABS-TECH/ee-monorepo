@@ -120,7 +120,7 @@ export function createPrGovernanceCheckPayload({ evaluation, expectedHeadSha }) 
     status: 'completed',
     conclusion: passed ? 'success' : 'failure',
     output: {
-      title: passed ? 'PN-017 governance verified' : 'PN-017 governance blocked',
+      title: passed ? 'PR Governance verified' : 'PR Governance blocked',
       summary: [
         `Classification: ${evaluation.classification}`,
         `Decision: ${evaluation.decision.status}`,

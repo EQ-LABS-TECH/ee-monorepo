@@ -114,7 +114,7 @@ jobs:
         shell: bash
         run: |
           if [[ ! -f scripts/commands/governance ]]; then
-            echo "::notice::PN-017 advisory unavailable: trusted implementation not yet merged"
+            echo "::notice::PR Governance advisory unavailable: trusted implementation not yet merged"
             exit 0
           fi
 

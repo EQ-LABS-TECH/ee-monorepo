@@ -52,7 +52,7 @@ test('rejects missing and malformed trusted context', () => {
   ]) {
     assert.throws(
       () => readGovernanceCommandContext({ ...env, ...override }),
-      /Invalid PN-017 trusted execution context/,
+      /Invalid PR Governance trusted execution context/,
     );
   }
 });
@@ -153,7 +153,7 @@ test('inconsistent evaluation result is rejected', async () => {
       }),
       log: () => {},
     }),
-    /Invalid PN-017 execution result/,
+    /Invalid PR Governance execution result/,
   );
 });
 
@@ -169,7 +169,7 @@ test('invalid context prevents runner execution', async () => {
       },
       log: () => {},
     }),
-    /Invalid PN-017 trusted execution context/,
+    /Invalid PR Governance trusted execution context/,
   );
 
   assert.equal(executed, false);

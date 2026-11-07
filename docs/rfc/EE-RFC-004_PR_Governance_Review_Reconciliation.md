@@ -124,12 +124,13 @@ La comprobación de “sigue siendo insuficiente” será conservadora. El relay
 
 ### 03.5. Efectos técnicos de la materialización
 
-| Efecto                                                | Acción                                                                                                                                                              |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Reconciliación repetida por approvals parciales       | Suprimir dispatch solo con prueba conservadora de `BLOCKED` actual y falta inevitable de aprobaciones.                                                              |
-| Decisión de política reportada como fallo de workflow | Publicar `BLOCKED` en el check con conclusión `failure`, y terminar el workflow con `success` si la operación fue técnicamente correcta.                            |
-| Evidencia sustituida durante concurrencia             | Revalidar HEAD y evidencia vigente antes de publicar; una ejecución que detecte evidencia sustituida no publicará `PASS`.                                           |
-| Límite de atomicidad                                  | Documentar que Actions y Checks API no ofrecen transacción atómica sobre reviews, permisos y publicación del check; no afirmar atomicidad en el instante del merge. |
+| Efecto                                                | Acción                                                                                                                                                                                                                                                                                                             |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Reconciliación repetida por approvals parciales       | Suprimir dispatch solo con prueba conservadora de `BLOCKED` actual y falta inevitable de aprobaciones.                                                                                                                                                                                                             |
+| Decisión de política reportada como fallo de workflow | Publicar `BLOCKED` en el check con conclusión `failure`, y terminar el workflow con `success` si la operación fue técnicamente correcta.                                                                                                                                                                           |
+| Evidencia sustituida durante concurrencia             | Revalidar HEAD y evidencia vigente antes de publicar; una ejecución que detecte evidencia sustituida no publicará `PASS`.                                                                                                                                                                                          |
+| Identidad del dispatch y deduplicación                | El título corto identifica PR y run de review; el SHA se conserva en `head_sha`. Solo se suprime el mismo evento o un título histórico con PR/SHA/review exactos. Un dispatch activo distinto no se reutiliza sin prueba de que cubra el evento actual; en caso contrario se solicita otra evaluación serializada. |
+| Límite de atomicidad                                  | Documentar que Actions y Checks API no ofrecen transacción atómica sobre reviews, permisos y publicación del check; no afirmar atomicidad en el instante del merge.                                                                                                                                                |
 
 ---
 
@@ -166,17 +167,18 @@ La comprobación de “sigue siendo insuficiente” será conservadora. El relay
 
 ## 07. Criterios de aceptación
 
-| #   | Check medible                                                                                                                                                                     |
-| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | El RFC es aprobado por Arquitectura y EE-DOC-001 lo registra como aprobado antes de iniciar la implementación.                                                                    |
-| 2   | EE-DOC-007 define sin ambigüedad decisión, check, estado interno del relay y resultado operativo del workflow.                                                                    |
-| 3   | `Validate` ejecuta por cambio de HEAD y Governance solo acepta su `success` para el mismo HEAD vigente.                                                                           |
-| 4   | La secuencia `BLOCKED 0/2 → aprobación 1/2` conserva el check `failure`, termina relay en `WAITING_FOR_APPROVALS` con workflow `success` y no crea un segundo dispatch protegido. |
-| 5   | Al alcanzar la cantidad necesaria, `main` vuelve a evaluar desde la API la cualificación, CODEOWNERS, independencia y vigencia.                                                   |
-| 6   | `PASS → dismissed` provoca reconciliación y ningún resultado favorable sobrevive si ya no cumple la política.                                                                     |
-| 7   | Cambios de HEAD/evidencia, fallos HTTP y carreras entre eventos tienen regresiones; evidencia desconocida nunca produce `PASS` ni suprime una reevaluación necesaria.             |
-| 8   | `BLOCKED` es check `failure` con workflow `success`; `ERROR` impide `PASS` y hace fallar el workflow.                                                                             |
-| 9   | Se revalida la evidencia antes de publicar; la documentación conserva explícitamente el límite de falta de atomicidad frente a cambios posteriores a la última consulta.          |
+| #   | Check medible                                                                                                                                                                                                               |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | El RFC es aprobado por Arquitectura y EE-DOC-001 lo registra como aprobado antes de iniciar la implementación.                                                                                                              |
+| 2   | EE-DOC-007 define sin ambigüedad decisión, check, estado interno del relay y resultado operativo del workflow.                                                                                                              |
+| 3   | `Validate` ejecuta por cambio de HEAD y Governance solo acepta su `success` para el mismo HEAD vigente.                                                                                                                     |
+| 4   | La secuencia `BLOCKED 0/2 → aprobación 1/2` conserva el check `failure`, termina relay en `WAITING_FOR_APPROVALS` con workflow `success` y no crea un segundo dispatch protegido.                                           |
+| 5   | Al alcanzar la cantidad necesaria, `main` vuelve a evaluar desde la API la cualificación, CODEOWNERS, independencia y vigencia.                                                                                             |
+| 6   | `PASS → dismissed` provoca reconciliación y ningún resultado favorable sobrevive si ya no cumple la política.                                                                                                               |
+| 7   | Cambios de HEAD/evidencia, fallos HTTP y carreras entre eventos tienen regresiones; evidencia desconocida nunca produce `PASS` ni suprime una reevaluación necesaria.                                                       |
+| 8   | `BLOCKED` es check `failure` con workflow `success`; `ERROR` impide `PASS` y hace fallar el workflow.                                                                                                                       |
+| 9   | Se revalida la evidencia antes de publicar; la documentación conserva explícitamente el límite de falta de atomicidad frente a cambios posteriores a la última consulta.                                                    |
+| 10  | El relay acepta estados transitorios documentados, valida campos según el evento y no deduplica otra review por un dispatch activo cuyo evento/HEAD no puede demostrar. Los diagnósticos exponen fase y código específicos. |
 
 ---
 

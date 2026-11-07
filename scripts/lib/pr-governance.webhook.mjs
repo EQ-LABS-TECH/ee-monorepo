@@ -12,13 +12,13 @@ export function authenticatePrGovernanceWebhook({ rawBody, signature, eventName,
     typeof secret !== 'string' ||
     !secret
   ) {
-    throw new TypeError('Invalid PN-017 webhook authentication request');
+    throw new TypeError('Invalid PR Governance webhook authentication request');
   }
 
   const match = SIGNATURE.exec(signature);
 
   if (!match) {
-    throw new Error('Invalid PN-017 webhook signature');
+    throw new Error('Invalid PR Governance webhook signature');
   }
 
   const expected = createHmac('sha256', secret).update(rawBody).digest();
@@ -26,7 +26,7 @@ export function authenticatePrGovernanceWebhook({ rawBody, signature, eventName,
   const received = Buffer.from(match[1], 'hex');
 
   if (received.length !== expected.length || !timingSafeEqual(received, expected)) {
-    throw new Error('Invalid PN-017 webhook signature');
+    throw new Error('Invalid PR Governance webhook signature');
   }
 
   let payload;
@@ -34,11 +34,11 @@ export function authenticatePrGovernanceWebhook({ rawBody, signature, eventName,
   try {
     payload = JSON.parse(rawBody.toString('utf8'));
   } catch {
-    throw new TypeError('Invalid PN-017 webhook JSON');
+    throw new TypeError('Invalid PR Governance webhook JSON');
   }
 
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
-    throw new TypeError('Invalid PN-017 webhook payload');
+    throw new TypeError('Invalid PR Governance webhook payload');
   }
 
   return {

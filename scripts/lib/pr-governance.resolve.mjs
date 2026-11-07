@@ -16,7 +16,7 @@ export async function resolvePrGovernanceRoute({ route, token, fetchImpl = fetch
     !token ||
     typeof fetchImpl !== 'function'
   ) {
-    throw new TypeError('Invalid PN-017 PR resolution request');
+    throw new TypeError('Invalid PR resolution request');
   }
 
   const { owner, repo, number } = route;
@@ -34,7 +34,7 @@ export async function resolvePrGovernanceRoute({ route, token, fetchImpl = fetch
     });
 
     if (!response.ok || response.status !== 200) {
-      throw createGitHubHttpError(response, 'PN-017 PR resolution');
+      throw createGitHubHttpError(response, 'PR resolution');
     }
 
     const pr = await response.json();
@@ -50,7 +50,7 @@ export async function resolvePrGovernanceRoute({ route, token, fetchImpl = fetch
       typeof pr?.head?.repo?.full_name !== 'string' ||
       !pr.head.repo.full_name
     ) {
-      throw new TypeError('Invalid or closed PN-017 pull request');
+      throw new TypeError('Invalid or closed PR Governance pull request');
     }
 
     return {
@@ -71,7 +71,7 @@ export async function resolvePrGovernanceRoute({ route, token, fetchImpl = fetch
     first.headSha !== second.headSha ||
     first.headRepository !== second.headRepository
   ) {
-    throw new Error('PN-017 pull request changed during route resolution');
+    throw new Error('PR Governance pull request changed during route resolution');
   }
 
   return {

@@ -99,7 +99,7 @@ export async function runPrGovernance({
     });
   } catch (error) {
     if (error instanceof Error) {
-      error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
     }
     throw error;
   }
@@ -126,14 +126,14 @@ export async function runPrGovernance({
       });
     } catch (error) {
       if (error instanceof Error) {
-        error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+        error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       }
       throw error;
     }
 
     if (initialEvaluation.headSha?.toLowerCase() !== expectedHeadSha.toLowerCase()) {
       const error = new Error('PR governance evaluation returned a superseded HEAD');
-      error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       throw error;
     }
   }
@@ -158,7 +158,7 @@ export async function runPrGovernance({
       }
     } catch (error) {
       if (error instanceof Error) {
-        error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+        error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
       }
       throw error;
     }
@@ -169,7 +169,7 @@ export async function runPrGovernance({
     started = await startPrGovernanceCheck(publication);
   } catch (error) {
     if (error instanceof Error) {
-      error.pn017Diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
+      error.governanceDiagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
     }
     throw error;
   }
@@ -208,7 +208,7 @@ export async function runPrGovernance({
     };
   } catch (error) {
     const diagnostic = diagnosticFor(error, phase, { number, expectedHeadSha });
-    if (error instanceof Error) error.pn017Diagnostic = diagnostic;
+    if (error instanceof Error) error.governanceDiagnostic = diagnostic;
     // Never turn an unsuccessful evaluation into a successful check.
     // If completion already failed, the fallback may also fail.
     try {
@@ -223,7 +223,7 @@ export async function runPrGovernance({
         [error, completionError],
         'PR governance execution and failure completion were unsuccessful',
       );
-      aggregate.pn017Diagnostic = { ...diagnostic, code: 'failure-publication-failed' };
+      aggregate.governanceDiagnostic = { ...diagnostic, code: 'failure-publication-failed' };
       throw aggregate;
     }
 

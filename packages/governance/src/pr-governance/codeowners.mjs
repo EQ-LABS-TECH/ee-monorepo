@@ -1,5 +1,5 @@
 /**
- * PN-017: conservative CODEOWNERS resolution.
+ * PR Governance: conservative CODEOWNERS resolution.
  *
  * Supports the patterns used by EE-LABS:
  * - global "*"

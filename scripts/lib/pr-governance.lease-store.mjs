@@ -30,18 +30,18 @@ export function createPrGovernanceLeaseStore({
     !Number.isSafeInteger(maxAttempts) ||
     maxAttempts < 1
   ) {
-    throw new TypeError('Invalid PN-017 lease store configuration');
+    throw new TypeError('Invalid PR Governance lease store configuration');
   }
 
   async function transition(id, operation, claimToken) {
     if (typeof id !== 'string' || !DELIVERY_ID.test(id)) {
-      throw new TypeError('Invalid PN-017 delivery ID');
+      throw new TypeError('Invalid PR Governance delivery ID');
     }
 
     const token = operation === 'CLAIM' ? createToken() : claimToken;
 
     if (typeof token !== 'string' || !token) {
-      throw new TypeError('Invalid PN-017 lease token');
+      throw new TypeError('Invalid PR Governance lease token');
     }
 
     for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
@@ -63,7 +63,7 @@ export function createPrGovernanceLeaseStore({
             !Array.isArray(snapshot.record))
         )
       ) {
-        throw new TypeError('Invalid PN-017 storage snapshot');
+        throw new TypeError('Invalid PR Governance storage snapshot');
       }
 
       const { version, record } = snapshot;
@@ -77,7 +77,7 @@ export function createPrGovernanceLeaseStore({
       });
 
       if (result.status === 'STALE') {
-        throw new Error('PN-017 lease is stale or no longer owned');
+        throw new Error('PR Governance lease is stale or no longer owned');
       }
 
       if (
@@ -96,11 +96,11 @@ export function createPrGovernanceLeaseStore({
       }
 
       if (updated !== false) {
-        throw new TypeError('Invalid PN-017 storage CAS result');
+        throw new TypeError('Invalid PR Governance storage CAS result');
       }
     }
 
-    throw new Error('PN-017 lease transaction contention limit exceeded');
+    throw new Error('PR Governance lease transaction contention limit exceeded');
   }
 
   return {

@@ -9,19 +9,47 @@ const MAX_RUN_PAGES = 100;
 const RUNS_PER_PAGE = 100;
 const MAX_REVIEW_PAGES = 100;
 const PR_GOVERNANCE_CHECK = 'PR Governance';
+const RUN_STATUSES = new Set([
+  'queued',
+  'in_progress',
+  'completed',
+  'requested',
+  'waiting',
+  'pending',
+]);
+const LEGACY_DISPATCH_TITLE = /^[A-Z][A-Z\d]*-\d+ PR-(\d+) SHA-([0-9a-f]{40}) REVIEW-(\d+)$/i;
+
+async function withPhase(phase, operation) {
+  try {
+    return await operation();
+  } catch (error) {
+    const diagnostic = error instanceof Error ? error : new Error('Unknown relay operation error');
+    const hasHttpStatus = /\bHTTP [1-5]\d{2}\b/.test(diagnostic.message);
+    diagnostic.phase ??= phase;
+    diagnostic.code ??= hasHttpStatus
+      ? 'github-http-error'
+      : diagnostic instanceof TypeError
+        ? 'invalid-github-response'
+        : 'unexpected-operation-error';
+    throw diagnostic;
+  }
+}
 
 function isPullRequestRun(run, number) {
   return Array.isArray(run.pull_requests) && run.pull_requests.some((pr) => pr?.number === number);
 }
 
-function validateRunList(result) {
+function validateRunList(result, { event, phase }) {
   if (
     !result ||
     !Number.isSafeInteger(result.total_count) ||
     !Array.isArray(result.workflow_runs) ||
     result.workflow_runs.length > RUNS_PER_PAGE
   ) {
-    throw new TypeError('Malformed governance workflow run list');
+    const error = new TypeError('Malformed governance workflow run list');
+    error.code = 'malformed-run-list';
+    error.phase = phase;
+    throw error;
   }
 
   for (const run of result.workflow_runs) {
@@ -32,10 +60,15 @@ function validateRunList(result) {
       !Number.isSafeInteger(run.run_number) ||
       run.run_number < 1 ||
       typeof run.event !== 'string' ||
-      !Array.isArray(run.pull_requests) ||
-      !['queued', 'in_progress', 'completed'].includes(run.status)
+      run.event !== event ||
+      !RUN_STATUSES.has(run.status) ||
+      (event === 'pull_request_review' && !Array.isArray(run.pull_requests)) ||
+      (event === 'workflow_dispatch' && typeof run.display_title !== 'string')
     ) {
-      throw new TypeError('Malformed governance workflow run');
+      const error = new TypeError('Malformed governance workflow run');
+      error.code = 'malformed-run';
+      error.phase = phase;
+      throw error;
     }
   }
 
@@ -121,7 +154,7 @@ async function currentGovernanceDecision({ owner, repo, headSha, appId, token, f
     !latest ||
     latest.status !== 'completed' ||
     latest.conclusion !== 'failure' ||
-    latest.output.title !== 'PN-017 governance blocked'
+    latest.output.title !== 'PR Governance blocked'
   ) {
     return null;
   }
@@ -252,19 +285,28 @@ async function waitingForApprovals({ owner, repo, number, pr, headSha, appId, to
     : null;
 }
 
-export function governanceDispatchTitle({ number, headSha, reviewRunNumber }) {
+export function governanceDispatchTitle({ number, reviewRunNumber }) {
   if (
     !Number.isSafeInteger(number) ||
     number < 1 ||
-    typeof headSha !== 'string' ||
-    !/^[0-9a-f]{40}$/i.test(headSha) ||
     !Number.isSafeInteger(reviewRunNumber) ||
     reviewRunNumber < 1
   ) {
     throw new TypeError('Invalid governance dispatch identity');
   }
 
-  return `PN-017 PR-${number} SHA-${headSha.toLowerCase()} REVIEW-${reviewRunNumber}`;
+  return `GV PR #${number} · R${reviewRunNumber}`;
+}
+
+function isLegacyDispatchForReview(title, { number, headSha, reviewRunNumber }) {
+  if (typeof title !== 'string') return false;
+  const match = LEGACY_DISPATCH_TITLE.exec(title);
+  return (
+    match !== null &&
+    Number(match[1]) === number &&
+    match[2].toLowerCase() === headSha.toLowerCase() &&
+    Number(match[3]) === reviewRunNumber
+  );
 }
 
 async function reviewRunOrder({
@@ -286,14 +328,18 @@ async function reviewRunOrder({
       sort: 'created',
       direction: 'desc',
     });
-    const runs = validateRunList(
-      await getJson({
+    const result = await withPhase('review-run-lookup', () =>
+      getJson({
         url: `${url}?${query}`,
         token,
         fetchImpl,
         operation: 'Governance review event lookup',
       }),
     );
+    const runs = validateRunList(result, {
+      event: 'pull_request_review',
+      phase: 'review-run-lookup',
+    });
 
     const samePrRuns = runs.filter(
       (run) => run.event === 'pull_request_review' && isPullRequestRun(run, number),
@@ -323,8 +369,7 @@ async function dispatchedForReview({
   fetchImpl,
 }) {
   const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/governance.yml/runs`;
-  const exactTitle = governanceDispatchTitle({ number, headSha, reviewRunNumber });
-  const samePrHeadPrefix = `PN-017 PR-${number} SHA-${headSha.toLowerCase()} REVIEW-`;
+  const exactTitle = governanceDispatchTitle({ number, reviewRunNumber });
 
   for (let page = 1; page <= MAX_RUN_PAGES; page += 1) {
     const query = new URLSearchParams({
@@ -334,25 +379,23 @@ async function dispatchedForReview({
       sort: 'created',
       direction: 'desc',
     });
-    const runs = validateRunList(
-      await getJson({
+    const result = await withPhase('dispatch-lookup', () =>
+      getJson({
         url: `${url}?${query}`,
         token,
         fetchImpl,
         operation: 'Governance dispatch deduplication lookup',
       }),
     );
+    const runs = validateRunList(result, { event: 'workflow_dispatch', phase: 'dispatch-lookup' });
 
     for (const run of runs) {
       if (run.event !== 'workflow_dispatch') continue;
-      if (run.display_title === exactTitle) return { exact: true, active: false };
       if (
-        typeof run.display_title === 'string' &&
-        run.display_title.startsWith(samePrHeadPrefix) &&
-        run.status !== 'completed'
-      ) {
-        return { exact: false, active: true };
-      }
+        run.display_title === exactTitle ||
+        isLegacyDispatchForReview(run.display_title, { number, headSha, reviewRunNumber })
+      )
+        return { exact: true };
     }
 
     if (runs.length < RUNS_PER_PAGE) return { exact: false, active: false };
@@ -402,18 +445,23 @@ export async function runGovernanceReviewRelay({
     !token ||
     typeof fetchImpl !== 'function'
   ) {
-    throw new TypeError('Invalid governance review relay context');
+    const error = new TypeError('Invalid governance review relay context');
+    error.phase = 'relay-context';
+    error.code = 'invalid-relay-context';
+    throw error;
   }
 
-  let order = await reviewRunOrder({
-    owner,
-    repo,
-    number,
-    currentRunId,
-    currentRunNumber,
-    token,
-    fetchImpl,
-  });
+  let order = await withPhase('review-run-lookup', () =>
+    reviewRunOrder({
+      owner,
+      repo,
+      number,
+      currentRunId,
+      currentRunNumber,
+      token,
+      fetchImpl,
+    }),
+  );
   if (order.status === 'SUPERSEDED') return order;
 
   const repositoryUrl = `https://api.github.com/repos/${owner}/${repo}`;
@@ -425,117 +473,130 @@ export async function runGovernanceReviewRelay({
       operation: 'Governance relay PR lookup',
     });
 
-  let pr = await readPr();
+  let pr = await withPhase('pull-request-lookup', readPr);
   if (!ensurePrMatches(pr, { owner, repo, number, expectedHeadSha })) {
     return { status: 'SUPERSEDED' };
   }
 
-  let validation = await readValidateReadiness({
-    owner,
-    repo,
-    headSha: expectedHeadSha,
-    token,
-    fetchImpl,
-  });
+  let validation = await withPhase('validate-readiness', () =>
+    readValidateReadiness({
+      owner,
+      repo,
+      headSha: expectedHeadSha,
+      token,
+      fetchImpl,
+    }),
+  );
   if (validation.status !== 'READY') {
     return { status: 'WAITING_FOR_CI', validationCheckRunId: validation.checkRunId };
   }
 
-  await waitingForApprovals({
-    owner,
-    repo,
-    number,
-    pr,
-    headSha: expectedHeadSha,
-    appId: expectedAppId,
-    token,
-    fetchImpl,
-  });
+  await withPhase('approval-evidence', () =>
+    waitingForApprovals({
+      owner,
+      repo,
+      number,
+      pr,
+      headSha: expectedHeadSha,
+      appId: expectedAppId,
+      token,
+      fetchImpl,
+    }),
+  );
 
   const title = governanceDispatchTitle({
     number,
-    headSha: expectedHeadSha,
     reviewRunNumber: currentRunNumber,
   });
-  const dispatchState = await dispatchedForReview({
-    owner,
-    repo,
-    number,
-    headSha: expectedHeadSha,
-    reviewRunNumber: currentRunNumber,
-    token,
-    fetchImpl,
-  });
-  if (dispatchState.exact || dispatchState.active) {
+  const dispatchState = await withPhase('dispatch-lookup', () =>
+    dispatchedForReview({
+      owner,
+      repo,
+      number,
+      headSha: expectedHeadSha,
+      reviewRunNumber: currentRunNumber,
+      token,
+      fetchImpl,
+    }),
+  );
+  if (dispatchState.exact) {
     return { status: 'ALREADY_CURRENT' };
   }
 
   // Re-read event order and readiness immediately before dispatch. This is
   // idempotent coordination, not a timing window; GitHub still creates one
   // relay run for each webhook delivery.
-  order = await reviewRunOrder({
-    owner,
-    repo,
-    number,
-    currentRunId,
-    currentRunNumber,
-    token,
-    fetchImpl,
-  });
+  order = await withPhase('review-run-lookup', () =>
+    reviewRunOrder({
+      owner,
+      repo,
+      number,
+      currentRunId,
+      currentRunNumber,
+      token,
+      fetchImpl,
+    }),
+  );
   if (order.status === 'SUPERSEDED') return order;
 
-  pr = await readPr();
+  pr = await withPhase('pull-request-lookup', readPr);
   if (!ensurePrMatches(pr, { owner, repo, number, expectedHeadSha })) {
     return { status: 'SUPERSEDED' };
   }
 
-  validation = await readValidateReadiness({
-    owner,
-    repo,
-    headSha: expectedHeadSha,
-    token,
-    fetchImpl,
-  });
+  validation = await withPhase('validate-readiness', () =>
+    readValidateReadiness({
+      owner,
+      repo,
+      headSha: expectedHeadSha,
+      token,
+      fetchImpl,
+    }),
+  );
   if (validation.status !== 'READY') {
     return { status: 'WAITING_FOR_CI', validationCheckRunId: validation.checkRunId };
   }
 
-  const latestWaiting = await waitingForApprovals({
-    owner,
-    repo,
-    number,
-    pr,
-    headSha: expectedHeadSha,
-    appId: expectedAppId,
-    token,
-    fetchImpl,
-  });
+  const latestWaiting = await withPhase('approval-evidence', () =>
+    waitingForApprovals({
+      owner,
+      repo,
+      number,
+      pr,
+      headSha: expectedHeadSha,
+      appId: expectedAppId,
+      token,
+      fetchImpl,
+    }),
+  );
   if (latestWaiting) return latestWaiting;
 
-  const dispatchResponse = await fetchImpl(
-    `${repositoryUrl}/actions/workflows/governance.yml/dispatches`,
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-      body: JSON.stringify({
-        ref: 'main',
-        inputs: {
-          pr_number: String(number),
-          head_sha: expectedHeadSha.toLowerCase(),
-          review_run_number: String(currentRunNumber),
+  await withPhase('dispatch-create', async () => {
+    const dispatchResponse = await fetchImpl(
+      `${repositoryUrl}/actions/workflows/governance.yml/dispatches`,
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/vnd.github+json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'X-GitHub-Api-Version': '2022-11-28',
         },
-      }),
-    },
-  );
+        body: JSON.stringify({
+          ref: 'main',
+          inputs: {
+            pr_number: String(number),
+            head_sha: expectedHeadSha.toLowerCase(),
+            review_run_number: String(currentRunNumber),
+          },
+        }),
+      },
+    );
 
-  if (!dispatchResponse.ok || dispatchResponse.status !== 204) {
-    throw createGitHubHttpError(dispatchResponse, 'Governance workflow dispatch');
-  }
+    if (!dispatchResponse.ok || dispatchResponse.status !== 204) {
+      throw createGitHubHttpError(dispatchResponse, 'Governance workflow dispatch');
+    }
+  });
 
   return { status: 'DISPATCHED', dispatchTitle: title };
 }

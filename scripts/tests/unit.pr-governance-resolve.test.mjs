@@ -125,7 +125,7 @@ test('closed pull request is rejected', async () => {
       token: 'reader-token',
       fetchImpl: mock.fetchImpl,
     }),
-    /Invalid or closed PN-017 pull request/,
+    /Invalid or closed PR Governance pull request/,
   );
 
   assert.equal(mock.calls.length, 1);
@@ -148,7 +148,7 @@ test('different target repository is rejected', async () => {
       token: 'reader-token',
       fetchImpl: mock.fetchImpl,
     }),
-    /Invalid or closed PN-017 pull request/,
+    /Invalid or closed PR Governance pull request/,
   );
 });
 
@@ -168,7 +168,7 @@ test('unresolved organization route is rejected without API calls', async () => 
         throw new Error('Unexpected API call');
       },
     }),
-    /Invalid PN-017 PR resolution request/,
+    /Invalid PR resolution request/,
   );
 
   assert.equal(calls, 0);
@@ -185,7 +185,7 @@ test('missing token is rejected without API calls', async () => {
         throw new Error('Unexpected API call');
       },
     }),
-    /Invalid PN-017 PR resolution request/,
+    /Invalid PR resolution request/,
   );
 
   assert.equal(calls, 0);

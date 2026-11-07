@@ -41,7 +41,7 @@ export async function processPrGovernanceDelivery({
     typeof store.release !== 'function' ||
     typeof dispatch !== 'function'
   ) {
-    throw new TypeError('Invalid PN-017 delivery context');
+    throw new TypeError('Invalid PR Governance delivery context');
   }
 
   // Verify HMAC before accessing persistent state or privileged APIs.
@@ -59,11 +59,11 @@ export async function processPrGovernanceDelivery({
   }
 
   if (claim?.status === 'IN_PROGRESS') {
-    throw new Error('PN-017 delivery is already in progress');
+    throw new Error('PR Governance delivery is already in progress');
   }
 
   if (claim?.status !== 'ACQUIRED' || typeof claim.claimToken !== 'string' || !claim.claimToken) {
-    throw new Error('PN-017 delivery claim was not established');
+    throw new Error('PR Governance delivery claim was not established');
   }
 
   const id = deliveryId.toLowerCase();
@@ -81,19 +81,19 @@ export async function processPrGovernanceDelivery({
     });
 
     if (!result || !['IGNORED', 'DISCOVERY_REQUIRED', 'EVALUATED'].includes(result.status)) {
-      throw new TypeError('Invalid PN-017 delivery dispatch result');
+      throw new TypeError('Invalid PR Governance delivery dispatch result');
     }
 
     // DISCOVERY_REQUIRED is not a completed governance operation.
     // Preserve the event for subsequent organization-wide processing.
     if (result.status === 'DISCOVERY_REQUIRED') {
-      throw new Error('PN-017 organization discovery is not implemented');
+      throw new Error('PR Governance organization discovery is not implemented');
     }
 
     const completion = await store.complete(id, claimToken);
 
     if (completion?.status !== 'COMPLETED') {
-      throw new Error('PN-017 delivery completion was not confirmed');
+      throw new Error('PR Governance delivery completion was not confirmed');
     }
 
     return result;
@@ -102,12 +102,12 @@ export async function processPrGovernanceDelivery({
       const release = await store.release(id, claimToken);
 
       if (release?.status !== 'RELEASED') {
-        throw new Error('PN-017 delivery release was not confirmed', { cause: error });
+        throw new Error('PR Governance delivery release was not confirmed', { cause: error });
       }
     } catch (releaseError) {
       throw new AggregateError(
         [error, releaseError],
-        'PN-017 delivery execution and lease release failed',
+        'PR Governance delivery execution and lease release failed',
         { cause: releaseError },
       );
     }

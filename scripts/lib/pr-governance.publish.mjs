@@ -153,7 +153,7 @@ export async function startPrGovernanceCheck({
     head_sha: headSha,
     status: 'in_progress',
     output: {
-      title: 'PN-017 governance evaluation in progress',
+      title: 'PR Governance evaluation in progress',
       summary: 'Governance evidence is being revalidated.',
     },
   };
@@ -307,7 +307,7 @@ export async function completePrGovernanceCheck({
           head_sha: expectedHeadSha.toLowerCase(),
           conclusion: 'failure',
           output: {
-            title: 'PN-017 governance evaluation failed',
+            title: 'PR Governance evaluation failed',
             summary: 'The governance evidence could not be verified.',
           },
         }

@@ -99,7 +99,7 @@ async function readTeamPermissions({ owner, repo, teams, token, fetchImpl }) {
 }
 
 /**
- * Evaluates PN-017 using GitHub evidence.
+ * Evaluates PR Governance using GitHub evidence.
  *
  * The caller must provide tokens obtained in a trusted execution context.
  * A PASS is an internal policy result, not a GitHub merge authorization.

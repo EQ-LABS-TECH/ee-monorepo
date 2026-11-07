@@ -150,7 +150,7 @@ test('evaluation error completes the same check as failure', async () => {
   const patch = mock.calls.find(({ method }) => method === 'PATCH');
 
   assert.equal(patch.body.conclusion, 'failure');
-  assert.equal(patch.body.output.title, 'PN-017 governance evaluation failed');
+  assert.equal(patch.body.output.title, 'PR Governance evaluation failed');
 });
 
 test('check start error includes safe GitHub request context', async () => {
@@ -163,7 +163,7 @@ test('check start error includes safe GitHub request context', async () => {
     }),
     (error) => {
       assert.match(error.message, /check start returned HTTP 403/);
-      assert.deepEqual(error.pn017Diagnostic, {
+      assert.deepEqual(error.governanceDiagnostic, {
         number: 42,
         headSha,
         phase: 'check-start',
@@ -192,14 +192,14 @@ test('Validate lookup errors carry a sanitized readiness diagnostic', async () =
       }),
     }),
     (error) => {
-      assert.deepEqual(error.pn017Diagnostic, {
+      assert.deepEqual(error.governanceDiagnostic, {
         number: 42,
         headSha,
         phase: 'validate-readiness',
         code: 'github-http-error',
         httpStatus: 403,
       });
-      assert.equal(JSON.stringify(error.pn017Diagnostic).includes('private response'), false);
+      assert.equal(JSON.stringify(error.governanceDiagnostic).includes('private response'), false);
       return true;
     },
   );
@@ -472,7 +472,7 @@ test('publishes an approval block immediately and passes after a later approval'
   assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 1);
 
   const blockedPayload = mock.calls.find(({ method }) => method === 'PATCH').body;
-  assert.equal(blockedPayload.output.title, 'PN-017 governance blocked');
+  assert.equal(blockedPayload.output.title, 'PR Governance blocked');
   assert.match(blockedPayload.output.summary, /Qualified approvals: 0 \/ 1/);
   assert.match(
     blockedPayload.output.summary,

@@ -42,6 +42,8 @@ test('CI validation and Governance review triggers are separated', () => {
   assert.deepEqual(governance.on.workflow_run.workflows, ['CI']);
   assert.deepEqual(governance.on.workflow_run.types, ['completed']);
   assert.deepEqual(governance.on.pull_request_review.types, ['submitted', 'edited', 'dismissed']);
+  assert.match(governance['run-name'], /format\('GV PR #\{0\} · R\{1\}'/);
+  assert.ok(Object.hasOwn(governance.on.workflow_dispatch.inputs, 'head_sha'));
   assert.equal(
     Object.keys(governance.on.workflow_dispatch.inputs).filter((key) => key === 'review_run_number')
       .length,

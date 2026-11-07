@@ -32,12 +32,12 @@ export function transitionPrGovernanceLease({ record, operation, claimToken, now
     typeof claimToken !== 'string' ||
     !claimToken
   ) {
-    throw new TypeError('Invalid PN-017 lease transition');
+    throw new TypeError('Invalid PR Governance lease transition');
   }
 
   if (operation === 'CLAIM') {
     if (!POSITIVE_TIME(leaseMs) || !Number.isSafeInteger(now + leaseMs)) {
-      throw new TypeError('Invalid PN-017 lease duration');
+      throw new TypeError('Invalid PR Governance lease duration');
     }
 
     if (record?.status === 'COMPLETED') {
@@ -69,7 +69,7 @@ export function transitionPrGovernanceLease({ record, operation, claimToken, now
 
   if (operation === 'RENEW') {
     if (!POSITIVE_TIME(leaseMs) || !Number.isSafeInteger(now + leaseMs)) {
-      throw new TypeError('Invalid PN-017 lease duration');
+      throw new TypeError('Invalid PR Governance lease duration');
     }
 
     return {

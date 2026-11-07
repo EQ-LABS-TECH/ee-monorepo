@@ -19,6 +19,7 @@ const RULES = Object.freeze([
       p === 'scripts/commands/governance' ||
       p.startsWith('scripts/lib/pr-governance.') ||
       p.startsWith('scripts/tests/pr-governance.') ||
+      p.startsWith('scripts/tests/unit.pr-governance-') ||
       p.startsWith('packages/governance/src/pr-governance/'),
   },
   { id: 'public-contract', match: (p) => p.startsWith('packages/foundation/src/contracts/') },

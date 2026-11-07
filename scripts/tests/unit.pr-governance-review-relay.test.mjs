@@ -40,6 +40,8 @@ function fixture({
   governanceDecision = null,
   governanceCheckStatus = 200,
   reviews = [],
+  currentRunId = 101,
+  currentRunNumber = 165,
 } = {}) {
   const requests = [];
   const fetchImpl = async (urlValue, init = {}) => {
@@ -84,8 +86,8 @@ function fixture({
                   output: {
                     title:
                       governanceDecision.status === 'PASS'
-                        ? 'PN-017 governance verified'
-                        : 'PN-017 governance blocked',
+                        ? 'PR Governance verified'
+                        : 'PR Governance blocked',
                     summary: [
                       `Classification: ${governanceDecision.classification}`,
                       `Decision: ${governanceDecision.status}`,
@@ -132,8 +134,8 @@ function fixture({
       repo,
       number,
       expectedHeadSha: headSha,
-      currentRunId: 101,
-      currentRunNumber: 165,
+      currentRunId,
+      currentRunNumber,
       expectedAppId: governanceAppId,
       token: 'test-token',
       fetchImpl,
@@ -143,8 +145,8 @@ function fixture({
 
 test('uses an explicit review run identity for workflow dispatch names', () => {
   assert.equal(
-    governanceDispatchTitle({ number, headSha, reviewRunNumber: 165 }),
-    `PN-017 PR-${number} SHA-${headSha} REVIEW-165`,
+    governanceDispatchTitle({ number, reviewRunNumber: 165 }),
+    `GV PR #${number} · R165`,
   );
 });
 
@@ -341,7 +343,12 @@ test('fails closed when the current governance check cannot be verified', async 
     },
   });
 
-  await assert.rejects(runGovernanceReviewRelay(setup.context), /HTTP 503/);
+  await assert.rejects(runGovernanceReviewRelay(setup.context), (error) => {
+    assert.match(error.message, /HTTP 503/);
+    assert.equal(error.phase, 'approval-evidence');
+    assert.equal(error.code, 'github-http-error');
+    return true;
+  });
   assert.equal(
     setup.requests.some((request) => request.method === 'POST'),
     false,
@@ -407,7 +414,7 @@ test('does not dispatch when the PR HEAD changed after the review event', async 
 });
 
 test('does not dispatch the same review event twice', async () => {
-  const title = governanceDispatchTitle({ number, headSha, reviewRunNumber: 165 });
+  const title = governanceDispatchTitle({ number, reviewRunNumber: 165 });
   const setup = fixture({
     dispatchRuns: [
       {
@@ -430,7 +437,7 @@ test('does not dispatch the same review event twice', async () => {
   );
 });
 
-test('reuses a pending protected dispatch for the same PR and HEAD', async () => {
+test('does not reuse a pending dispatch from a different review event', async () => {
   const setup = fixture({
     dispatchRuns: [
       {
@@ -438,8 +445,80 @@ test('reuses a pending protected dispatch for the same PR and HEAD', async () =>
         run_number: 32,
         event: 'workflow_dispatch',
         status: 'queued',
-        display_title: `PN-017 PR-${number} SHA-${headSha} REVIEW-164`,
-        pull_requests: [],
+        display_title: `GV PR #${number} · R164`,
+      },
+    ],
+  });
+
+  const result = await runGovernanceReviewRelay(setup.context);
+
+  assert.equal(result.status, 'DISPATCHED');
+  assert.equal(
+    setup.requests.some((request) => request.method === 'POST'),
+    true,
+  );
+});
+
+test('handles a newer relay while the previous review dispatch is still waiting', async () => {
+  const setup = fixture({
+    currentRunId: 190,
+    currentRunNumber: 190,
+    reviewPages: [[run({ id: 190, runNumber: 190 }), run({ id: 189, runNumber: 189 })]],
+    dispatchRuns: [
+      {
+        id: 191,
+        run_number: 191,
+        event: 'workflow_dispatch',
+        status: 'waiting',
+        display_title: `GV PR #${number} · R189`,
+      },
+    ],
+  });
+
+  const result = await runGovernanceReviewRelay(setup.context);
+
+  assert.equal(result.status, 'DISPATCHED');
+  assert.equal(
+    setup.requests.some((request) => request.method === 'POST'),
+    true,
+  );
+});
+
+test('accepts transient dispatch states without requiring pull request run fields', async (t) => {
+  for (const status of ['requested', 'waiting', 'pending']) {
+    await t.test(status, async () => {
+      const setup = fixture({
+        dispatchRuns: [
+          {
+            id: 202,
+            run_number: 32,
+            event: 'workflow_dispatch',
+            status,
+            display_title: `GV PR #${number} · R164`,
+          },
+        ],
+      });
+
+      const result = await runGovernanceReviewRelay(setup.context);
+
+      assert.equal(result.status, 'DISPATCHED');
+      assert.equal(
+        setup.requests.some((request) => request.method === 'POST'),
+        true,
+      );
+    });
+  }
+});
+
+test('deduplicates a legacy title only for the same PR, HEAD and review run', async () => {
+  const setup = fixture({
+    dispatchRuns: [
+      {
+        id: 202,
+        run_number: 32,
+        event: 'workflow_dispatch',
+        status: 'waiting',
+        display_title: `OPS-123 PR-${number} SHA-${headSha} REVIEW-165`,
       },
     ],
   });
@@ -453,8 +532,55 @@ test('reuses a pending protected dispatch for the same PR and HEAD', async () =>
   );
 });
 
+test('does not deduplicate a legacy run when the PR HEAD differs', async () => {
+  const setup = fixture({
+    dispatchRuns: [
+      {
+        id: 202,
+        run_number: 32,
+        event: 'workflow_dispatch',
+        status: 'in_progress',
+        display_title: `OPS-123 PR-${number} SHA-${'b'.repeat(40)} REVIEW-165`,
+      },
+    ],
+  });
+
+  const result = await runGovernanceReviewRelay(setup.context);
+
+  assert.equal(result.status, 'DISPATCHED');
+  assert.equal(
+    setup.requests.some((request) => request.method === 'POST'),
+    true,
+  );
+});
+
+test('reports the dispatch lookup phase for malformed run evidence', async () => {
+  const setup = fixture({
+    dispatchRuns: [
+      {
+        id: 202,
+        run_number: 32,
+        event: 'workflow_dispatch',
+        status: 'invalid',
+        display_title: `GV PR #${number} · R164`,
+      },
+    ],
+  });
+
+  await assert.rejects(runGovernanceReviewRelay(setup.context), (error) => {
+    assert.equal(error.phase, 'dispatch-lookup');
+    assert.equal(error.code, 'malformed-run');
+    return true;
+  });
+});
+
 test('reports dispatch failures instead of treating them as completed', async () => {
   const setup = fixture({ dispatchStatus: 503 });
 
-  await assert.rejects(runGovernanceReviewRelay(setup.context), /HTTP 503/);
+  await assert.rejects(runGovernanceReviewRelay(setup.context), (error) => {
+    assert.match(error.message, /HTTP 503/);
+    assert.equal(error.phase, 'dispatch-create');
+    assert.equal(error.code, 'github-http-error');
+    return true;
+  });
 });

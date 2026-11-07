@@ -136,7 +136,7 @@ Implementation:
 - `scripts/lib/pr-governance.evidence.mjs`: GitHub PR, review, permission, and team-membership evidence.
 - `packages/governance/src/pr-governance/approvals.mjs`: approval thresholds and reviewer-eligibility evidence.
 - `scripts/lib/pr-governance.inspect.mjs`: advisory report composition.
-- `scripts/tests/pr-governance.*.test.mjs`: regression and integration tests.
+- `scripts/tests/*pr-governance*.test.mjs`: regression and integration tests.
 
 The inspector identifies `CRITICAL` changes through conservative path indicators.
 Complete changed-path evidence without a critical indicator defaults to `ORDINARY`;

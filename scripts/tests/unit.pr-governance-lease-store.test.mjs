@@ -167,7 +167,7 @@ test('invalid configuration fails before storage access', () => {
         storage: mock.storage,
         leaseMs: 0,
       }),
-    /Invalid PN-017 lease store configuration/,
+    /Invalid PR Governance lease store configuration/,
   );
 });
 
@@ -203,7 +203,7 @@ test('malformed storage snapshots cannot create a new lease', async () => {
 
     mock.storage.read = async () => snapshot;
 
-    await assert.rejects(mock.createStore().claim(id), /Invalid PN-017 storage snapshot/);
+    await assert.rejects(mock.createStore().claim(id), /Invalid PR Governance storage snapshot/);
 
     assert.equal(mock.getWrites(), 0);
   }

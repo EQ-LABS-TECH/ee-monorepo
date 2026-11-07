@@ -33,7 +33,7 @@ export async function dispatchPrGovernanceEvent({
     typeof resolve !== 'function' ||
     typeof run !== 'function'
   ) {
-    throw new TypeError('Invalid trusted PN-017 dispatch context');
+    throw new TypeError('Invalid trusted PR Governance dispatch context');
   }
 
   const route = routePrGovernanceEvent({
@@ -54,7 +54,7 @@ export async function dispatchPrGovernanceEvent({
   }
 
   if (route.status !== 'READY') {
-    throw new TypeError('Unsupported PN-017 dispatch route');
+    throw new TypeError('Unsupported PR Governance dispatch route');
   }
 
   const resolved = await resolve({
@@ -69,7 +69,7 @@ export async function dispatchPrGovernanceEvent({
     resolved?.number !== route.number ||
     !/^[0-9a-f]{40}$/i.test(resolved.expectedHeadSha ?? '')
   ) {
-    throw new TypeError('Invalid PN-017 resolved PR context');
+    throw new TypeError('Invalid PR Governance resolved PR context');
   }
 
   const result = await run({

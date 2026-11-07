@@ -101,7 +101,7 @@ Materializar el archivo **`.github/CODEOWNERS`** con ownership real por áreas d
 | `apps/`                                                                                 | `@EQ-LABS-TECH/maintainers`  | Aplicaciones                                 |
 | `connectors/`                                                                           | `@EQ-LABS-TECH/maintainers`  | Conectores                                   |
 | `scripts/`                                                                              | `@EQ-LABS-TECH/maintainers`  | Automatización del repositorio               |
-| `scripts/lib/pr-governance.*`, `scripts/tests/pr-governance.*`                          | `@EQ-LABS-TECH/architecture` | Implementación y pruebas de políticas PN-017 |
+| `scripts/lib/pr-governance.*`, `scripts/tests/*pr-governance*`                          | `@EQ-LABS-TECH/architecture` | Implementación y pruebas de políticas PN-017 |
 | `scripts/commands/enforce`, `scripts/commands/reconcile`, `scripts/commands/governance` | `@EQ-LABS-TECH/architecture` | Comandos que aplican políticas PN-017        |
 | `docs/`                                                                                 | `@EQ-LABS-TECH/maintainers`  | Documentación ordinaria                      |
 | `docs/architecture/`, `docs/adr/`, `docs/rfc/`                                          | `@EQ-LABS-TECH/architecture` | Normativa y arquitectura                     |
@@ -174,7 +174,7 @@ scripts/lib/pr-governance.*     @EQ-LABS-TECH/architecture
 scripts/commands/enforce       @EQ-LABS-TECH/architecture
 scripts/commands/reconcile     @EQ-LABS-TECH/architecture
 scripts/commands/governance    @EQ-LABS-TECH/architecture
-scripts/tests/pr-governance.*  @EQ-LABS-TECH/architecture
+scripts/tests/*pr-governance*  @EQ-LABS-TECH/architecture
 
 # Documentation: Maintainers own routine material; Architecture owns normative domains.
 docs/                           @EQ-LABS-TECH/maintainers
