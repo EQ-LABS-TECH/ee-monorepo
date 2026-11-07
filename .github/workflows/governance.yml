@@ -1,7 +1,7 @@
 # PR Governance — Trusted governance verification.
 # Automatic validation; not yet a required check.
 name: Governance Verification
-run-name: "${{ github.event_name == 'pull_request_review' && 'Governance review relay' || (github.event_name == 'workflow_dispatch' && format('GV PR #{0} · R{1}', inputs.pr_number, inputs.review_run_number)) || 'Governance Verification' }}"
+run-name: "${{ github.event_name == 'pull_request_review' && 'Governance review relay' || (github.event_name == 'workflow_dispatch' && format('Governance PR #{0} · R{1}', inputs.pr_number, inputs.review_run_number)) || 'Governance Verification' }}"
 
 on:
   workflow_run:

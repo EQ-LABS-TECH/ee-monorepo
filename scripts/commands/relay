@@ -26,14 +26,12 @@ function readContext(env) {
   });
   const currentRunId = readPositiveInteger(env.GITHUB_RUN_ID);
   const currentRunNumber = readPositiveInteger(env.GITHUB_RUN_NUMBER);
-  const expectedAppId = readPositiveInteger(env.GOVERNANCE_APP_ID);
   const expectedHeadSha = event.pull_request?.head?.sha;
 
   if (
     env.GITHUB_EVENT_NAME !== 'pull_request_review' ||
     currentRunId === null ||
     currentRunNumber === null ||
-    expectedAppId === null ||
     typeof expectedHeadSha !== 'string' ||
     !/^[0-9a-f]{40}$/i.test(expectedHeadSha)
   ) {
@@ -47,7 +45,6 @@ function readContext(env) {
     expectedHeadSha: expectedHeadSha.toLowerCase(),
     currentRunId,
     currentRunNumber,
-    expectedAppId,
     token: env.GITHUB_TOKEN,
   };
 }

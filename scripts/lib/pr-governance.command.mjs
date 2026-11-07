@@ -75,28 +75,6 @@ export async function executeGovernanceCommand({ env, run = runPrGovernance, log
   }
 
   if (
-    result?.mode === 'WAITING_FOR_APPROVALS' &&
-    result.headSha?.toLowerCase() === context.expectedHeadSha &&
-    Number.isSafeInteger(result.checkRunId) &&
-    result.checkRunId > 0 &&
-    Number.isSafeInteger(result.approvalCount) &&
-    result.approvalCount >= 0 &&
-    Number.isSafeInteger(result.required) &&
-    result.required > result.approvalCount
-  ) {
-    log(
-      JSON.stringify({
-        status: 'WAITING_FOR_APPROVALS',
-        headSha: result.headSha,
-        checkRunId: result.checkRunId,
-        approvalCount: result.approvalCount,
-        required: result.required,
-      }),
-    );
-    return 0;
-  }
-
-  if (
     result?.mode === 'ALREADY_CURRENT' &&
     context.deduplicateCurrentChecks &&
     result.headSha?.toLowerCase() === context.expectedHeadSha &&

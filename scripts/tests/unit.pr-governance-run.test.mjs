@@ -452,9 +452,10 @@ function successfulFixture({
         size: Buffer.byteLength(owners),
         content: Buffer.from(owners).toString('base64'),
       };
-    } else if (url.includes('/collaborators/architect/permission')) {
+    } else if (url.match(/\/collaborators\/[^/]+\/permission$/)) {
+      const login = url.match(/\/collaborators\/([^/]+)\/permission$/)[1];
       data = {
-        user: { login: 'architect' },
+        user: { login },
         permission: 'write',
         role_name: 'write',
       };
@@ -465,7 +466,7 @@ function successfulFixture({
       };
     } else if (url.endsWith('/orgs/EQ-LABS-TECH/teams/architecture')) {
       data = { slug: 'architecture', privacy: teamVisible ? 'closed' : 'secret' };
-    } else if (url.includes('/teams/architecture/memberships/architect')) {
+    } else if (url.match(/\/teams\/architecture\/memberships\/[^/]+$/)) {
       status = membershipErrorStatus ?? (architectActive ? 200 : 404);
       data = status === 200 ? { state: 'active', role: 'member' } : undefined;
     } else if (method === 'GET' && url.includes('/check-runs?check_name=Validate')) {
@@ -648,6 +649,63 @@ test('critical governance with one approval completes as failure', async () => {
   assert.equal(mock.calls.filter(({ method }) => method === 'POST').length, 1);
 
   assert.equal(mock.calls.filter(({ method }) => method === 'PATCH').length, 1);
+});
+
+test('critical approval progress publishes 0/2, 1/2, then 2/2', async () => {
+  const mock = successfulFixture({
+    paths: ['.github/workflows/governance.yml'],
+    reviewEvents: [],
+  });
+  const reconcile = () =>
+    runPrGovernance({
+      ...options,
+      deduplicateCurrentChecks: true,
+      fetchImpl: mock.fetchImpl,
+    });
+
+  const first = await reconcile();
+  assert.equal(first.classification, 'CRITICAL');
+  assert.equal(first.decision.status, 'BLOCKED');
+
+  mock.setReviews([
+    {
+      user: { login: 'architect' },
+      state: 'APPROVED',
+      commit_id: headSha,
+      submitted_at: '2026-10-29T00:00:00Z',
+      body: 'First approval',
+    },
+  ]);
+  const second = await reconcile();
+  assert.equal(second.classification, 'CRITICAL');
+  assert.equal(second.decision.status, 'BLOCKED');
+
+  mock.setReviews([
+    {
+      user: { login: 'architect' },
+      state: 'APPROVED',
+      commit_id: headSha,
+      submitted_at: '2026-10-29T00:00:00Z',
+      body: 'First approval',
+    },
+    {
+      user: { login: 'architect-two' },
+      state: 'APPROVED',
+      commit_id: headSha,
+      submitted_at: '2026-10-29T00:01:00Z',
+      body: 'Second approval',
+    },
+  ]);
+  const third = await reconcile();
+
+  const summaries = mock.calls
+    .filter(({ method, url }) => method === 'PATCH' && url.endsWith('/check-runs/456'))
+    .map(({ body }) => body.output.summary);
+  assert.equal(summaries.length, 3);
+  assert.match(summaries[0], /Qualified approvals: 0 \/ 2/);
+  assert.match(summaries[1], /Qualified approvals: 1 \/ 2/);
+  assert.match(summaries[2], /Qualified approvals: 2 \/ 2/);
+  assert.equal(third.decision.status, 'PASS');
 });
 
 test('publishes an approval block immediately and passes after a later approval', async () => {

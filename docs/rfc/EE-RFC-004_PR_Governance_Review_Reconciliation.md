@@ -15,7 +15,7 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Clasificación**                   | D — Cambio Significativo / Transversal                                                                                                 |
 | **Nivel**                           | Estratégico                                                                                                                            |
 | **Normativo**                       | Sí                                                                                                                                     |
-| **Versión**                         | v0.1.0                                                                                                                                 |
+| **Versión**                         | v0.2.0                                                                                                                                 |
 | **Estado**                          | Aprobado                                                                                                                               |
 | **Propietario**                     | Equipo de Arquitectura                                                                                                                 |
 | **Documento padre**                 | EE-DOC-007                                                                                                                             |
@@ -27,18 +27,18 @@ Este documento sigue el estándar **EE-DOC-002 — Document Design Template**.
 | **Aprobado por**                    | Equipo de Arquitectura                                                                                                                 |
 | **Audiencia**                       | Arquitectura, Desarrollo, Maintainers, QA                                                                                              |
 | **Fecha de creación**               | 2026-11-06                                                                                                                             |
-| **Última revisión**                 | 2026-11-06                                                                                                                             |
-| **Próxima revisión**                | 2026-12-06                                                                                                                             |
+| **Última revisión**                 | 2026-11-07                                                                                                                             |
+| **Próxima revisión**                | 2026-12-07                                                                                                                             |
 
-> Este RFC fue aprobado el 2026-11-06. Sustituye prospectivamente EE-RFC-003 §02.8.7 cuando la actualización normativa de EE-DOC-007 se integre. No modifica EE-RFC-003 retroactivamente.
+> v0.1.0 fue aprobado el 2026-11-06. Esta revisión v0.2.0, aprobada el 2026-11-07, actualiza el contrato de reconciliación para publicar el progreso cualificado después de cada evento de review. No modifica EE-RFC-003 retroactivamente.
 
 ---
 
 ## 01. Resumen ejecutivo
 
-Este RFC sustituye prospectivamente el requisito de EE-RFC-003 §02.8.7 que vuelve a ejecutar `Validate` ante cada evento de revisión. `Validate` se ejecuta cuando cambia el HEAD del Pull Request; Governance reutiliza el resultado `success` vigente de `Validate` para ese mismo HEAD.
+Este RFC sustituye prospectivamente el requisito de EE-RFC-003 §02.8.7 que vuelve a ejecutar `Validate` ante cada evento de revisión. `Validate` se ejecuta cuando cambia el HEAD del Pull Request; Governance reutiliza el resultado `success` vigente de `Validate` para ese mismo HEAD. Cada evento actual de review inicia una reevaluación confiable para actualizar el conteo de aprobaciones cualificadas.
 
-La decisión aprobada separa la decisión de gobernanza, el check `PR Governance` y el resultado operativo del workflow. Evita despachos protegidos redundantes por aprobaciones parciales, conserva el bloqueo requerido y fuerza reevaluaciones ante aprobaciones suficientes, revocaciones y cambios de HEAD o evidencia.
+La decisión aprobada separa la decisión de gobernanza, el check `PR Governance` y el resultado operativo del workflow. Actualiza el check después de cada evento de review, conserva `BLOCKED` mientras falten aprobaciones cualificadas y evita repetir CI para el mismo HEAD. La huella vigente deduplica publicaciones con evidencia idéntica.
 
 ---
 
@@ -46,7 +46,7 @@ La decisión aprobada separa la decisión de gobernanza, el check `PR Governance
 
 ### 02.1. Descubrimiento
 
-En el PR #50, el primer evento de review despachó Governance en `main` aunque la evidencia solo alcanzaba una de dos aprobaciones requeridas. La verificación publicó `BLOCKED` y terminó el workflow con fallo operativo.
+En el PR #50, el primer evento de review despachó Governance en `main` aunque la evidencia solo alcanzaba una de dos aprobaciones requeridas. La verificación publicó `BLOCKED` y terminó el workflow con fallo operativo. En ejecuciones posteriores, el relay conservó el check anterior ante una aprobación parcial, por lo que la interfaz siguió mostrando `0/2` aunque la evidencia de review hubiera cambiado.
 
 ### 02.2. Conflicto normativo actual
 
@@ -60,9 +60,9 @@ EE-RFC-003 está cerrado. Esta decisión resuelve la contradicción prospectivam
 
 ### 02.3. Interpretación del cambio
 
-Un evento de revisión actualiza evidencia de gobernanza; no cambia el código ni requiere repetir CI para el mismo HEAD. Governance deberá consultar de nuevo las revisiones y elegibilidad desde fuentes confiables.
+Un evento de revisión actualiza evidencia de gobernanza; no cambia el código ni requiere repetir CI para el mismo HEAD. Cada evento distinto de review solicitado, editado o dismiss inicia una reevaluación confiable en `main`. La publicación debe mostrar el conteo vigente de aprobaciones cualificadas (por ejemplo, `0/2`, `1/2` y `2/2`) y conservar `BLOCKED` mientras los requisitos no se cumplan.
 
-`WAITING_FOR_APPROVALS` será un resultado operativo interno del relay. No sustituirá ni publicará un nuevo check. El check vigente `PR Governance: failure` se conservará cuando la política siga bloqueando el merge.
+El relay no determina cualificación ni modifica checks; solo solicita la reevaluación. La verificación de `main` conserva la autoridad sobre identidad, elegibilidad, CODEOWNERS e independencia, y publica el nuevo check `PR Governance`. Si llegan reviews concurrentes, la evaluación refleja la evidencia vigente al momento de publicar; no deberá publicar un conteo histórico inferior después de una decisión basada en evidencia más reciente.
 
 ### 02.4. Límite de autoridad
 
@@ -87,30 +87,29 @@ Un evento de revisión actualiza evidencia de gobernanza; no cambia el código n
 
 ### 03.1. Superficie A — EE-RFC-003 §02.8.7
 
-| Sección afectada                                      | Cambio                                                                                                                                                                                                                                                   |
-| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Requisito de nueva ejecución de `Validate` por review | Sustituir prospectivamente por `Validate` ante cambios de HEAD; los eventos de review iniciarán reconciliación de Governance y reutilizarán `Validate` satisfactorio vigente para el mismo HEAD. EE-RFC-003 permanecerá intacto como registro histórico. |
+| Sección afectada                                      | Cambio                                                                                                                                                                                                                                             |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Requisito de nueva ejecución de `Validate` por review | Sustituir prospectivamente por `Validate` ante cambios de HEAD; cada evento de review inicia reconciliación de Governance y reutiliza `Validate` satisfactorio vigente para el mismo HEAD. EE-RFC-003 permanecerá intacto como registro histórico. |
 
 ### 03.2. Superficie B — Contrato de decisión, check y workflow
 
-| Condición                                                                                                            | Acción del relay / Governance                                                                                       | Check `PR Governance`                                                 | Workflow                                    |
-| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------- |
-| No existe check vigente                                                                                              | Despachar reconciliación confiable. Main publica la decisión actual, incluido `BLOCKED` si faltan aprobaciones.     | Según decisión evaluada.                                              | `success` si la operación técnica concluye. |
-| Existe `BLOCKED` vigente y la evidencia actual demuestra que las aprobaciones siguen por debajo del mínimo aplicable | `WAITING_FOR_APPROVALS`; no despachar otra evaluación protegida.                                                    | Conservar `failure`.                                                  | `success`.                                  |
-| Aprobaciones brutas alcanzan el mínimo posible o no puede probarse que siguen siendo insuficientes                   | Despachar a `main`; la cantidad no equivale a cualificación.                                                        | Reevaluar identidad, independencia, permisos, membresía y CODEOWNERS. | Según resultado operativo.                  |
-| Existe `PASS` y se revoca o edita una aprobación que podría invalidarlo                                              | Reconciliar inmediatamente.                                                                                         | Invalidar el `PASS` si deja de cumplir la política.                   | `success` si no hay error técnico.          |
-| Cambia HEAD o evidencia relevante, y no se demuestra que un `BLOCKED` continúa necesariamente vigente                | No aplicar deduplicación obsoleta; reconciliar con la evidencia actual y exigir `Validate` exitoso del HEAD actual. | Según nueva evaluación; nunca heredar el `PASS` anterior.             | Según resultado operativo.                  |
-| Error de GitHub, evidencia indeterminada o fallo técnico                                                             | `ERROR`; detener la publicación favorable.                                                                          | Nunca publicar `PASS`.                                                | `failure`.                                  |
+| Condición                                                                                             | Acción del relay / Governance                                                                                       | Check `PR Governance`                                     | Workflow                                    |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------- |
+| No existe check vigente                                                                               | Despachar reconciliación confiable. Main publica la decisión actual, incluido `BLOCKED` si faltan aprobaciones.     | Según decisión evaluada.                                  | `success` si la operación técnica concluye. |
+| Llega un evento distinto de review, aunque las aprobaciones sigan debajo del mínimo                   | Despachar a `main`; la cantidad no equivale a cualificación.                                                        | Reevaluar y publicar el conteo cualificado vigente.       | `success` si la operación técnica concluye. |
+| Existe `PASS` y se revoca o edita una aprobación que podría invalidarlo                               | Reconciliar inmediatamente.                                                                                         | Invalidar el `PASS` si deja de cumplir la política.       | `success` si no hay error técnico.          |
+| Cambia HEAD o evidencia relevante, y no se demuestra que un `BLOCKED` continúa necesariamente vigente | No aplicar deduplicación obsoleta; reconciliar con la evidencia actual y exigir `Validate` exitoso del HEAD actual. | Según nueva evaluación; nunca heredar el `PASS` anterior. | Según resultado operativo.                  |
+| Error de GitHub, evidencia indeterminada o fallo técnico                                              | `ERROR`; detener la publicación favorable.                                                                          | Nunca publicar `PASS`.                                    | `failure`.                                  |
 
-La comprobación de “sigue siendo insuficiente” será conservadora. El relay no declarará aprobaciones calificadas por conteo: únicamente podrá omitir el despacho si puede demostrar que el número bruto actual está por debajo de un mínimo aplicable vigente y que no existe una evidencia de cambio que pueda alterar ese mínimo. Si no puede demostrarlo, deberá despachar.
+El relay no declara aprobaciones cualificadas por conteo ni omite la evaluación debido a un conteo bruto insuficiente. Cada evento actualiza la evidencia en `main`; la huella deduplica únicamente una publicación cuyo resultado y evidencia ya sean idénticos.
 
 ### 03.3. Superficie C — EE-DOC-007 e implementación derivada
 
-| Ítem                | Cambio                                                                                                                                                                  |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| EE-DOC-007 §07.10.1 | Precisar los estados `PASS`, `BLOCKED`, `WAITING_FOR_APPROVALS` y `ERROR`, el mapeo a check/workflow, la validez de evidencia y las condiciones de supresión del relay. |
-| EE-IMP-007-P08      | Documentar el as-built, el comportamiento en concurrencia, evidencias de CI y limitaciones verificadas.                                                                 |
-| Workflow y código   | Ajustar relay, evaluación y publicación después de integrar el contrato normativo aprobado.                                                                             |
+| Ítem                | Cambio                                                                                                                          |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| EE-DOC-007 §07.10.1 | Precisar los estados `PASS`, `BLOCKED` y `ERROR`, el mapeo a check/workflow y la reevaluación después de cada evento de review. |
+| EE-IMP-007-P08      | Documentar el as-built, el comportamiento en concurrencia, evidencias de CI y limitaciones verificadas.                         |
+| Workflow y código   | Ajustar relay, evaluación y publicación después de integrar el contrato normativo aprobado.                                     |
 
 ### 03.4. Lo que este RFC **no** cambia
 
@@ -126,7 +125,7 @@ La comprobación de “sigue siendo insuficiente” será conservadora. El relay
 
 | Efecto                                                | Acción                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Reconciliación repetida por approvals parciales       | Suprimir dispatch solo con prueba conservadora de `BLOCKED` actual y falta inevitable de aprobaciones.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Progreso de approvals parciales                       | Cada evento distinto de review solicita evaluación confiable y actualiza el check con el conteo cualificado vigente. La deduplicación por huella evita publicar otra vez cuando la evidencia final es idéntica; `Validate` no se repite si el HEAD no cambió.                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | Decisión de política reportada como fallo de workflow | Publicar `BLOCKED` en el check con conclusión `failure`, y terminar el workflow con `success` si la operación fue técnicamente correcta.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | Evidencia sustituida durante concurrencia             | Revalidar HEAD y evidencia vigente antes de publicar; una ejecución que detecte evidencia sustituida no publicará `PASS`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | Identidad del dispatch y deduplicación                | El título corto identifica PR y run de review; el SHA se conserva en `head_sha`. Solo se suprime el mismo evento o un título histórico con PR/SHA/review exactos. Un dispatch activo distinto no se reutiliza sin prueba de que cubra el evento actual; en caso contrario se solicita otra evaluación serializada.                                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -137,23 +136,23 @@ La comprobación de “sigue siendo insuficiente” será conservadora. El relay
 
 ## 04. Alternativas consideradas
 
-| ID    | Alternativa                                                                                                                                           | Dictamen         | Motivo                                                                               |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------ |
-| **A** | Relay conserva `BLOCKED` vigente cuando prueba que el mínimo de aprobaciones sigue fuera de alcance; Governance corre al cambiar la decisión posible. | **Seleccionada** | Reduce ejecuciones protegidas redundantes y conserva el check requerido.             |
-| **B** | Despachar `main` en cada submitted/edited/dismissed y permitir que el workflow falle por decisión `BLOCKED`.                                          | Rechazada        | Genera runs innecesarios y confunde una decisión de política con un error operativo. |
-| **C** | Reejecutar `Validate` por cada evento de review.                                                                                                      | Rechazada        | Repite CI sin cambios de código y mantiene la contradicción que origina el problema. |
-| **D** | Añadir servicio externo con almacenamiento transaccional.                                                                                             | Diferida         | No es necesario para el cambio mínimo Actions-only y aumenta la infraestructura.     |
+| ID    | Alternativa                                                                                                                                    | Dictamen         | Motivo                                                                               |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------ |
+| **A** | Relay conserva `BLOCKED` vigente ante approvals parciales y espera hasta el umbral.                                                            | Rechazada        | Deja visible un conteo antiguo y no refleja el progreso de reviews.                  |
+| **B** | Cada evento de review solicita evaluación en `main`; `BLOCKED` publica `failure` y el workflow termina `success` si la operación fue correcta. | **Seleccionada** | Actualiza el progreso cualificado sin repetir CI ni confundir política con error.    |
+| **C** | Reejecutar `Validate` por cada evento de review.                                                                                               | Rechazada        | Repite CI sin cambios de código y mantiene la contradicción que origina el problema. |
+| **D** | Añadir servicio externo con almacenamiento transaccional.                                                                                      | Diferida         | No es necesario para el cambio mínimo Actions-only y aumenta la infraestructura.     |
 
 ---
 
 ## 05. Impacto
 
-| Ámbito                    | Impacto                                                                                                                                 |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **Documentos normativos** | EE-DOC-001 registra este RFC aprobado; EE-DOC-007 contiene el contrato materializado. EE-RFC-003 no se modifica.                        |
-| **Monorepo físico**       | La implementación se ajusta conforme a los criterios aprobados en este RFC.                                                             |
-| **CI / Quality Gates**    | `Validate` continúa ejecutándose ante cambios de HEAD; reviews no reinician CI. Governance consume el resultado vigente del mismo HEAD. |
-| **Otros**                 | Reduce runs de `workflow_dispatch`; mantiene la autoridad de clasificación y elegibilidad en el verificador de `main`.                  |
+| Ámbito                    | Impacto                                                                                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Documentos normativos** | EE-DOC-001 registra este RFC aprobado; EE-DOC-007 contiene el contrato materializado. EE-RFC-003 no se modifica.                            |
+| **Monorepo físico**       | La implementación se ajusta conforme a los criterios aprobados en este RFC.                                                                 |
+| **CI / Quality Gates**    | `Validate` continúa ejecutándose ante cambios de HEAD; reviews no reinician CI. Governance consume el resultado vigente del mismo HEAD.     |
+| **Otros**                 | Aumenta reevaluaciones de Governance al cambiar reviews, sin repetir CI; mantiene clasificación y elegibilidad en el verificador de `main`. |
 
 ---
 
@@ -168,21 +167,21 @@ La comprobación de “sigue siendo insuficiente” será conservadora. El relay
 
 ## 07. Criterios de aceptación
 
-| #   | Check medible                                                                                                                                                                                                                                                                               |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | El RFC es aprobado por Arquitectura y EE-DOC-001 lo registra como aprobado antes de iniciar la implementación.                                                                                                                                                                              |
-| 2   | EE-DOC-007 define sin ambigüedad decisión, check, estado interno del relay y resultado operativo del workflow.                                                                                                                                                                              |
-| 3   | `Validate` ejecuta por cambio de HEAD y Governance solo acepta su `success` para el mismo HEAD vigente.                                                                                                                                                                                     |
-| 4   | La secuencia `BLOCKED 0/2 → aprobación 1/2` conserva el check `failure`, termina relay en `WAITING_FOR_APPROVALS` con workflow `success` y no crea un segundo dispatch protegido.                                                                                                           |
-| 5   | Al alcanzar la cantidad necesaria, `main` vuelve a evaluar desde la API la cualificación, CODEOWNERS, independencia y vigencia.                                                                                                                                                             |
-| 6   | `PASS → dismissed` provoca reconciliación y ningún resultado favorable sobrevive si ya no cumple la política.                                                                                                                                                                               |
-| 7   | Cambios de HEAD/evidencia, fallos HTTP y carreras entre eventos tienen regresiones; evidencia desconocida nunca produce `PASS` ni suprime una reevaluación necesaria.                                                                                                                       |
-| 8   | `BLOCKED` es check `failure` con workflow `success`; `ERROR` impide `PASS` y hace fallar el workflow.                                                                                                                                                                                       |
-| 9   | Se revalida la evidencia antes de publicar; la documentación conserva explícitamente el límite de falta de atomicidad frente a cambios posteriores a la última consulta.                                                                                                                    |
-| 10  | El relay acepta estados transitorios documentados, valida campos según el evento y no deduplica otra review por un dispatch activo cuyo evento/HEAD no puede demostrar. Los diagnósticos exponen fase y código específicos.                                                                 |
-| 11  | Cada reconciliación vuelve a leer la evidencia completa. Solo conserva el último `PASS` o `BLOCKED` cuando HEAD, resultado y huella versionada coinciden; sin huella, con cambios de evidencia o con errores, no deduplica y publica o falla de forma segura.                               |
-| 12  | Una consulta fallida antes de iniciar un check no deja vigente un `PASS` anterior: la ejecución intenta publicar `PR Governance = failure`. La implementación mantiene una sola evaluación completa posterior al inicio del check, con verificación interna de consistencia de las fuentes. |
-| 13  | Los cambios de formato de evidencia incrementan `EVIDENCE_SCHEMA_VERSION`; los cambios en clasificación, aprobaciones, elegibilidad o resultados incrementan `GOVERNANCE_POLICY_VERSION`. Las regresiones demuestran que los checks con una versión anterior no se deduplican.              |
+| #   | Check medible                                                                                                                                                                                                                                                                                       |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | El RFC es aprobado por Arquitectura y EE-DOC-001 lo registra como aprobado antes de iniciar la implementación.                                                                                                                                                                                      |
+| 2   | EE-DOC-007 define sin ambigüedad decisión, check, estado interno del relay y resultado operativo del workflow.                                                                                                                                                                                      |
+| 3   | `Validate` ejecuta por cambio de HEAD y Governance solo acepta su `success` para el mismo HEAD vigente.                                                                                                                                                                                             |
+| 4   | La secuencia secuencial `BLOCKED 0/2 → aprobación cualificada 1/2 → segunda aprobación cualificada 2/2` actualiza `PR Governance` tras cada evento; `BLOCKED` conserva conclusión `failure` con workflow `success`, y el resultado final refleja `2/2`. `Validate` no se repite para el mismo HEAD. |
+| 5   | Cada reevaluación en `main` verifica desde la API cualificación, CODEOWNERS, independencia y vigencia; reviews concurrentes solo publican evidencia vigente y pueden converger directamente al conteo final.                                                                                        |
+| 6   | `PASS → dismissed` provoca reconciliación y ningún resultado favorable sobrevive si ya no cumple la política.                                                                                                                                                                                       |
+| 7   | Cambios de HEAD/evidencia, fallos HTTP y carreras entre eventos tienen regresiones; evidencia desconocida nunca produce `PASS` ni suprime una reevaluación necesaria.                                                                                                                               |
+| 8   | `BLOCKED` es check `failure` con workflow `success`; `ERROR` impide `PASS` y hace fallar el workflow.                                                                                                                                                                                               |
+| 9   | Se revalida la evidencia antes de publicar; la documentación conserva explícitamente el límite de falta de atomicidad frente a cambios posteriores a la última consulta.                                                                                                                            |
+| 10  | El relay acepta estados transitorios documentados, valida campos según el evento y no deduplica otra review por un dispatch activo cuyo evento/HEAD no puede demostrar. Los diagnósticos exponen fase y código específicos.                                                                         |
+| 11  | Cada reconciliación vuelve a leer la evidencia completa. Solo conserva el último `PASS` o `BLOCKED` cuando HEAD, resultado y huella versionada coinciden; sin huella, con cambios de evidencia o con errores, no deduplica y publica o falla de forma segura.                                       |
+| 12  | Una consulta fallida antes de iniciar un check no deja vigente un `PASS` anterior: la ejecución intenta publicar `PR Governance = failure`. La implementación mantiene una sola evaluación completa posterior al inicio del check, con verificación interna de consistencia de las fuentes.         |
+| 13  | Los cambios de formato de evidencia incrementan `EVIDENCE_SCHEMA_VERSION`; los cambios en clasificación, aprobaciones, elegibilidad o resultados incrementan `GOVERNANCE_POLICY_VERSION`. Las regresiones demuestran que los checks con una versión anterior no se deduplican.                      |
 
 ---
 
@@ -225,11 +224,11 @@ La comprobación de “sigue siendo insuficiente” será conservadora. El relay
 
 ## 11. Resolución
 
-| Campo                      | Valor                                                                                                |
-| -------------------------- | ---------------------------------------------------------------------------------------------------- |
-| **Dictamen**               | Aprobado por el Equipo de Arquitectura el 2026-11-06.                                                |
-| **Decisión**               | Sustituir prospectivamente EE-RFC-003 §02.8.7 mediante EE-DOC-007; conservar RFC-003 como historial. |
-| **Condición para aplicar** | Actualizar la versión normativa al commit e integrar las regresiones y evidencia de implementación.  |
+| Campo                      | Valor                                                                                                                                      |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Dictamen**               | Aprobado por el Equipo de Arquitectura el 2026-11-06.                                                                                      |
+| **Decisión**               | v0.2.0 actualiza el contrato de v0.1.0 para reevaluar cada review y reflejar el conteo cualificado; EE-RFC-003 se conserva como historial. |
+| **Condición para aplicar** | Sincronizar EE-DOC-007 y validar relay, deduplicación y actualización de conteos con regresiones.                                          |
 
 ---
 
@@ -238,3 +237,4 @@ La comprobación de “sigue siendo insuficiente” será conservadora. El relay
 | Versión    | Fecha      | Autor                  | Aprobado por           | Motivo                                         | Cambios                                                                                   | Estado       |
 | ---------- | ---------- | ---------------------- | ---------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------ |
 | **v0.1.0** | 2026-11-06 | Equipo de Arquitectura | Equipo de Arquitectura | Aprobación y contrato de reconciliación PN-017 | Sustituye prospectivamente EE-RFC-003 §02.8.7 y separa decisión, check, relay y workflow. | **Aprobado** |
+| **v0.2.0** | 2026-11-07 | Equipo de Arquitectura | Equipo de Arquitectura | Progreso visible de aprobaciones               | Reevaluación tras cada review; actualiza el conteo cualificado sin volver a ejecutar CI.  | **Aprobado** |
