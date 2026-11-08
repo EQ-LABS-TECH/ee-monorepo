@@ -6,9 +6,9 @@ import { readCodeownersEvidence } from '../lib/pr-governance.owners-api.mjs';
 const baseSha = 'a'.repeat(40);
 
 const source = [
-  '* @EQ-LABS-TECH/maintainers',
-  '.github/ @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin',
-  'scripts/ @EQ-LABS-TECH/repository-admin @EQ-LABS-TECH/maintainers',
+  '* @EQ-LABS-TECH/ee-labs-maintainers',
+  '.github/ @EQ-LABS-TECH/ee-labs-architecture @EQ-LABS-TECH/ee-labs-repository-admin',
+  'scripts/ @EQ-LABS-TECH/ee-labs-repository-admin @EQ-LABS-TECH/ee-labs-maintainers',
 ].join('\n');
 
 const options = {
@@ -66,8 +66,8 @@ test('resolves CODEOWNERS from the exact base commit', async () => {
   assert.deepEqual(
     result.requirements.map((entry) => entry.eligibleTeams),
     [
-      ['architecture', 'repository-admin'],
-      ['repository-admin', 'maintainers'],
+      ['ee-labs-architecture', 'ee-labs-repository-admin'],
+      ['ee-labs-repository-admin', 'ee-labs-maintainers'],
     ],
   );
 });
@@ -109,7 +109,7 @@ test('unsupported CODEOWNERS patterns block resolution', async () => {
     readCodeownersEvidence({
       ...options,
       fetchImpl: fixture({
-        content: '**/*.ts @EQ-LABS-TECH/architecture',
+        content: '**/*.ts @EQ-LABS-TECH/ee-labs-architecture',
       }),
     }),
     /Unsupported CODEOWNERS pattern/,

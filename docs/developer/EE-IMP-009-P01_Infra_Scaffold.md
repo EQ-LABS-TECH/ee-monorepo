@@ -68,6 +68,8 @@ ee-monorepo/
 
 **CODEOWNERS** (EE-DOC-007 §08):
 
+El siguiente snippet conserva la evidencia histórica de la configuración inicial de P01, capturada antes del renombre de equipos. No sustituye las referencias objetivo actualizadas en EE-IMP-007-P04.
+
 ```text
 infra/    @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin
 ```

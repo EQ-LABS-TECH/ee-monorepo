@@ -370,7 +370,7 @@ function successfulFixture({
   paths = ['README.md'],
   reviewEvents,
   revokeAfterFirstEvaluation = false,
-  owners = '* @EQ-LABS-TECH/architecture',
+  owners = '* @EQ-LABS-TECH/ee-labs-architecture',
   teamWritable = true,
   teamVisible = true,
   architectActive = true,
@@ -459,14 +459,14 @@ function successfulFixture({
         permission: 'write',
         role_name: 'write',
       };
-    } else if (url.includes('/teams/architecture/repos/')) {
+    } else if (url.includes('/teams/ee-labs-architecture/repos/')) {
       data = {
         full_name: 'EQ-LABS-TECH/ee-monorepo',
         permissions: { pull: true, push: teamWritable, admin: false },
       };
-    } else if (url.endsWith('/orgs/EQ-LABS-TECH/teams/architecture')) {
-      data = { slug: 'architecture', privacy: teamVisible ? 'closed' : 'secret' };
-    } else if (url.match(/\/teams\/architecture\/memberships\/[^/]+$/)) {
+    } else if (url.endsWith('/orgs/EQ-LABS-TECH/teams/ee-labs-architecture')) {
+      data = { slug: 'ee-labs-architecture', privacy: teamVisible ? 'closed' : 'secret' };
+    } else if (url.match(/\/teams\/ee-labs-architecture\/memberships\/[^/]+$/)) {
       status = membershipErrorStatus ?? (architectActive ? 200 : 404);
       data = status === 200 ? { state: 'active', role: 'member' } : undefined;
     } else if (method === 'GET' && url.includes('/check-runs?check_name=Validate')) {
@@ -876,7 +876,7 @@ test('publishes a new check when the same decision has a different CODEOWNERS so
     });
 
   const first = await reconcile();
-  mock.setOwners('* @EQ-LABS-TECH/architecture\n# source revision');
+  mock.setOwners('* @EQ-LABS-TECH/ee-labs-architecture\n# source revision');
   const changed = await reconcile();
 
   assert.equal(first.decision.status, 'BLOCKED');

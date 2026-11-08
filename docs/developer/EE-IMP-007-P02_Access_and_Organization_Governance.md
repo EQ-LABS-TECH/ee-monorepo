@@ -84,16 +84,18 @@ Los identificadores de **equipos** y **usuarios** se registran únicamente en es
 
 ---
 
-## 05. Modelo de Equipos a Materializar
+## 05. Equipos existentes y migración de slugs
 
-Derivado de EE-DOC-007 §06.2–§06.9. Nombres definitivos en **kebab-case**, prefijo de organización implícito en GitHub Teams.
+El modelo conceptual deriva de EE-DOC-007 §06.2–§06.9. La migración cambia los nombres visibles de los equipos existentes para que GitHub actualice sus slugs; no crea equipos duplicados ni altera sus membresías o permisos.
 
-| Equipo GitHub (slug) | Nombre visible   | Rol conceptual EE-DOC-007 | Permiso repo `ee-monorepo`                         | Notas                                                       |
-| :------------------- | :--------------- | :------------------------ | :------------------------------------------------- | :---------------------------------------------------------- |
-| `architecture`       | Architecture     | Architecture Authority    | **Maintain** (o Admin solo si se justifica)        | Accountable normativo; no equivale a Org Owner              |
-| `repository-admin`   | Repository Admin | Repository Administration | **Admin**                                          | Administración de settings, teams, permisos del repo        |
-| `maintainers`        | Maintainers      | Maintainers               | **Write**                                          | Code review, merge según protección (P03)                   |
-| `contributors`       | Contributors     | Contributors              | **Triage** o **Write** según política del proyecto | Por defecto **Triage**; elevar a Write solo si se documenta |
+| Nombre visible objetivo  | Slug actual        | Slug objetivo              | Rol conceptual EE-DOC-007 | Permiso repo `ee-monorepo` |
+| :----------------------- | :----------------- | :------------------------- | :------------------------ | :------------------------- |
+| EE-Labs Architecture     | `architecture`     | `ee-labs-architecture`     | Architecture Authority    | **Maintain**               |
+| EE-Labs Repository Admin | `repository-admin` | `ee-labs-repository-admin` | Repository Administration | **Admin**                  |
+| EE-Labs Maintainers      | `maintainers`      | `ee-labs-maintainers`      | Maintainers               | **Write**                  |
+| EE-Labs Contributors     | `contributors`     | `ee-labs-contributors`     | Contributors              | **Triage**                 |
+
+**Estado al preparar el PR:** GitHub todavía contiene los cuatro slugs actuales. El PR actualizará primero las referencias de código, pruebas, CODEOWNERS y documentación. Después se renombrarán los equipos existentes en GitHub, se comprobarán los slugs nuevos y solo entonces se integrará el PR.
 
 ### 05.1. Principios de asignación
 
@@ -108,13 +110,13 @@ En la fase actual del Engineering Ecosystem **una sola persona** concentra las r
 
 **Decisión de implementación:**
 
-| Regla               | Aplicación                                                                    |
-| :------------------ | :---------------------------------------------------------------------------- |
-| Estructura de teams | **Se crea igual** (architecture, repository-admin, maintainers, contributors) |
-| Membresía inicial   | El operador único se asigna a los teams que correspondan a sus roles actuales |
-| Team `contributors` | Puede quedar **sin miembros** hasta incorporar colaboradores                  |
-| Permisos de repo    | Siguen el mapa §05 (Maintain / Admin / Write / Triage por team)               |
-| Evolución           | Al incorporar personas: añadir membresías a teams; **no** rediseñar el modelo |
+| Regla                       | Aplicación                                                                    |
+| :-------------------------- | :---------------------------------------------------------------------------- |
+| Estructura de teams         | Se conservan los cuatro equipos existentes y se renombra cada uno según §05   |
+| Membresía inicial           | El operador único se asigna a los teams que correspondan a sus roles actuales |
+| Team `ee-labs-contributors` | Puede quedar **sin miembros** hasta incorporar colaboradores                  |
+| Permisos de repo            | Siguen el mapa §05 (Maintain / Admin / Write / Triage por team)               |
+| Evolución                   | Al incorporar personas: añadir membresías a teams; **no** rediseñar el modelo |
 
 Esto no contradice EE-DOC-007 §06.9: los teams existen como vehículo de permisos; el tamaño de la membresía es un hecho operativo, no una desviación normativa.
 
@@ -122,15 +124,15 @@ Esto no contradice EE-DOC-007 §06.9: los teams existen como vehículo de permis
 
 ### 05.2. Mapeo conceptual → GitHub (permisos de repositorio)
 
-| Capacidad conceptual                      | architecture | repository-admin | maintainers | contributors |
-| :---------------------------------------- | :----------: | :--------------: | :---------: | :----------: |
-| Definir política arquitectónica           |      R       |        —         |      —      |      —       |
-| Administrar configuración GitHub del repo |      —       |       R/A        |      —      |      —       |
-| Administrar equipos/permisos del repo     |      —       |       R/A        |      —      |      —       |
-| Crear branch / commits                    |      —       |        —         |      R      |     R\*      |
-| Crear Pull Request                        |      —       |        —         |      R      |      R       |
-| Code Review                               |     A\*      |        —         |      R      |      —       |
-| Integrar cambios                          |     A\*      |       A\*        |      R      |      —       |
+| Capacidad conceptual                      | ee-labs-architecture | ee-labs-repository-admin | ee-labs-maintainers | ee-labs-contributors |
+| :---------------------------------------- | :------------------: | :----------------------: | :-----------------: | :------------------: |
+| Definir política arquitectónica           |          R           |            —             |          —          |          —           |
+| Administrar configuración GitHub del repo |          —           |           R/A            |          —          |          —           |
+| Administrar equipos/permisos del repo     |          —           |           R/A            |          —          |          —           |
+| Crear branch / commits                    |          —           |            —             |          R          |         R\*          |
+| Crear Pull Request                        |          —           |            —             |          R          |          R           |
+| Code Review                               |         A\*          |            —             |          R          |          —           |
+| Integrar cambios                          |         A\*          |           A\*            |          R          |          —           |
 
 `*` sujeto a Branch Protection (P03) y CODEOWNERS (P04). Esta tabla **no** otorga permisos técnicos por sí sola; guía la configuración.
 
@@ -140,18 +142,17 @@ Esto no contradice EE-DOC-007 §06.9: los teams existen como vehículo de permis
 
 ```mermaid
 flowchart TD
-    A["Confirmar org EQ-LABS-TECH"] --> B["Confirmar repo ee-monorepo"]
-    B --> C["Crear teams en la org"]
-    C --> D["Asignar permisos de repo a teams"]
-    D --> E["Asignar miembros a teams"]
-    E --> F["Verificar con gh / UI"]
-    F --> G["Registrar evidencia en EE-IMP-007-P02"]
-    G --> H["Validación P02"]
+    A["Preparar PR con referencias nuevas"] --> B["Abrir PR sin integrarlo"]
+    B --> C["Renombrar los cuatro equipos existentes en GitHub"]
+    C --> D["Verificar slugs, membresías y permisos"]
+    D --> E["Completar checks y aprobaciones del PR"]
+    E --> F["Integrar PR"]
+    F --> G["Validar CODEOWNERS y Governance"]
 ```
 
 ### 06.1. Comandos orientativos (GitHub CLI)
 
-Requiere `gh` autenticado con permisos de administración en `EQ-LABS-TECH`.
+La migración se ejecuta **después de abrir el PR y antes de integrarlo**. Requiere `gh` autenticado con permisos para administrar equipos en `EQ-LABS-TECH`. Los comandos renombran los equipos existentes; no ejecutar comandos de creación.
 
 ```powershell
 # Identidad y contexto
@@ -162,34 +163,25 @@ gh api user --jq .login
 gh api orgs/EQ-LABS-TECH --jq "{login:.login, id:.id}"
 gh repo view EQ-LABS-TECH/ee-monorepo --json name,visibility,owner
 
-# Crear teams (si no existen)
-gh api -X POST orgs/EQ-LABS-TECH/teams -f name="Architecture" -f privacy=closed
-gh api -X POST orgs/EQ-LABS-TECH/teams -f name="Repository Admin" -f privacy=closed
-gh api -X POST orgs/EQ-LABS-TECH/teams -f name="Maintainers" -f privacy=closed
-gh api -X POST orgs/EQ-LABS-TECH/teams -f name="Contributors" -f privacy=closed
-
-# Listar teams
+# Confirmar los equipos actuales antes del cambio
 gh api orgs/EQ-LABS-TECH/teams --jq ".[] | {slug:.slug, name:.name, privacy:.privacy}"
 
-# Permisos de repo (ajustar team_slug tras crear)
-# permission: pull | triage | push | maintain | admin
-gh api -X PUT orgs/EQ-LABS-TECH/teams/architecture/repos/EQ-LABS-TECH/ee-monorepo -f permission=maintain
-gh api -X PUT orgs/EQ-LABS-TECH/teams/repository-admin/repos/EQ-LABS-TECH/ee-monorepo -f permission=admin
-gh api -X PUT orgs/EQ-LABS-TECH/teams/maintainers/repos/EQ-LABS-TECH/ee-monorepo -f permission=push
-gh api -X PUT orgs/EQ-LABS-TECH/teams/contributors/repos/EQ-LABS-TECH/ee-monorepo -f permission=triage
+# Renombrar cada equipo existente (GitHub actualiza su slug a partir del nombre)
+gh api -X PATCH orgs/EQ-LABS-TECH/teams/architecture -f name="EE-Labs Architecture"
+gh api -X PATCH orgs/EQ-LABS-TECH/teams/repository-admin -f name="EE-Labs Repository Admin"
+gh api -X PATCH orgs/EQ-LABS-TECH/teams/maintainers -f name="EE-Labs Maintainers"
+gh api -X PATCH orgs/EQ-LABS-TECH/teams/contributors -f name="EE-Labs Contributors"
 
-# Miembros (ejemplo — sustituir USER)
-# gh api -X PUT orgs/EQ-LABS-TECH/teams/architecture/memberships/USER -f role=member
-
-# Verificar permisos de teams sobre el repo
+# Verificar los slugs y permisos tras el renombre
+gh api orgs/EQ-LABS-TECH/teams --jq ".[] | {slug:.slug, name:.name, privacy:.privacy}"
 gh api repos/EQ-LABS-TECH/ee-monorepo/teams --jq ".[] | {name:.name, permission:.permission}"
 ```
 
-> Los slugs reales de GitHub pueden diferir ligeramente del nombre visible (p.ej. `repository-admin`). Registrar el **slug real** en §08 as-built.
+Los cuatro slugs deben coincidir exactamente con §05 antes de integrar el PR. Confirmar también que se conservaron las membresías y permisos existentes; si GitHub no produjo el slug esperado, detener la integración y corregir la discrepancia primero.
 
 ### 06.2. Alternativa UI
 
-Si no se usa `gh`: GitHub → Organization `EQ-LABS-TECH` → Teams → New team; luego Repo Settings → Collaborators and teams → Add team.
+Si no se usa `gh`: GitHub → Organization `EQ-LABS-TECH` → Teams → seleccionar cada equipo existente → Team settings → cambiar su nombre visible. No usar **New team**. Luego verificar los slugs y los permisos desde Repo Settings → Collaborators and teams.
 
 ---
 
@@ -199,10 +191,10 @@ Si no se usa `gh`: GitHub → Organization `EQ-LABS-TECH` → Teams → New team
 | :------------------------ | :------------------------- | :----------------------------- | :--------------------------------------------------------------------------------------------- |
 | Organización              | `EQ-LABS-TECH`             | Unidad administrativa superior | **Confirmada**                                                                                 |
 | Repositorio               | `EQ-LABS-TECH/ee-monorepo` | Monorepo principal             | **Confirmado** (PRIVATE)                                                                       |
-| Team Architecture         | Org team                   | Architecture Authority         | **Implementado** — permiso `maintain`                                                          |
-| Team Repository Admin     | Org team                   | Repository Administration      | **Implementado** — permiso `admin`                                                             |
-| Team Maintainers          | Org team                   | Maintainers                    | **Implementado** — permiso `push` (Write)                                                      |
-| Team Contributors         | Org team                   | Contributors                   | **Implementado** — permiso `triage`                                                            |
+| Team Architecture         | Org team                   | Architecture Authority         | Slug objetivo pendiente; permiso existente `maintain`                                          |
+| Team Repository Admin     | Org team                   | Repository Administration      | Slug objetivo pendiente; permiso existente `admin`                                             |
+| Team Maintainers          | Org team                   | Maintainers                    | Slug objetivo pendiente; permiso existente `push` (Write)                                      |
+| Team Contributors         | Org team                   | Contributors                   | Slug objetivo pendiente; permiso existente `triage`                                            |
 | Permisos de repo por team | Repo settings              | Least privilege                | **Implementado** (verificado vía `gh api`)                                                     |
 | Membresías                | Team memberships           | Single-operator                | **Implementado** — operador en Architecture, Repository Admin, Maintainers; Contributors vacío |
 
@@ -210,7 +202,7 @@ Si no se usa `gh`: GitHub → Organization `EQ-LABS-TECH` → Teams → New team
 
 ## 08. Evidencia As-Built
 
-Evidencia capturada 2026-09-22 vía GitHub CLI y confirmación de ejecución en UI.
+Evidencia capturada 2026-09-22 vía GitHub CLI y confirmación de ejecución en UI. Este registro conserva el estado histórico anterior al renombre; no acredita que los slugs objetivo de §05 ya existan.
 
 ### 08.1. Organización y repositorio
 
@@ -259,6 +251,8 @@ Acceso vía **teams únicamente** (team-first).
 
 ## 09. Validaciones
 
+Las validaciones siguientes documentan el cierre original de P02 y los slugs vigentes en 2026-09-22. La migración actual requiere la verificación posterior descrita en §06.
+
 | Comando / Prueba                                     | Resultado                 | Evidencia                                                                   |
 | :--------------------------------------------------- | :------------------------ | :-------------------------------------------------------------------------- |
 | `gh repo view EQ-LABS-TECH/ee-monorepo`              | **OK**                    | PRIVATE; owner EQ-LABS-TECH                                                 |
@@ -279,7 +273,7 @@ P02 será conforme cuando:
 - [x] no se hayan configurado Branch Protection, CODEOWNERS operativos ni workflows (fuera de alcance);
 - [x] cualquier excepción de acceso individual esté justificada en §08.3 (ninguna).
 
-**Dictamen:** **Conforme**. Unidad lista para cierre formal e inicio de P03.
+**Dictamen:** La configuración base de P02 sigue verificada. La migración de slugs está **pendiente**; completar §06 y registrar evidencia nueva antes de declarar actualizado el as-built.
 
 ---
 

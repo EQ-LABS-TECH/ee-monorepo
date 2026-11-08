@@ -17,7 +17,7 @@ function evidence(overrides = {}) {
     headSha,
     classificationComments: [escalation()],
     permissions: [{ reviewer: 'architect', hasWriteAccess: true }],
-    memberships: [{ reviewer: 'architect', teamSlug: 'architecture', active: true }],
+    memberships: [{ reviewer: 'architect', teamSlug: 'ee-labs-architecture', active: true }],
     ...overrides,
   };
 }
@@ -60,7 +60,9 @@ test('ignores escalations without current HEAD, rationale, valid author, or acti
     assert.deepEqual(result.authorizedEscalators, []);
   }
   const revoked = resolvePrGovernanceClassification(
-    evidence({ memberships: [{ reviewer: 'architect', teamSlug: 'architecture', active: false }] }),
+    evidence({
+      memberships: [{ reviewer: 'architect', teamSlug: 'ee-labs-architecture', active: false }],
+    }),
   );
   assert.equal(revoked.classification, 'ORDINARY');
 });

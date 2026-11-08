@@ -44,16 +44,16 @@ Materializar el archivo **`.github/CODEOWNERS`** con ownership real por áreas d
 | Ruleset `Protect main`                   | Completado                     | EE-IMP-007-P03 |
 | Org / repo                               | `EQ-LABS-TECH` / `ee-monorepo` | P01–P02        |
 
-### 02.1. Teams disponibles (handles GitHub)
+### 02.1. Teams objetivo de la migración
 
-| Team visible     | Handle CODEOWNERS                | Uso en ownership                                         |
-| :--------------- | :------------------------------- | :------------------------------------------------------- |
-| Architecture     | `@EQ-LABS-TECH/architecture`     | Gobernanza, norma, config crítica, docs normativos       |
-| Repository Admin | `@EQ-LABS-TECH/repository-admin` | Equipo disponible; no asignado como owner en el mapa P04 |
-| Maintainers      | `@EQ-LABS-TECH/maintainers`      | Código del ecosistema (packages, apps, connectors)       |
-| Contributors     | `@EQ-LABS-TECH/contributors`     | **No** como owner obligatorio en P04 (membresía vacía)   |
+| Nombre objetivo          | Slug objetivo              | Handle CODEOWNERS                        | Uso en ownership                                         |
+| :----------------------- | :------------------------- | :--------------------------------------- | :------------------------------------------------------- |
+| EE-Labs Architecture     | `ee-labs-architecture`     | `@EQ-LABS-TECH/ee-labs-architecture`     | Gobernanza, norma, config crítica, docs normativos       |
+| EE-Labs Repository Admin | `ee-labs-repository-admin` | `@EQ-LABS-TECH/ee-labs-repository-admin` | Equipo disponible; no asignado como owner en el mapa P04 |
+| EE-Labs Maintainers      | `ee-labs-maintainers`      | `@EQ-LABS-TECH/ee-labs-maintainers`      | Código del ecosistema (packages, apps, connectors)       |
+| EE-Labs Contributors     | `ee-labs-contributors`     | `@EQ-LABS-TECH/ee-labs-contributors`     | **No** como owner obligatorio en P04                     |
 
-> Si el **slug** real del team en GitHub difiere (p.ej. `repository-admin` vs `repository_admin`), ajustar el handle tras verificar en la URL del team. Registrar slug real en §08.
+> **Estado de migración:** estos son los slugs objetivo del PR. Los teams existentes todavía deben renombrarse en GitHub. No integrar el PR hasta comprobar que los cuatro slugs reales coinciden exactamente con esta tabla.
 
 ---
 
@@ -89,28 +89,28 @@ Materializar el archivo **`.github/CODEOWNERS`** con ownership real por áreas d
 
 ### 04.2. Mapa ruta → team
 
-| Ruta / patrón                                                                           | Owner(s)                     | Justificación                                |
-| :-------------------------------------------------------------------------------------- | :--------------------------- | :------------------------------------------- |
-| `*` (default)                                                                           | `@EQ-LABS-TECH/maintainers`  | Fallback del código del ecosistema           |
-| `.github/`                                                                              | `@EQ-LABS-TECH/architecture` | Gobernanza de plataforma                     |
-| `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `turbo.json`                   | `@EQ-LABS-TECH/architecture` | Orquestación del monorepo                    |
-| `.nvmrc`, `.npmrc`, `.editorconfig`, `.gitattributes`, `.gitignore`                     | `@EQ-LABS-TECH/architecture` | Config de repo / runtime base                |
-| `packages/config/`                                                                      | `@EQ-LABS-TECH/architecture` | SSOT de configuración compartida             |
-| `packages/`                                                                             | `@EQ-LABS-TECH/maintainers`  | Núcleo de paquetes                           |
-| `packages/knowledge/`                                                                   | `@EQ-LABS-TECH/maintainers`  | Implementación del dominio knowledge         |
-| `apps/`                                                                                 | `@EQ-LABS-TECH/maintainers`  | Aplicaciones                                 |
-| `connectors/`                                                                           | `@EQ-LABS-TECH/maintainers`  | Conectores                                   |
-| `scripts/`                                                                              | `@EQ-LABS-TECH/maintainers`  | Automatización del repositorio               |
-| `scripts/lib/pr-governance.*`, `scripts/tests/*pr-governance*`                          | `@EQ-LABS-TECH/architecture` | Implementación y pruebas de políticas PN-017 |
-| `scripts/commands/enforce`, `scripts/commands/reconcile`, `scripts/commands/governance` | `@EQ-LABS-TECH/architecture` | Comandos que aplican políticas PN-017        |
-| `docs/`                                                                                 | `@EQ-LABS-TECH/maintainers`  | Documentación ordinaria                      |
-| `docs/architecture/`, `docs/adr/`, `docs/rfc/`                                          | `@EQ-LABS-TECH/architecture` | Normativa y arquitectura                     |
-| `docs/validation/audit/EE-AUD-*`                                                        | `@EQ-LABS-TECH/architecture` | Auditoría normativa                          |
-| `docs/developer/`, `docs/validation/`                                                   | `@EQ-LABS-TECH/maintainers`  | Implementación y evidencia                   |
-| `assets/`, `data/`, `examples/`, `marketplace/`                                         | `@EQ-LABS-TECH/maintainers`  | Soporte / extensibilidad                     |
-| `infra/`                                                                                | `@EQ-LABS-TECH/architecture` | Infraestructura de plataforma                |
-| `templates/`                                                                            | `@EQ-LABS-TECH/architecture` | Plantillas gobernadas                        |
-| `LICENSE`, `NOTICE`, `CHANGELOG.md`, `README.md`                                        | `@EQ-LABS-TECH/architecture` | Artefactos de gobierno del repo              |
+| Ruta / patrón                                                                           | Owner(s)                             | Justificación                                |
+| :-------------------------------------------------------------------------------------- | :----------------------------------- | :------------------------------------------- |
+| `*` (default)                                                                           | `@EQ-LABS-TECH/ee-labs-maintainers`  | Fallback del código del ecosistema           |
+| `.github/`                                                                              | `@EQ-LABS-TECH/ee-labs-architecture` | Gobernanza de plataforma                     |
+| `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `turbo.json`                   | `@EQ-LABS-TECH/ee-labs-architecture` | Orquestación del monorepo                    |
+| `.nvmrc`, `.npmrc`, `.editorconfig`, `.gitattributes`, `.gitignore`                     | `@EQ-LABS-TECH/ee-labs-architecture` | Config de repo / runtime base                |
+| `packages/config/`                                                                      | `@EQ-LABS-TECH/ee-labs-architecture` | SSOT de configuración compartida             |
+| `packages/`                                                                             | `@EQ-LABS-TECH/ee-labs-maintainers`  | Núcleo de paquetes                           |
+| `packages/knowledge/`                                                                   | `@EQ-LABS-TECH/ee-labs-maintainers`  | Implementación del dominio knowledge         |
+| `apps/`                                                                                 | `@EQ-LABS-TECH/ee-labs-maintainers`  | Aplicaciones                                 |
+| `connectors/`                                                                           | `@EQ-LABS-TECH/ee-labs-maintainers`  | Conectores                                   |
+| `scripts/`                                                                              | `@EQ-LABS-TECH/ee-labs-maintainers`  | Automatización del repositorio               |
+| `scripts/lib/pr-governance.*`, `scripts/tests/*pr-governance*`                          | `@EQ-LABS-TECH/ee-labs-architecture` | Implementación y pruebas de políticas PN-017 |
+| `scripts/commands/enforce`, `scripts/commands/reconcile`, `scripts/commands/governance` | `@EQ-LABS-TECH/ee-labs-architecture` | Comandos que aplican políticas PN-017        |
+| `docs/`                                                                                 | `@EQ-LABS-TECH/ee-labs-maintainers`  | Documentación ordinaria                      |
+| `docs/architecture/`, `docs/adr/`, `docs/rfc/`                                          | `@EQ-LABS-TECH/ee-labs-architecture` | Normativa y arquitectura                     |
+| `docs/validation/audit/EE-AUD-*`                                                        | `@EQ-LABS-TECH/ee-labs-architecture` | Auditoría normativa                          |
+| `docs/developer/`, `docs/validation/`                                                   | `@EQ-LABS-TECH/ee-labs-maintainers`  | Implementación y evidencia                   |
+| `assets/`, `data/`, `examples/`, `marketplace/`                                         | `@EQ-LABS-TECH/ee-labs-maintainers`  | Soporte / extensibilidad                     |
+| `infra/`                                                                                | `@EQ-LABS-TECH/ee-labs-architecture` | Infraestructura de plataforma                |
+| `templates/`                                                                            | `@EQ-LABS-TECH/ee-labs-architecture` | Plantillas gobernadas                        |
+| `LICENSE`, `NOTICE`, `CHANGELOG.md`, `README.md`                                        | `@EQ-LABS-TECH/ee-labs-architecture` | Artefactos de gobierno del repo              |
 
 ---
 
@@ -121,81 +121,81 @@ Archivo a escribir en el monorepo (UTF-8). Comentarios en inglés (artefacto té
 ```text
 # CODEOWNERS — EE-DOC-007 §08 / EE-IMP-007-P04
 # Organization: EQ-LABS-TECH
-# Teams: architecture, repository-admin, maintainers, contributors
+# Teams: ee-labs-architecture, ee-labs-repository-admin, ee-labs-maintainers, ee-labs-contributors
 # Last matching pattern takes precedence.
 #
 # Operational ownership for ee-monorepo.
 # Do not list individual users; use org teams only.
 
 # Default — ecosystem code
-*       @EQ-LABS-TECH/maintainers
+*       @EQ-LABS-TECH/ee-labs-maintainers
 
 # Repository root governance & orchestration
-LICENSE                         @EQ-LABS-TECH/architecture
-NOTICE                          @EQ-LABS-TECH/architecture
-CHANGELOG.md                    @EQ-LABS-TECH/architecture
-README.md                       @EQ-LABS-TECH/architecture
-package.json                    @EQ-LABS-TECH/architecture
-pnpm-workspace.yaml             @EQ-LABS-TECH/architecture
-pnpm-lock.yaml                  @EQ-LABS-TECH/architecture
-turbo.json                      @EQ-LABS-TECH/architecture
-.nvmrc                          @EQ-LABS-TECH/architecture
-.npmrc                          @EQ-LABS-TECH/architecture
-.editorconfig                   @EQ-LABS-TECH/architecture
-.gitattributes                  @EQ-LABS-TECH/architecture
-.gitignore                      @EQ-LABS-TECH/architecture
+LICENSE                         @EQ-LABS-TECH/ee-labs-architecture
+NOTICE                          @EQ-LABS-TECH/ee-labs-architecture
+CHANGELOG.md                    @EQ-LABS-TECH/ee-labs-architecture
+README.md                       @EQ-LABS-TECH/ee-labs-architecture
+package.json                    @EQ-LABS-TECH/ee-labs-architecture
+pnpm-workspace.yaml             @EQ-LABS-TECH/ee-labs-architecture
+pnpm-lock.yaml                  @EQ-LABS-TECH/ee-labs-architecture
+turbo.json                      @EQ-LABS-TECH/ee-labs-architecture
+.nvmrc                          @EQ-LABS-TECH/ee-labs-architecture
+.npmrc                          @EQ-LABS-TECH/ee-labs-architecture
+.editorconfig                   @EQ-LABS-TECH/ee-labs-architecture
+.gitattributes                  @EQ-LABS-TECH/ee-labs-architecture
+.gitignore                      @EQ-LABS-TECH/ee-labs-architecture
 
 # GitHub Governance (high impact)
-.github/                        @EQ-LABS-TECH/architecture
+.github/                        @EQ-LABS-TECH/ee-labs-architecture
 
 # Ecosystem packages & applications (general first)
-packages/                       @EQ-LABS-TECH/maintainers
-apps/                           @EQ-LABS-TECH/maintainers
-connectors/                     @EQ-LABS-TECH/maintainers
+packages/                       @EQ-LABS-TECH/ee-labs-maintainers
+apps/                           @EQ-LABS-TECH/ee-labs-maintainers
+connectors/                     @EQ-LABS-TECH/ee-labs-maintainers
 
 # Shared config (SSOT) — after packages/ so it wins
-packages/config/                @EQ-LABS-TECH/architecture
+packages/config/                @EQ-LABS-TECH/ee-labs-architecture
 
 # Knowledge Layer (EE-DOC-014 / KS-06) — after packages/
-packages/knowledge/             @EQ-LABS-TECH/maintainers
-packages/foundation/src/contracts/knowledge*.ts @EQ-LABS-TECH/architecture
+packages/knowledge/             @EQ-LABS-TECH/ee-labs-maintainers
+packages/foundation/src/contracts/knowledge*.ts @EQ-LABS-TECH/ee-labs-architecture
 
 # AI Provider SPI contracts (EE-DOC-013 §11 #12)
-packages/foundation/src/contracts/provider.ts    @EQ-LABS-TECH/architecture
-packages/foundation/src/contracts/inference.ts   @EQ-LABS-TECH/architecture
-packages/foundation/src/contracts/generation.ts  @EQ-LABS-TECH/architecture
-packages/foundation/src/contracts/error.ts       @EQ-LABS-TECH/architecture
+packages/foundation/src/contracts/provider.ts    @EQ-LABS-TECH/ee-labs-architecture
+packages/foundation/src/contracts/inference.ts   @EQ-LABS-TECH/ee-labs-architecture
+packages/foundation/src/contracts/generation.ts  @EQ-LABS-TECH/ee-labs-architecture
+packages/foundation/src/contracts/error.ts       @EQ-LABS-TECH/ee-labs-architecture
 
 # Automation scripts
-scripts/                        @EQ-LABS-TECH/maintainers
+scripts/                        @EQ-LABS-TECH/ee-labs-maintainers
 
 # Security and governance policy implementation — after scripts/ so it wins
-scripts/lib/pr-governance.*     @EQ-LABS-TECH/architecture
-scripts/commands/enforce       @EQ-LABS-TECH/architecture
-scripts/commands/reconcile     @EQ-LABS-TECH/architecture
-scripts/commands/governance    @EQ-LABS-TECH/architecture
-scripts/tests/*pr-governance*  @EQ-LABS-TECH/architecture
+scripts/lib/pr-governance.*     @EQ-LABS-TECH/ee-labs-architecture
+scripts/commands/enforce       @EQ-LABS-TECH/ee-labs-architecture
+scripts/commands/reconcile     @EQ-LABS-TECH/ee-labs-architecture
+scripts/commands/governance    @EQ-LABS-TECH/ee-labs-architecture
+scripts/tests/*pr-governance*  @EQ-LABS-TECH/ee-labs-architecture
 
 # Documentation: Maintainers own routine material; Architecture owns normative domains.
-docs/                           @EQ-LABS-TECH/maintainers
-docs/architecture/              @EQ-LABS-TECH/architecture
-docs/adr/                       @EQ-LABS-TECH/architecture
-docs/rfc/                       @EQ-LABS-TECH/architecture
-docs/developer/                 @EQ-LABS-TECH/maintainers
-docs/validation/                @EQ-LABS-TECH/maintainers
-docs/validation/audit/EE-AUD-* @EQ-LABS-TECH/architecture
+docs/                           @EQ-LABS-TECH/ee-labs-maintainers
+docs/architecture/              @EQ-LABS-TECH/ee-labs-architecture
+docs/adr/                       @EQ-LABS-TECH/ee-labs-architecture
+docs/rfc/                       @EQ-LABS-TECH/ee-labs-architecture
+docs/developer/                 @EQ-LABS-TECH/ee-labs-maintainers
+docs/validation/                @EQ-LABS-TECH/ee-labs-maintainers
+docs/validation/audit/EE-AUD-* @EQ-LABS-TECH/ee-labs-architecture
 
 # Support / extensibility
-assets/                         @EQ-LABS-TECH/maintainers
-data/                           @EQ-LABS-TECH/maintainers
-examples/                       @EQ-LABS-TECH/maintainers
-marketplace/                    @EQ-LABS-TECH/maintainers
+assets/                         @EQ-LABS-TECH/ee-labs-maintainers
+data/                           @EQ-LABS-TECH/ee-labs-maintainers
+examples/                       @EQ-LABS-TECH/ee-labs-maintainers
+marketplace/                    @EQ-LABS-TECH/ee-labs-maintainers
 
 # Platform infrastructure (EE-DOC-009)
-infra/                          @EQ-LABS-TECH/architecture
+infra/                          @EQ-LABS-TECH/ee-labs-architecture
 
 # Platform templates (EE-DOC-012)
-templates/                      @EQ-LABS-TECH/architecture
+templates/                      @EQ-LABS-TECH/ee-labs-architecture
 ```
 
 ---
@@ -204,10 +204,10 @@ templates/                      @EQ-LABS-TECH/architecture
 
 ```mermaid
 flowchart TD
-    A["Verificar slugs de teams"] --> B["Escribir .github/CODEOWNERS"]
-    B --> C["Commit vía PR a main"]
-    C --> D["Opcional: Require Code Owners en ruleset"]
-    D --> E["Verificar en un PR de prueba"]
+    A["Preparar PR con slugs objetivo"] --> B["Renombrar los cuatro teams en GitHub"]
+    B --> C["Verificar slugs reales por API"]
+    C --> D["Integrar PR en main"]
+    D --> E["Verificar CODEOWNERS y Governance"]
     E --> F["Registrar evidencia §08"]
 ```
 
@@ -217,7 +217,7 @@ flowchart TD
 gh api orgs/EQ-LABS-TECH/teams --jq ".[] | {name:.name, slug:.slug}"
 ```
 
-Si algún slug no coincide con el handle del §05, corregir el archivo antes del commit.
+Después del renombrado y antes del merge, confirmar que GitHub devuelve exactamente `ee-labs-architecture`, `ee-labs-repository-admin`, `ee-labs-maintainers` y `ee-labs-contributors`. Si algún slug difiere, corregir el PR antes de integrarlo.
 
 ### 06.2. Escribir el archivo (local)
 
@@ -252,7 +252,7 @@ En ruleset **Protect main** → editar → activar **Require review from Code Ow
 
 Evidencia capturada 2026-09-23.
 
-Los valores de tamaño y validaciones de esta sección son una captura histórica. El diseño aprobado asigna el ownership rutinario de `docs/` a Maintainers, con reglas más específicas de Architecture para `docs/architecture/`, `docs/adr/`, `docs/rfc/` y `docs/validation/audit/EE-AUD-*`. La evaluación efectiva de CODEOWNERS y de teams requiere una ejecución de PR y comprobación remota; no se afirma completada localmente.
+Los valores de tamaño, slugs y validaciones de esta sección son una captura histórica de 2026-09-23, anterior a la migración. El diseño aprobado asigna el ownership rutinario de `docs/` a Maintainers, con reglas más específicas de Architecture para `docs/architecture/`, `docs/adr/`, `docs/rfc/` y `docs/validation/audit/EE-AUD-*`. La evaluación efectiva de CODEOWNERS y de teams requiere una ejecución de PR y comprobación remota; no se afirma completada localmente.
 
 ### 08.1. Teams (slugs reales)
 
@@ -332,7 +332,7 @@ Los valores de tamaño y validaciones de esta sección son una captura históric
 ## 10. Reglas de implementación
 
 1. No listar logins individuales en CODEOWNERS.
-2. No asignar `@EQ-LABS-TECH/contributors` como owner requerido mientras el team esté vacío.
+2. No asignar `@EQ-LABS-TECH/ee-labs-contributors` como owner requerido mientras el team esté vacío.
 3. No activar Require Code Owners hasta que el archivo esté en la rama por defecto (o en el mismo cambio coordinado).
 4. Cambios posteriores de ownership = especialización técnica o ADR según EE-DOC-007 §15.11.
 5. Mantener comentarios y rutas en inglés.

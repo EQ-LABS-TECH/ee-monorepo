@@ -63,7 +63,7 @@ export async function inspectPrGovernance({
       candidatesWithPermissions.map((candidate) =>
         readReviewerTeamMembership({
           owner,
-          teamSlug: 'architecture',
+          teamSlug: 'ee-labs-architecture',
           reviewer: candidate.reviewer,
           token: membershipToken,
           fetchImpl,

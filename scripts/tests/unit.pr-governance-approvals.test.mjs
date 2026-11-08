@@ -146,11 +146,11 @@ const authorityEvidence = () => ({
     hasWriteAccess: true,
   },
   approvedReviewers: ['reviewer'],
-  responsibleTeams: ['maintainers'],
+  responsibleTeams: ['ee-labs-maintainers'],
   memberships: [
     {
       reviewer: 'reviewer',
-      teamSlug: 'maintainers',
+      teamSlug: 'ee-labs-maintainers',
       active: true,
     },
   ],
@@ -160,7 +160,7 @@ test('matches independent approval and active responsible membership', () => {
   const result = evaluateReviewerAuthority(authorityEvidence());
 
   assert.equal(result.status, 'ELIGIBLE_EVIDENCE');
-  assert.deepEqual(result.matchedTeams, ['maintainers']);
+  assert.deepEqual(result.matchedTeams, ['ee-labs-maintainers']);
 });
 
 test('reviewer without current approval is not eligible', () => {
@@ -202,7 +202,7 @@ test('membership in an unrelated team is insufficient', () => {
     memberships: [
       {
         reviewer: 'reviewer',
-        teamSlug: 'contributors',
+        teamSlug: 'ee-labs-contributors',
         active: true,
       },
     ],
@@ -218,7 +218,7 @@ test('pending membership cannot establish authority', () => {
     memberships: [
       {
         reviewer: 'reviewer',
-        teamSlug: 'maintainers',
+        teamSlug: 'ee-labs-maintainers',
         active: false,
       },
     ],
@@ -233,7 +233,7 @@ test('another users team membership cannot establish authority', () => {
     memberships: [
       {
         reviewer: 'another-user',
-        teamSlug: 'maintainers',
+        teamSlug: 'ee-labs-maintainers',
         active: true,
       },
     ],
@@ -247,7 +247,7 @@ test('malformed authority evidence is rejected', () => {
     () =>
       evaluateReviewerAuthority({
         ...authorityEvidence(),
-        memberships: [{ teamSlug: 'maintainers', active: true }],
+        memberships: [{ teamSlug: 'ee-labs-maintainers', active: true }],
       }),
     TypeError,
   );

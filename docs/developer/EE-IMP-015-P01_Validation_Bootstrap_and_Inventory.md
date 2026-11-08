@@ -41,7 +41,7 @@ Materializar el árbol canónico `docs/validation/` (EE-DOC-006 / EE-DOC-015), r
 - Inventario `git ls-files` en `docs/validation/evidence/inventory-git-ls-files.txt`.
 - Override `shell-quote >= 1.11.0` (critical cerrado).
 - WAIVE vigentes: braces (GHSA-vfj7-8cjw-p6xm), sprintf-js (GHSA-hp3w-g68c-fv3c), con espejo `pnpm.auditConfig.ignoreGhsas`.
-- CODEOWNERS: `docs/validation/` → `@EQ-LABS-TECH/architecture`.
+- CODEOWNERS: `docs/validation/` → `@EQ-LABS-TECH/ee-labs-architecture`.
 
 **Fuera de alcance:** Validation Report formal (P05); ejecución completa de dominios V-\* (P02–P04).
 

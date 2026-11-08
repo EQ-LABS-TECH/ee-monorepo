@@ -16,7 +16,7 @@ import {
   readCodeownerTeamVisibility,
 } from './pr-governance.evidence.mjs';
 
-const ARCHITECTURE_TEAM = 'architecture';
+const ARCHITECTURE_TEAM = 'ee-labs-architecture';
 
 function sameSnapshot(first, second) {
   return (

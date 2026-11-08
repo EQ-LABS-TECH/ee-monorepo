@@ -33,7 +33,7 @@ function input(overrides = {}) {
       uncoveredPaths: [],
     },
     permissions: [{ reviewer: 'architect', hasWriteAccess: true }],
-    memberships: [{ reviewer: 'architect', teamSlug: 'architecture', active: true }],
+    memberships: [{ reviewer: 'architect', teamSlug: 'ee-labs-architecture', active: true }],
     evidenceCurrent: true,
     ...overrides,
   };

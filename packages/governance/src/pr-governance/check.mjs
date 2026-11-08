@@ -3,10 +3,10 @@ const SHA = /^[0-9a-f]{40}$/i;
 export const PR_GOVERNANCE_CHECK_NAME = 'PR Governance';
 
 const TEAM_LABELS = new Map([
-  ['architecture', 'Architecture'],
-  ['maintainers', 'Maintainers'],
-  ['repository-admin', 'Repository Admin'],
-  ['contributors', 'Contributors'],
+  ['ee-labs-architecture', 'EE-Labs Architecture'],
+  ['ee-labs-maintainers', 'EE-Labs Maintainers'],
+  ['ee-labs-repository-admin', 'EE-Labs Repository Admin'],
+  ['ee-labs-contributors', 'EE-Labs Contributors'],
 ]);
 
 function formatTeam(team) {

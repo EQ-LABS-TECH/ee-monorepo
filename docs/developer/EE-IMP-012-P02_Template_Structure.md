@@ -110,7 +110,7 @@ Usar el borrador de **EE-IMP-012-P01 §05** (schemaVersion `"1"`, categorías T-
 ### 03.3. CODEOWNERS (añadir)
 
 ```text
-templates/                        @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
+templates/                        @EQ-LABS-TECH/ee-labs-architecture @EQ-LABS-TECH/ee-labs-maintainers
 ```
 
 ### 03.4. `.prettierignore` (añadir)

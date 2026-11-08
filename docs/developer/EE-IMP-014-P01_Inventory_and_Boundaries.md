@@ -124,8 +124,8 @@ Formalizar el **inventario as-built** de la Knowledge Layer, verificar **fronter
 ### 05.1. As-built relevante
 
 ```text
-packages/config/                @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-packages/                       @EQ-LABS-TECH/maintainers
+packages/config/                @EQ-LABS-TECH/ee-labs-architecture @EQ-LABS-TECH/ee-labs-maintainers
+packages/                       @EQ-LABS-TECH/ee-labs-maintainers
 ```
 
 | Path requerido (014 KS-06)                    | Presente                        | Notas                                       |
@@ -148,8 +148,8 @@ packages/                       @EQ-LABS-TECH/maintainers
 
 ```text
 # Knowledge Layer (EE-DOC-014 / KS-06 / EE-IMP-014-P01)
-packages/knowledge/                          @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-packages/foundation/src/contracts/knowledge.ts @EQ-LABS-TECH/architecture
+packages/knowledge/                          @EQ-LABS-TECH/ee-labs-architecture @EQ-LABS-TECH/ee-labs-maintainers
+packages/foundation/src/contracts/knowledge.ts @EQ-LABS-TECH/ee-labs-architecture
 ```
 
 > Insertar **después** de `packages/config/` y **antes** del patrón genérico `packages/`, para que “last matching pattern” no anule el ownership de architecture sobre knowledge.
@@ -221,8 +221,8 @@ Select-String -Path .github\CODEOWNERS -Pattern "knowledge|packages/"
 
 # Insertar ANTES de la línea genérica "packages/" (last match wins):
 #   # Knowledge Layer (EE-DOC-014 / KS-06 / EE-IMP-014-P01)
-#   packages/knowledge/                            @EQ-LABS-TECH/architecture @EQ-LABS-TECH/maintainers
-#   packages/foundation/src/contracts/knowledge.ts @EQ-LABS-TECH/architecture
+#   packages/knowledge/                            @EQ-LABS-TECH/ee-labs-architecture @EQ-LABS-TECH/ee-labs-maintainers
+#   packages/foundation/src/contracts/knowledge.ts @EQ-LABS-TECH/ee-labs-architecture
 
 # --- B. Inventario knowledge ---
 Get-Content packages\knowledge\package.json
