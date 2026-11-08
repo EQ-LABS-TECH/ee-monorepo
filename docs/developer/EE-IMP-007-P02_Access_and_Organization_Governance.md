@@ -86,14 +86,14 @@ Los identificadores de **equipos** y **usuarios** se registran únicamente en es
 
 ## 05. Equipos existentes y migración de slugs
 
-El modelo conceptual deriva de EE-DOC-007 §06.2–§06.9. La migración cambia los nombres visibles de los equipos existentes para que GitHub actualice sus slugs; no crea equipos duplicados ni altera sus membresías o permisos.
+El modelo conceptual deriva de EE-DOC-007 §06.2–§06.9. La migración cambia los nombres visibles de los equipos existentes para que GitHub actualice sus slugs; no crea equipos duplicados ni altera sus membresías o permisos. GitHub requiere que todo equipo listado como propietario en CODEOWNERS sea **Visible** y tenga acceso explícito de escritura al repositorio. En la captura histórica de §08, Architecture era **Secreto** y tenía `maintain`; Maintainers era **Visible** y tenía `push` (Write). El primero debe hacerse Visible; ambos requisitos deben verificarse de nuevo después del renombre y antes de integrar el PR. [GitHub Docs: About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
 
-| Nombre visible objetivo  | Slug actual        | Slug objetivo              | Rol conceptual EE-DOC-007 | Permiso repo `ee-monorepo` |
-| :----------------------- | :----------------- | :------------------------- | :------------------------ | :------------------------- |
-| EE-Labs Architecture     | `architecture`     | `ee-labs-architecture`     | Architecture Authority    | **Maintain**               |
-| EE-Labs Repository Admin | `repository-admin` | `ee-labs-repository-admin` | Repository Administration | **Admin**                  |
-| EE-Labs Maintainers      | `maintainers`      | `ee-labs-maintainers`      | Maintainers               | **Write**                  |
-| EE-Labs Contributors     | `contributors`     | `ee-labs-contributors`     | Contributors              | **Triage**                 |
+| Nombre visible objetivo  | Slug actual        | Slug objetivo              | Permiso repo `ee-monorepo`   | CODEOWNERS: visibilidad requerida |
+| :----------------------- | :----------------- | :------------------------- | :--------------------------- | :-------------------------------- |
+| EE-Labs Architecture     | `architecture`     | `ee-labs-architecture`     | **Maintain** (incluye Write) | **Visible**                       |
+| EE-Labs Repository Admin | `repository-admin` | `ee-labs-repository-admin` | **Admin**                    | No asignado como owner            |
+| EE-Labs Maintainers      | `maintainers`      | `ee-labs-maintainers`      | **Write**                    | **Visible**                       |
+| EE-Labs Contributors     | `contributors`     | `ee-labs-contributors`     | **Triage**                   | No asignado como owner            |
 
 **Estado al preparar el PR:** GitHub todavía contiene los cuatro slugs actuales. El PR actualizará primero las referencias de código, pruebas, CODEOWNERS y documentación. Después se renombrarán los equipos existentes en GitHub, se comprobarán los slugs nuevos y solo entonces se integrará el PR.
 
@@ -167,17 +167,20 @@ gh repo view EQ-LABS-TECH/ee-monorepo --json name,visibility,owner
 gh api orgs/EQ-LABS-TECH/teams --jq ".[] | {slug:.slug, name:.name, privacy:.privacy}"
 
 # Renombrar cada equipo existente (GitHub actualiza su slug a partir del nombre)
-gh api -X PATCH orgs/EQ-LABS-TECH/teams/architecture -f name="EE-Labs Architecture"
+# Architecture debe quedar Visible (privacy=closed) para CODEOWNERS.
+gh api -X PATCH orgs/EQ-LABS-TECH/teams/architecture -f name="EE-Labs Architecture" -f privacy=closed
 gh api -X PATCH orgs/EQ-LABS-TECH/teams/repository-admin -f name="EE-Labs Repository Admin"
-gh api -X PATCH orgs/EQ-LABS-TECH/teams/maintainers -f name="EE-Labs Maintainers"
+gh api -X PATCH orgs/EQ-LABS-TECH/teams/maintainers -f name="EE-Labs Maintainers" -f privacy=closed
 gh api -X PATCH orgs/EQ-LABS-TECH/teams/contributors -f name="EE-Labs Contributors"
 
 # Verificar los slugs y permisos tras el renombre
 gh api orgs/EQ-LABS-TECH/teams --jq ".[] | {slug:.slug, name:.name, privacy:.privacy}"
-gh api repos/EQ-LABS-TECH/ee-monorepo/teams --jq ".[] | {name:.name, permission:.permission}"
+gh api repos/EQ-LABS-TECH/ee-monorepo/teams --jq ".[] | {slug:.slug, name:.name, permission:.permission}"
+gh api orgs/EQ-LABS-TECH/teams/ee-labs-architecture --jq "{slug:.slug, privacy:.privacy}"
+gh api orgs/EQ-LABS-TECH/teams/ee-labs-maintainers --jq "{slug:.slug, privacy:.privacy}"
 ```
 
-Los cuatro slugs deben coincidir exactamente con §05 antes de integrar el PR. Confirmar también que se conservaron las membresías y permisos existentes; si GitHub no produjo el slug esperado, detener la integración y corregir la discrepancia primero.
+Los cuatro slugs deben coincidir exactamente con §05 antes de integrar el PR. Para los dos equipos usados en CODEOWNERS, `privacy` debe ser `closed` (Visible); `maintain` para Architecture y `push`/Write para Maintainers cumplen el acceso de escritura requerido. Confirmar que se conservaron las membresías y permisos; si la API devuelve otro slug, visibilidad o permiso, detener la integración y corregir la discrepancia primero.
 
 ### 06.2. Alternativa UI
 
