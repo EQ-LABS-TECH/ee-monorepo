@@ -17,6 +17,14 @@ function diagnosticFor(error, phase, { number, expectedHeadSha }) {
       : {}),
     ...(requestId ? { requestId } : {}),
     phase,
+    ...(typeof error?.governanceOperation === 'string' &&
+    /^[a-z\d-]{1,64}$/i.test(error.governanceOperation)
+      ? { operation: error.governanceOperation }
+      : {}),
+    ...(typeof error?.governanceSubject === 'string' &&
+    /^[a-z\d_-]{1,100}$/i.test(error.governanceSubject)
+      ? { subject: error.governanceSubject }
+      : {}),
     code:
       error instanceof AggregateError
         ? 'aggregate-operation-failed'

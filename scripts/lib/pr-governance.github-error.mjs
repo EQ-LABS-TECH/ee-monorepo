@@ -1,4 +1,23 @@
 const REQUEST_ID = /^[a-z\d:._-]{1,128}$/i;
+const OPERATION = /^[a-z\d-]{1,64}$/i;
+const SUBJECT = /^[a-z\d_-]{1,100}$/i;
+
+/** Attach safe operation context without exposing an API response or token. */
+export async function withGovernanceOperation(operation, subject, action) {
+  try {
+    return await action();
+  } catch (error) {
+    const diagnosticError =
+      error instanceof Error ? error : new Error('Governance operation failed');
+    if (OPERATION.test(operation) && !diagnosticError.governanceOperation) {
+      diagnosticError.governanceOperation = operation;
+    }
+    if (subject && SUBJECT.test(subject) && !diagnosticError.governanceSubject) {
+      diagnosticError.governanceSubject = subject;
+    }
+    throw diagnosticError;
+  }
+}
 
 export function getGitHubRequestId(error, seen = new Set()) {
   if (!(error instanceof Error) || seen.has(error)) return undefined;

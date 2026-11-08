@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { parseCodeowners, resolveCodeowners } from '@eq-labs/governance/pr-governance/codeowners';
-import { createGitHubHttpError } from './pr-governance.github-error.mjs';
+import { createGitHubHttpError, withGovernanceOperation } from './pr-governance.github-error.mjs';
 
 const SHA = /^[0-9a-f]{40}$/i;
 const OWNER = /^[a-z\d-]+$/i;
@@ -35,21 +35,26 @@ export async function readCodeownersEvidence({
     'X-GitHub-Api-Version': '2022-11-28',
   };
 
-  async function getJson(url) {
-    const response = await fetchImpl(url, {
-      method: 'GET',
-      headers,
+  async function getJson(url, operation) {
+    return withGovernanceOperation(operation, null, async () => {
+      const response = await fetchImpl(url, {
+        method: 'GET',
+        headers,
+      });
+
+      if (!response.ok) {
+        throw createGitHubHttpError(response, 'GitHub CODEOWNERS request');
+      }
+
+      return response.json();
     });
-
-    if (!response.ok) {
-      throw createGitHubHttpError(response, 'GitHub CODEOWNERS request');
-    }
-
-    return response.json();
   }
 
   // Check the exact base commit, not the mutable branch name.
-  const errors = await getJson(`${root}/codeowners/errors?ref=${encodeURIComponent(baseSha)}`);
+  const errors = await getJson(
+    `${root}/codeowners/errors?ref=${encodeURIComponent(baseSha)}`,
+    'codeowners-errors',
+  );
 
   if (!errors || !Array.isArray(errors.errors)) {
     throw new TypeError('Malformed GitHub CODEOWNERS errors response');
@@ -61,6 +66,7 @@ export async function readCodeownersEvidence({
 
   const file = await getJson(
     `${root}/contents/.github/CODEOWNERS?ref=${encodeURIComponent(baseSha)}`,
+    'codeowners-content',
   );
 
   if (

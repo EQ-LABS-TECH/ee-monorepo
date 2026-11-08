@@ -15,6 +15,7 @@ import {
   readCodeownerTeamPermission,
   readCodeownerTeamVisibility,
 } from './pr-governance.evidence.mjs';
+import { withGovernanceOperation } from './pr-governance.github-error.mjs';
 
 const ARCHITECTURE_TEAM = 'ee-labs-architecture';
 
@@ -34,27 +35,31 @@ function sameSnapshot(first, second) {
 async function readAuthorityEvidence({ owner, repo, number, token, reviewers, teams, fetchImpl }) {
   const permissions = await Promise.all(
     reviewers.map((reviewer) =>
-      readReviewerRepositoryPermission({
-        owner,
-        repo,
-        number,
-        reviewer,
-        token,
-        fetchImpl,
-      }),
+      withGovernanceOperation('reviewer-repository-permission', reviewer, () =>
+        readReviewerRepositoryPermission({
+          owner,
+          repo,
+          number,
+          reviewer,
+          token,
+          fetchImpl,
+        }),
+      ),
     ),
   );
 
   const memberships = await Promise.all(
     reviewers.flatMap((reviewer) =>
       teams.map((teamSlug) =>
-        readReviewerTeamMembership({
-          owner,
-          teamSlug,
-          reviewer,
-          token,
-          fetchImpl,
-        }),
+        withGovernanceOperation('reviewer-team-membership', teamSlug, () =>
+          readReviewerTeamMembership({
+            owner,
+            teamSlug,
+            reviewer,
+            token,
+            fetchImpl,
+          }),
+        ),
       ),
     ),
   );
@@ -73,23 +78,30 @@ async function readTeamPermissions({ owner, repo, teams, token, fetchImpl }) {
   return Promise.all(
     teams.map(async (teamSlug) => {
       const [permission, visibility] = await Promise.all([
-        readCodeownerTeamPermission({
-          owner,
-          repo,
-          teamSlug,
-          token,
-          fetchImpl,
-        }),
-        readCodeownerTeamVisibility({
-          owner,
-          teamSlug,
-          token,
-          fetchImpl,
-        }),
+        withGovernanceOperation('codeowner-team-repository-permission', teamSlug, () =>
+          readCodeownerTeamPermission({
+            owner,
+            repo,
+            teamSlug,
+            token,
+            fetchImpl,
+          }),
+        ),
+        withGovernanceOperation('codeowner-team-visibility', teamSlug, () =>
+          readCodeownerTeamVisibility({
+            owner,
+            teamSlug,
+            token,
+            fetchImpl,
+          }),
+        ),
       ]);
 
       if (permission.teamSlug !== visibility.teamSlug) {
-        throw new Error('CODEOWNERS team identity mismatch');
+        const error = new Error('CODEOWNERS team identity mismatch');
+        error.governanceOperation = 'codeowner-team-identity';
+        error.governanceSubject = teamSlug;
+        throw error;
       }
 
       return {
@@ -121,10 +133,12 @@ export async function evaluatePrGovernance({
 
   const locator = { owner, repo, number, fetchImpl };
 
-  const evidence = await readPullRequestEvidence({
-    ...locator,
-    token,
-  });
+  const evidence = await withGovernanceOperation('pull-request-evidence', null, () =>
+    readPullRequestEvidence({
+      ...locator,
+      token,
+    }),
+  );
 
   const indicators = classifyCriticalChange(evidence.paths);
 
@@ -135,14 +149,16 @@ export async function evaluatePrGovernance({
     critical: indicators.criticalIndicatorsPresent,
   });
 
-  const codeowners = await readCodeownersEvidence({
-    owner,
-    repo,
-    baseSha: evidence.baseSha,
-    paths: evidence.paths,
-    token: governanceToken,
-    fetchImpl,
-  });
+  const codeowners = await withGovernanceOperation('codeowners-evidence', null, () =>
+    readCodeownersEvidence({
+      owner,
+      repo,
+      baseSha: evidence.baseSha,
+      paths: evidence.paths,
+      token: governanceToken,
+      fetchImpl,
+    }),
+  );
 
   const ownerTeams = [...new Set(codeowners.requirements.flatMap((entry) => entry.eligibleTeams))];
 
@@ -195,7 +211,9 @@ export async function evaluatePrGovernance({
     fetchImpl,
   };
 
-  const authorityEvidence = await readAuthorityEvidence(authorityQuery);
+  const authorityEvidence = await withGovernanceOperation('reviewer-authority', null, () =>
+    readAuthorityEvidence(authorityQuery),
+  );
   const { permissions, memberships } = authorityEvidence;
 
   const classification = resolvePrGovernanceClassification({
@@ -236,32 +254,42 @@ export async function evaluatePrGovernance({
 
   // Re-read after all external queries. An earlier snapshot cannot
   // establish that permissions, ownership and reviews are still valid.
-  const confirmedEvidence = await readPullRequestEvidence({
-    ...locator,
-    token,
-  });
+  const confirmedEvidence = await withGovernanceOperation('confirm-pr-evidence', null, () =>
+    readPullRequestEvidence({
+      ...locator,
+      token,
+    }),
+  );
 
   if (!sameSnapshot(evidence, confirmedEvidence)) {
     throw new Error('PR governance evidence changed during evaluation');
   }
 
-  const confirmedAuthority = await readAuthorityEvidence(authorityQuery);
+  const confirmedAuthority = await withGovernanceOperation('confirm-reviewer-authority', null, () =>
+    readAuthorityEvidence(authorityQuery),
+  );
 
   if (!sameAuthorityEvidence(authorityEvidence, confirmedAuthority)) {
     throw new Error('PR governance reviewer authority changed during evaluation');
   }
 
-  const confirmedTeamPermissions = await readTeamPermissions(teamPermissionQuery);
+  const confirmedTeamPermissions = await withGovernanceOperation(
+    'confirm-codeowner-team-permissions',
+    null,
+    () => readTeamPermissions(teamPermissionQuery),
+  );
 
   if (JSON.stringify(teamPermissions) !== JSON.stringify(confirmedTeamPermissions)) {
     throw new Error('PR governance CODEOWNERS team permissions changed during evaluation');
   }
 
   // Recheck the PR after the final permission and membership API calls.
-  const finalEvidence = await readPullRequestEvidence({
-    ...locator,
-    token,
-  });
+  const finalEvidence = await withGovernanceOperation('final-pr-evidence', null, () =>
+    readPullRequestEvidence({
+      ...locator,
+      token,
+    }),
+  );
 
   if (!sameSnapshot(evidence, finalEvidence)) {
     throw new Error('PR governance evidence changed during final verification');

@@ -24,6 +24,12 @@ try {
         ? { requestId: diagnostic.requestId }
         : {}),
       phase: diagnostic.phase ?? 'command',
+      ...(typeof diagnostic.operation === 'string' && /^[a-z\d-]{1,64}$/i.test(diagnostic.operation)
+        ? { operation: diagnostic.operation }
+        : {}),
+      ...(typeof diagnostic.subject === 'string' && /^[a-z\d_-]{1,100}$/i.test(diagnostic.subject)
+        ? { subject: diagnostic.subject }
+        : {}),
       code:
         diagnostic.code ??
         (error instanceof TypeError ? 'invalid-input-or-evidence' : 'unexpected-operation-error'),
