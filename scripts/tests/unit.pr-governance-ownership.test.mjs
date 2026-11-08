@@ -7,11 +7,11 @@ import { evaluatePrGovernanceEnforcement } from '@eq-labs/governance/pr-governan
 const requirements = [
   {
     path: '.github/workflows/ci.yml',
-    eligibleTeams: ['architecture', 'repository-admin'],
+    eligibleTeams: ['ee-labs-architecture', 'ee-labs-repository-admin'],
   },
   {
     path: 'scripts/lib/example.mjs',
-    eligibleTeams: ['repository-admin', 'maintainers'],
+    eligibleTeams: ['ee-labs-repository-admin', 'ee-labs-maintainers'],
   },
 ];
 
@@ -22,9 +22,9 @@ const permissions = [
 ];
 
 const memberships = [
-  { reviewer: 'architect', teamSlug: 'architecture', active: true },
-  { reviewer: 'maintainer', teamSlug: 'maintainers', active: true },
-  { reviewer: 'outsider', teamSlug: 'contributors', active: true },
+  { reviewer: 'architect', teamSlug: 'ee-labs-architecture', active: true },
+  { reviewer: 'maintainer', teamSlug: 'ee-labs-maintainers', active: true },
+  { reviewer: 'outsider', teamSlug: 'ee-labs-contributors', active: true },
 ];
 
 function evaluate(overrides = {}) {
@@ -95,12 +95,12 @@ test('one qualified reviewer may cover multiple files', () => {
     memberships: [
       {
         reviewer: 'architect',
-        teamSlug: 'architecture',
+        teamSlug: 'ee-labs-architecture',
         active: true,
       },
       {
         reviewer: 'architect',
-        teamSlug: 'maintainers',
+        teamSlug: 'ee-labs-maintainers',
         active: true,
       },
     ],
@@ -161,8 +161,8 @@ test('critical enforcement rejects one reviewer covering all paths', () => {
   const ownership = evaluate({
     approvedReviewers: ['architect'],
     memberships: [
-      { reviewer: 'architect', teamSlug: 'architecture', active: true },
-      { reviewer: 'architect', teamSlug: 'maintainers', active: true },
+      { reviewer: 'architect', teamSlug: 'ee-labs-architecture', active: true },
+      { reviewer: 'architect', teamSlug: 'ee-labs-maintainers', active: true },
     ],
   });
 
@@ -200,7 +200,7 @@ test('uncovered paths block enforcement despite two reviewers', () => {
       ...requirements,
       {
         path: 'docs/validation/report.md',
-        eligibleTeams: ['repository-admin'],
+        eligibleTeams: ['ee-labs-repository-admin'],
       },
     ],
   });

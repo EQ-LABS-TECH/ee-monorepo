@@ -71,12 +71,14 @@ Este documento consolida la evidencia técnica de **EE-IMP-007-P01 … P07**, ej
 
 ### 03.2. Teams y permisos (P02)
 
-| Team             | Slug               | Permiso repo               |
-| :--------------- | :----------------- | :------------------------- |
-| Architecture     | `architecture`     | maintain                   |
-| Repository Admin | `repository-admin` | admin                      |
-| Maintainers      | `maintainers`      | push (Write)               |
-| Contributors     | `contributors`     | triage (vacío de miembros) |
+La columna de slug registra la última evidencia física capturada antes de la migración. Los slugs objetivo se mantienen pendientes hasta renombrar los equipos existentes en GitHub y verificar la API.
+
+| Equipo           | Slug verificado (2026-09-22) | Slug objetivo              | Permiso repo               |
+| :--------------- | :--------------------------- | :------------------------- | :------------------------- |
+| Architecture     | `architecture`               | `ee-labs-architecture`     | maintain                   |
+| Repository Admin | `repository-admin`           | `ee-labs-repository-admin` | admin                      |
+| Maintainers      | `maintainers`                | `ee-labs-maintainers`      | push (Write)               |
+| Contributors     | `contributors`               | `ee-labs-contributors`     | triage (vacío de miembros) |
 
 ### 03.3. `.github/` (P01, P04, P05)
 

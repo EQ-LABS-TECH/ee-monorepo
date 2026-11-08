@@ -167,7 +167,7 @@ export async function reconcileOpenGovernancePrs({
       // Do not expose API responses or credentials in logs.
       const httpStatus = getHttpStatus(error);
       const diagnosticHttpStatus = error?.governanceDiagnostic?.httpStatus ?? httpStatus;
-      const requestId = getGitHubRequestId(error);
+      const requestId = error?.governanceDiagnostic?.requestId ?? getGitHubRequestId(error);
 
       console.error(
         'PR Governance reconciliation PR failure:',
@@ -177,6 +177,14 @@ export async function reconcileOpenGovernancePrs({
           ...(expectedHeadSha ? { headSha: expectedHeadSha } : {}),
           ...(requestId ? { requestId } : {}),
           phase: error?.governanceDiagnostic?.phase ?? phase,
+          ...(typeof error?.governanceDiagnostic?.operation === 'string' &&
+          /^[a-z\d-]{1,64}$/i.test(error.governanceDiagnostic.operation)
+            ? { operation: error.governanceDiagnostic.operation }
+            : {}),
+          ...(typeof error?.governanceDiagnostic?.subject === 'string' &&
+          /^[a-z\d_-]{1,100}$/i.test(error.governanceDiagnostic.subject)
+            ? { subject: error.governanceDiagnostic.subject }
+            : {}),
           code: /^[a-z0-9-]+$/.test(error?.governanceDiagnostic?.code ?? '')
             ? error.governanceDiagnostic.code
             : httpStatus !== undefined

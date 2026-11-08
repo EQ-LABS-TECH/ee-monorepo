@@ -2,7 +2,7 @@
  * Read-only GitHub REST adapter for PR Governance.
  * Provides evidence only: classification and merge authorization remain separate.
  */
-import { createGitHubHttpError } from './pr-governance.github-error.mjs';
+import { createGitHubHttpError, withGovernanceOperation } from './pr-governance.github-error.mjs';
 
 const SHA = /^[0-9a-f]{40}$/i;
 const LOGIN = /^[a-z\d](?:[a-z\d-]{0,38}[a-z\d])?$/i;
@@ -32,32 +32,41 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
     'X-GitHub-Api-Version': '2022-11-28',
   };
 
-  async function getJson(url) {
-    const response = await fetchImpl(url, { method: 'GET', headers });
-    if (!response.ok) throw createGitHubHttpError(response, 'GitHub API');
-    return response.json();
+  async function getJson(url, operation) {
+    return withGovernanceOperation(operation, null, async () => {
+      const response = await fetchImpl(url, { method: 'GET', headers });
+      if (!response.ok) throw createGitHubHttpError(response, 'GitHub API');
+      return response.json();
+    });
   }
 
-  async function collectFrom(urlForPage, label, maxItems) {
-    const result = [];
-    for (let page = 1; page <= Math.ceil(maxItems / 100) + 1; page++) {
-      const items = await getJson(urlForPage(page));
-      if (!Array.isArray(items)) throw new TypeError(`Invalid ${label} response`);
-      result.push(...items);
-      if (result.length > maxItems) {
-        throw new Error(`GitHub ${label} evidence exceeds supported limit`);
+  async function collectFrom(urlForPage, label, maxItems, operation = label) {
+    return withGovernanceOperation(operation, null, async () => {
+      const result = [];
+      for (let page = 1; page <= Math.ceil(maxItems / 100) + 1; page++) {
+        const items = await getJson(urlForPage(page), operation);
+        if (!Array.isArray(items)) throw new TypeError(`Invalid ${label} response`);
+        result.push(...items);
+        if (result.length > maxItems) {
+          throw new Error(`GitHub ${label} evidence exceeds supported limit`);
+        }
+        if (items.length < 100) return result;
       }
-      if (items.length < 100) return result;
-    }
-    throw new Error(`GitHub ${label} pagination incomplete`);
+      throw new Error(`GitHub ${label} pagination incomplete`);
+    });
   }
 
-  const collect = (endpoint, maxItems) =>
-    collectFrom((page) => `${base}/${endpoint}?per_page=100&page=${page}`, endpoint, maxItems);
+  const collect = (endpoint, maxItems, operation = `pull-request-${endpoint}`) =>
+    collectFrom(
+      (page) => `${base}/${endpoint}?per_page=100&page=${page}`,
+      endpoint,
+      maxItems,
+      operation,
+    );
 
   const commentsUrl = `https://api.github.com/repos/${owner}/${repo}/issues/${number}/comments`;
 
-  const pr = await getJson(base);
+  const pr = await getJson(base, 'pull-request-snapshot');
 
   if (
     !pr ||
@@ -82,6 +91,7 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
     (page) => `${commentsUrl}?per_page=100&page=${page}`,
     'issue comments',
     10000,
+    'pull-request-comments',
   );
   const normalizedReviews = reviews
     .map((review, sequence) => {
@@ -155,7 +165,7 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
 
   // Detect review changes while collecting evidence.
   // This is a consistency check, not an atomic GitHub snapshot.
-  const confirmedReviews = await collect('reviews', 10000);
+  const confirmedReviews = await collect('reviews', 10000, 'confirm-review-snapshot');
 
   if (JSON.stringify(confirmedReviews) !== JSON.stringify(reviews)) {
     throw new Error('Pull request reviews changed while collecting governance evidence');
@@ -165,13 +175,14 @@ export async function readPullRequestEvidence({ owner, repo, number, token, fetc
     (page) => `${commentsUrl}?per_page=100&page=${page}`,
     'issue comments',
     10000,
+    'confirm-comment-snapshot',
   );
 
   if (JSON.stringify(confirmedComments) !== JSON.stringify(comments)) {
     throw new Error('Pull request classification comments changed while collecting evidence');
   }
 
-  const currentPr = await getJson(base);
+  const currentPr = await getJson(base, 'confirm-pull-request-snapshot');
 
   if (
     currentPr?.number !== number ||

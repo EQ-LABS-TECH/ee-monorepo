@@ -49,6 +49,35 @@ test('blocked governance maps to failure', () => {
   }
 });
 
+test('check summaries render the renamed GitHub team slugs', () => {
+  const teamLabels = [
+    ['ee-labs-architecture', 'EE-Labs Architecture'],
+    ['ee-labs-repository-admin', 'EE-Labs Repository Admin'],
+    ['ee-labs-maintainers', 'EE-Labs Maintainers'],
+    ['ee-labs-contributors', 'EE-Labs Contributors'],
+  ];
+
+  for (const [teamSlug, label] of teamLabels) {
+    const payload = createPrGovernanceCheckPayload({
+      evaluation: {
+        ...evaluation('ORDINARY', 'BLOCKED'),
+        decision: {
+          status: 'BLOCKED',
+          qualifiedApprovalCount: 0,
+          requiredCount: 2,
+          reasons: [],
+        },
+        ownershipEvidence: {
+          coverage: [{ eligibleTeams: [teamSlug], covered: false }],
+        },
+      },
+      expectedHeadSha: headSha,
+    });
+
+    assert.match(payload.output.summary, new RegExp(`Required reviewer team: ${label}`));
+  }
+});
+
 test('cannot publish an evaluation for a different HEAD', () => {
   assert.throws(
     () =>

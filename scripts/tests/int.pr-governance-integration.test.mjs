@@ -175,7 +175,7 @@ test('reviewer eligibility evidence does not authorize ordinary impact', async (
 
   const membership = await readReviewerTeamMembership({
     owner: locator.owner,
-    teamSlug: 'architecture',
+    teamSlug: 'ee-labs-architecture',
     reviewer: 'reviewer-a',
     token: locator.token,
     fetchImpl: async () => ({
@@ -195,7 +195,7 @@ test('reviewer eligibility evidence does not authorize ordinary impact', async (
     },
     approvedReviewers: approvals.approvedReviewers,
     memberships: [membership],
-    responsibleTeams: ['architecture'],
+    responsibleTeams: ['ee-labs-architecture'],
   });
 
   assert.equal(classification.status, 'ORDINARY');
@@ -214,11 +214,11 @@ test('active membership outside the stipulated team is insufficient', () => {
     memberships: [
       {
         reviewer: 'reviewer-a',
-        teamSlug: 'maintainers',
+        teamSlug: 'ee-labs-maintainers',
         active: true,
       },
     ],
-    responsibleTeams: ['architecture'],
+    responsibleTeams: ['ee-labs-architecture'],
   });
 
   assert.equal(authority.status, 'UNVERIFIED');

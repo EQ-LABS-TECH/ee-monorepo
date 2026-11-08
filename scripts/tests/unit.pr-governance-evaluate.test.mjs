@@ -21,9 +21,9 @@ const pr = {
 };
 
 const codeowners = [
-  '* @EQ-LABS-TECH/maintainers',
-  'README.md @EQ-LABS-TECH/architecture',
-  '.github/ @EQ-LABS-TECH/architecture @EQ-LABS-TECH/repository-admin',
+  '* @EQ-LABS-TECH/ee-labs-maintainers',
+  'README.md @EQ-LABS-TECH/ee-labs-architecture',
+  '.github/ @EQ-LABS-TECH/ee-labs-architecture @EQ-LABS-TECH/ee-labs-repository-admin',
 ].join('\n');
 
 const options = {
@@ -57,10 +57,10 @@ function fixture({
     },
   ],
   memberTeams = {
-    architect: ['architecture'],
-    administrator: ['repository-admin'],
+    architect: ['ee-labs-architecture'],
+    administrator: ['ee-labs-repository-admin'],
   },
-  writableTeams = ['architecture', 'repository-admin', 'maintainers'],
+  writableTeams = ['ee-labs-architecture', 'ee-labs-repository-admin', 'ee-labs-maintainers'],
   secretTeams = [],
   changeHead = false,
   owners = codeowners,
@@ -179,7 +179,7 @@ test('fingerprint changes when team visibility changes without an API error', as
   const baseline = await evaluatePrGovernance({ ...options, fetchImpl: fixture() });
   const changedAuthority = await evaluatePrGovernance({
     ...options,
-    fetchImpl: fixture({ secretTeams: ['architecture'] }),
+    fetchImpl: fixture({ secretTeams: ['ee-labs-architecture'] }),
   });
 
   assert.notEqual(baseline.evidenceFingerprint, changedAuthority.evidenceFingerprint);
@@ -287,7 +287,7 @@ test('revoked architecture membership invalidates evaluation', async () => {
     evaluatePrGovernance({
       ...options,
       fetchImpl: async (url, init) => {
-        if (url.includes('/teams/architecture/memberships/architect')) {
+        if (url.includes('/teams/ee-labs-architecture/memberships/architect')) {
           architectureReads += 1;
 
           if (architectureReads > 1) {
@@ -315,7 +315,7 @@ test('CODEOWNERS team without write permission cannot satisfy ownership', async 
   const result = await evaluatePrGovernance({
     ...options,
     fetchImpl: fixture({
-      writableTeams: ['repository-admin', 'maintainers'],
+      writableTeams: ['ee-labs-repository-admin', 'ee-labs-maintainers'],
     }),
   });
 
@@ -330,7 +330,7 @@ test('alternative writable CODEOWNERS team can satisfy ownership', async () => {
     fetchImpl: fixture({
       paths: ['.github/workflows/ci.yml'],
       reviews: [review('administrator')],
-      writableTeams: ['repository-admin'],
+      writableTeams: ['ee-labs-repository-admin'],
     }),
   });
 
@@ -348,7 +348,7 @@ test('revoked CODEOWNERS team permission invalidates evaluation', async () => {
     evaluatePrGovernance({
       ...options,
       fetchImpl: async (url, init) => {
-        if (url.includes('/teams/architecture/repos/')) {
+        if (url.includes('/teams/ee-labs-architecture/repos/')) {
           teamReads += 1;
 
           if (teamReads > 1) {
@@ -380,7 +380,7 @@ test('secret CODEOWNERS team cannot satisfy ownership', async () => {
   const result = await evaluatePrGovernance({
     ...options,
     fetchImpl: fixture({
-      secretTeams: ['architecture'],
+      secretTeams: ['ee-labs-architecture'],
     }),
   });
 
@@ -395,7 +395,7 @@ test('visible alternative CODEOWNERS team can satisfy ownership', async () => {
     fetchImpl: fixture({
       paths: ['.github/workflows/ci.yml'],
       reviews: [review('administrator')],
-      secretTeams: ['architecture'],
+      secretTeams: ['ee-labs-architecture'],
     }),
   });
 
@@ -413,7 +413,7 @@ test('CODEOWNERS team visibility change invalidates evaluation', async () => {
     evaluatePrGovernance({
       ...options,
       fetchImpl: async (url, init) => {
-        if (url.endsWith('/orgs/EQ-LABS-TECH/teams/architecture')) {
+        if (url.endsWith('/orgs/EQ-LABS-TECH/teams/ee-labs-architecture')) {
           visibilityReads += 1;
 
           if (visibilityReads > 1) {
@@ -421,7 +421,7 @@ test('CODEOWNERS team visibility change invalidates evaluation', async () => {
               ok: true,
               status: 200,
               json: async () => ({
-                slug: 'architecture',
+                slug: 'ee-labs-architecture',
                 privacy: 'secret',
               }),
             };

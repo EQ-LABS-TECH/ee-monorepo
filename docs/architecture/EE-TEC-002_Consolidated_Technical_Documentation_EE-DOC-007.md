@@ -179,6 +179,19 @@ La arquitectura separa el control de integración de la finalización privilegia
 
 Esta evolución no modifica retrospectivamente el dictamen de la Validación Final original ni constituye evidencia suficiente para cerrar PN-021 o PN-030.
 
+### 06.2. Migración posterior de slugs de equipos — pendiente
+
+La captura original de §03 y la evolución de §06.1 conservan los slugs que existían cuando se registraron; no se sobrescriben. La rama `chore/rename-governance-teams` prepara referencias a nuevos slugs y el procedimiento requiere abrir el PR antes de renombrar los equipos existentes. Al 2026-11-07, el renombre en GitHub todavía no se ha ejecutado, por lo que esta evolución queda **PENDING**.
+
+| Slug en la captura histórica | Slug objetivo              | Condición para CODEOWNERS                                                       |
+| :--------------------------- | :------------------------- | :------------------------------------------------------------------------------ |
+| `architecture`               | `ee-labs-architecture`     | Visible (`privacy=closed`) y permiso `maintain` (nivel con acceso de escritura) |
+| `repository-admin`           | `ee-labs-repository-admin` | No se asigna como code owner en el mapa P04                                     |
+| `maintainers`                | `ee-labs-maintainers`      | Visible (`privacy=closed`) y permiso `push`/Write                               |
+| `contributors`               | `ee-labs-contributors`     | No se asigna como code owner en el mapa P04                                     |
+
+GitHub requiere que los equipos usados en CODEOWNERS sean visibles y tengan permisos explícitos de escritura. La captura de EE-IMP-007-P02 §08 registra Architecture como secreta y Maintainers como visible; esa evidencia histórica no sustituye la verificación posterior al renombre. Antes de integrar el PR se deben comprobar los slugs, visibilidad y permisos en GitHub, además de confirmar que CODEOWNERS reconoce a ambos equipos. [GitHub Docs: About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
+
 ---
 
 ## 07. Referencias

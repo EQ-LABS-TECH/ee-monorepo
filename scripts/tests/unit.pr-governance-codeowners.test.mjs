@@ -4,17 +4,17 @@ import assert from 'node:assert/strict';
 import { parseCodeowners, resolveCodeowners } from '@eq-labs/governance/pr-governance/codeowners';
 
 const source = `
-* @EQ-LABS-TECH/maintainers
-README.md @EQ-LABS-TECH/architecture
-.github/ @EQ-LABS-TECH/architecture
-scripts/ @EQ-LABS-TECH/maintainers
-scripts/lib/pr-governance.* @EQ-LABS-TECH/architecture
-scripts/commands/enforce @EQ-LABS-TECH/architecture
-scripts/commands/reconcile @EQ-LABS-TECH/architecture
-scripts/commands/governance @EQ-LABS-TECH/architecture
-scripts/tests/*pr-governance* @EQ-LABS-TECH/architecture
-packages/ @EQ-LABS-TECH/maintainers
-packages/foundation/src/contracts/knowledge*.ts @EQ-LABS-TECH/architecture
+* @EQ-LABS-TECH/ee-labs-maintainers
+README.md @EQ-LABS-TECH/ee-labs-architecture
+.github/ @EQ-LABS-TECH/ee-labs-architecture
+scripts/ @EQ-LABS-TECH/ee-labs-maintainers
+scripts/lib/pr-governance.* @EQ-LABS-TECH/ee-labs-architecture
+scripts/commands/enforce @EQ-LABS-TECH/ee-labs-architecture
+scripts/commands/reconcile @EQ-LABS-TECH/ee-labs-architecture
+scripts/commands/governance @EQ-LABS-TECH/ee-labs-architecture
+scripts/tests/*pr-governance* @EQ-LABS-TECH/ee-labs-architecture
+packages/ @EQ-LABS-TECH/ee-labs-maintainers
+packages/foundation/src/contracts/knowledge*.ts @EQ-LABS-TECH/ee-labs-architecture
 `;
 
 const rules = parseCodeowners(source, 'EQ-LABS-TECH');
@@ -25,7 +25,7 @@ test('resolves default owner for an ordinary application path', () => {
     paths: ['apps/dashboard/src/main.ts'],
   });
 
-  assert.deepEqual(result[0].eligibleTeams, ['maintainers']);
+  assert.deepEqual(result[0].eligibleTeams, ['ee-labs-maintainers']);
 });
 
 test('uses last matching CODEOWNERS rule', () => {
@@ -35,7 +35,7 @@ test('uses last matching CODEOWNERS rule', () => {
   });
 
   assert.equal(result[0].pattern, 'packages/foundation/src/contracts/knowledge*.ts');
-  assert.deepEqual(result[0].eligibleTeams, ['architecture']);
+  assert.deepEqual(result[0].eligibleTeams, ['ee-labs-architecture']);
 });
 
 test('resolves a single accountable team for automation scripts', () => {
@@ -44,7 +44,7 @@ test('resolves a single accountable team for automation scripts', () => {
     paths: ['scripts/lib/example.mjs'],
   });
 
-  assert.deepEqual(result[0].eligibleTeams, ['maintainers']);
+  assert.deepEqual(result[0].eligibleTeams, ['ee-labs-maintainers']);
 });
 
 test('resolves architectural ownership for PR Governance policy implementation and tests', () => {
@@ -61,7 +61,13 @@ test('resolves architectural ownership for PR Governance policy implementation a
 
   assert.deepEqual(
     result.map((entry) => entry.eligibleTeams),
-    [['architecture'], ['architecture'], ['architecture'], ['architecture'], ['architecture']],
+    [
+      ['ee-labs-architecture'],
+      ['ee-labs-architecture'],
+      ['ee-labs-architecture'],
+      ['ee-labs-architecture'],
+      ['ee-labs-architecture'],
+    ],
   );
 });
 
@@ -73,13 +79,14 @@ test('resolves mixed ownership independently for each path', () => {
 
   assert.deepEqual(
     result.map((entry) => entry.eligibleTeams),
-    [['architecture'], ['maintainers'], ['architecture']],
+    [['ee-labs-architecture'], ['ee-labs-maintainers'], ['ee-labs-architecture']],
   );
 });
 
 test('rejects unsupported ownership syntax', () => {
   assert.throws(
-    () => parseCodeowners('src/**/internal/*.ts @EQ-LABS-TECH/architecture', 'EQ-LABS-TECH'),
+    () =>
+      parseCodeowners('src/**/internal/*.ts @EQ-LABS-TECH/ee-labs-architecture', 'EQ-LABS-TECH'),
     /Unsupported CODEOWNERS/,
   );
 });
@@ -92,7 +99,7 @@ test('rejects owner from another organization', () => {
 });
 
 test('rejects uncovered paths', () => {
-  const restricted = parseCodeowners('scripts/ @EQ-LABS-TECH/maintainers', 'EQ-LABS-TECH');
+  const restricted = parseCodeowners('scripts/ @EQ-LABS-TECH/ee-labs-maintainers', 'EQ-LABS-TECH');
 
   assert.throws(
     () =>
@@ -121,7 +128,7 @@ test('matches file names case-sensitively', () => {
     paths: ['readme.md'],
   });
 
-  assert.deepEqual(result[0].eligibleTeams, ['maintainers']);
+  assert.deepEqual(result[0].eligibleTeams, ['ee-labs-maintainers']);
 });
 
 test('matches unanchored file patterns in nested directories', () => {
@@ -131,7 +138,7 @@ test('matches unanchored file patterns in nested directories', () => {
   });
 
   assert.equal(result[0].pattern, 'README.md');
-  assert.deepEqual(result[0].eligibleTeams, ['architecture']);
+  assert.deepEqual(result[0].eligibleTeams, ['ee-labs-architecture']);
 });
 
 test('matches unanchored directory patterns at any depth', () => {
@@ -141,7 +148,7 @@ test('matches unanchored directory patterns at any depth', () => {
   });
 
   assert.equal(result[0].pattern, 'scripts/');
-  assert.deepEqual(result[0].eligibleTeams, ['maintainers']);
+  assert.deepEqual(result[0].eligibleTeams, ['ee-labs-maintainers']);
 });
 
 test('preserves root anchoring for patterns containing directories', () => {
@@ -155,7 +162,7 @@ test('preserves root anchoring for patterns containing directories', () => {
 
   assert.deepEqual(
     result.map((entry) => entry.eligibleTeams),
-    [['architecture'], ['maintainers']],
+    [['ee-labs-architecture'], ['ee-labs-maintainers']],
   );
 });
 
@@ -202,28 +209,28 @@ test('repository CODEOWNERS resolves actual governance boundaries', async () => 
     assert.deepEqual(ownersByPath.get(path), [...teams].sort());
   };
 
-  expectOwners('apps/dashboard/src/main.ts', ['maintainers']);
-  expectOwners('README.md', ['architecture']);
-  expectOwners('scripts/lib/pr-governance.evaluate.mjs', ['architecture']);
-  expectOwners('scripts/commands/enforce', ['architecture']);
-  expectOwners('scripts/commands/reconcile', ['architecture']);
-  expectOwners('scripts/commands/governance', ['architecture']);
-  expectOwners('scripts/tests/unit.pr-governance-evaluation.test.mjs', ['architecture']);
-  expectOwners('.github/workflows/ci.yml', ['architecture']);
-  expectOwners('packages/config/src/index.ts', ['architecture']);
-  expectOwners('packages/knowledge/src/index.ts', ['maintainers']);
-  expectOwners('package.json', ['architecture']);
-  expectOwners('pnpm-workspace.yaml', ['architecture']);
-  expectOwners('pnpm-lock.yaml', ['architecture']);
-  expectOwners('turbo.json', ['architecture']);
-  expectOwners('docs/validation/evidence.md', ['maintainers']);
-  expectOwners('docs/validation/audit/EE-AUD-Rules_Emerging.md', ['architecture']);
-  expectOwners('docs/architecture/EE-DOC-007_GitHub_Governance.md', ['architecture']);
-  expectOwners('packages/foundation/src/contracts/provider.ts', ['architecture']);
-  expectOwners('packages/foundation/src/contracts/knowledge.ts', ['architecture']);
-  expectOwners('packages/foundation/src/contracts/knowledge-status.ts', ['architecture']);
-  expectOwners('infra/terraform/main.tf', ['architecture']);
-  expectOwners('templates/issue/bug-report.yml', ['architecture']);
+  expectOwners('apps/dashboard/src/main.ts', ['ee-labs-maintainers']);
+  expectOwners('README.md', ['ee-labs-architecture']);
+  expectOwners('scripts/lib/pr-governance.evaluate.mjs', ['ee-labs-architecture']);
+  expectOwners('scripts/commands/enforce', ['ee-labs-architecture']);
+  expectOwners('scripts/commands/reconcile', ['ee-labs-architecture']);
+  expectOwners('scripts/commands/governance', ['ee-labs-architecture']);
+  expectOwners('scripts/tests/unit.pr-governance-evaluation.test.mjs', ['ee-labs-architecture']);
+  expectOwners('.github/workflows/ci.yml', ['ee-labs-architecture']);
+  expectOwners('packages/config/src/index.ts', ['ee-labs-architecture']);
+  expectOwners('packages/knowledge/src/index.ts', ['ee-labs-maintainers']);
+  expectOwners('package.json', ['ee-labs-architecture']);
+  expectOwners('pnpm-workspace.yaml', ['ee-labs-architecture']);
+  expectOwners('pnpm-lock.yaml', ['ee-labs-architecture']);
+  expectOwners('turbo.json', ['ee-labs-architecture']);
+  expectOwners('docs/validation/evidence.md', ['ee-labs-maintainers']);
+  expectOwners('docs/validation/audit/EE-AUD-Rules_Emerging.md', ['ee-labs-architecture']);
+  expectOwners('docs/architecture/EE-DOC-007_GitHub_Governance.md', ['ee-labs-architecture']);
+  expectOwners('packages/foundation/src/contracts/provider.ts', ['ee-labs-architecture']);
+  expectOwners('packages/foundation/src/contracts/knowledge.ts', ['ee-labs-architecture']);
+  expectOwners('packages/foundation/src/contracts/knowledge-status.ts', ['ee-labs-architecture']);
+  expectOwners('infra/terraform/main.tf', ['ee-labs-architecture']);
+  expectOwners('templates/issue/bug-report.yml', ['ee-labs-architecture']);
 
   assert.equal(requirements.length, 22);
 });

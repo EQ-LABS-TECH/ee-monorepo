@@ -16,7 +16,7 @@ const evidence = {
   ],
   authority: {
     permissions: [{ reviewer: 'maintainer', permission: 'write' }],
-    memberships: [{ reviewer: 'maintainer', team: 'maintainers', active: true }],
+    memberships: [{ reviewer: 'maintainer', team: 'ee-labs-maintainers', active: true }],
   },
 };
 
@@ -45,7 +45,7 @@ test('fingerprint changes for HEAD, review, CODEOWNERS, or authority evidence ch
       ...evidence,
       authority: {
         ...evidence.authority,
-        memberships: [{ reviewer: 'maintainer', team: 'maintainers', active: false }],
+        memberships: [{ reviewer: 'maintainer', team: 'ee-labs-maintainers', active: false }],
       },
     },
   ];

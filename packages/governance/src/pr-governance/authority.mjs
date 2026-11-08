@@ -1,6 +1,6 @@
 const CRITICAL_ESCALATION =
   /^EE-LABS-IMPACT: CRITICAL\r?\nHEAD: ([a-f0-9]{40})\r?\nRATIONALE: (.+)$/i;
-const ARCHITECTURE_TEAM = 'architecture';
+const ARCHITECTURE_TEAM = 'ee-labs-architecture';
 
 function normalizedCriticalEscalation(comment, { headSha, author }) {
   if (

@@ -396,13 +396,13 @@ test('reviewer permission lookup fails closed on API errors', async () => {
 test('verifies active team membership using a read-only request', async () => {
   const membership = await readReviewerTeamMembership({
     owner: 'EQ-LABS-TECH',
-    teamSlug: 'maintainers',
+    teamSlug: 'ee-labs-maintainers',
     reviewer: 'reviewer',
     token: 'test',
     fetchImpl: async (url, options) => {
       assert.equal(
         url,
-        'https://api.github.com/orgs/EQ-LABS-TECH/teams/maintainers/memberships/reviewer',
+        'https://api.github.com/orgs/EQ-LABS-TECH/teams/ee-labs-maintainers/memberships/reviewer',
       );
       assert.equal(options.method, 'GET');
 
@@ -419,7 +419,7 @@ test('verifies active team membership using a read-only request', async () => {
 
   assert.deepEqual(membership, {
     reviewer: 'reviewer',
-    teamSlug: 'maintainers',
+    teamSlug: 'ee-labs-maintainers',
     active: true,
     role: 'member',
   });
@@ -428,7 +428,7 @@ test('verifies active team membership using a read-only request', async () => {
 test('pending team membership is not active', async () => {
   const membership = await readReviewerTeamMembership({
     owner: 'EQ-LABS-TECH',
-    teamSlug: 'maintainers',
+    teamSlug: 'ee-labs-maintainers',
     reviewer: 'reviewer',
     token: 'test',
     fetchImpl: async () => ({
@@ -447,7 +447,7 @@ test('pending team membership is not active', async () => {
 test('missing team membership is not authorization', async () => {
   const membership = await readReviewerTeamMembership({
     owner: 'EQ-LABS-TECH',
-    teamSlug: 'maintainers',
+    teamSlug: 'ee-labs-maintainers',
     reviewer: 'reviewer',
     token: 'test',
     fetchImpl: async () => ({
@@ -464,7 +464,7 @@ test('team membership API errors fail closed', async () => {
   await assert.rejects(
     readReviewerTeamMembership({
       owner: 'EQ-LABS-TECH',
-      teamSlug: 'architecture',
+      teamSlug: 'ee-labs-architecture',
       reviewer: 'reviewer',
       token: 'test',
       fetchImpl: async () => ({
@@ -480,7 +480,7 @@ test('malformed team membership evidence is rejected', async () => {
   await assert.rejects(
     readReviewerTeamMembership({
       owner: 'EQ-LABS-TECH',
-      teamSlug: 'maintainers',
+      teamSlug: 'ee-labs-maintainers',
       reviewer: 'reviewer',
       token: 'test',
       fetchImpl: async () => ({
@@ -647,12 +647,12 @@ test('verifies repository write permission of a CODEOWNERS team', async () => {
   const result = await readCodeownerTeamPermission({
     owner: 'EQ-LABS-TECH',
     repo: 'ee-monorepo',
-    teamSlug: 'architecture',
+    teamSlug: 'ee-labs-architecture',
     token: 'test-token',
     fetchImpl: async (url, init) => {
       assert.equal(
         url,
-        'https://api.github.com/orgs/EQ-LABS-TECH/teams/architecture/repos/EQ-LABS-TECH/ee-monorepo',
+        'https://api.github.com/orgs/EQ-LABS-TECH/teams/ee-labs-architecture/repos/EQ-LABS-TECH/ee-monorepo',
       );
 
       assert.equal(init.method, 'GET');
@@ -674,7 +674,7 @@ test('verifies repository write permission of a CODEOWNERS team', async () => {
   });
 
   assert.deepEqual(result, {
-    teamSlug: 'architecture',
+    teamSlug: 'ee-labs-architecture',
     hasWriteAccess: true,
   });
 });
@@ -683,7 +683,7 @@ test('read-only CODEOWNERS team does not qualify', async () => {
   const result = await readCodeownerTeamPermission({
     owner: 'EQ-LABS-TECH',
     repo: 'ee-monorepo',
-    teamSlug: 'maintainers',
+    teamSlug: 'ee-labs-maintainers',
     token: 'test-token',
     fetchImpl: async () => ({
       ok: true,
@@ -707,7 +707,7 @@ test('missing CODEOWNERS team permission evidence fails closed', async () => {
     readCodeownerTeamPermission({
       owner: 'EQ-LABS-TECH',
       repo: 'ee-monorepo',
-      teamSlug: 'architecture',
+      teamSlug: 'ee-labs-architecture',
       token: 'test-token',
       fetchImpl: async () => ({
         ok: false,
@@ -721,10 +721,10 @@ test('missing CODEOWNERS team permission evidence fails closed', async () => {
 test('visible CODEOWNERS team is eligible for visibility', async () => {
   const result = await readCodeownerTeamVisibility({
     owner: 'EQ-LABS-TECH',
-    teamSlug: 'architecture',
+    teamSlug: 'ee-labs-architecture',
     token: 'test-token',
     fetchImpl: async (url, init) => {
-      assert.equal(url, 'https://api.github.com/orgs/EQ-LABS-TECH/teams/architecture');
+      assert.equal(url, 'https://api.github.com/orgs/EQ-LABS-TECH/teams/ee-labs-architecture');
       assert.equal(init.method, 'GET');
       assert.equal(init.headers.Authorization, 'Bearer test-token');
 
@@ -732,7 +732,7 @@ test('visible CODEOWNERS team is eligible for visibility', async () => {
         ok: true,
         status: 200,
         json: async () => ({
-          slug: 'architecture',
+          slug: 'ee-labs-architecture',
           privacy: 'closed',
         }),
       };
@@ -740,7 +740,7 @@ test('visible CODEOWNERS team is eligible for visibility', async () => {
   });
 
   assert.deepEqual(result, {
-    teamSlug: 'architecture',
+    teamSlug: 'ee-labs-architecture',
     visible: true,
   });
 });
@@ -748,20 +748,20 @@ test('visible CODEOWNERS team is eligible for visibility', async () => {
 test('secret CODEOWNERS team is not visible', async () => {
   const result = await readCodeownerTeamVisibility({
     owner: 'EQ-LABS-TECH',
-    teamSlug: 'architecture',
+    teamSlug: 'ee-labs-architecture',
     token: 'test-token',
     fetchImpl: async () => ({
       ok: true,
       status: 200,
       json: async () => ({
-        slug: 'architecture',
+        slug: 'ee-labs-architecture',
         privacy: 'secret',
       }),
     }),
   });
 
   assert.deepEqual(result, {
-    teamSlug: 'architecture',
+    teamSlug: 'ee-labs-architecture',
     visible: false,
   });
 });
@@ -769,7 +769,7 @@ test('secret CODEOWNERS team is not visible', async () => {
 test('unavailable or malformed CODEOWNERS visibility fails closed', async () => {
   const args = {
     owner: 'EQ-LABS-TECH',
-    teamSlug: 'architecture',
+    teamSlug: 'ee-labs-architecture',
     token: 'test-token',
   };
 
@@ -791,7 +791,7 @@ test('unavailable or malformed CODEOWNERS visibility fails closed', async () => 
         ok: true,
         status: 200,
         json: async () => ({
-          slug: 'architecture',
+          slug: 'ee-labs-architecture',
         }),
       }),
     }),

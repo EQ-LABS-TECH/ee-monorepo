@@ -1,4 +1,4 @@
-﻿import test from 'node:test';
+import test from 'node:test';
 import assert from 'node:assert/strict';
 import { inspectPrGovernance } from '../lib/pr-governance.inspect.mjs';
 
@@ -407,7 +407,7 @@ test('active architecture reviewer can escalate to critical', async () => {
     ...options,
     membershipToken: 'membership-test-token',
     fetchImpl: async (url, init) => {
-      if (url.includes('/teams/architecture/memberships/')) {
+      if (url.includes('/teams/ee-labs-architecture/memberships/')) {
         assert.equal(init.headers.Authorization, 'Bearer membership-test-token');
 
         return {
@@ -440,7 +440,7 @@ test('inactive architecture membership cannot escalate impact', async () => {
     ...options,
     membershipToken: 'membership-test-token',
     fetchImpl: async (url, init) => {
-      if (url.includes('/teams/architecture/memberships/')) {
+      if (url.includes('/teams/ee-labs-architecture/memberships/')) {
         return {
           ok: true,
           status: 200,
@@ -469,7 +469,7 @@ test('governance membership API failure prevents ordinary classification', async
       ...options,
       membershipToken: 'membership-test-token',
       fetchImpl: async (url, init) => {
-        if (url.includes('/teams/architecture/memberships/')) {
+        if (url.includes('/teams/ee-labs-architecture/memberships/')) {
           return { ok: false, status: 403 };
         }
 
