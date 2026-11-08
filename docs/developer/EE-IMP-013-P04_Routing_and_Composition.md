@@ -394,7 +394,7 @@ Añadir si no existen:
 Ejecutar el script de materialización (sección §08 abajo) o aplicar archivos a mano, luego:
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 pnpm install
 
@@ -418,7 +418,7 @@ pnpm run validate
 ## 08. Script PowerShell de materialización (copiar/pegar)
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 $utf8 = New-Object System.Text.UTF8Encoding $false
 $root = (Resolve-Path .).Path
 

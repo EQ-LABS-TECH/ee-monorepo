@@ -157,7 +157,7 @@ Solo unificar estilo de cabecera si hace falta; **no** cambiar semántica SKIPPE
 ### Paso 1 — Baseline
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 Select-String -Path scripts\lint,scripts\typecheck,scripts\build,scripts\test,scripts\validate -Pattern "shell:\s*true|QG-"
 ```
 

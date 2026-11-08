@@ -105,7 +105,7 @@ V-E2E → PENDING (no pnpm run e2e en root contract)
 ### 06.1. V-AUTO (verificación)
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 # Facade no redefine QG
 node apps\cli\dist\index.js help

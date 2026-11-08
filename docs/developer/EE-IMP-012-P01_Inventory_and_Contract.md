@@ -80,7 +80,7 @@ Este documento registra la evidencia técnica de implementación de la fase **P0
 ### 04.1. Procedimiento operador
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 Write-Host "=== TOP-LEVEL ==="
 Get-ChildItem -Force -Directory | Select-Object Name

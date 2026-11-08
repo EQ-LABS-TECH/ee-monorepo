@@ -407,7 +407,7 @@ C-01…C-06. Community/experimental not workspace targets until executable code 
 ## 06. Procedimiento operador
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 # Directorios
 @(

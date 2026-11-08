@@ -171,7 +171,7 @@ Reescribir conforme a §06:
 ### Paso 1 — Baseline
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 Get-Content apps\cli\src\index.ts
 Get-Content apps\cli\package.json
 Get-Content apps\cli\README.md

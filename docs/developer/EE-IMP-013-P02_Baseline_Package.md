@@ -190,7 +190,7 @@ Remove-Item -Force packages\intelligence\src\index.js -ErrorAction SilentlyConti
 ## 06. Procedimiento operador
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 # 1. Limpieza residuo
 Remove-Item -Force packages\intelligence\src\index.js -ErrorAction SilentlyContinue

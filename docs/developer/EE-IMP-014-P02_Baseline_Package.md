@@ -160,7 +160,7 @@ Actualizar description para citar EE-DOC-014 y aclarar: package plano, private, 
 ## 06. Script PowerShell (copiar/pegar)
 
 ````powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 $utf8 = New-Object System.Text.UTF8Encoding $false
 $root = (Resolve-Path .).Path

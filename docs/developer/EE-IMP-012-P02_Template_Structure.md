@@ -144,7 +144,7 @@ Comportamiento mínimo:
 ### Paso 1 — Scaffold `templates/`
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 New-Item -ItemType Directory -Force -Path templates\document | Out-Null
 New-Item -ItemType Directory -Force -Path templates\package | Out-Null

@@ -164,7 +164,7 @@ Estado observado (as-built):
 ### 06.1. Inventario local (Paso 1)
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 # Comandos en package.json
 node -e "const p=require('./package.json'); console.log(Object.keys(p.scripts).sort().join('\n'))"
