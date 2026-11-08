@@ -64,7 +64,7 @@ P01 no implementa:
 Inspección local en:
 
 ```text
-C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Raíz local del repositorio (ruta personal omitida)
 ```
 
 ### 03.1. Estructura `.github/` detectada

@@ -95,7 +95,7 @@ P01–P04 evidence
 ### 06.1. Generar report (PowerShell)
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 $sha = git rev-parse --short HEAD
 $date = Get-Date -Format "yyyyMMdd"

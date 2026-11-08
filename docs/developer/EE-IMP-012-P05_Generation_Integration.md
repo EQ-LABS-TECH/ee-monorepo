@@ -371,7 +371,7 @@ const actions = collectHbs(filesDir).map((rel) => ({
 ## 07. Procedimiento de prueba (operador)
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 # 1. Materializar scripts/plopfile.mjs + scripts/generate (§05–§06)
 # 2. Actualizar scripts/README.md (ruta del registro)

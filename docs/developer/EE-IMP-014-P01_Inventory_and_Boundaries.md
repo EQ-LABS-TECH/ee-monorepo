@@ -214,7 +214,7 @@ pnpm audit
 Ejecutar en la raíz del monorepo (`PowerShell`). Orden: **format → validate** cuando se compruebe estilo.
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 # --- A. CODEOWNERS (KS-06) ---
 Select-String -Path .github\CODEOWNERS -Pattern "knowledge|packages/"

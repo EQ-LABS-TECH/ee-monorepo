@@ -187,7 +187,7 @@ Añadir sección **Security & data** apuntando a EE-IMP-014-P05 y prohibición d
 ## 07. Script PowerShell (copiar/pegar)
 
 ```powershell
-cd C:\Users\Edus\Desktop\Proyectos\EQ-LABS-TECH\ee-monorepo
+Set-Location (git rev-parse --show-toplevel).Trim()
 
 $utf8 = New-Object System.Text.UTF8Encoding $false
 $root = (Resolve-Path .).Path
