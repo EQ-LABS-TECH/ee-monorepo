@@ -31,14 +31,14 @@
     "vite": "^8.3.5"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "6.2.1"
+    "@vitejs/plugin-react": "6.3.0"
   },
   "scripts": {
     "build": "node -e \"const fs=require('fs'); ['base.mjs','library.mjs','react.mjs'].forEach(f=>{if(!fs.existsSync(f))throw new Error('Missing '+f)}); console.log('Build successful')\"",
     "lint": "eslint ."
   },
   "devDependencies": {
-    "eslint": "10.14.0",
+    "eslint": "10.15.0",
     "@eq-labs/config-eslint": "workspace:*"
   }
 }

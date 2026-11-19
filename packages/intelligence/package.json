@@ -29,7 +29,7 @@
     "@eq-labs/config-eslint": "workspace:*",
     "@eq-labs/config-typescript": "workspace:*",
     "@types/node": "26.6.6",
-    "eslint": "10.14.0",
+    "eslint": "10.15.0",
     "typescript": "7.0.2"
   }
 }
